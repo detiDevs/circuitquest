@@ -348,13 +348,14 @@ class _PlacedComponentWidget extends ConsumerWidget {
           ),
           child: Stack(
             children: [
-              // Component icon
+              // Component icon with fallback to name text
               Center(
                 child: SvgPicture.asset(
                   componentType.svgAsset,
                   width: gridSize * 0.7,
                   height: gridSize * 0.7,
                   fit: BoxFit.contain,
+                  placeholderBuilder: (context) => Text(placedComponent.type),
                 ),
               ),
               // Input pins (left side)

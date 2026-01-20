@@ -53,7 +53,7 @@ class Simulator {
         return false;
       }
     }
-
+    print("Evaluated event driven");
     return true;
   }
 
@@ -112,7 +112,7 @@ class Simulator {
       onUpdate?.call(entry.value);
       onWait?.call();
     }
-
+    print("Evaluated topologically");
     return true;
   }
 }

@@ -1,3 +1,5 @@
+import 'package:circuitquest_flutter/core/components/input_source.dart';
+import 'package:circuitquest_flutter/core/components/output_probe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,6 +88,8 @@ final List<ComponentType> availableComponents = [
     svgAsset: 'assets/gates/Register.svg',
     createComponent: () => DFlipFlop(),
   ),
+  ComponentType(name: "InputSource", displayName: "Input", svgAsset: 'assets/gates/Input.svg', createComponent: () => InputSource()),
+  ComponentType(name: "OutputProbe", displayName: "Output", svgAsset: 'assets/gates/Output.svg', createComponent: () => OutputProbe()),
 ];
 
 /// Component palette widget showing available components.
