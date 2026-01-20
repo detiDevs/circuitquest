@@ -9,6 +9,8 @@ class NotGate extends Component {
 
   @override
   bool evaluate() {
+    inputs["input"]!.updateFromSource();
+    
     final input = inputs["input"]!.value;
     final mask = (1 << outputs["output"]!.bitWidth) - 1;
 

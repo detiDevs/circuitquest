@@ -1,0 +1,208 @@
+
+Flutter Logic Simulator – Architecture & Design Reference
+========================================================
+
+This document summarizes the design decisions, architecture, and core code patterns
+discussed for rewriting a Python/Qt logic-gate simulator into Dart/Flutter.
+
+--------------------------------------------------------
+CORE DESIGN DECISIONS
+--------------------------------------------------------
+
+1. Backend rewritten in Dart (Python backend not reused)
+2. UI written in Flutter, backend pure Dart
+3. Event-driven circuit evaluation
+4. Components connected via pins and wires
+5. Multi-bit signals supported (not just boolean)
+6. String-keyed pins instead of index-based pins
+7. No dedicated Gate base class (all gates extend Component)
+8. tick() is no-op for combinational components
+
+--------------------------------------------------------
+COMPONENT BASE CLASS
+--------------------------------------------------------
+
+abstract class Component {
+  static int _nextId = 0;
+  final int id;
+
+  Component() : id = _nextId++;
+
+  Map<String, InputPin> get inputs;
+  Map<String, OutputPin> get outputs;
+
+  // Returns true if any output changed
+  bool evaluate();
+
+  // Sequential components override this
+  void tick() {}
+}
+
+--------------------------------------------------------
+PIN DESIGN
+--------------------------------------------------------
+
+- Pins carry integer values
+- Bitwidth determines valid value range
+- Values are masked on write
+
+abstract class Pin {
+  Component component;
+  final int bitWidth;
+  int _value = 0;
+
+  Pin(this.component, {this.bitWidth = 1});
+
+  int get value => _value;
+
+  set value(int newValue) {
+    final mask = (1 << bitWidth) - 1;
+    _value = newValue & mask;
+  }
+}
+
+class InputPin extends Pin {
+  Wire? source;
+  InputPin(super.component, {super.bitWidth});
+
+  void updateFromSource() {
+    if (source != null) value = source!.value;
+  }
+}
+
+class OutputPin extends Pin {
+  final List<Wire> connections = [];
+  OutputPin(super.component, {super.bitWidth});
+}
+
+--------------------------------------------------------
+WIRE
+--------------------------------------------------------
+
+class Wire {
+  final OutputPin from;
+  final InputPin to;
+
+  Wire(this.from, this.to) {
+    if (from.bitWidth != to.bitWidth) {
+      throw ArgumentError('Bitwidth mismatch');
+    }
+    from.connections.add(this);
+    to.source = this;
+  }
+
+  int get value => from.value;
+}
+
+--------------------------------------------------------
+SIMPLE GATE EXAMPLE (AND)
+--------------------------------------------------------
+
+class AndGate extends Component {
+  late final Map<String, InputPin> _inputs;
+  late final Map<String, OutputPin> _outputs;
+
+  AndGate({int bitWidth = 1}) {
+    _inputs = {
+      'A': InputPin(this, bitWidth: bitWidth),
+      'B': InputPin(this, bitWidth: bitWidth),
+    };
+    _outputs = {
+      'OUT': OutputPin(this, bitWidth: bitWidth),
+    };
+  }
+
+  @override
+  Map<String, InputPin> get inputs => _inputs;
+
+  @override
+  Map<String, OutputPin> get outputs => _outputs;
+
+  @override
+  bool evaluate() {
+    final newValue = _inputs['A']!.value & _inputs['B']!.value;
+    final out = _outputs['OUT']!;
+    final changed = out.value != newValue;
+    out.value = newValue;
+    return changed;
+  }
+}
+
+--------------------------------------------------------
+EVENT-DRIVEN SIMULATOR
+--------------------------------------------------------
+
+typedef UpdateCallback = void Function(Set<Component>);
+typedef WaitCallback = void Function();
+
+class Simulator {
+  final Set<Component> components;
+  final Set<Component> inputComponents;
+
+  Simulator({
+    required this.components,
+    required this.inputComponents,
+  });
+
+  bool evaluateEventDriven({
+    Set<Component>? startingComponents,
+    UpdateCallback? onUpdate,
+    WaitCallback? onWait,
+    int maxEvalCycles = 1000,
+  }) {
+    Set<Component> current =
+        startingComponents ?? inputComponents.toSet();
+
+    int tick = 0;
+
+    while (current.isNotEmpty) {
+      final Set<Component> next = {};
+
+      for (final c in current) {
+        if (c.evaluate()) {
+          for (final out in c.outputs.values) {
+            for (final wire in out.connections) {
+              next.add(wire.to.component);
+            }
+          }
+        }
+      }
+
+      onUpdate?.call(current);
+      onWait?.call();
+
+      current = next;
+      tick++;
+
+      if (tick > maxEvalCycles * components.length) {
+        return false; // unstable
+      }
+    }
+
+    return true;
+  }
+}
+
+--------------------------------------------------------
+WHY STRING-KEYED PINS?
+--------------------------------------------------------
+
+- Stable identity (UI safe)
+- Readable logic
+- Easy serialization
+- Matches Python architecture
+- Better debugging
+
+--------------------------------------------------------
+NEXT STEPS
+--------------------------------------------------------
+
+1. Unit tests for gates & simulator
+2. InputSource and OutputProbe components
+3. Clock & sequential evaluation phase
+4. Circuit serialization
+5. Flutter UI wiring
+
+--------------------------------------------------------
+END OF REFERENCE
+--------------------------------------------------------

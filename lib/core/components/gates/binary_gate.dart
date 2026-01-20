@@ -12,12 +12,15 @@ abstract class BinaryGate extends Component {
 
   @override
   bool evaluate() {
+    inputs["inputA"]!.updateFromSource();
+    inputs["inputB"]!.updateFromSource();
+    
     int a = inputs["inputA"]!.value;
     int b = inputs["inputB"]!.value;
     int out = outputs["output"]!.value;
     int newValue = compute(a, b);
     bool valueChanged = newValue != out;
-    out = newValue;
+    outputs["output"]!.value = newValue;
     return valueChanged;
   }
 }
