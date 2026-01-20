@@ -32,8 +32,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
 
     return DragTarget<ComponentType>(
       onAcceptWithDetails: (details) {
-        // Calculate grid-aligned position
-        final localPosition = details.offset;
+        // Convert global drop offset into local canvas coordinates then snap to grid
+        final renderBox = context.findRenderObject() as RenderBox;
+        final localPosition = renderBox.globalToLocal(details.offset);
         final gridPosition = _snapToGrid(localPosition);
 
         // Create and place the component
@@ -45,47 +46,64 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
             );
       },
       builder: (context, candidateData, rejectedData) {
-        return GestureDetector(
-          onTapDown: (details) {
-            // Handle tap interactions (e.g., cancel wire drawing)
+        return MouseRegion(
+          onHover: (event) {
+            // Track mouse position for wire drawing feedback
             if (state.wireDrawingStart != null) {
-              state.cancelWireDrawing();
+              setState(() {
+                _currentPointerPosition = event.localPosition;
+              });
             }
           },
-          onPanUpdate: (details) {
-            // Track pointer position for wire drawing
-            setState(() {
-              _currentPointerPosition = details.localPosition;
-            });
-          },
-          onPanEnd: (details) {
-            setState(() {
-              _currentPointerPosition = null;
-            });
-          },
-          child: CustomPaint(
-            painter: _GridPainter(),
-            child: Stack(
-              children: [
-                // Draw wires
-                CustomPaint(
-                  painter: _WirePainter(
-                    connections: state.connections,
-                    placedComponents: state.placedComponents,
-                    wireDrawingStart: state.wireDrawingStart,
-                    currentPointerPosition: _currentPointerPosition,
+          child: GestureDetector(
+            onTapDown: (details) {
+              // Cancel wire drawing only when tapping empty space
+              if (state.wireDrawingStart != null) {
+                final hitComponent = _hitTestComponent(state, details.localPosition);
+                if (hitComponent == null) {
+                  state.cancelWireDrawing();
+                  setState(() {
+                    _currentPointerPosition = null;
+                  });
+                }
+              }
+            },
+            onPanUpdate: (details) {
+              // Track pointer position for wire drawing
+              setState(() {
+                _currentPointerPosition = details.localPosition;
+              });
+            },
+            onPanEnd: (details) {
+              setState(() {
+                _currentPointerPosition = null;
+              });
+            },
+            child: CustomPaint(
+              painter: _GridPainter(),
+              child: Stack(
+                children: [
+                  // Draw wires
+                  CustomPaint(
+                    painter: _WirePainter(
+                      connections: state.connections,
+                      placedComponents: state.placedComponents,
+                      wireDrawingStart: state.wireDrawingStart,
+                      currentPointerPosition: _currentPointerPosition,
+                      gridSize: gridSize,
+                    ),
+                    child: Container(),
                   ),
-                  child: Container(),
-                ),
-                // Draw components
-                ...state.placedComponents.map((placed) {
-                  return _PlacedComponentWidget(
-                    key: ValueKey(placed.id),
-                    placedComponent: placed,
-                    gridSize: gridSize,
-                  );
-                }),
-              ],
+                  // Draw components
+                  ...state.placedComponents.map((placed) {
+                    return _PlacedComponentWidget(
+                      key: ValueKey(placed.id),
+                      placedComponent: placed,
+                      gridSize: gridSize,
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
         );
@@ -99,6 +117,22 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
       (position.dx / gridSize).round() * gridSize,
       (position.dy / gridSize).round() * gridSize,
     );
+  }
+
+  /// Returns the component under the given local canvas position, if any.
+  PlacedComponent? _hitTestComponent(SandboxState state, Offset position) {
+    for (final component in state.placedComponents) {
+      final rect = Rect.fromLTWH(
+        component.position.dx,
+        component.position.dy,
+        gridSize,
+        gridSize,
+      );
+      if (rect.contains(position)) {
+        return component;
+      }
+    }
+    return null;
   }
 }
 
@@ -141,12 +175,14 @@ class _WirePainter extends CustomPainter {
   final List<PlacedComponent> placedComponents;
   final ({String componentId, String pinName})? wireDrawingStart;
   final Offset? currentPointerPosition;
+  final double gridSize;
 
   _WirePainter({
     required this.connections,
     required this.placedComponents,
     this.wireDrawingStart,
     this.currentPointerPosition,
+    required this.gridSize,
   });
 
   @override
@@ -163,9 +199,17 @@ class _WirePainter extends CustomPainter {
       final targetComponent = placedComponents
           .firstWhere((c) => c.id == connection.targetComponentId);
 
-      // Calculate pin positions (right side for outputs, left side for inputs)
-      final sourcePos = sourceComponent.position + const Offset(70, 35);
-      final targetPos = targetComponent.position + const Offset(10, 35);
+      // Calculate pin centers for the specific pins involved
+      final sourcePos = _pinCenter(
+        sourceComponent,
+        connection.sourcePin,
+        isInput: false,
+      );
+      final targetPos = _pinCenter(
+        targetComponent,
+        connection.targetPin,
+        isInput: true,
+      );
 
       _drawWire(canvas, paint, sourcePos, targetPos);
     }
@@ -174,7 +218,11 @@ class _WirePainter extends CustomPainter {
     if (wireDrawingStart != null && currentPointerPosition != null) {
       final sourceComponent = placedComponents
           .firstWhere((c) => c.id == wireDrawingStart!.componentId);
-      final sourcePos = sourceComponent.position + const Offset(70, 35);
+      final sourcePos = _pinCenter(
+        sourceComponent,
+        wireDrawingStart!.pinName,
+        isInput: false,
+      );
 
       paint.color = Colors.blue[300]!;
       paint.strokeWidth = 2.0;
@@ -212,6 +260,33 @@ class _WirePainter extends CustomPainter {
         wireDrawingStart != oldDelegate.wireDrawingStart ||
         currentPointerPosition != oldDelegate.currentPointerPosition;
   }
+
+  /// Returns the canvas-space center for a given pin.
+  Offset _pinCenter(
+    PlacedComponent component,
+    String pinName, {
+    required bool isInput,
+  }) {
+    final pins = isInput
+        ? component.component.inputs.keys.toList()
+        : component.component.outputs.keys.toList();
+
+    if (pins.isEmpty) {
+      return component.position + Offset(isInput ? 0 : gridSize, gridSize / 2);
+    }
+
+    final index = pins.indexOf(pinName);
+    if (index == -1) {
+      // Fallback to first pin if name not found
+      return _pinCenter(component, pins.first, isInput: isInput);
+    }
+
+    final spacing = gridSize / (pins.length + 1);
+    final yCenter = spacing * (index + 1);
+    final xCenter = isInput ? 0.0 : gridSize;
+
+    return component.position + Offset(xCenter, yCenter);
+  }
 }
 
 /// Widget representing a placed component on the canvas.
@@ -248,8 +323,12 @@ class _PlacedComponentWidget extends ConsumerWidget {
           );
           ref.read(sandboxProvider).moveComponent(placedComponent.id, snapped);
         },
+        onSecondaryTapDown: (details) {
+          // Show context menu on right-click
+          _showContextMenu(context, details.globalPosition, ref.read(sandboxProvider));
+        },
         onLongPress: () {
-          // Show context menu to delete
+          // Show context menu on long press (for touch devices)
           _showComponentMenu(context, ref.read(sandboxProvider));
         },
         child: Container(
@@ -304,12 +383,21 @@ class _PlacedComponentWidget extends ConsumerWidget {
           top: pinPosition.dy,
           child: GestureDetector(
             onTap: () {
-              // Complete wire connection to this input
               if (state.wireDrawingStart != null) {
+                // Complete wire connection to this input
                 state.completeWireDrawing(
                   placedComponent.id,
                   entry.key,
                 );
+                return;
+              }
+
+              // If already connected, delete the connection by tapping the input pin
+              final existing = state.connections.where(
+                (c) => c.targetComponentId == placedComponent.id && c.targetPin == entry.key,
+              );
+              if (existing.isNotEmpty) {
+                state.removeConnection(existing.first);
               }
             },
             child: Container(
@@ -398,6 +486,36 @@ class _PlacedComponentWidget extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  /// Shows a context menu at the cursor position (for right-click).
+  void _showContextMenu(BuildContext context, Offset position, SandboxState state) {
+    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    
+    showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+        position & const Size(40, 40),
+        Offset.zero & overlay.size,
+      ),
+      items: [
+        PopupMenuItem(
+          child: const Row(
+            children: [
+              Icon(Icons.delete, color: Colors.red, size: 18),
+              SizedBox(width: 8),
+              Text('Delete'),
+            ],
+          ),
+          onTap: () {
+            // Use Future.delayed to avoid closing before tap completes
+            Future.delayed(Duration.zero, () {
+              state.removeComponent(placedComponent.id);
+            });
+          },
+        ),
+      ],
     );
   }
 }
