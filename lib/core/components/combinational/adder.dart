@@ -1,5 +1,5 @@
-import 'package:cirquitquest_flutter/core/components/base/component.dart';
-import 'package:cirquitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest_flutter/core/components/base/component.dart';
+import 'package:circuitquest_flutter/core/logic/pin.dart';
 
 /// Half Adder: computes sum and carry from two 1-bit inputs.
 class HalfAdder extends Component {

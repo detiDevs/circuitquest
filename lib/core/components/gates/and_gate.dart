@@ -1,4 +1,4 @@
-import 'package:cirquitquest_flutter/core/components/gates/binary_gate.dart';
+import 'package:circuitquest_flutter/core/components/gates/binary_gate.dart';
 
 class AndGate extends BinaryGate{
   @override

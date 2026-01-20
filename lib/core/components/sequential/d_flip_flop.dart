@@ -1,5 +1,5 @@
-import 'package:cirquitquest_flutter/core/components/base/component.dart';
-import 'package:cirquitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest_flutter/core/components/base/component.dart';
+import 'package:circuitquest_flutter/core/logic/pin.dart';
 
 /// D Flip-Flop - stores a value on the rising edge of the clock
 /// Only updates on the rising edge (0 -> 1 transition) of clock

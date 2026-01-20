@@ -1,5 +1,5 @@
-import 'package:cirquitquest_flutter/core/components/base/component.dart';
-import 'package:cirquitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest_flutter/core/components/base/component.dart';
+import 'package:circuitquest_flutter/core/logic/pin.dart';
 
 /// A clock component that generates periodic pulses
 /// The clock value must be manually toggled using setClock()

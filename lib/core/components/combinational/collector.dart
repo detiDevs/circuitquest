@@ -1,5 +1,5 @@
-import 'package:cirquitquest_flutter/core/components/base/component.dart';
-import 'package:cirquitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest_flutter/core/components/base/component.dart';
+import 'package:circuitquest_flutter/core/logic/pin.dart';
 
 /// Collects multiple equal-width inputs into a single wider output bus.
 class Collector extends Component {

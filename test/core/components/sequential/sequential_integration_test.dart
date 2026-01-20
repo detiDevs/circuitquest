@@ -1,13 +1,13 @@
-import 'package:cirquitquest_flutter/core/components/gates/and_gate.dart';
-import 'package:cirquitquest_flutter/core/components/gates/or_gate.dart';
-import 'package:cirquitquest_flutter/core/components/input_source.dart';
-import 'package:cirquitquest_flutter/core/components/output_probe.dart';
-import 'package:cirquitquest_flutter/core/components/sequential/clock.dart';
-import 'package:cirquitquest_flutter/core/components/sequential/d_flip_flop.dart';
-import 'package:cirquitquest_flutter/core/components/sequential/d_latch.dart';
-import 'package:cirquitquest_flutter/core/components/sequential/register.dart';
-import 'package:cirquitquest_flutter/core/logic/wire.dart';
-import 'package:cirquitquest_flutter/core/simulation/simulator.dart';
+import 'package:circuitquest_flutter/core/components/gates/and_gate.dart';
+import 'package:circuitquest_flutter/core/components/gates/or_gate.dart';
+import 'package:circuitquest_flutter/core/components/input_source.dart';
+import 'package:circuitquest_flutter/core/components/output_probe.dart';
+import 'package:circuitquest_flutter/core/components/sequential/clock.dart';
+import 'package:circuitquest_flutter/core/components/sequential/d_flip_flop.dart';
+import 'package:circuitquest_flutter/core/components/sequential/d_latch.dart';
+import 'package:circuitquest_flutter/core/components/sequential/register.dart';
+import 'package:circuitquest_flutter/core/logic/wire.dart';
+import 'package:circuitquest_flutter/core/simulation/simulator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

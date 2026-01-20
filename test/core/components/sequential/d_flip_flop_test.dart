@@ -1,4 +1,4 @@
-import 'package:cirquitquest_flutter/core/components/sequential/d_flip_flop.dart';
+import 'package:circuitquest_flutter/core/components/sequential/d_flip_flop.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

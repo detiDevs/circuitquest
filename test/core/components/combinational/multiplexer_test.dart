@@ -1,4 +1,4 @@
-import 'package:cirquitquest_flutter/core/components/combinational/multiplexer.dart';
+import 'package:circuitquest_flutter/core/components/combinational/multiplexer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
