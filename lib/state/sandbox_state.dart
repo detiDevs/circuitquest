@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
 import '../core/logic/wire.dart';
 import '../core/simulation/simulator.dart';
+import '../core/components/input_source.dart';
 
 /// Riverpod provider for sandbox state.
 final sandboxProvider = ChangeNotifierProvider<SandboxState>(
@@ -226,14 +227,20 @@ class SandboxState extends ChangeNotifier {
   void evaluateCircuit() {
     final allComponents = _placedComponents.map((pc) => pc.component).toSet();
     if (allComponents.isEmpty) return;
-    
-    // Create a new simulator instance with current components
+
+    // Treat components with no inputs or explicit InputSources as starting points
+    final inputStarts = _placedComponents
+      .where((pc) => pc.component.inputs.isEmpty || pc.component is InputSource)
+      .map((pc) => pc.component)
+      .toSet();
+    final startingSet = inputStarts.isEmpty ? allComponents : inputStarts;
+
     _simulator = Simulator(
       components: allComponents,
-      inputComponents: {}, // For sandbox mode, no specific input components
+      inputComponents: startingSet,
     );
-    
-    _simulator!.evaluateEventDriven();
+
+    _simulator!.evaluateEventDriven(startingComponents: startingSet);
     notifyListeners();
   }
 
