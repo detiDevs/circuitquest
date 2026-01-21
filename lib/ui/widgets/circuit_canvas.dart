@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import '../../state/sandbox_state.dart';
 import '../../core/components/input_source.dart';
 import '../../core/components/output_probe.dart';
@@ -512,21 +513,23 @@ class _PlacedComponentWidget extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('${placedComponent.type} Component'),
-        content: const Text('What would you like to do?'),
+        title: Text(AppLocalizations.of(context)!.componentMenuTitle(
+            placedComponent.type)),
+        content: Text(AppLocalizations.of(context)!.componentMenuPrompt),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
               state.removeComponent(placedComponent.id);
               Navigator.of(context).pop();
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.delete, 
+                style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -545,11 +548,11 @@ class _PlacedComponentWidget extends ConsumerWidget {
       ),
       items: [
         PopupMenuItem(
-          child: const Row(
+          child: Row(
             children: [
-              Icon(Icons.delete, color: Colors.red, size: 18),
-              SizedBox(width: 8),
-              Text('Delete'),
+              const Icon(Icons.delete, color: Colors.red, size: 18),
+              const SizedBox(width: 8),
+              Text(AppLocalizations.of(context)!.delete),
             ],
           ),
           onTap: () {

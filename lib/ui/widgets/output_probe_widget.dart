@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/components/output_probe.dart';
 import '../../state/sandbox_state.dart';
 
@@ -34,7 +35,7 @@ class OutputProbeWidget extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '$bitWidth-bit output',
+                AppLocalizations.of(context)!.outputLabel(bitWidth),
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
@@ -60,7 +61,7 @@ class OutputProbeWidget extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                '0 .. $maxVal',
+                AppLocalizations.of(context)!.rangeLabel('0', maxVal.toString()),
                 style: TextStyle(
                   fontSize: 10,
                   color: Colors.grey[700],

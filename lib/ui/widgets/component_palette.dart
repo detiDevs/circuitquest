@@ -1,5 +1,6 @@
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -107,7 +108,7 @@ class ComponentPalette extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Components',
+            AppLocalizations.of(context)!.componentPaletteTitle,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -186,7 +187,8 @@ class _PaletteItem extends ConsumerWidget {
           ref.read(sandboxProvider).selectComponentType(componentType.name);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${componentType.displayName} selected'),
+              content: Text(AppLocalizations.of(context)!.componentSelected(
+                  componentType.displayName)),
               duration: const Duration(seconds: 1),
             ),
           );

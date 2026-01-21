@@ -1,14 +1,12 @@
 import 'package:circuitquest/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'ui/screens/sandbox_screen.dart';
+import 'l10n/app_localizations.dart';
 
 void main() {
-  runApp(
-    const ProviderScope(
-      child: CircuitQuestApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: CircuitQuestApp()));
 }
 
 /// Main application widget for CircuitQuest.
@@ -27,6 +25,8 @@ class CircuitQuestApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: SandboxScreen(),
     );
   }

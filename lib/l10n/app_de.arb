@@ -1,0 +1,199 @@
+{
+  "appTitle": "SchaltkreisQuest",
+  "@appTitle": {
+    "description": "Anwendungstitel"
+  },
+
+  "sandboxModeTitle": "Sandbox-Modus",
+  "@sandboxModeTitle": {
+    "description": "Titel für Sandbox-Modus-Bildschirm"
+  },
+
+  "controlsTitle": "Steuerung",
+  "@controlsTitle": {
+    "description": "Titel des Steuerungspanels"
+  },
+  "evaluateCircuit": "Schaltkreis auswerten",
+  "@evaluateCircuit": {
+    "description": "Schaltfläche zum einmaligen Auswerten des Schaltkreises"
+  },
+  "circuitEvaluated": "Schaltkreis ausgewertet",
+  "@circuitEvaluated": {
+    "description": "Snackbar-Nachricht nach der Schaltkreisauswertung"
+  },
+  "startSimulation": "Simulation starten",
+  "@startSimulation": {
+    "description": "Schaltfläche zum Starten der kontinuierlichen Simulation"
+  },
+  "stopSimulation": "Simulation stoppen",
+  "@stopSimulation": {
+    "description": "Schaltfläche zum Stoppen der kontinuierlichen Simulation"
+  },
+  "clearCircuit": "Schaltkreis löschen",
+  "@clearCircuit": {
+    "description": "Schaltfläche zum Löschen aller Komponenten von der Arbeitsfläche"
+  },
+  "clearCircuitConfirmTitle": "Schaltkreis löschen",
+  "@clearCircuitConfirmTitle": {
+    "description": "Titel für Bestätigungsdialog zum Löschen des Schaltkreises"
+  },
+  "clearCircuitConfirmMessage": "Möchten Sie wirklich den gesamten Schaltkreis löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "@clearCircuitConfirmMessage": {
+    "description": "Nachricht für Bestätigungsdialog zum Löschen des Schaltkreises"
+  },
+  "circuitCleared": "Schaltkreis gelöscht",
+  "@circuitCleared": {
+    "description": "Snackbar-Nachricht nachdem Schaltkreis gelöscht wurde"
+  },
+  "clear": "Löschen",
+  "@clear": {
+    "description": "Löschen-Schaltfläche im Bestätigungsdialog"
+  },
+
+  "circuitInfoTitle": "Schaltkreis-Info",
+  "@circuitInfoTitle": {
+    "description": "Titel des Schaltkreisinformationsabschnitts"
+  },
+  "componentsLabel": "Komponenten",
+  "@componentsLabel": {
+    "description": "Beschriftung für die Anzahl der Komponenten"
+  },
+  "connectionsLabel": "Verbindungen",
+  "@connectionsLabel": {
+    "description": "Beschriftung für die Anzahl der Drahtverbindungen"
+  },
+  "statusLabel": "Status",
+  "@statusLabel": {
+    "description": "Beschriftung für den Simulationsstatus"
+  },
+  "statusRunning": "Läuft",
+  "@statusRunning": {
+    "description": "Status wenn Simulation läuft"
+  },
+  "statusStopped": "Gestoppt",
+  "@statusStopped": {
+    "description": "Status wenn Simulation gestoppt ist"
+  },
+
+  "instructionsTitle": "Anleitung",
+  "@instructionsTitle": {
+    "description": "Titel des Anleitungsabschnitts"
+  },
+  "instructionDragComponents": "Ziehen Sie Komponenten aus der Palette auf die Arbeitsfläche",
+  "@instructionDragComponents": {
+    "description": "Anleitung zum Ziehen von Komponenten"
+  },
+  "instructionMoveComponents": "Verschieben Sie Komponenten durch Ziehen auf der Arbeitsfläche",
+  "@instructionMoveComponents": {
+    "description": "Anleitung zum Verschieben von Komponenten"
+  },
+  "instructionStartWires": "Tippen Sie auf Ausgangspins, um Drähte zu zeichnen",
+  "@instructionStartWires": {
+    "description": "Anleitung zum Starten von Drahtverbindungen"
+  },
+  "instructionCompleteWires": "Tippen Sie auf Eingangspins, um Drahtverbindungen abzuschließen",
+  "@instructionCompleteWires": {
+    "description": "Anleitung zum Abschließen von Drahtverbindungen"
+  },
+  "instructionDeleteComponents": "Drücken Sie lange auf Komponenten, um sie zu löschen",
+  "@instructionDeleteComponents": {
+    "description": "Anleitung zum Löschen von Komponenten"
+  },
+  "instructionEvaluate": "Auswerten, um den Schaltkreis einmal auszuführen",
+  "@instructionEvaluate": {
+    "description": "Anleitung zur Schaltkreisauswertung"
+  },
+  "pinColorsInfo": "Pin-Farben: Grün = HIGH (1), Rot = LOW (0)",
+  "@pinColorsInfo": {
+    "description": "Information über die Farbcodierung der Pins"
+  },
+
+  "componentPaletteTitle": "Komponenten",
+  "@componentPaletteTitle": {
+    "description": "Titel der Komponentenpalette"
+  },
+  "componentSelected": "{componentName} ausgewählt",
+  "@componentSelected": {
+    "description": "Snackbar-Nachricht wenn Komponente ausgewählt wird",
+    "placeholders": {
+      "componentName": {
+        "type": "String",
+        "example": "AND-Gatter"
+      }
+    }
+  },
+
+  "andGate": "AND-Gatter",
+  "orGate": "OR-Gatter",
+  "notGate": "NOT-Gatter",
+  "nandGate": "NAND-Gatter",
+  "norGate": "NOR-Gatter",
+  "xorGate": "XOR-Gatter",
+  "clock": "Takt",
+  "dLatch": "D-Latch",
+  "dFlipFlop": "D-Flipflop",
+  "inputSource": "Eingang",
+  "outputProbe": "Ausgang",
+
+  "componentMenuTitle": "{componentType}-Komponente",
+  "@componentMenuTitle": {
+    "description": "Titel für Komponenten-Kontextmenü",
+    "placeholders": {
+      "componentType": {
+        "type": "String",
+        "example": "AND"
+      }
+    }
+  },
+  "componentMenuPrompt": "Was möchten Sie tun?",
+  "@componentMenuPrompt": {
+    "description": "Aufforderung im Komponenten-Kontextmenü"
+  },
+  "cancel": "Abbrechen",
+  "@cancel": {
+    "description": "Schaltfläche Abbrechen"
+  },
+  "delete": "Löschen",
+  "@delete": {
+    "description": "Schaltfläche Löschen"
+  },
+
+  "toggleBitwidth": "Bitbreite umschalten",
+  "@toggleBitwidth": {
+    "description": "Tooltip für Bitbreite-Umschaltknopf"
+  },
+  "bitwidthLabel": "{bitWidth}-Bit",
+  "@bitwidthLabel": {
+    "description": "Bitbreite-Anzeigebeschriftung",
+    "placeholders": {
+      "bitWidth": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+
+  "outputLabel": "{bitWidth}-Bit Ausgang",
+  "@outputLabel": {
+    "description": "Ausgangskomponenten-Bitbreite-Beschriftung",
+    "placeholders": {
+      "bitWidth": {
+        "type": "int",
+        "example": "8"
+      }
+    }  },
+
+  "rangeLabel": "{min} .. {max}",
+  "@rangeLabel": {
+    "description": "Value range display",
+    "placeholders": {
+      "min": {
+        "type": "String",
+        "example": "0"
+      },
+      "max": {
+        "type": "String",
+        "example": "255"
+      }
+    }  }
+}

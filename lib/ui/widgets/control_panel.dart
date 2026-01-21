@@ -1,3 +1,4 @@
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../state/sandbox_state.dart';
@@ -22,7 +23,7 @@ class ControlPanel extends ConsumerWidget {
       Padding(
         padding: const EdgeInsets.all(12.0),
         child: Text(
-          'Controls',
+          AppLocalizations.of(context)!.controlsTitle,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -43,14 +44,14 @@ class ControlPanel extends ConsumerWidget {
                   : () {
                       state.evaluateCircuit();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Circuit evaluated'),
-                          duration: Duration(seconds: 1),
+                        SnackBar(
+                          content: Text(AppLocalizations.of(context)!.circuitEvaluated),
+                          duration: const Duration(seconds: 1),
                         ),
                       );
                     },
               icon: const Icon(Icons.play_arrow),
-              label: const Text('Evaluate Circuit'),
+              label: Text(AppLocalizations.of(context)!.evaluateCircuit),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
@@ -73,7 +74,9 @@ class ControlPanel extends ConsumerWidget {
                 state.isSimulating ? Icons.stop : Icons.autorenew,
               ),
               label: Text(
-                state.isSimulating ? 'Stop Simulation' : 'Start Simulation',
+                state.isSimulating 
+                    ? AppLocalizations.of(context)!.stopSimulation 
+                    : AppLocalizations.of(context)!.startSimulation,
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor:
@@ -91,7 +94,7 @@ class ControlPanel extends ConsumerWidget {
                       _showClearConfirmation(context, state);
                     },
               icon: const Icon(Icons.delete_outline),
-              label: const Text('Clear Circuit'),
+              label: Text(AppLocalizations.of(context)!.clearCircuit),
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.red,
               ),
@@ -109,23 +112,25 @@ class ControlPanel extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Circuit Info',
+              AppLocalizations.of(context)!.circuitInfoTitle,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
             ),
             const SizedBox(height: 8),
             _InfoRow(
-              label: 'Components',
+              label: AppLocalizations.of(context)!.componentsLabel,
               value: '${state.placedComponents.length}',
             ),
             _InfoRow(
-              label: 'Connections',
+              label: AppLocalizations.of(context)!.connectionsLabel,
               value: '${state.connections.length}',
             ),
             _InfoRow(
-              label: 'Status',
-              value: state.isSimulating ? 'Running' : 'Stopped',
+              label: AppLocalizations.of(context)!.statusLabel,
+              value: state.isSimulating 
+                  ? AppLocalizations.of(context)!.statusRunning 
+                  : AppLocalizations.of(context)!.statusStopped,
               valueColor: state.isSimulating ? Colors.green : Colors.grey,
             ),
           ],
@@ -141,7 +146,7 @@ class ControlPanel extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Instructions',
+              AppLocalizations.of(context)!.instructionsTitle,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -149,27 +154,27 @@ class ControlPanel extends ConsumerWidget {
             const SizedBox(height: 8),
             _InstructionItem(
               icon: Icons.touch_app,
-              text: 'Drag components from the palette to the canvas',
+              text: AppLocalizations.of(context)!.instructionDragComponents,
             ),
             _InstructionItem(
               icon: Icons.pan_tool,
-              text: 'Move components by dragging them on the canvas',
+              text: AppLocalizations.of(context)!.instructionMoveComponents,
             ),
             _InstructionItem(
               icon: Icons.cable,
-              text: 'Tap output pins to start drawing wires',
+              text: AppLocalizations.of(context)!.instructionStartWires,
             ),
             _InstructionItem(
               icon: Icons.touch_app,
-              text: 'Tap input pins to complete wire connections',
+              text: AppLocalizations.of(context)!.instructionCompleteWires,
             ),
             _InstructionItem(
               icon: Icons.delete,
-              text: 'Long-press components to delete them',
+              text: AppLocalizations.of(context)!.instructionDeleteComponents,
             ),
             _InstructionItem(
               icon: Icons.play_arrow,
-              text: 'Evaluate to run the circuit once',
+              text: AppLocalizations.of(context)!.instructionEvaluate,
             ),
             const SizedBox(height: 8),
             Container(
@@ -188,7 +193,7 @@ class ControlPanel extends ConsumerWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Pin colors: Green = HIGH (1), Red = LOW (0)',
+                      AppLocalizations.of(context)!.pinColorsInfo,
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.blue[900],
@@ -220,30 +225,29 @@ class ControlPanel extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Clear Circuit'),
-        content: const Text(
-          'Are you sure you want to clear the entire circuit? '
-          'This action cannot be undone.',
+        title: Text(AppLocalizations.of(context)!.clearCircuitConfirmTitle),
+        content: Text(
+          AppLocalizations.of(context)!.clearCircuitConfirmMessage,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
               state.clearCircuit();
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Circuit cleared'),
-                  duration: Duration(seconds: 1),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.circuitCleared),
+                  duration: const Duration(seconds: 1),
                 ),
               );
             },
-            child: const Text(
-              'Clear',
-              style: TextStyle(color: Colors.red),
+            child: Text(
+              AppLocalizations.of(context)!.clear,
+              style: const TextStyle(color: Colors.red),
             ),
           ),
         ],

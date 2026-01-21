@@ -1,0 +1,416 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_de.dart';
+import 'app_localizations_en.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
+    Locale('en'),
+  ];
+
+  /// Application title
+  ///
+  /// In en, this message translates to:
+  /// **'CircuitQuest'**
+  String get appTitle;
+
+  /// Title for sandbox mode screen
+  ///
+  /// In en, this message translates to:
+  /// **'Sandbox Mode'**
+  String get sandboxModeTitle;
+
+  /// Control panel title
+  ///
+  /// In en, this message translates to:
+  /// **'Controls'**
+  String get controlsTitle;
+
+  /// Button to evaluate the circuit once
+  ///
+  /// In en, this message translates to:
+  /// **'Evaluate Circuit'**
+  String get evaluateCircuit;
+
+  /// Snackbar message after circuit evaluation
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit evaluated'**
+  String get circuitEvaluated;
+
+  /// Button to start continuous simulation
+  ///
+  /// In en, this message translates to:
+  /// **'Start Simulation'**
+  String get startSimulation;
+
+  /// Button to stop continuous simulation
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Simulation'**
+  String get stopSimulation;
+
+  /// Button to clear all components from canvas
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Circuit'**
+  String get clearCircuit;
+
+  /// Title for clear circuit confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Clear Circuit'**
+  String get clearCircuitConfirmTitle;
+
+  /// Message for clear circuit confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear the entire circuit? This action cannot be undone.'**
+  String get clearCircuitConfirmMessage;
+
+  /// Snackbar message after circuit is cleared
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit cleared'**
+  String get circuitCleared;
+
+  /// Clear button in confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// Circuit information section title
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit Info'**
+  String get circuitInfoTitle;
+
+  /// Label for number of components
+  ///
+  /// In en, this message translates to:
+  /// **'Components'**
+  String get componentsLabel;
+
+  /// Label for number of wire connections
+  ///
+  /// In en, this message translates to:
+  /// **'Connections'**
+  String get connectionsLabel;
+
+  /// Label for simulation status
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get statusLabel;
+
+  /// Status when simulation is running
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get statusRunning;
+
+  /// Status when simulation is stopped
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get statusStopped;
+
+  /// Instructions section title
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions'**
+  String get instructionsTitle;
+
+  /// Instruction for dragging components
+  ///
+  /// In en, this message translates to:
+  /// **'Drag components from the palette to the canvas'**
+  String get instructionDragComponents;
+
+  /// Instruction for moving components
+  ///
+  /// In en, this message translates to:
+  /// **'Move components by dragging them on the canvas'**
+  String get instructionMoveComponents;
+
+  /// Instruction for starting wire connections
+  ///
+  /// In en, this message translates to:
+  /// **'Tap output pins to start drawing wires'**
+  String get instructionStartWires;
+
+  /// Instruction for completing wire connections
+  ///
+  /// In en, this message translates to:
+  /// **'Tap input pins to complete wire connections'**
+  String get instructionCompleteWires;
+
+  /// Instruction for deleting components
+  ///
+  /// In en, this message translates to:
+  /// **'Long-press components to delete them'**
+  String get instructionDeleteComponents;
+
+  /// Instruction for circuit evaluation
+  ///
+  /// In en, this message translates to:
+  /// **'Evaluate to run the circuit once'**
+  String get instructionEvaluate;
+
+  /// Information about pin color coding
+  ///
+  /// In en, this message translates to:
+  /// **'Pin colors: Green = HIGH (1), Red = LOW (0)'**
+  String get pinColorsInfo;
+
+  /// Component palette title
+  ///
+  /// In en, this message translates to:
+  /// **'Components'**
+  String get componentPaletteTitle;
+
+  /// Snackbar message when component is selected
+  ///
+  /// In en, this message translates to:
+  /// **'{componentName} selected'**
+  String componentSelected(String componentName);
+
+  /// No description provided for @andGate.
+  ///
+  /// In en, this message translates to:
+  /// **'AND Gate'**
+  String get andGate;
+
+  /// No description provided for @orGate.
+  ///
+  /// In en, this message translates to:
+  /// **'OR Gate'**
+  String get orGate;
+
+  /// No description provided for @notGate.
+  ///
+  /// In en, this message translates to:
+  /// **'NOT Gate'**
+  String get notGate;
+
+  /// No description provided for @nandGate.
+  ///
+  /// In en, this message translates to:
+  /// **'NAND Gate'**
+  String get nandGate;
+
+  /// No description provided for @norGate.
+  ///
+  /// In en, this message translates to:
+  /// **'NOR Gate'**
+  String get norGate;
+
+  /// No description provided for @xorGate.
+  ///
+  /// In en, this message translates to:
+  /// **'XOR Gate'**
+  String get xorGate;
+
+  /// No description provided for @clock.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock'**
+  String get clock;
+
+  /// No description provided for @dLatch.
+  ///
+  /// In en, this message translates to:
+  /// **'D-Latch'**
+  String get dLatch;
+
+  /// No description provided for @dFlipFlop.
+  ///
+  /// In en, this message translates to:
+  /// **'D-Flip-Flop'**
+  String get dFlipFlop;
+
+  /// No description provided for @inputSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Input'**
+  String get inputSource;
+
+  /// No description provided for @outputProbe.
+  ///
+  /// In en, this message translates to:
+  /// **'Output'**
+  String get outputProbe;
+
+  /// Title for component context menu
+  ///
+  /// In en, this message translates to:
+  /// **'{componentType} Component'**
+  String componentMenuTitle(String componentType);
+
+  /// Prompt in component context menu
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to do?'**
+  String get componentMenuPrompt;
+
+  /// Cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Delete button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Tooltip for bitwidth toggle button
+  ///
+  /// In en, this message translates to:
+  /// **'Toggle bitwidth'**
+  String get toggleBitwidth;
+
+  /// Bitwidth display label
+  ///
+  /// In en, this message translates to:
+  /// **'{bitWidth}-bit'**
+  String bitwidthLabel(int bitWidth);
+
+  /// Output component bitwidth label
+  ///
+  /// In en, this message translates to:
+  /// **'{bitWidth}-bit output'**
+  String outputLabel(int bitWidth);
+
+  /// Value range display
+  ///
+  /// In en, this message translates to:
+  /// **'{min} .. {max}'**
+  String rangeLabel(String min, String max);
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['de', 'en'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
+    case 'en':
+      return AppLocalizationsEn();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

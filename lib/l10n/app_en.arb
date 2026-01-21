@@ -1,0 +1,201 @@
+{
+  "appTitle": "CircuitQuest",
+  "@appTitle": {
+    "description": "Application title"
+  },
+
+  "sandboxModeTitle": "Sandbox Mode",
+  "@sandboxModeTitle": {
+    "description": "Title for sandbox mode screen"
+  },
+
+  "controlsTitle": "Controls",
+  "@controlsTitle": {
+    "description": "Control panel title"
+  },
+  "evaluateCircuit": "Evaluate Circuit",
+  "@evaluateCircuit": {
+    "description": "Button to evaluate the circuit once"
+  },
+  "circuitEvaluated": "Circuit evaluated",
+  "@circuitEvaluated": {
+    "description": "Snackbar message after circuit evaluation"
+  },
+  "startSimulation": "Start Simulation",
+  "@startSimulation": {
+    "description": "Button to start continuous simulation"
+  },
+  "stopSimulation": "Stop Simulation",
+  "@stopSimulation": {
+    "description": "Button to stop continuous simulation"
+  },
+  "clearCircuit": "Clear Circuit",
+  "@clearCircuit": {
+    "description": "Button to clear all components from canvas"
+  },
+  "clearCircuitConfirmTitle": "Clear Circuit",
+  "@clearCircuitConfirmTitle": {
+    "description": "Title for clear circuit confirmation dialog"
+  },
+  "clearCircuitConfirmMessage": "Are you sure you want to clear the entire circuit? This action cannot be undone.",
+  "@clearCircuitConfirmMessage": {
+    "description": "Message for clear circuit confirmation dialog"
+  },
+  "circuitCleared": "Circuit cleared",
+  "@circuitCleared": {
+    "description": "Snackbar message after circuit is cleared"
+  },
+  "clear": "Clear",
+  "@clear": {
+    "description": "Clear button in confirmation dialog"
+  },
+
+  "circuitInfoTitle": "Circuit Info",
+  "@circuitInfoTitle": {
+    "description": "Circuit information section title"
+  },
+  "componentsLabel": "Components",
+  "@componentsLabel": {
+    "description": "Label for number of components"
+  },
+  "connectionsLabel": "Connections",
+  "@connectionsLabel": {
+    "description": "Label for number of wire connections"
+  },
+  "statusLabel": "Status",
+  "@statusLabel": {
+    "description": "Label for simulation status"
+  },
+  "statusRunning": "Running",
+  "@statusRunning": {
+    "description": "Status when simulation is running"
+  },
+  "statusStopped": "Stopped",
+  "@statusStopped": {
+    "description": "Status when simulation is stopped"
+  },
+
+  "instructionsTitle": "Instructions",
+  "@instructionsTitle": {
+    "description": "Instructions section title"
+  },
+  "instructionDragComponents": "Drag components from the palette to the canvas",
+  "@instructionDragComponents": {
+    "description": "Instruction for dragging components"
+  },
+  "instructionMoveComponents": "Move components by dragging them on the canvas",
+  "@instructionMoveComponents": {
+    "description": "Instruction for moving components"
+  },
+  "instructionStartWires": "Tap output pins to start drawing wires",
+  "@instructionStartWires": {
+    "description": "Instruction for starting wire connections"
+  },
+  "instructionCompleteWires": "Tap input pins to complete wire connections",
+  "@instructionCompleteWires": {
+    "description": "Instruction for completing wire connections"
+  },
+  "instructionDeleteComponents": "Long-press components to delete them",
+  "@instructionDeleteComponents": {
+    "description": "Instruction for deleting components"
+  },
+  "instructionEvaluate": "Evaluate to run the circuit once",
+  "@instructionEvaluate": {
+    "description": "Instruction for circuit evaluation"
+  },
+  "pinColorsInfo": "Pin colors: Green = HIGH (1), Red = LOW (0)",
+  "@pinColorsInfo": {
+    "description": "Information about pin color coding"
+  },
+
+  "componentPaletteTitle": "Components",
+  "@componentPaletteTitle": {
+    "description": "Component palette title"
+  },
+  "componentSelected": "{componentName} selected",
+  "@componentSelected": {
+    "description": "Snackbar message when component is selected",
+    "placeholders": {
+      "componentName": {
+        "type": "String",
+        "example": "AND Gate"
+      }
+    }
+  },
+
+  "andGate": "AND Gate",
+  "orGate": "OR Gate",
+  "notGate": "NOT Gate",
+  "nandGate": "NAND Gate",
+  "norGate": "NOR Gate",
+  "xorGate": "XOR Gate",
+  "clock": "Clock",
+  "dLatch": "D-Latch",
+  "dFlipFlop": "D-Flip-Flop",
+  "inputSource": "Input",
+  "outputProbe": "Output",
+
+  "componentMenuTitle": "{componentType} Component",
+  "@componentMenuTitle": {
+    "description": "Title for component context menu",
+    "placeholders": {
+      "componentType": {
+        "type": "String",
+        "example": "AND"
+      }
+    }
+  },
+  "componentMenuPrompt": "What would you like to do?",
+  "@componentMenuPrompt": {
+    "description": "Prompt in component context menu"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button"
+  },
+
+  "toggleBitwidth": "Toggle bitwidth",
+  "@toggleBitwidth": {
+    "description": "Tooltip for bitwidth toggle button"
+  },
+  "bitwidthLabel": "{bitWidth}-bit",
+  "@bitwidthLabel": {
+    "description": "Bitwidth display label",
+    "placeholders": {
+      "bitWidth": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+
+  "outputLabel": "{bitWidth}-bit output",
+  "@outputLabel": {
+    "description": "Output component bitwidth label",
+    "placeholders": {
+      "bitWidth": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+
+  "rangeLabel": "{min} .. {max}",
+  "@rangeLabel": {
+    "description": "Value range display",
+    "placeholders": {
+      "min": {
+        "type": "String",
+        "example": "0"
+      },
+      "max": {
+        "type": "String",
+        "example": "255"
+      }
+    }
+  }
+}

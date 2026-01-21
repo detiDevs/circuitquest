@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/components/input_source.dart';
 import '../../state/sandbox_state.dart';
 
@@ -71,7 +72,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
             children: [
           // Bitwidth toggle button
           Tooltip(
-            message: 'Toggle bitwidth',
+            message: AppLocalizations.of(context)!.toggleBitwidth,
             child: GestureDetector(
               onTap: () {
                 int newBitWidth;
@@ -98,7 +99,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  '$bitWidth-bit',
+                  AppLocalizations.of(context)!.bitwidthLabel(bitWidth),
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.bold,
