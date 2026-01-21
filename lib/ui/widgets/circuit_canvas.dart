@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../state/sandbox_state.dart';
+import '../../core/components/input_source.dart';
+import '../../core/components/output_probe.dart';
 import 'component_palette.dart';
+import 'input_source_widget.dart';
+import 'output_probe_widget.dart';
 
 /// The main canvas where components are placed and connected.
 ///
@@ -346,26 +350,65 @@ class _PlacedComponentWidget extends ConsumerWidget {
               ),
             ],
           ),
-          child: Stack(
-            children: [
-              // Component icon with fallback to name text
-              Center(
-                child: SvgPicture.asset(
-                  componentType.svgAsset,
-                  width: gridSize * 0.7,
-                  height: gridSize * 0.7,
-                  fit: BoxFit.contain,
-                  placeholderBuilder: (context) => Text(placedComponent.type),
-                ),
-              ),
-              // Input pins (left side)
-              ..._buildInputPins(context, state),
-              // Output pins (right side)
-              ..._buildOutputPins(context, state),
-            ],
-          ),
+            child: placedComponent.component is InputSource
+                ? _buildInputControls(
+                    placedComponent.component as InputSource,
+                    placedComponent,
+                    ref,
+                  )
+                : placedComponent.component is OutputProbe
+                    ? _buildOutputProbe(
+                        placedComponent.component as OutputProbe,
+                        placedComponent,
+                        ref,
+                      )
+                    : Stack(
+                        children: [
+                          // Component icon with fallback to name text
+                          Center(
+                            child: SvgPicture.asset(
+                              componentType.svgAsset,
+                              width: gridSize * 0.7,
+                              height: gridSize * 0.7,
+                              fit: BoxFit.contain,
+                              placeholderBuilder: (context) => Text(placedComponent.type),
+                            ),
+                          ),
+                          // Input pins (left side)
+                          ..._buildInputPins(context, state),
+                          // Output pins (right side)
+                          ..._buildOutputPins(context, state),
+                        ],
+                      ),
         ),
       ),
+    );
+  }
+
+  /// Builds input controls for InputSource components.
+  Widget _buildInputControls(
+    InputSource inputComponent,
+    PlacedComponent placed,
+    WidgetRef ref,
+  ) {
+    return InputSourceWidget(
+      inputComponent: inputComponent,
+      placedComponent: placed,
+      ref: ref,
+      gridSize: gridSize,
+    );
+  }
+
+  Widget _buildOutputProbe(
+    OutputProbe outputComponent,
+    PlacedComponent placed,
+    WidgetRef ref,
+  ) {
+    return OutputProbeWidget(
+      outputComponent: outputComponent,
+      placedComponent: placed,
+      ref: ref,
+      gridSize: gridSize,
     );
   }
 

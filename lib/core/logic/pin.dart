@@ -44,5 +44,12 @@ class OutputPin extends Pin {
   void connect(Wire wire) {
     connections.add(wire);
   }
+
+  /// Creates a new OutputPin with the same component but different bitwidth.
+  OutputPin copyWith(int newBitWidth) {
+    final newPin = OutputPin(component, bitWidth: newBitWidth);
+    newPin.value = value; // Preserve the value, it will be masked
+    return newPin;
+  }
 }
 

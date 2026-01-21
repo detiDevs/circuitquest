@@ -3,9 +3,13 @@ import 'package:circuitquest_flutter/core/components/base/component.dart';
 import 'package:circuitquest_flutter/core/logic/pin.dart';
 
 class OutputProbe extends Component {
-  OutputProbe({int bitWidth = 1}) {
-    inputs['input'] = InputPin(this, bitWidth: bitWidth);
+  OutputProbe() {
+    // Default to a wide input; actual width is effectively the source's width.
+    inputs['input'] = InputPin(this, bitWidth: 32);
   }
+
+  /// Current bitwidth is driven by the connected source if present.
+  int get bitWidth => inputs['input']!.source?.from.bitWidth ?? inputs['input']!.bitWidth;
 
   int get value {
     inputs['input']!.updateFromSource();
