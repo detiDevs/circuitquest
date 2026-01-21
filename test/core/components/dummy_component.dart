@@ -1,5 +1,5 @@
 // Dummy component for testing
-import 'package:circuitquest_flutter/core/components/base/component.dart';
+import 'package:circuitquest/core/components/base/component.dart';
 
 class DummyComponent extends Component {
   @override

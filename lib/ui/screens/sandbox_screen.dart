@@ -1,3 +1,4 @@
+import 'package:circuitquest/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/component_palette.dart';
@@ -19,7 +20,7 @@ class SandboxScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CircuitQuest - Sandbox Mode'),
+        title: const Text('${Constants.kAppName} - Sandbox Mode'),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
       ),

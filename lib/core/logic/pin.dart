@@ -1,5 +1,5 @@
-import 'package:circuitquest_flutter/core/components/base/component.dart';
-import 'package:circuitquest_flutter/core/logic/wire.dart';
+import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/logic/wire.dart';
 
 abstract class Pin {
   final Component component;

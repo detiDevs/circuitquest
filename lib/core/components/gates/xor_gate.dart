@@ -1,4 +1,4 @@
-import 'package:circuitquest_flutter/core/components/gates/binary_gate.dart';
+import 'package:circuitquest/core/components/gates/binary_gate.dart';
 
 class XorGate extends BinaryGate {
   @override

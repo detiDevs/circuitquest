@@ -1,6 +1,6 @@
 // Input source component for testing
-import 'package:circuitquest_flutter/core/components/base/component.dart';
-import 'package:circuitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 
 class InputSource extends Component {
   InputSource({int bitWidth = 1}) {

@@ -1,4 +1,4 @@
-import 'package:circuitquest_flutter/core/components/sequential/register.dart';
+import 'package:circuitquest/core/components/sequential/register.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

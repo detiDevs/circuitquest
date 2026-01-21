@@ -1,3 +1,4 @@
+import 'package:circuitquest/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'ui/screens/sandbox_screen.dart';
@@ -17,7 +18,7 @@ class CircuitQuestApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CircuitQuest',
+      title: Constants.kAppName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

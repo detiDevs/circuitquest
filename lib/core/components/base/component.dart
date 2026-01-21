@@ -1,4 +1,4 @@
-import 'package:circuitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 
 abstract class Component {
   static int _nextId = 0;

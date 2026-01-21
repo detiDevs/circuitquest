@@ -1,11 +1,11 @@
-import 'package:circuitquest_flutter/core/components/base/component.dart';
-import 'package:circuitquest_flutter/core/components/gates/and_gate.dart';
-import 'package:circuitquest_flutter/core/components/gates/not_gate.dart';
-import 'package:circuitquest_flutter/core/components/gates/or_gate.dart';
-import 'package:circuitquest_flutter/core/components/input_source.dart';
-import 'package:circuitquest_flutter/core/components/output_probe.dart';
-import 'package:circuitquest_flutter/core/logic/wire.dart';
-import 'package:circuitquest_flutter/core/simulation/simulator.dart';
+import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/components/gates/and_gate.dart';
+import 'package:circuitquest/core/components/gates/not_gate.dart';
+import 'package:circuitquest/core/components/gates/or_gate.dart';
+import 'package:circuitquest/core/components/input_source.dart';
+import 'package:circuitquest/core/components/output_probe.dart';
+import 'package:circuitquest/core/logic/wire.dart';
+import 'package:circuitquest/core/simulation/simulator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

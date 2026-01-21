@@ -1,5 +1,5 @@
-import 'package:circuitquest_flutter/core/components/base/component.dart';
-import 'package:circuitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 
 /// D Latch - stores a value when clock is high
 /// When clock is high (1), output Q follows input D

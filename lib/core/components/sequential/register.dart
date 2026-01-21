@@ -1,5 +1,5 @@
-import 'package:circuitquest_flutter/core/components/base/component.dart';
-import 'package:circuitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 
 /// Register - stores a multi-bit value on the rising edge of the clock
 class Register extends Component {

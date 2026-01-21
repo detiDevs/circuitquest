@@ -1,5 +1,5 @@
-import 'package:circuitquest_flutter/core/components/input_source.dart';
-import 'package:circuitquest_flutter/core/components/output_probe.dart';
+import 'package:circuitquest/core/components/input_source.dart';
+import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,4 +1,4 @@
-import 'package:circuitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 
 class Wire {
   final OutputPin from;

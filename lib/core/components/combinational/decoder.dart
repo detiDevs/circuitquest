@@ -1,5 +1,5 @@
-import 'package:circuitquest_flutter/core/components/base/component.dart';
-import 'package:circuitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 
 /// Binary decoder: converts an N-bit input into 2^N one-hot outputs.
 class Decoder extends Component {

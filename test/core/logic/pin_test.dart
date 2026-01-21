@@ -1,5 +1,5 @@
-import 'package:circuitquest_flutter/core/logic/pin.dart';
-import 'package:circuitquest_flutter/core/logic/wire.dart';
+import 'package:circuitquest/core/logic/pin.dart';
+import 'package:circuitquest/core/logic/wire.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../components/dummy_component.dart';

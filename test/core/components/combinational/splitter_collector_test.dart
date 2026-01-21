@@ -1,5 +1,5 @@
-import 'package:circuitquest_flutter/core/components/combinational/collector.dart';
-import 'package:circuitquest_flutter/core/components/combinational/splitter.dart';
+import 'package:circuitquest/core/components/combinational/collector.dart';
+import 'package:circuitquest/core/components/combinational/splitter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

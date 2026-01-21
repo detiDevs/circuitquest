@@ -1,5 +1,5 @@
-import 'package:circuitquest_flutter/core/components/base/component.dart';
-import 'package:circuitquest_flutter/core/logic/pin.dart';
+import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 
 /// Multiplexer that forwards one of several data inputs to a single output
 /// based on the binary value of the select input.

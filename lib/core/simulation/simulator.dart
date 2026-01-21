@@ -1,4 +1,4 @@
-import 'package:circuitquest_flutter/core/components/base/component.dart';
+import 'package:circuitquest/core/components/base/component.dart';
 
 typedef UpdateCallback = void Function(Set<Component> components);
 typedef WaitCallback = void Function();

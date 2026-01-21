@@ -1,4 +1,4 @@
-import 'package:circuitquest_flutter/core/components/gates/xor_gate.dart';
+import 'package:circuitquest/core/components/gates/xor_gate.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
