@@ -216,5 +216,6 @@
 
   "util": "",
   "retry": "Retry",
-  "selected": "Selected"
+  "selected": "Selected",
+  "settings": "Settings"
 }

@@ -215,5 +215,6 @@
 
   "util": "",
   "retry": "Erneut versuchen",
-  "selected": "Ausgewählt"
+  "selected": "Ausgewählt",
+  "settings": "Einstellungen"
 }

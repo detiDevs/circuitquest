@@ -1,4 +1,5 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:circuitquest/constants.dart';
@@ -77,6 +78,17 @@ class HomeScreen extends StatelessWidget {
                       );
                     },
                   ),
+                  _ModeButton(
+                    title: AppLocalizations.of(context)!.settings,
+                    description: "",
+                    icon: Icons.settings,
+                    color: Colors.blue,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => const SettingsScreen())
+                      );
+                    },
+                  )
                 ],
               ),
             ),

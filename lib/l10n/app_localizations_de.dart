@@ -215,4 +215,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get selected => 'Ausgewählt';
+
+  @override
+  String get settings => 'Einstellungen';
 }
