@@ -206,6 +206,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settings => 'Settings';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get systemDefault => 'System default';
+
+  @override
   String get util => '';
 
   @override
@@ -213,7 +222,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selected => 'Selected';
-
-  @override
-  String get settings => 'Settings';
 }

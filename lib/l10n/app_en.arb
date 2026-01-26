@@ -214,8 +214,11 @@
     }
   },
 
+  "settings": "Settings",
+  "language": "Language",
+  "systemDefault": "System default",
+
   "util": "",
   "retry": "Retry",
-  "selected": "Selected",
-  "settings": "Settings"
+  "selected": "Selected"
 }

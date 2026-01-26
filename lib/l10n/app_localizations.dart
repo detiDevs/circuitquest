@@ -458,6 +458,24 @@ abstract class AppLocalizations {
   /// **'{min} .. {max}'**
   String rangeLabel(String min, String max);
 
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @systemDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'System default'**
+  String get systemDefault;
+
   /// No description provided for @util.
   ///
   /// In en, this message translates to:
@@ -475,12 +493,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Selected'**
   String get selected;
-
-  /// No description provided for @settings.
-  ///
-  /// In en, this message translates to:
-  /// **'Settings'**
-  String get settings;
 }
 
 class _AppLocalizationsDelegate

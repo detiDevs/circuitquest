@@ -213,8 +213,11 @@
     }  
   },
 
+  "settings": "Einstellungen",
+  "language": "Sprache",
+  "systemDefault": "Systemeinstellung",
+
   "util": "",
   "retry": "Erneut versuchen",
-  "selected": "Ausgewählt",
-  "settings": "Einstellungen"
+  "selected": "Ausgewählt"
 }

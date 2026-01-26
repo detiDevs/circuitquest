@@ -45,12 +45,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           Text(
-            'App language',
+            AppLocalizations.of(context)!.language,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           RadioListTile<String>(
-            title: const Text('System default'),
+            title: Text(
+              AppLocalizations.of(context)!.systemDefault
+            ),
             value: 'sys-default',
             groupValue: _localeChoice,
             onChanged: _updateLocale,
