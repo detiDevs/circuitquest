@@ -1,8 +1,7 @@
 import 'package:circuitquest/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'ui/screens/sandbox_screen.dart';
+import 'ui/screens/home_screen.dart';
 import 'l10n/app_localizations.dart';
 
 void main() {
@@ -27,7 +26,7 @@ class CircuitQuestApp extends StatelessWidget {
       ),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: SandboxScreen(),
+      home: const HomeScreen(),
     );
   }
 }
