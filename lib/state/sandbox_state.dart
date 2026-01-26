@@ -265,6 +265,18 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Fully reset the sandbox state (used when entering a fresh scene).
+  void reset() {
+    _placedComponents.clear();
+    _connections.clear();
+    _wireDrawingStart = null;
+    _isSimulating = false;
+    _selectedComponentType = null;
+    _draggingComponent = null;
+    _simulator = null;
+    _nextComponentId = 0;
+  }
+
   /// Gets a component by its ID.
   PlacedComponent? getComponent(String id) {
     try {

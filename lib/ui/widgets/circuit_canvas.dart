@@ -32,6 +32,13 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   Offset? _currentPointerPosition;
 
   @override
+  void deactivate() {
+    super.deactivate();
+    final state = ref.watch(sandboxProvider);
+    state.reset();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(sandboxProvider);
 
