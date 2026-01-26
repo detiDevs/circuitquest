@@ -104,11 +104,89 @@ abstract class AppLocalizations {
   /// **'CircuitQuest'**
   String get appTitle;
 
+  /// No description provided for @appDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Master Digital Logic and Processor Design'**
+  String get appDescription;
+
   /// Title for sandbox mode screen
   ///
   /// In en, this message translates to:
   /// **'Sandbox Mode'**
   String get sandboxModeTitle;
+
+  /// No description provided for @sandboxModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Design circuits freely\nwithout constraints'**
+  String get sandboxModeDescription;
+
+  /// No description provided for @levelModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Level Mode'**
+  String get levelModeTitle;
+
+  /// No description provided for @levelModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete circuit challenges and progress through levels'**
+  String get levelModeDescription;
+
+  /// No description provided for @failedToLoadLevels.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load levels'**
+  String get failedToLoadLevels;
+
+  /// No description provided for @failedToLoadLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load level'**
+  String get failedToLoadLevel;
+
+  /// No description provided for @selectALevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a level'**
+  String get selectALevel;
+
+  /// No description provided for @noLevelsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No levels available'**
+  String get noLevelsAvailable;
+
+  /// No description provided for @recommendedLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended level'**
+  String get recommendedLevel;
+
+  /// No description provided for @availableComponents.
+  ///
+  /// In en, this message translates to:
+  /// **'Available components'**
+  String get availableComponents;
+
+  /// No description provided for @levelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get levelDescription;
+
+  /// No description provided for @levelObjectives.
+  ///
+  /// In en, this message translates to:
+  /// **'Objectives'**
+  String get levelObjectives;
+
+  /// No description provided for @levelHints.
+  ///
+  /// In en, this message translates to:
+  /// **'Hints'**
+  String get levelHints;
 
   /// Control panel title
   ///
@@ -379,6 +457,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{min} .. {max}'**
   String rangeLabel(String min, String max);
+
+  /// No description provided for @util.
+  ///
+  /// In en, this message translates to:
+  /// **''**
+  String get util;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get selected;
 }
 
 class _AppLocalizationsDelegate

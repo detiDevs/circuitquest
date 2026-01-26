@@ -1,3 +1,4 @@
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:circuitquest/constants.dart';
@@ -35,7 +36,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 16),
             // Subtitle
             Text(
-              'Master Digital Logic and Processor Design',
+              AppLocalizations.of(context)!.appDescription,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Colors.grey[600],
               ),
@@ -49,8 +50,8 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   // Level Mode Button
                   _ModeButton(
-                    title: 'Level Mode',
-                    description: 'Complete circuit challenges\nand progress through levels',
+                    title: AppLocalizations.of(context)!.levelModeTitle,
+                    description: AppLocalizations.of(context)!.levelModeDescription,
                     icon: Icons.school,
                     color: Colors.green,
                     onPressed: () {
@@ -64,8 +65,8 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   // Sandbox Mode Button
                   _ModeButton(
-                    title: 'Sandbox Mode',
-                    description: 'Design circuits freely\nwithout constraints',
+                    title: AppLocalizations.of(context)!.sandboxModeTitle,
+                    description: AppLocalizations.of(context)!.sandboxModeDescription,
                     icon: Icons.construction,
                     color: Colors.orange,
                     onPressed: () {

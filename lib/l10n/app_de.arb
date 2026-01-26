@@ -1,13 +1,28 @@
 {
-  "appTitle": "SchaltkreisQuest",
+  "appTitle": "CircuitQuest",
   "@appTitle": {
     "description": "Anwendungstitel"
   },
+  "appDescription": "Meistere Rechnerarchitektur und Prozessorentwicklung",
+
 
   "sandboxModeTitle": "Sandbox-Modus",
   "@sandboxModeTitle": {
     "description": "Titel für Sandbox-Modus-Bildschirm"
   },
+  "sandboxModeDescription": "Entwerfe eigene Schaltungen ohne Einschränkungen",
+
+  "levelModeTitle": "Level Modus",
+  "levelModeDescription": "Lerne spielerisch anhand von Levels",
+  "failedToLoadLevels": "Fehler beim Laden der Level",
+  "failedToLoadLevel": "Fehler beim laden des Levels",
+  "selectALevel": "Wähle ein level",
+  "noLevelsAvailable": "Keine Level verfügbar",
+  "recommendedLevel": "Empfohlenes level",
+  "availableComponents": "Verfügbare Komponenten",
+  "levelDescription": "Beschreibung",
+  "levelObjectives": "Ziele",
+  "levelHints": "Tipps",
 
   "controlsTitle": "Steuerung",
   "@controlsTitle": {
@@ -195,5 +210,10 @@
         "type": "String",
         "example": "255"
       }
-    }  }
+    }  
+  },
+
+  "util": "",
+  "retry": "Erneut versuchen",
+  "selected": "Ausgewählt"
 }

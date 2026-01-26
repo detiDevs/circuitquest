@@ -1,3 +1,4 @@
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:circuitquest/levels/levels.dart';
 import 'level_screen.dart';
@@ -35,7 +36,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
       });
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to load levels: $e';
+        _errorMessage = '${AppLocalizations.of(context)!.failedToLoadLevels}: $e';
         _isLoading = false;
       });
     }
@@ -45,7 +46,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select a Level'),
+        title: Text(AppLocalizations.of(context)!.selectALevel),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
       ),
@@ -77,7 +78,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                 });
                 _loadLevelBlocks();
               },
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.retry),
             ),
           ],
         ),
@@ -85,8 +86,8 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
     }
 
     if (_levelBlocks == null || _levelBlocks!.isEmpty) {
-      return const Center(
-        child: Text('No levels available'),
+      return Center(
+        child: Text(AppLocalizations.of(context)!.noLevelsAvailable),
       );
     }
 
@@ -182,7 +183,7 @@ class _LevelCard extends StatelessWidget {
           } catch (e) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Failed to load level: $e')),
+                SnackBar(content: Text('${AppLocalizations.of(context)!.failedToLoadLevel}: $e')),
               );
             }
           }
@@ -215,8 +216,8 @@ class _LevelCard extends StatelessWidget {
                       horizontal: 8,
                       vertical: 4,
                     ),
-                    child: const Text(
-                      'Recommended',
+                    child: Text(
+                      AppLocalizations.of(context)!.recommendedLevel,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 10,

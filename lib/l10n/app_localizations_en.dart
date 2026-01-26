@@ -12,7 +12,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'CircuitQuest';
 
   @override
+  String get appDescription => 'Master Digital Logic and Processor Design';
+
+  @override
   String get sandboxModeTitle => 'Sandbox Mode';
+
+  @override
+  String get sandboxModeDescription =>
+      'Design circuits freely\nwithout constraints';
+
+  @override
+  String get levelModeTitle => 'Level Mode';
+
+  @override
+  String get levelModeDescription =>
+      'Complete circuit challenges and progress through levels';
+
+  @override
+  String get failedToLoadLevels => 'Failed to load levels';
+
+  @override
+  String get failedToLoadLevel => 'Failed to load level';
+
+  @override
+  String get selectALevel => 'Select a level';
+
+  @override
+  String get noLevelsAvailable => 'No levels available';
+
+  @override
+  String get recommendedLevel => 'Recommended level';
+
+  @override
+  String get availableComponents => 'Available components';
+
+  @override
+  String get levelDescription => 'Description';
+
+  @override
+  String get levelObjectives => 'Objectives';
+
+  @override
+  String get levelHints => 'Hints';
 
   @override
   String get controlsTitle => 'Controls';
@@ -163,4 +204,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String rangeLabel(String min, String max) {
     return '$min .. $max';
   }
+
+  @override
+  String get util => '';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get selected => 'Selected';
 }

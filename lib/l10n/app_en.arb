@@ -3,11 +3,26 @@
   "@appTitle": {
     "description": "Application title"
   },
+  "appDescription": "Master Digital Logic and Processor Design",
 
   "sandboxModeTitle": "Sandbox Mode",
   "@sandboxModeTitle": {
     "description": "Title for sandbox mode screen"
   },
+  "sandboxModeDescription": "Design circuits freely\nwithout constraints",
+
+  "levelModeTitle": "Level Mode",
+  "levelModeDescription": "Complete circuit challenges and progress through levels",
+  "failedToLoadLevels": "Failed to load levels",
+  "failedToLoadLevel": "Failed to load level",
+  "selectALevel": "Select a level",
+  "noLevelsAvailable": "No levels available",
+  "recommendedLevel": "Recommended level",
+  "availableComponents": "Available components",
+  "levelDescription": "Description",
+  "levelObjectives": "Objectives",
+  "levelHints": "Hints",
+
 
   "controlsTitle": "Controls",
   "@controlsTitle": {
@@ -197,5 +212,9 @@
         "example": "255"
       }
     }
-  }
+  },
+
+  "util": "",
+  "retry": "Retry",
+  "selected": "Selected"
 }

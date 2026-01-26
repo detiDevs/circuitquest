@@ -9,10 +9,51 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get appTitle => 'SchaltkreisQuest';
+  String get appTitle => 'CircuitQuest';
+
+  @override
+  String get appDescription =>
+      'Meistere Rechnerarchitektur und Prozessorentwicklung';
 
   @override
   String get sandboxModeTitle => 'Sandbox-Modus';
+
+  @override
+  String get sandboxModeDescription =>
+      'Entwerfe eigene Schaltungen ohne Einschränkungen';
+
+  @override
+  String get levelModeTitle => 'Level Modus';
+
+  @override
+  String get levelModeDescription => 'Lerne spielerisch anhand von Levels';
+
+  @override
+  String get failedToLoadLevels => 'Fehler beim Laden der Level';
+
+  @override
+  String get failedToLoadLevel => 'Fehler beim laden des Levels';
+
+  @override
+  String get selectALevel => 'Wähle ein level';
+
+  @override
+  String get noLevelsAvailable => 'Keine Level verfügbar';
+
+  @override
+  String get recommendedLevel => 'Empfohlenes level';
+
+  @override
+  String get availableComponents => 'Verfügbare Komponenten';
+
+  @override
+  String get levelDescription => 'Beschreibung';
+
+  @override
+  String get levelObjectives => 'Ziele';
+
+  @override
+  String get levelHints => 'Tipps';
 
   @override
   String get controlsTitle => 'Steuerung';
@@ -165,4 +206,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String rangeLabel(String min, String max) {
     return '$min .. $max';
   }
+
+  @override
+  String get util => '';
+
+  @override
+  String get retry => 'Erneut versuchen';
+
+  @override
+  String get selected => 'Ausgewählt';
 }

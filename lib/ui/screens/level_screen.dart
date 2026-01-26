@@ -1,3 +1,4 @@
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -114,7 +115,7 @@ class _LevelScreenBody extends ConsumerWidget {
                     ),
                   ),
                   child: ExpansionTile(
-                    title: const Text('Available Components'),
+                    title: Text(AppLocalizations.of(context)!.availableComponents),
                     initiallyExpanded: false,
                     children: const [
                       SizedBox(
@@ -139,7 +140,7 @@ class _LevelScreenBody extends ConsumerWidget {
                     ),
                   ),
                   child: ExpansionTile(
-                    title: const Text('Controls & Simulation'),
+                    title: Text(AppLocalizations.of(context)!.controlsTitle),
                     initiallyExpanded: false,
                     children: const [
                       SizedBox(
@@ -192,7 +193,7 @@ class _LevelInfoPanel extends ConsumerWidget {
 
             // Description
             Text(
-              'Description',
+              AppLocalizations.of(context)!.levelDescription,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -206,7 +207,7 @@ class _LevelInfoPanel extends ConsumerWidget {
 
             // Objectives
             Text(
-              'Objectives',
+              AppLocalizations.of(context)!.levelObjectives,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -239,7 +240,7 @@ class _LevelInfoPanel extends ConsumerWidget {
             // Hints
             if (level.hints.isNotEmpty) ...[
               Text(
-                'Hints',
+                AppLocalizations.of(context)!.levelHints,
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -370,7 +371,7 @@ class _LimitedComponentPalette extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            'Components',
+            AppLocalizations.of(context)!.availableComponents,
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -447,7 +448,7 @@ class _PaletteItem extends ConsumerWidget {
           ref.read(sandboxProvider).selectComponentType(componentType.name);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Selected: ${componentType.displayName}'),
+              content: Text('${AppLocalizations.of(context)!.selected}: ${componentType.displayName}'),
               duration: const Duration(seconds: 1),
             ),
           );
