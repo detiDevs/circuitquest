@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vector_math/vector_math_64.dart' show Vector3, Matrix4;
 import '../../l10n/app_localizations.dart';
 import '../../state/sandbox_state.dart';
 import '../../core/components/input_source.dart';
@@ -39,11 +40,20 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   /// Whether initial components were placed from the level
   bool _initializedFromLevel = false;
 
+  /// Controller for handling pan and zoom transformations
+  final TransformationController _transformationController = TransformationController();
+
+  @override
+  void dispose() {
+    _transformationController.dispose();
+    super.dispose();
+  }
+
   @override
   void deactivate() {
-    super.deactivate();
     final state = ref.watch(sandboxProvider);
     state.reset();
+    super.deactivate();
   }
 
   @override
@@ -122,63 +132,75 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
             );
       },
       builder: (context, candidateData, rejectedData) {
-        return MouseRegion(
-          onHover: (event) {
-            // Track mouse position for wire drawing feedback
-            if (state.wireDrawingStart != null) {
-              setState(() {
-                _currentPointerPosition = event.localPosition;
-              });
-            }
-          },
-          child: GestureDetector(
-            onTapDown: (details) {
-              // Cancel wire drawing only when tapping empty space
+        return InteractiveViewer(
+          transformationController: _transformationController,
+          boundaryMargin: const EdgeInsets.all(1000),
+          minScale: 0.1,
+          maxScale: 4.0,
+          constrained: false,
+          child: MouseRegion(
+            onHover: (event) {
+              // Track mouse position for wire drawing feedback
               if (state.wireDrawingStart != null) {
-                final hitComponent = _hitTestComponent(state, details.localPosition);
-                if (hitComponent == null) {
-                  state.cancelWireDrawing();
-                  setState(() {
-                    _currentPointerPosition = null;
-                  });
-                }
+                setState(() {
+                  _currentPointerPosition = _transformPosition(event.localPosition);
+                });
               }
             },
-            onPanUpdate: (details) {
-              // Track pointer position for wire drawing
-              setState(() {
-                _currentPointerPosition = details.localPosition;
-              });
-            },
-            onPanEnd: (details) {
-              setState(() {
-                _currentPointerPosition = null;
-              });
-            },
-            child: CustomPaint(
-              painter: _GridPainter(),
-              child: Stack(
-                children: [
-                  // Draw wires
-                  CustomPaint(
-                    painter: _WirePainter(
-                      connections: state.connections,
-                      placedComponents: state.placedComponents,
-                      wireDrawingStart: state.wireDrawingStart,
-                      currentPointerPosition: _currentPointerPosition,
-                      gridSize: gridSize,
-                    ),
-                    child: Container(),
+            child: GestureDetector(
+              onTapDown: (details) {
+                // Cancel wire drawing only when tapping empty space
+                if (state.wireDrawingStart != null) {
+                  final transformedPos = _transformPosition(details.localPosition);
+                  final hitComponent = _hitTestComponent(state, transformedPos);
+                  if (hitComponent == null) {
+                    state.cancelWireDrawing();
+                    setState(() {
+                      _currentPointerPosition = null;
+                    });
+                  }
+                }
+              },
+              onPanUpdate: (details) {
+                // Track pointer position for wire drawing
+                setState(() {
+                  _currentPointerPosition = _transformPosition(details.localPosition);
+                });
+              },
+              onPanEnd: (details) {
+                setState(() {
+                  _currentPointerPosition = null;
+                });
+              },
+              child: SizedBox(
+                width: 4000,
+                height: 4000,
+                child: CustomPaint(
+                  painter: _GridPainter(),
+                  child: Stack(
+                    children: [
+                      // Draw wires
+                      CustomPaint(
+                        painter: _WirePainter(
+                          connections: state.connections,
+                          placedComponents: state.placedComponents,
+                          wireDrawingStart: state.wireDrawingStart,
+                          currentPointerPosition: _currentPointerPosition,
+                          gridSize: gridSize,
+                        ),
+                        child: Container(),
+                      ),
+                      // Draw components
+                      ...state.placedComponents.map((placed) {
+                        return _PlacedComponentWidget(
+                          key: ValueKey(placed.id),
+                          placedComponent: placed,
+                          gridSize: gridSize,
+                        );
+                      }),
+                    ],
                   ),
-                  // Draw components
-                  ...state.placedComponents.map((placed) {
-                    return _PlacedComponentWidget(
-                      key: ValueKey(placed.id),
-                      placedComponent: placed,
-                      gridSize: gridSize,
-                    );
-                  }),
-                ],
+                ),
               ),
             ),
           ),
@@ -209,6 +231,18 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
       }
     }
     return null;
+  }
+
+  /// Transforms screen coordinates to canvas coordinates accounting for zoom/pan
+  Offset _transformPosition(Offset screenPosition) {
+    final Matrix4 transform = _transformationController.value;
+    final Matrix4 inverseTransform = Matrix4.inverted(transform);
+    final Vector3 transformed = inverseTransform.transform3(Vector3(
+      screenPosition.dx,
+      screenPosition.dy,
+      0,
+    ));
+    return Offset(transformed.x, transformed.y);
   }
 }
 
