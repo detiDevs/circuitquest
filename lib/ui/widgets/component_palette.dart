@@ -15,6 +15,7 @@ import '../../core/components/sequential/d_latch.dart';
 import '../../core/components/sequential/d_flip_flop.dart';
 import '../../core/components/base/component.dart';
 import '../../state/sandbox_state.dart';
+import '../../core/components/combinational/adder.dart';
 
 /// A draggable component type in the palette.
 class ComponentType {
@@ -69,6 +70,19 @@ final List<ComponentType> availableComponents = [
     displayName: 'XOR Gate',
     svgAsset: 'assets/gates/Xor.svg',
     createComponent: () => XorGate(),
+  ),
+  // Adders
+  ComponentType(
+    name: 'HalfAdder',
+    displayName: 'Half Adder',
+    svgAsset: 'assets/gates/HalfAdder.svg',
+    createComponent: () => HalfAdder(),
+  ),
+  ComponentType(
+    name: 'FullAdder',
+    displayName: 'Full Adder',
+    svgAsset: 'assets/gates/FullAdder.svg',
+    createComponent: () => FullAdder(),
   ),
   // Sequential components
   ComponentType(

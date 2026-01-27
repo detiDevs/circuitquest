@@ -5,6 +5,8 @@ import '../../l10n/app_localizations.dart';
 import '../../state/sandbox_state.dart';
 import '../../core/components/input_source.dart';
 import '../../core/components/output_probe.dart';
+import 'package:circuitquest/levels/level.dart';
+import '../../core/components/base/component.dart';
 import 'component_palette.dart';
 import 'input_source_widget.dart';
 import 'output_probe_widget.dart';
@@ -18,7 +20,10 @@ import 'output_probe_widget.dart';
 /// - Wire drawing between component pins
 /// - Interactive component visualization
 class CircuitCanvas extends ConsumerStatefulWidget {
-  const CircuitCanvas({super.key});
+  /// Optional level for pre-placing components on the canvas
+  final Level? level;
+
+  const CircuitCanvas({super.key, this.level});
 
   @override
   ConsumerState<CircuitCanvas> createState() => _CircuitCanvasState();
@@ -31,11 +36,70 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   /// Current mouse/touch position for wire drawing
   Offset? _currentPointerPosition;
 
+  /// Whether initial components were placed from the level
+  bool _initializedFromLevel = false;
+
   @override
   void deactivate() {
     super.deactivate();
     final state = ref.watch(sandboxProvider);
     state.reset();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Try to initialize from level after first frame to ensure provider readiness
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeFromLevelIfNeeded();
+    });
+  }
+
+  void _initializeFromLevelIfNeeded() {
+    if (_initializedFromLevel) return;
+    final level = widget.level;
+    if (level == null) return;
+
+    final state = ref.read(sandboxProvider);
+    state.reset();
+
+    for (final lc in level.components) {
+      final resolved = _resolveComponentForLevelType(lc.type);
+      if (resolved == null) continue;
+
+      final position = Offset(
+        (lc.position[0]) * gridSize,
+        (lc.position[1]) * gridSize,
+      );
+
+      state.placeComponent(
+        resolved.typeName,
+        position,
+        resolved.component,
+        immovable: lc.immovable,
+        label: lc.label,
+      );
+    }
+
+    _initializedFromLevel = true;
+  }
+
+  /// Maps a level component type to a concrete component and canonical type name.
+  ({String typeName, Component component})? _resolveComponentForLevelType(String type) {
+    switch (type) {
+      case 'Input':
+        return (typeName: 'InputSource', component: InputSource());
+      case 'Output':
+        return (typeName: 'OutputProbe', component: OutputProbe());
+      default:
+        // Try to resolve via availableComponents mapping
+        try {
+          final ct = availableComponents.firstWhere((c) => c.name == type);
+          return (typeName: ct.name, component: ct.createComponent());
+        } catch (_) {
+          return null;
+        }
+    }
   }
 
   @override
@@ -323,11 +387,13 @@ class _PlacedComponentWidget extends ConsumerWidget {
       top: placedComponent.position.dy,
       child: GestureDetector(
         onPanUpdate: (details) {
+          if (placedComponent.immovable) return;
           // Move component
           final newPosition = placedComponent.position + details.delta;
           ref.read(sandboxProvider).moveComponent(placedComponent.id, newPosition);
         },
         onPanEnd: (details) {
+          if (placedComponent.immovable) return;
           // Snap to grid when done dragging
           final snapped = Offset(
             (placedComponent.position.dx / gridSize).round() * gridSize,
@@ -336,10 +402,12 @@ class _PlacedComponentWidget extends ConsumerWidget {
           ref.read(sandboxProvider).moveComponent(placedComponent.id, snapped);
         },
         onSecondaryTapDown: (details) {
+          if (placedComponent.immovable) return;
           // Show context menu on right-click
           _showContextMenu(context, details.globalPosition, ref.read(sandboxProvider));
         },
         onLongPress: () {
+          if (placedComponent.immovable) return;
           // Show context menu on long press (for touch devices)
           _showComponentMenu(context, ref.read(sandboxProvider));
         },
@@ -372,6 +440,23 @@ class _PlacedComponentWidget extends ConsumerWidget {
                       )
                     : Stack(
                         children: [
+                          if (placedComponent.label != null)
+                            Positioned(
+                              top: 4,
+                              left: 6,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue[50],
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: Colors.blue[200]!),
+                                ),
+                                child: Text(
+                                  placedComponent.label!,
+                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
                           // Component icon with fallback to name text
                           Center(
                             child: SvgPicture.asset(
@@ -436,11 +521,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
           child: GestureDetector(
             onTap: () {
               if (state.wireDrawingStart != null) {
-                // Complete wire connection to this input
-                state.completeWireDrawing(
-                  placedComponent.id,
-                  entry.key,
-                );
+                state.completeWireDrawing(placedComponent.id, entry.key);
                 return;
               }
 

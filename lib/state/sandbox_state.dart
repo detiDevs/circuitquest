@@ -24,11 +24,19 @@ class PlacedComponent {
   /// Unique identifier for this placed component
   final String id;
 
+  /// Whether this component can be moved/removed by the player
+  final bool immovable;
+
+  /// Optional display label from level configuration (e.g., "A", "B")
+  final String? label;
+
   PlacedComponent({
     required this.type,
     required this.component,
     required this.position,
     required this.id,
+    this.immovable = false,
+    this.label,
   });
 }
 
@@ -103,13 +111,15 @@ class SandboxState extends ChangeNotifier {
   /// Adds a new component to the canvas at the specified position.
   ///
   /// Returns the ID of the newly placed component.
-  String placeComponent(String type, Offset position, Component component) {
+  String placeComponent(String type, Offset position, Component component, {bool immovable = false, String? label}) {
     final id = 'component_${_nextComponentId++}';
     final placed = PlacedComponent(
       type: type,
       component: component,
       position: position,
       id: id,
+      immovable: immovable,
+      label: label,
     );
     _placedComponents.add(placed);
     notifyListeners();
@@ -138,6 +148,8 @@ class SandboxState extends ChangeNotifier {
         component: component.component,
         position: newPosition,
         id: component.id,
+        immovable: component.immovable,
+        label: component.label,
       );
       notifyListeners();
     }

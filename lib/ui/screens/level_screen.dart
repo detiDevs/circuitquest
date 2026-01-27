@@ -78,8 +78,8 @@ class _LevelScreenBody extends ConsumerWidget {
                 ),
               ),
               // Center: Circuit Canvas
-              const Expanded(
-                child: CircuitCanvas(),
+              Expanded(
+                child: CircuitCanvas(level: _getCurrentLevel(context)),
               ),
               // Right: Control Panel
               SizedBox(
@@ -129,7 +129,7 @@ class _LevelScreenBody extends ConsumerWidget {
                 Container(
                   constraints: const BoxConstraints(minHeight: 400),
                   color: Colors.white,
-                  child: const CircuitCanvas(),
+                  child: CircuitCanvas(level: _getCurrentLevel(context)),
                 ),
                 // Control Panel (collapsible)
                 Container(
