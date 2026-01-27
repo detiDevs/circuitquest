@@ -171,7 +171,7 @@ class LevelBlockItem {
 /// Data model representing level progression metadata
 class LevelMeta {
   final List<int> completedLevels;
-  final bool allLevelsUnlocked;
+  bool allLevelsUnlocked;
 
   LevelMeta({
     required this.completedLevels,

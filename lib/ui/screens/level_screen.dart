@@ -91,7 +91,7 @@ class _LevelScreenBody extends ConsumerWidget {
                       left: BorderSide(color: Colors.grey[300]!),
                     ),
                   ),
-                  child: const ControlPanel(),
+                  child: ControlPanel(level: _getCurrentLevel(context)),
                 ),
               ),
             ],
@@ -142,9 +142,9 @@ class _LevelScreenBody extends ConsumerWidget {
                   child: ExpansionTile(
                     title: Text(AppLocalizations.of(context)!.controlsTitle),
                     initiallyExpanded: false,
-                    children: const [
+                    children: [
                       SizedBox(
-                        child: ControlPanel(),
+                        child: ControlPanel(level: _getCurrentLevel(context)),
                       ),
                     ],
                   ),

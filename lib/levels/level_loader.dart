@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:path_provider/path_provider.dart';
 import 'level.dart';
 
 /// Service class for loading level data from JSON assets
@@ -110,6 +112,7 @@ class LevelLoader {
   /// Load level metadata (progression info)
   /// 
   /// Returns the LevelMeta object containing completed levels and unlock status.
+  /// First tries to load from user documents directory, falls back to assets.
   Future<LevelMeta> loadLevelMeta() async {
     // Return cached version if available
     if (_levelMeta != null) {
@@ -117,6 +120,14 @@ class LevelLoader {
     }
 
     try {
+      // Try to load from user data directory first
+      final userMeta = await _loadUserMeta();
+      if (userMeta != null) {
+        _levelMeta = userMeta;
+        return userMeta;
+      }
+      
+      // Fall back to assets
       final String jsonString = await rootBundle.loadString(
         'assets/levels/meta.json',
       );
@@ -130,6 +141,46 @@ class LevelLoader {
       return meta;
     } catch (e) {
       throw Exception('Failed to load level metadata: $e');
+    }
+  }
+
+  /// Load metadata from user documents directory if it exists
+  Future<LevelMeta?> _loadUserMeta() async {
+    try {
+      final file = await _getUserMetaFile();
+      if (!await file.exists()) {
+        return null;
+      }
+      
+      final jsonString = await file.readAsString();
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      return LevelMeta.fromJson(jsonData);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// Get the path to the user meta file
+  Future<File> _getUserMetaFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final questDir = Directory('${dir.path}/CircuitQuest');
+    if (!await questDir.exists()) {
+      await questDir.create(recursive: true);
+    }
+    return File('${questDir.path}/level_meta.json');
+  }
+
+  /// Save metadata to user documents directory
+  Future<void> _saveUserMeta(LevelMeta meta) async {
+    try {
+      final file = await _getUserMetaFile();
+      final jsonData = {
+        'completed_levels': meta.completedLevels,
+        'all_levels_unlocked': meta.allLevelsUnlocked,
+      };
+      await file.writeAsString(json.encode(jsonData));
+    } catch (e) {
+      print('Warning: Failed to save level metadata: $e');
     }
   }
 
@@ -174,6 +225,65 @@ class LevelLoader {
     _levelCache.clear();
     _levelBlocks = null;
     _levelMeta = null;
+  }
+
+  /// Check if a level can be accessed by the player
+  /// 
+  /// Returns true if the level is unlocked (either all levels unlocked,
+  /// or the player has completed the previous level).
+  Future<bool> canAccessLevel(int levelId) async {
+    final meta = await loadLevelMeta();
+    
+    // If all levels are unlocked, allow access
+    if (meta.allLevelsUnlocked) {
+      return true;
+    }
+    
+    // Level 0 is always accessible
+    if (levelId == 0) {
+      return true;
+    }
+    
+    // Otherwise, check if previous level is completed
+    return meta.completedLevels.contains(levelId - 1);
+  }
+
+  /// Mark a level as completed
+  /// 
+  /// Adds the level ID to the completed levels list if not already present.
+  /// Persists the change to the user data directory.
+  Future<void> completeLevel(int levelId) async {
+    // Reload meta to ensure we have latest data
+    _levelMeta = null;
+    final meta = await loadLevelMeta();
+    
+    if (!meta.completedLevels.contains(levelId)) {
+      meta.completedLevels.add(levelId);
+      _levelMeta = meta;
+      await _saveUserMeta(meta);
+    }
+  }
+
+  /// Toggle the all_levels_unlocked flag
+  /// 
+  /// Toggles whether all levels are unlocked for testing purposes.
+  /// Persists the change to the user data directory.
+  Future<void> toggleAllLevelsUnlocked() async {
+    // Reload meta to ensure we have latest data
+    _levelMeta = null;
+    final meta = await loadLevelMeta();
+    
+    meta.allLevelsUnlocked = !meta.allLevelsUnlocked;
+    _levelMeta = meta;
+    await _saveUserMeta(meta);
+  }
+
+  /// Check if a level is completed
+  /// 
+  /// Returns true if the level ID is in the completed levels list.
+  Future<bool> isLevelCompleted(int levelId) async {
+    final meta = await loadLevelMeta();
+    return meta.completedLevels.contains(levelId);
   }
 
   /// Check if a level exists and can be loaded

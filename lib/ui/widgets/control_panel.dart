@@ -2,6 +2,9 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../state/sandbox_state.dart';
+import '../../levels/levels.dart';
+import '../../core/components/input_source.dart';
+import '../../core/components/output_probe.dart';
 import 'circuit_file_manager.dart';
 
 /// Control panel for circuit simulation and evaluation.
@@ -12,10 +15,13 @@ import 'circuit_file_manager.dart';
 /// - Clearing the circuit
 /// - Viewing circuit state
 class ControlPanel extends ConsumerWidget {
-  const ControlPanel({super.key, this.isSandbox = false});
+  const ControlPanel({super.key, this.isSandbox = false, this.level});
 
   /// When true, shows sandbox-only controls like save/load circuit.
   final bool isSandbox;
+
+  /// The current level being played (if in level mode).
+  final Level? level;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -143,6 +149,23 @@ class ControlPanel extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
             
+            // Check Solution button (level mode only)
+            if (!isSandbox && level != null) ...[
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                onPressed: state.placedComponents.isEmpty
+                    ? null
+                    : () => _checkSolution(context, state, level!),
+                icon: const Icon(Icons.check_circle),
+                label: const Text('Check Solution'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+
             if (isSandbox) ...[
               const Divider(),
               const SizedBox(height: 8),
@@ -293,6 +316,126 @@ class ControlPanel extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Shows a dialog and checks if the player's solution is correct
+  void _checkSolution(BuildContext context, SandboxState state, Level level) async {
+    // Import LevelValidator at top
+    // For now, implement inline validation
+    try {
+      // Get all input components and set their values from the test
+      // Run all tests and collect results
+      
+      final inputSources = state.placedComponents
+          .where((c) => c.component is InputSource)
+          .toList();
+      
+      final outputProbes = state.placedComponents
+          .where((c) => c.component is OutputProbe)
+          .toList();
+
+      if (inputSources.isEmpty || outputProbes.isEmpty) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Circuit must have inputs and outputs'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
+      bool allTestsPassed = true;
+      String? failureReason;
+
+      // Run each test with animation
+      for (int testIndex = 0; testIndex < level.tests.length; testIndex++) {
+        final test = level.tests[testIndex];
+
+        // Set input values
+        for (int i = 0; i < test.inputs.length && i < inputSources.length; i++) {
+          final inputValues = test.inputs[i];
+          final inputComponent = inputSources[i].component as InputSource;
+          if (inputValues.isNotEmpty) {
+            inputComponent.setValue(inputValues[0]);
+          }
+        }
+
+        // Reset circuit state before simulation
+        state.resetSimulation();
+
+        // Run simulation with animation (respects tick speed setting)
+        await state.startSimulation();
+
+        // Check output values after simulation completes
+        bool testPassed = true;
+        for (int i = 0; i < test.expectedOutput.length && i < outputProbes.length; i++) {
+          final expectedValues = test.expectedOutput[i];
+          final outputComponent = outputProbes[i].component as OutputProbe;
+          final actualValue = outputComponent.value;
+
+          if (expectedValues.isEmpty || expectedValues[0] != actualValue) {
+            testPassed = false;
+            failureReason = 'Test ${testIndex + 1} failed: Input ${test.inputs} expected ${expectedValues[0]} but got $actualValue';
+            break;
+          }
+        }
+
+        if (!testPassed) {
+          allTestsPassed = false;
+          break;
+        }
+      }
+
+      if (context.mounted) {
+        if (allTestsPassed) {
+          // Mark level as completed
+          final levelLoader = LevelLoader();
+          await levelLoader.completeLevel(level.levelId);
+
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Success!'),
+                content: const Text('All tests passed! Level completed.'),
+                actions: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    child: const Text('Continue'),
+                  ),
+                ],
+              ),
+            );
+          }
+        } else {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Test Failed'),
+              content: Text(failureReason ?? 'One or more tests failed'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Try Again'),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error checking solution: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   /// Converts tick speed to slider value (1-11, where 11 is instant)

@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 import 'package:circuitquest/levels/level_loader.dart';
-import 'package:circuitquest/levels/level.dart';
 
 void main() {
   // Set up the test environment to load assets
