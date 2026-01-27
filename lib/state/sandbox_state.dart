@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -91,6 +92,18 @@ class SandboxState extends ChangeNotifier {
   /// Current simulation running state
   bool _isSimulating = false;
   
+  /// Simulation tick speed (ticks per second, 0 = instant)
+  double _tickSpeed = 0.0;
+  
+  /// Saved component states before simulation for reset
+  Map<String, Map<String, int>>? _savedComponentStates;
+  
+  /// Flag to cancel ongoing simulation
+  bool _cancelSimulation = false;
+  
+  /// Components that are currently being evaluated (for visualization)
+  Set<String> _activeComponentIds = {};
+  
   /// Auto-increment counter for component IDs
   int _nextComponentId = 0;
 
@@ -100,6 +113,9 @@ class SandboxState extends ChangeNotifier {
   String? get selectedComponentType => _selectedComponentType;
   PlacedComponent? get draggingComponent => _draggingComponent;
   bool get isSimulating => _isSimulating;
+  double get tickSpeed => _tickSpeed;
+  bool get canReset => _savedComponentStates != null;
+  Set<String> get activeComponentIds => Set.unmodifiable(_activeComponentIds);
   ({String componentId, String pinName})? get wireDrawingStart => _wireDrawingStart;
 
   /// Sets the currently selected component type for placement.
@@ -256,29 +272,125 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Starts continuous simulation mode.
-  void startSimulation() {
-    _isSimulating = true;
+  /// Sets the tick speed for simulation (0 = instant, >0 = ticks per second)
+  void setTickSpeed(double ticksPerSecond) {
+    _tickSpeed = ticksPerSecond;
     notifyListeners();
   }
 
-  /// Stops continuous simulation mode.
-  void stopSimulation() {
-    _isSimulating = false;
+  /// Starts simulation with tick-based evaluation
+  Future<void> startSimulation() async {
+    if (_placedComponents.isEmpty) return;
+    
+    // Save current state for reset
+    _saveComponentStates();
+    _cancelSimulation = false;
+    _isSimulating = true;
+    _activeComponentIds = {};
     notifyListeners();
+    
+    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
+    final inputStarts = _placedComponents
+      .where((pc) => pc.component.inputs.isEmpty || pc.component is InputSource)
+      .map((pc) => pc.component)
+      .toSet();
+    final startingSet = inputStarts.isEmpty ? allComponents : inputStarts;
+
+    _simulator = Simulator(
+      components: allComponents,
+      inputComponents: startingSet,
+    );
+
+    if (_tickSpeed == 0) {
+      // Instant evaluation
+      _simulator!.evaluateEventDriven(startingComponents: startingSet);
+    } else {
+      // Timed evaluation with onWait and onUpdate callbacks
+      await _simulator!.evaluateEventDriven(
+        startingComponents: startingSet,
+        onUpdate: (updatedComponents) {
+          // Track which components are active in this tick
+          _activeComponentIds = _placedComponents
+              .where((pc) => updatedComponents.contains(pc.component))
+              .map((pc) => pc.id)
+              .toSet();
+        },
+        onWait: () async {
+          if (_cancelSimulation) return;
+          notifyListeners();
+          await Future.delayed(Duration(milliseconds: (1000 / _tickSpeed).round()));
+        },
+      );
+    }
+    
+    // Simulation complete
+    _isSimulating = false;
+    _activeComponentIds = {};
+    _savedComponentStates = null;
+    notifyListeners();
+  }
+
+  /// Pauses the simulation
+  void pauseSimulation() {
+    _cancelSimulation = true;
+    _isSimulating = false;
+    _activeComponentIds = {};
+    notifyListeners();
+  }
+
+  /// Resets circuit to state before simulation started
+  void resetSimulation() {
+    _cancelSimulation = true;
+    _isSimulating = false;
+    _activeComponentIds = {};
+    _restoreComponentStates();
+    _savedComponentStates = null;
+    notifyListeners();
+  }
+
+  /// Internal: Save component output states
+  void _saveComponentStates() {
+    _savedComponentStates = {};
+    for (final placed in _placedComponents) {
+      final outputs = <String, int>{};
+      for (final entry in placed.component.outputs.entries) {
+        outputs[entry.key] = entry.value.value;
+      }
+      _savedComponentStates![placed.id] = outputs;
+    }
+  }
+
+  /// Internal: Restore component output states
+  void _restoreComponentStates() {
+    if (_savedComponentStates == null) return;
+    
+    for (final placed in _placedComponents) {
+      final savedOutputs = _savedComponentStates![placed.id];
+      if (savedOutputs != null) {
+        for (final entry in savedOutputs.entries) {
+          final output = placed.component.outputs[entry.key];
+          if (output != null) {
+            output.value = entry.value;
+          }
+        }
+      }
+    }
   }
 
   /// Clears the entire circuit (all components and connections).
   void clearCircuit() {
+    _cancelSimulation = true;
     _placedComponents.clear();
     _connections.clear();
     _wireDrawingStart = null;
     _isSimulating = false;
+    _savedComponentStates = null;
     notifyListeners();
   }
 
   /// Fully reset the sandbox state (used when entering a fresh scene).
   void reset() {
+    _cancelSimulation = true;
     _placedComponents.clear();
     _connections.clear();
     _wireDrawingStart = null;
@@ -287,6 +399,14 @@ class SandboxState extends ChangeNotifier {
     _draggingComponent = null;
     _simulator = null;
     _nextComponentId = 0;
+    _tickSpeed = 0.0;
+    _savedComponentStates = null;
+  }
+
+  @override
+  void dispose() {
+    _cancelSimulation = true;
+    super.dispose();
   }
 
   /// Gets a component by its ID.

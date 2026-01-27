@@ -187,6 +187,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
                           wireDrawingStart: state.wireDrawingStart,
                           currentPointerPosition: _currentPointerPosition,
                           gridSize: gridSize,
+                          activeComponentIds: state.activeComponentIds,
                         ),
                         child: Container(),
                       ),
@@ -196,6 +197,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
                           key: ValueKey(placed.id),
                           placedComponent: placed,
                           gridSize: gridSize,
+                          isActive: state.activeComponentIds.contains(placed.id),
                         );
                       }),
                     ],
@@ -286,6 +288,7 @@ class _WirePainter extends CustomPainter {
   final ({String componentId, String pinName})? wireDrawingStart;
   final Offset? currentPointerPosition;
   final double gridSize;
+  final Set<String> activeComponentIds;
 
   _WirePainter({
     required this.connections,
@@ -293,6 +296,7 @@ class _WirePainter extends CustomPainter {
     this.wireDrawingStart,
     this.currentPointerPosition,
     required this.gridSize,
+    this.activeComponentIds = const {},
   });
 
   @override
@@ -309,6 +313,10 @@ class _WirePainter extends CustomPainter {
       final targetComponent = placedComponents
           .firstWhere((c) => c.id == connection.targetComponentId);
 
+      // Check if this connection is active (either endpoint is being evaluated)
+      final isActive = activeComponentIds.contains(connection.sourceComponentId) ||
+                       activeComponentIds.contains(connection.targetComponentId);
+
       // Calculate pin centers for the specific pins involved
       final sourcePos = _pinCenter(
         sourceComponent,
@@ -320,6 +328,15 @@ class _WirePainter extends CustomPainter {
         connection.targetPin,
         isInput: true,
       );
+
+      // Use brighter color and wider stroke for active connections
+      if (isActive) {
+        paint.color = Colors.orange;
+        paint.strokeWidth = 3.5;
+      } else {
+        paint.color = Colors.blue[700]!;
+        paint.strokeWidth = 2.0;
+      }
 
       _drawWire(canvas, paint, sourcePos, targetPos);
     }
@@ -368,7 +385,8 @@ class _WirePainter extends CustomPainter {
   bool shouldRepaint(covariant _WirePainter oldDelegate) {
     return connections != oldDelegate.connections ||
         wireDrawingStart != oldDelegate.wireDrawingStart ||
-        currentPointerPosition != oldDelegate.currentPointerPosition;
+        currentPointerPosition != oldDelegate.currentPointerPosition ||
+        activeComponentIds != oldDelegate.activeComponentIds;
   }
 
   /// Returns the canvas-space center for a given pin.
@@ -403,11 +421,13 @@ class _WirePainter extends CustomPainter {
 class _PlacedComponentWidget extends ConsumerWidget {
   final PlacedComponent placedComponent;
   final double gridSize;
+  final bool isActive;
 
   const _PlacedComponentWidget({
     super.key,
     required this.placedComponent,
     required this.gridSize,
+    this.isActive = false,
   });
 
   @override
@@ -574,6 +594,13 @@ class _PlacedComponentWidget extends ConsumerWidget {
                 color: entry.value.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.black, width: 1),
+                boxShadow: isActive ? [
+                  BoxShadow(
+                    color: (entry.value.value > 0 ? Colors.green : Colors.red).withOpacity(0.8),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ] : null,
               ),
             ),
           ),
@@ -609,6 +636,13 @@ class _PlacedComponentWidget extends ConsumerWidget {
                 color: entry.value.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.black, width: 1),
+                boxShadow: isActive ? [
+                  BoxShadow(
+                    color: (entry.value.value > 0 ? Colors.green : Colors.red).withOpacity(0.8),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+                ] : null,
               ),
             ),
           ),

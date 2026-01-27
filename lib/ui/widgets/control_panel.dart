@@ -37,54 +37,107 @@ class ControlPanel extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Evaluate button
-            ElevatedButton.icon(
-              onPressed: state.placedComponents.isEmpty
-                  ? null
-                  : () {
-                      state.evaluateCircuit();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(AppLocalizations.of(context)!.circuitEvaluated),
-                          duration: const Duration(seconds: 1),
-                        ),
-                      );
-                    },
-              icon: const Icon(Icons.play_arrow),
-              label: Text(AppLocalizations.of(context)!.evaluateCircuit),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            
-            // Simulation toggle
+            // Play/Pause simulation button
             ElevatedButton.icon(
               onPressed: state.placedComponents.isEmpty
                   ? null
                   : () {
                       if (state.isSimulating) {
-                        state.stopSimulation();
+                        state.pauseSimulation();
                       } else {
                         state.startSimulation();
                       }
                     },
               icon: Icon(
-                state.isSimulating ? Icons.stop : Icons.autorenew,
+                state.isSimulating ? Icons.pause : Icons.play_arrow,
               ),
               label: Text(
                 state.isSimulating 
-                    ? AppLocalizations.of(context)!.stopSimulation 
-                    : AppLocalizations.of(context)!.startSimulation,
+                    ? 'Pause Simulation'
+                    : 'Start Simulation',
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor:
-                    state.isSimulating ? Colors.orange : Colors.blue,
+                    state.isSimulating ? Colors.orange : Colors.green,
                 foregroundColor: Colors.white,
               ),
             ),
+            const SizedBox(height: 12),
+            
+            // Speed slider
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Simulation Speed',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      _getSpeedDisplayValue(state.tickSpeed) == 0 ? 'Instant' : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.blue[700],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Slider(
+                  value: _getSliderValue(state.tickSpeed),
+                  min: 1,
+                  max: 11,
+                  divisions: 10,
+                  label: _getSpeedDisplayValue(state.tickSpeed) == 0 ? 'Instant' : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
+                  onChanged: (value) {
+                    state.setTickSpeed(_getTickSpeedFromSlider(value));
+                  },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '1 tick/s',
+                      style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                    ),
+                    Text(
+                      '5 tick/s',
+                      style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                    ),
+                    Text(
+                      'Instant',
+                      style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ],
+            ),
             const SizedBox(height: 8),
+            
+            // Reset button (only show if simulation was paused)
+            if (state.canReset) ...[
+              OutlinedButton.icon(
+                onPressed: () {
+                  state.resetSimulation();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Circuit reset to initial state'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.restore),
+                label: const Text('Reset to Initial State'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
             
             // Clear button
             OutlinedButton.icon(
@@ -218,6 +271,23 @@ class ControlPanel extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Converts tick speed to slider value (1-11, where 11 is instant)
+  double _getSliderValue(double tickSpeed) {
+    if (tickSpeed == 0) return 11; // Instant
+    return tickSpeed.clamp(1, 10);
+  }
+
+  /// Converts slider value to tick speed (0 for instant, 1-10 for ticks/s)
+  double _getTickSpeedFromSlider(double sliderValue) {
+    if (sliderValue == 11) return 0; // Instant
+    return sliderValue.clamp(1, 10);
+  }
+
+  /// Gets display value for speed (0 for instant, 1-10 for ticks/s)
+  double _getSpeedDisplayValue(double tickSpeed) {
+    return tickSpeed;
   }
 
   /// Shows a confirmation dialog before clearing the circuit.

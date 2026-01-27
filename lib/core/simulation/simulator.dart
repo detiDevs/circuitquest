@@ -1,7 +1,7 @@
 import 'package:circuitquest/core/components/base/component.dart';
 
 typedef UpdateCallback = void Function(Set<Component> components);
-typedef WaitCallback = void Function();
+typedef WaitCallback = Future<void> Function();
 
 class Simulator {
   final Set<Component> components;
@@ -10,12 +10,12 @@ class Simulator {
   Simulator({required this.components, required this.inputComponents});
 
   // Event driven evaluation. Useful for oscillating components.
-  bool evaluateEventDriven({
+  Future<bool> evaluateEventDriven({
     Set<Component>? startingComponents,
     UpdateCallback? onUpdate,
     WaitCallback? onWait,
     int maxEvalCycles = 1000,
-  }) {
+  }) async {
     // Determine starting components
     Set<Component> current =
         startingComponents?.toSet() ?? inputComponents.toSet();
@@ -43,7 +43,9 @@ class Simulator {
       }
 
       onUpdate?.call(current);
-      onWait?.call();
+      if (onWait != null) {
+        await onWait();
+      }
 
       current = next;
       tick++;
@@ -58,7 +60,7 @@ class Simulator {
   }
 
   // Kahn / frontier evaluation. Useful for circuits without oscillation
-  bool evaluateTopological({UpdateCallback? onUpdate, WaitCallback? onWait}) {
+  Future<bool> evaluateTopological({UpdateCallback? onUpdate, WaitCallback? onWait}) async {
     final Map<Component, int> indegree = {};
     final Map<int, Set<Component>> tickBuckets = {};
 
@@ -110,7 +112,9 @@ class Simulator {
         component.evaluate();
       }
       onUpdate?.call(entry.value);
-      onWait?.call();
+      if (onWait != null) {
+        await onWait();
+      }
     }
     print("Evaluated topologically");
     return true;
