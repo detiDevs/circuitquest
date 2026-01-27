@@ -2,6 +2,7 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../state/sandbox_state.dart';
+import 'circuit_file_manager.dart';
 
 /// Control panel for circuit simulation and evaluation.
 ///
@@ -11,7 +12,10 @@ import '../../state/sandbox_state.dart';
 /// - Clearing the circuit
 /// - Viewing circuit state
 class ControlPanel extends ConsumerWidget {
-  const ControlPanel({super.key});
+  const ControlPanel({super.key, this.isSandbox = false});
+
+  /// When true, shows sandbox-only controls like save/load circuit.
+  final bool isSandbox;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -139,6 +143,24 @@ class ControlPanel extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
             
+            if (isSandbox) ...[
+              const Divider(),
+              const SizedBox(height: 8),
+
+              // File operations (sandbox only)
+              Text(
+                'File Operations',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const CircuitFileManager(),
+              const SizedBox(height: 8),
+              const Divider(),
+              const SizedBox(height: 8),
+            ],
+
             // Clear button
             OutlinedButton.icon(
               onPressed: state.placedComponents.isEmpty

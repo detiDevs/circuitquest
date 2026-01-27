@@ -43,6 +43,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  
+  # File picker for save/load functionality
+  file_picker: ^8.1.6
+  path_provider: ^2.1.5
 
 dev_dependencies:
   flutter_test:

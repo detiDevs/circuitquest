@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
 import '../core/logic/wire.dart';
 import '../core/simulation/simulator.dart';
 import '../core/components/input_source.dart';
+import '../core/components/output_probe.dart';
+import '../ui/widgets/component_palette.dart';
 
 /// Riverpod provider for sandbox state.
 final sandboxProvider = ChangeNotifierProvider<SandboxState>(
@@ -39,6 +42,17 @@ class PlacedComponent {
     this.immovable = false,
     this.label,
   });
+
+  /// Converts this PlacedComponent to JSON format
+  Map<String, dynamic> toJson() {
+    return {
+      'type': type,
+      'position': [position.dx.toInt(), position.dy.toInt()],
+      'id': id,
+      if (immovable) 'immovable': immovable,
+      if (label != null) 'label': label,
+    };
+  }
 }
 
 /// Represents a wire connection between two component pins.
@@ -61,6 +75,16 @@ class WireConnection {
     required this.targetComponentId,
     required this.targetPin,
   });
+
+  /// Converts this WireConnection to JSON format
+  Map<String, dynamic> toJson() {
+    return {
+      'sourceComponentId': sourceComponentId,
+      'sourcePin': sourcePin,
+      'targetComponentId': targetComponentId,
+      'targetPin': targetPin,
+    };
+  }
 }
 
 /// State management for the sandbox circuit designer.
@@ -407,6 +431,120 @@ class SandboxState extends ChangeNotifier {
   void dispose() {
     _cancelSimulation = true;
     super.dispose();
+  }
+
+  /// Serializes the current circuit to JSON format
+  String serializeCircuit({String? name, String? description}) {
+    final circuitData = {
+      'name': name ?? 'Saved Circuit',
+      'description': description ?? 'Circuit saved from sandbox mode',
+      'components': _placedComponents.map((pc) => pc.toJson()).toList(),
+      'connections': _connections.map((wc) => wc.toJson()).toList(),
+    };
+    return jsonEncode(circuitData);
+  }
+
+  /// Deserializes a circuit from JSON and loads it into the sandbox
+  bool loadCircuitFromJson(String jsonString) {
+    try {
+      final data = jsonDecode(jsonString) as Map<String, dynamic>;
+      
+      // Stop any running simulation
+      if (_isSimulating) {
+        pauseSimulation();
+      }
+      
+      // Clear existing circuit
+      _placedComponents.clear();
+      _connections.clear();
+      _wireDrawingStart = null;
+      _savedComponentStates = null;
+      
+      // Load components
+      final components = data['components'] as List<dynamic>;
+      for (final compData in components) {
+        final type = compData['type'] as String;
+        final positionList = compData['position'] as List<dynamic>;
+        final position = Offset(
+          (positionList[0] as num).toDouble(),
+          (positionList[1] as num).toDouble(),
+        );
+        final id = compData['id'] as String;
+        final immovable = compData['immovable'] as bool? ?? false;
+        final label = compData['label'] as String?;
+        
+        // Create component instance
+        Component component;
+        if (type == 'InputSource') {
+          component = InputSource();
+        } else if (type == 'OutputProbe') {
+          component = OutputProbe();
+        } else {
+          // Find component in available components list
+          try {
+            final componentType = availableComponents.firstWhere((ct) => ct.name == type);
+            component = componentType.createComponent();
+          } catch (_) {
+            print('Unknown component type: $type');
+            continue;
+          }
+        }
+        
+        _placedComponents.add(PlacedComponent(
+          type: type,
+          component: component,
+          position: position,
+          id: id,
+          immovable: immovable,
+          label: label,
+        ));
+      }
+      
+      // Load connections
+      final connections = data['connections'] as List<dynamic>;
+      for (final connData in connections) {
+        _connections.add(WireConnection(
+          sourceComponentId: connData['sourceComponentId'] as String,
+          sourcePin: connData['sourcePin'] as String,
+          targetComponentId: connData['targetComponentId'] as String,
+          targetPin: connData['targetPin'] as String,
+        ));
+      }
+      
+      // Rebuild wire connections
+      _rebuildWireConnections();
+      
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print('Error loading circuit: $e');
+      return false;
+    }
+  }
+
+  /// Rebuilds wire connections between components
+  void _rebuildWireConnections() {
+    // Clear existing wire connections by setting sources to null
+    for (final placed in _placedComponents) {
+      for (final input in placed.component.inputs.values) {
+        input.source = null;
+      }
+    }
+    
+    // Recreate connections based on WireConnection list
+    for (final conn in _connections) {
+      final source = getComponent(conn.sourceComponentId);
+      final target = getComponent(conn.targetComponentId);
+      
+      if (source != null && target != null) {
+        final sourceOutput = source.component.outputs[conn.sourcePin];
+        final targetInput = target.component.inputs[conn.targetPin];
+        
+        if (sourceOutput != null && targetInput != null) {
+          Wire(sourceOutput, targetInput);
+        }
+      }
+    }
   }
 
   /// Gets a component by its ID.

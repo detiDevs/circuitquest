@@ -71,7 +71,7 @@ class _SandboxBody extends StatelessWidget {
                       left: BorderSide(color: Colors.grey[300]!),
                     ),
                   ),
-                  child: const ControlPanel(),
+                  child: const ControlPanel(isSandbox: true),
                 ),
               ),
             ],
@@ -113,7 +113,7 @@ class _SandboxBody extends StatelessWidget {
                   ),
                 ),
                 child: const SingleChildScrollView(
-                  child: ControlPanel(),
+                  child: ControlPanel(isSandbox: true),
                 ),
               ),
             ],
