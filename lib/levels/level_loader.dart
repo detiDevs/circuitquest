@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:circuitquest/constants.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'level.dart';
@@ -162,12 +163,16 @@ class LevelLoader {
 
   /// Get the path to the user meta file
   Future<File> _getUserMetaFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final questDir = Directory('${dir.path}/CircuitQuest');
-    if (!await questDir.exists()) {
-      await questDir.create(recursive: true);
+    final home = Platform.environment['HOME'] ??
+        Platform.environment['USERPROFILE'] ??
+        Directory.current.path;
+    final dirPath = [home, Constants.kAppName]
+        .join(Platform.pathSeparator);
+    final dir = Directory(dirPath);
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
     }
-    return File('${questDir.path}/level_meta.json');
+    return File('${dir.path}/level_meta.json');
   }
 
   /// Save metadata to user documents directory

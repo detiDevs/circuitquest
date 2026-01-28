@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:circuitquest/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -219,7 +220,7 @@ class CircuitFileManager extends ConsumerWidget {
     final home = Platform.environment['HOME'] ??
         Platform.environment['USERPROFILE'] ??
         Directory.current.path;
-    final dirPath = [home, 'CircuitQuest', 'Saved Circuits']
+    final dirPath = [home, Constants.kAppName, 'Saved Circuits']
         .join(Platform.pathSeparator);
     final dir = Directory(dirPath);
     if (!await dir.exists()) {
