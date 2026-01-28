@@ -1,46 +1,22 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/levels/levels.dart';
+import '../../state/level_state.dart';
 import 'level_screen.dart';
 
 /// Screen for selecting a level to play.
 ///
 /// Displays all available levels organized by their category blocks.
 /// Users can tap on a level to start playing it.
-class LevelSelectionScreen extends StatefulWidget {
+class LevelSelectionScreen extends ConsumerStatefulWidget {
   const LevelSelectionScreen({super.key});
 
   @override
-  State<LevelSelectionScreen> createState() => _LevelSelectionScreenState();
+  ConsumerState<LevelSelectionScreen> createState() => _LevelSelectionScreenState();
 }
 
-class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
-  late LevelLoader _levelLoader;
-  Map<String, List<LevelBlockItem>>? _levelBlocks;
-  bool _isLoading = true;
-  String? _errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    _levelLoader = LevelLoader();
-    _loadLevelBlocks();
-  }
-
-  Future<void> _loadLevelBlocks() async {
-    try {
-      final blocks = await _levelLoader.loadLevelBlocks();
-      setState(() {
-        _levelBlocks = blocks;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = '${AppLocalizations.of(context)!.failedToLoadLevels}: $e';
-        _isLoading = false;
-      });
-    }
-  }
+class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -63,65 +39,52 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
   }
 
   Future<void> _toggleAllLevelsUnlocked(BuildContext context) async {
-    await _levelLoader.toggleAllLevelsUnlocked();
-    // Clear all caches to force reload
-    _levelLoader.clearCache();
-    // Refresh all level cards
-    setState(() {
-      _levelBlocks = null;
-      _isLoading = true;
-    });
-    _loadLevelBlocks();
+    await toggleAllLevelsUnlocked(ref);
   }
 
   Widget _buildBody() {
-    if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+    final levelBlocksAsync = ref.watch(levelBlocksProvider);
 
-    if (_errorMessage != null) {
-      return Center(
+    return levelBlocksAsync.when(
+      data: (levelBlocks) {
+        if (levelBlocks.isEmpty) {
+          return Center(
+            child: Text(AppLocalizations.of(context)!.noLevelsAvailable),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: levelBlocks.length,
+          itemBuilder: (context, index) {
+            final category = levelBlocks.keys.elementAt(index);
+            final levels = levelBlocks[category]!;
+            return _LevelCategory(
+              category: category,
+              levels: levels,
+            );
+          },
+        );
+      },
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      error: (error, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
             const SizedBox(height: 16),
-            Text(_errorMessage!),
+            Text('${AppLocalizations.of(context)!.failedToLoadLevels}: $error'),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                setState(() {
-                  _isLoading = true;
-                  _errorMessage = null;
-                });
-                _loadLevelBlocks();
+                ref.invalidate(levelBlocksProvider);
               },
               child: Text(AppLocalizations.of(context)!.retry),
             ),
           ],
         ),
-      );
-    }
-
-    if (_levelBlocks == null || _levelBlocks!.isEmpty) {
-      return Center(
-        child: Text(AppLocalizations.of(context)!.noLevelsAvailable),
-      );
-    }
-
-    return ListView.builder(
-      itemCount: _levelBlocks!.length,
-      itemBuilder: (context, index) {
-        final category = _levelBlocks!.keys.elementAt(index);
-        final levels = _levelBlocks![category]!;
-        return _LevelCategory(
-          category: category,
-          levels: levels,
-          levelLoader: _levelLoader,
-        );
-      },
+      ),
     );
   }
 }
@@ -130,12 +93,10 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
 class _LevelCategory extends StatelessWidget {
   final String category;
   final List<LevelBlockItem> levels;
-  final LevelLoader levelLoader;
 
   const _LevelCategory({
     required this.category,
     required this.levels,
-    required this.levelLoader,
   });
 
   @override
@@ -165,8 +126,6 @@ class _LevelCategory extends StatelessWidget {
               final levelItem = levels[index];
               return _LevelCard(
                 levelItem: levelItem,
-                levelLoader: levelLoader,
-                onLevelCompleted: () {},
               );
             },
           ),
@@ -178,66 +137,36 @@ class _LevelCategory extends StatelessWidget {
 }
 
 /// Widget displaying a single level card.
-class _LevelCard extends StatefulWidget {
+class _LevelCard extends ConsumerWidget {
   final LevelBlockItem levelItem;
-  final LevelLoader levelLoader;
-  final VoidCallback onLevelCompleted;
 
   const _LevelCard({
     required this.levelItem,
-    required this.levelLoader,
-    required this.onLevelCompleted,
   });
 
   @override
-  State<_LevelCard> createState() => _LevelCardState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isCompletedAsync = ref.watch(levelCompletedProvider(levelItem.id));
+    final canAccessAsync = ref.watch(levelAccessProvider(levelItem.id));
 
-class _LevelCardState extends State<_LevelCard> {
-  bool _isCompleted = false;
-  bool _canAccess = false;
-  bool _isLoading = true;
+    final isCompleted = isCompletedAsync.value ?? false;
+    final canAccess = canAccessAsync.value ?? false;
+    final isLoading = isCompletedAsync.isLoading || canAccessAsync.isLoading;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadAccessStatus();
-  }
-
-  Future<void> _loadAccessStatus() async {
-    if (!mounted) return;
-    
-    // Clear the loader cache to ensure fresh data
-    widget.levelLoader.clearCache();
-    
-    final canAccess = await widget.levelLoader.canAccessLevel(widget.levelItem.id);
-    final isCompleted = await widget.levelLoader.isLevelCompleted(widget.levelItem.id);
-    
-    if (mounted) {
-      setState(() {
-        _canAccess = canAccess;
-        _isCompleted = isCompleted;
-        _isLoading = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Material(
       child: InkWell(
-        onTap: _canAccess ? () => _accessLevel(context) : null,
+        onTap: canAccess ? () => _accessLevel(context, ref) : null,
         borderRadius: BorderRadius.circular(8),
         child: Stack(
           children: [
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: _getCardBorderColor(),
+                  color: _getCardBorderColor(isCompleted, canAccess),
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(8),
-                color: _getCardBackgroundColor(),
+                color: _getCardBackgroundColor(isCompleted, canAccess),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -247,7 +176,7 @@ class _LevelCardState extends State<_LevelCard> {
                     // Status badges
                     Row(
                       children: [
-                        if (widget.levelItem.recommended)
+                        if (levelItem.recommended)
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.orange,
@@ -267,7 +196,7 @@ class _LevelCardState extends State<_LevelCard> {
                             ),
                           ),
                         const Spacer(),
-                        if (_isCompleted)
+                        if (isCompleted)
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.green,
@@ -286,7 +215,7 @@ class _LevelCardState extends State<_LevelCard> {
                               ),
                             ),
                           ),
-                        if (!_canAccess && !_isLoading)
+                        if (!canAccess && !isLoading)
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.grey,
@@ -310,14 +239,14 @@ class _LevelCardState extends State<_LevelCard> {
                     const Spacer(),
                     // Level number
                     Text(
-                      'Level ${widget.levelItem.id}',
+                      'Level ${levelItem.id}',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Colors.grey[600],
                           ),
                     ),
                     // Level name
                     Text(
-                      widget.levelItem.name,
+                      levelItem.name,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -329,7 +258,7 @@ class _LevelCardState extends State<_LevelCard> {
               ),
             ),
             // Disabled overlay for locked levels
-            if (!_canAccess && !_isLoading)
+            if (!canAccess && !isLoading)
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -349,19 +278,17 @@ class _LevelCardState extends State<_LevelCard> {
     );
   }
 
-  Future<void> _accessLevel(BuildContext context) async {
+  Future<void> _accessLevel(BuildContext context, WidgetRef ref) async {
     try {
-      final level = await widget.levelLoader.loadLevel(widget.levelItem.id);
+      final loader = ref.read(levelLoaderProvider);
+      final level = await loader.loadLevel(levelItem.id);
       if (context.mounted) {
         await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => LevelScreen(level: level),
           ),
         );
-        // Reload status when returning from the level
-        // Clear cache to ensure fresh data is loaded
-        widget.levelLoader.clearCache();
-        _loadAccessStatus();
+        // No need to manually reload - Riverpod will handle the refresh
       }
     } catch (e) {
       if (context.mounted) {
@@ -372,17 +299,17 @@ class _LevelCardState extends State<_LevelCard> {
     }
   }
 
-  Color _getCardBorderColor() {
-    if (_isCompleted) return Colors.green;
-    if (widget.levelItem.recommended) return Colors.orange;
-    if (_canAccess) return Colors.blue;
+  Color _getCardBorderColor(bool isCompleted, bool canAccess) {
+    if (isCompleted) return Colors.green;
+    if (levelItem.recommended) return Colors.orange;
+    if (canAccess) return Colors.blue;
     return Colors.grey;
   }
 
-  Color? _getCardBackgroundColor() {
-    if (_isCompleted) return Colors.green[50];
-    if (widget.levelItem.recommended) return Colors.orange[50];
-    if (_canAccess) return Colors.blue[50];
+  Color? _getCardBackgroundColor(bool isCompleted, bool canAccess) {
+    if (isCompleted) return Colors.green[50];
+    if (levelItem.recommended) return Colors.orange[50];
+    if (canAccess) return Colors.blue[50];
     return Colors.grey[50];
   }
 }

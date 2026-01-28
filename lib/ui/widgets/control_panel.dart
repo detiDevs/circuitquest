@@ -2,6 +2,7 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../state/sandbox_state.dart';
+import '../../state/level_state.dart';
 import '../../levels/levels.dart';
 import '../../core/components/input_source.dart';
 import '../../core/components/output_probe.dart';
@@ -155,7 +156,7 @@ class ControlPanel extends ConsumerWidget {
               ElevatedButton.icon(
                 onPressed: state.placedComponents.isEmpty
                     ? null
-                    : () => _checkSolution(context, state, level!),
+                    : () => _checkSolution(context, ref, state, level!),
                 icon: const Icon(Icons.check_circle),
                 label: const Text('Check Solution'),
                 style: ElevatedButton.styleFrom(
@@ -319,7 +320,7 @@ class ControlPanel extends ConsumerWidget {
   }
 
   /// Shows a dialog and checks if the player's solution is correct
-  void _checkSolution(BuildContext context, SandboxState state, Level level) async {
+  void _checkSolution(BuildContext context, WidgetRef ref, SandboxState state, Level level) async {
     // Import LevelValidator at top
     // For now, implement inline validation
     try {
@@ -390,9 +391,8 @@ class ControlPanel extends ConsumerWidget {
 
       if (context.mounted) {
         if (allTestsPassed) {
-          // Mark level as completed
-          final levelLoader = LevelLoader();
-          await levelLoader.completeLevel(level.levelId);
+          // Mark level as completed and refresh providers
+          await markLevelCompleted(ref, level.levelId);
 
           if (context.mounted) {
             showDialog(
