@@ -4,27 +4,27 @@ import 'package:circuitquest/core/logic/pin.dart';
 /// Half Adder: computes sum and carry from two 1-bit inputs.
 class HalfAdder extends Component {
   HalfAdder() {
-    inputs['A'] = InputPin(this, bitWidth: 1);
-    inputs['B'] = InputPin(this, bitWidth: 1);
-    outputs['SUM'] = OutputPin(this, bitWidth: 1);
-    outputs['CARRY'] = OutputPin(this, bitWidth: 1);
+    inputs['inputA'] = InputPin(this, bitWidth: 1);
+    inputs['inputB'] = InputPin(this, bitWidth: 1);
+    outputs['outSum'] = OutputPin(this, bitWidth: 1);
+    outputs['carryOut'] = OutputPin(this, bitWidth: 1);
   }
 
   /// Evaluates sum = A xor B, carry = A & B.
   @override
   bool evaluate() {
-    inputs['A']!.updateFromSource();
-    inputs['B']!.updateFromSource();
+    inputs['inputA']!.updateFromSource();
+    inputs['inputB']!.updateFromSource();
 
-    final int a = inputs['A']!.value;
-    final int b = inputs['B']!.value;
+    final int a = inputs['inputA']!.value;
+    final int b = inputs['inputB']!.value;
     final int newSum = a ^ b;
     final int newCarry = a & b;
 
-    final bool sumChanged = outputs['SUM']!.value != newSum;
-    final bool carryChanged = outputs['CARRY']!.value != newCarry;
-    outputs['SUM']!.value = newSum;
-    outputs['CARRY']!.value = newCarry;
+    final bool sumChanged = outputs['outSum']!.value != newSum;
+    final bool carryChanged = outputs['carryOut']!.value != newCarry;
+    outputs['outSum']!.value = newSum;
+    outputs['carryOut']!.value = newCarry;
     return sumChanged || carryChanged;
   }
 }
@@ -32,31 +32,31 @@ class HalfAdder extends Component {
 /// Full Adder: computes sum and carry-out from two 1-bit inputs and carry-in.
 class FullAdder extends Component {
   FullAdder() {
-    inputs['A'] = InputPin(this, bitWidth: 1);
-    inputs['B'] = InputPin(this, bitWidth: 1);
-    inputs['CARRY_IN'] = InputPin(this, bitWidth: 1);
-    outputs['SUM'] = OutputPin(this, bitWidth: 1);
-    outputs['CARRY_OUT'] = OutputPin(this, bitWidth: 1);
+    inputs['inputA'] = InputPin(this, bitWidth: 1);
+    inputs['inputB'] = InputPin(this, bitWidth: 1);
+    inputs['carryIn'] = InputPin(this, bitWidth: 1);
+    outputs['outSum'] = OutputPin(this, bitWidth: 1);
+    outputs['carryOut'] = OutputPin(this, bitWidth: 1);
   }
 
   /// Evaluates sum = A xor B xor Cin; carry = majority(A,B,Cin).
   @override
   bool evaluate() {
-    inputs['A']!.updateFromSource();
-    inputs['B']!.updateFromSource();
-    inputs['CARRY_IN']!.updateFromSource();
+    inputs['inputA']!.updateFromSource();
+    inputs['inputA']!.updateFromSource();
+    inputs['carryIn']!.updateFromSource();
 
     final int a = inputs['A']!.value;
     final int b = inputs['B']!.value;
-    final int cin = inputs['CARRY_IN']!.value;
+    final int cin = inputs['carryIn']!.value;
 
     final int newSum = a ^ b ^ cin;
     final int newCarry = (a & b) | (a & cin) | (b & cin);
 
-    final bool sumChanged = outputs['SUM']!.value != newSum;
-    final bool carryChanged = outputs['CARRY_OUT']!.value != newCarry;
-    outputs['SUM']!.value = newSum;
-    outputs['CARRY_OUT']!.value = newCarry;
+    final bool sumChanged = outputs['sum']!.value != newSum;
+    final bool carryChanged = outputs['carryOut']!.value != newCarry;
+    outputs['sum']!.value = newSum;
+    outputs['carryOut']!.value = newCarry;
     return sumChanged || carryChanged;
   }
 }
@@ -70,33 +70,33 @@ class RippleCarryAdder extends Component {
     if (bitWidth <= 0) {
       throw ArgumentError('bitWidth must be positive');
     }
-    inputs['A'] = InputPin(this, bitWidth: bitWidth);
-    inputs['B'] = InputPin(this, bitWidth: bitWidth);
-    inputs['CARRY_IN'] = InputPin(this, bitWidth: 1);
-    outputs['SUM'] = OutputPin(this, bitWidth: bitWidth);
-    outputs['CARRY_OUT'] = OutputPin(this, bitWidth: 1);
+    inputs['inputA'] = InputPin(this, bitWidth: bitWidth);
+    inputs['inputB'] = InputPin(this, bitWidth: bitWidth);
+    inputs['carryIn'] = InputPin(this, bitWidth: 1);
+    outputs['sum'] = OutputPin(this, bitWidth: bitWidth);
+    outputs['carryOut'] = OutputPin(this, bitWidth: 1);
   }
 
-  /// Adds A and B and an optional carry-in, producing SUM and CARRY_OUT.
+  /// Adds A and B and an optional carry-in, producing SUM and carryOut.
   @override
   bool evaluate() {
-    inputs['A']!.updateFromSource();
-    inputs['B']!.updateFromSource();
-    inputs['CARRY_IN']!.updateFromSource();
+    inputs['inputA']!.updateFromSource();
+    inputs['inputB']!.updateFromSource();
+    inputs['carryIn']!.updateFromSource();
 
-    final int a = inputs['A']!.value;
-    final int b = inputs['B']!.value;
-    final int cin = inputs['CARRY_IN']!.value;
+    final int a = inputs['inputA']!.value;
+    final int b = inputs['inputB']!.value;
+    final int cin = inputs['carryIn']!.value;
 
     final int mask = (1 << bitWidth) - 1;
     final int raw = a + b + cin;
     final int newSum = raw & mask;
     final int newCarry = (raw >> bitWidth) & 0x1;
 
-    final bool sumChanged = outputs['SUM']!.value != newSum;
-    final bool carryChanged = outputs['CARRY_OUT']!.value != newCarry;
-    outputs['SUM']!.value = newSum;
-    outputs['CARRY_OUT']!.value = newCarry;
+    final bool sumChanged = outputs['sum']!.value != newSum;
+    final bool carryChanged = outputs['carryOut']!.value != newCarry;
+    outputs['sum']!.value = newSum;
+    outputs['carryOut']!.value = newCarry;
     return sumChanged || carryChanged;
   }
 }

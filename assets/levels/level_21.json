@@ -37,8 +37,6 @@
         {"type": "Splitter8to1", "position": [6,7], "immovable": false, "label": "SPLd"},
         {"type": "Collector1to6", "position": [17,8], "immovable": false, "label": "COL6b"},
         {"type": "ShiftLeft2", "position": [16,3], "immovable": false, "label": "<<2"}
-        
-
     ],
      "connections": [
         

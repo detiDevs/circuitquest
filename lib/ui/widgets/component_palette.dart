@@ -1,3 +1,6 @@
+import 'package:circuitquest/core/components/combinational/collector.dart';
+import 'package:circuitquest/core/components/combinational/multiplexer.dart';
+import 'package:circuitquest/core/components/combinational/splitter.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
@@ -34,6 +37,8 @@ class ComponentType {
 
 /// Available component types in the palette.
 final List<ComponentType> availableComponents = [
+  ComponentType(name: "InputSource", displayName: "Input", svgAsset: 'assets/gates/Input.svg', createComponent: () => InputSource()),
+  ComponentType(name: "OutputProbe", displayName: "Output", svgAsset: 'assets/gates/Output.svg', createComponent: () => OutputProbe()),
   // Basic gates
   ComponentType(
     name: 'And',
@@ -103,8 +108,13 @@ final List<ComponentType> availableComponents = [
     svgAsset: 'assets/gates/Register.svg',
     createComponent: () => DFlipFlop(),
   ),
-  ComponentType(name: "InputSource", displayName: "Input", svgAsset: 'assets/gates/Input.svg', createComponent: () => InputSource()),
-  ComponentType(name: "OutputProbe", displayName: "Output", svgAsset: 'assets/gates/Output.svg', createComponent: () => OutputProbe()),
+  ComponentType(name: "Splitter8to1", displayName: "Splitter 8 to 1", svgAsset: "assets/gates/Splitter8to1", createComponent: () => Splitter(sliceCount: 8, sliceBitWidth: 1)),
+  ComponentType(name: "Splitter32to8", displayName: "Splitter 32 to 8", svgAsset: "assets/gates/Splitter32to8", createComponent: () => Splitter(sliceCount: 4, sliceBitWidth: 1)),
+  ComponentType(name: "Collector1to5", displayName: "Collector 1 to 5", svgAsset: "assets/gates/Collector1to5", createComponent: () => Collector(sliceCount: 5, sliceBitWidth: 1)),
+  ComponentType(name: "Collector1to5", displayName: "Collector 1 to 5", svgAsset: "assets/gates/Collector1to5", createComponent: () => Collector(sliceCount: 5, sliceBitWidth: 1)),
+  ComponentType(name: "Collector1to5", displayName: "Collector 1 to 5", svgAsset: "assets/gates/Collector8to16", createComponent: () => Collector(sliceCount: 2, sliceBitWidth: 8)),
+  ComponentType(name: "Multiplexer2Inp", displayName: "Multiplexer2Inp", svgAsset: "assets/gates/Multiplexer2Inp", createComponent: () => Multiplexer(inputCount: 2)),
+  ComponentType(name: "Adder32Bit", displayName: "Adder32bit", svgAsset: "assets/gates/Multiplexer2Inp", createComponent: () => RippleCarryAdder(bitWidth: 32))
 ];
 
 /// Component palette widget showing available components.

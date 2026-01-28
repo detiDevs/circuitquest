@@ -38,15 +38,11 @@ class AvailableComponent {
   AvailableComponent({required this.type});
 
   factory AvailableComponent.fromJson(Map<String, dynamic> json) {
-    return AvailableComponent(
-      type: json['type'] as String,
-    );
+    return AvailableComponent(type: json['type'] as String);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'type': type,
-    };
+    return {'type': type};
   }
 }
 
@@ -55,10 +51,7 @@ class LevelTest {
   final List<List<int>> inputs;
   final List<List<int>> expectedOutput;
 
-  LevelTest({
-    required this.inputs,
-    required this.expectedOutput,
-  });
+  LevelTest({required this.inputs, required this.expectedOutput});
 
   factory LevelTest.fromJson(Map<String, dynamic> json) {
     return LevelTest(
@@ -72,10 +65,7 @@ class LevelTest {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'inputs': inputs,
-      'expected_output': expectedOutput,
-    };
+    return {'inputs': inputs, 'expected_output': expectedOutput};
   }
 }
 
@@ -117,7 +107,7 @@ class Level {
           .map((e) => AvailableComponent.fromJson(e as Map<String, dynamic>))
           .toList(),
       hints: (json['hints'] as List<dynamic>).cast<String>(),
-      tests: (json['tests'] as List<dynamic>)
+      tests: ((json['tests'] ?? []) as List<dynamic>)
           .map((e) => LevelTest.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -131,8 +121,9 @@ class Level {
       'difficulty': difficulty,
       'objectives': objectives,
       'components': components.map((c) => c.toJson()).toList(),
-      'available_components':
-          availableComponents.map((c) => c.toJson()).toList(),
+      'available_components': availableComponents
+          .map((c) => c.toJson())
+          .toList(),
       'hints': hints,
       'tests': tests.map((t) => t.toJson()).toList(),
     };
@@ -160,11 +151,7 @@ class LevelBlockItem {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'recommended': recommended,
-    };
+    return {'id': id, 'name': name, 'recommended': recommended};
   }
 }
 
@@ -173,10 +160,7 @@ class LevelMeta {
   final List<int> completedLevels;
   bool allLevelsUnlocked;
 
-  LevelMeta({
-    required this.completedLevels,
-    required this.allLevelsUnlocked,
-  });
+  LevelMeta({required this.completedLevels, required this.allLevelsUnlocked});
 
   factory LevelMeta.fromJson(Map<String, dynamic> json) {
     return LevelMeta(
