@@ -22,9 +22,9 @@ class RegisterBlock extends Component {
     _readData1 = OutputPin(this, bitWidth: 32);
     _readData2 = OutputPin(this, bitWidth: 32);
     
-    inputs['readAddr1'] = _readAddress1;
-    inputs['readAddr2'] = _readAddress2;
-    inputs['writeAddr'] = _writeAddress;
+    inputs['readReg1'] = _readAddress1;
+    inputs['readReg2'] = _readAddress2;
+    inputs['regWrite'] = _writeAddress;
     inputs['writeData'] = _writeData;
     inputs['writeEnable'] = _writeEnable;
     outputs['readData1'] = _readData1;

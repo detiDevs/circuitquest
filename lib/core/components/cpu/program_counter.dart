@@ -14,8 +14,8 @@ class ProgramCounter extends Component {
     _pcOutput = OutputPin(this, bitWidth: 32);
     
     inputs['clock'] = _clockInput;
-    inputs['nextPC'] = _nextPcInput;
-    outputs['pc'] = _pcOutput;
+    inputs['input'] = _nextPcInput;
+    outputs['outValue'] = _pcOutput;
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'package:circuitquest/state/sandbox_state.dart';
+
 /// Data model representing a circuit component in a level
 class LevelComponent {
   final String type;
@@ -78,6 +80,7 @@ class Level {
   final List<String> objectives;
   final List<LevelComponent> components;
   final List<AvailableComponent> availableComponents;
+  final List<WireConnection> connections;
   final List<String> hints;
   final List<LevelTest> tests;
 
@@ -89,6 +92,7 @@ class Level {
     required this.objectives,
     required this.components,
     required this.availableComponents,
+    required this.connections,
     required this.hints,
     required this.tests,
   });
@@ -105,6 +109,9 @@ class Level {
           .toList(),
       availableComponents: (json['available_components'] as List<dynamic>)
           .map((e) => AvailableComponent.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      connections: ((json['connections'] ?? []) as List<dynamic>)
+          .map((e) => WireConnection.fromJson(e as Map<String, dynamic>))
           .toList(),
       hints: (json['hints'] as List<dynamic>).cast<String>(),
       tests: ((json['tests'] ?? []) as List<dynamic>)

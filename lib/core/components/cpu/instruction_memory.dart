@@ -15,7 +15,7 @@ class InstructionMemory extends Component {
     _addressInput = InputPin(this, bitWidth: 32);
     _instructionOutput = OutputPin(this, bitWidth: 32);
     
-    inputs['address'] = _addressInput;
+    inputs['readAddress'] = _addressInput;
     outputs['instruction'] = _instructionOutput;
   }
 

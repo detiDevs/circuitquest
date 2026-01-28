@@ -4,11 +4,11 @@ import 'package:circuitquest/core/logic/pin.dart';
 
 class InputSource extends Component {
   InputSource({int bitWidth = 1}) {
-    outputs['output'] = OutputPin(this, bitWidth: bitWidth);
+    outputs['outValue'] = OutputPin(this, bitWidth: bitWidth);
   }
 
   void setValue(int value) {
-    outputs['output']!.value = value;
+    outputs['outValue']!.value = value;
   }
 
   @override

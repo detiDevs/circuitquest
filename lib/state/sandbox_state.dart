@@ -18,13 +18,13 @@ final sandboxProvider = ChangeNotifierProvider<SandboxState>(
 class PlacedComponent {
   /// The component type (e.g., "And", "Or", "Not")
   final String type;
-  
+
   /// The actual logic component instance
   final Component component;
-  
+
   /// Position on the canvas grid
   final Offset position;
-  
+
   /// Unique identifier for this placed component
   final String id;
 
@@ -59,13 +59,13 @@ class PlacedComponent {
 class WireConnection {
   /// Source component ID
   final String sourceComponentId;
-  
+
   /// Source output pin name
   final String sourcePin;
-  
+
   /// Target component ID
   final String targetComponentId;
-  
+
   /// Target input pin name
   final String targetPin;
 
@@ -75,6 +75,15 @@ class WireConnection {
     required this.targetComponentId,
     required this.targetPin,
   });
+
+  factory WireConnection.fromJson(Map<String, dynamic> json) {
+    return WireConnection(
+      sourceComponentId: json['origin'].toString(),
+      sourcePin: json['originKey'],
+      targetComponentId: json['destination'].toString(),
+      targetPin: json['destinationKey'],
+    );
+  }
 
   /// Converts this WireConnection to JSON format
   Map<String, dynamic> toJson() {
@@ -97,42 +106,43 @@ class WireConnection {
 class SandboxState extends ChangeNotifier {
   /// All components placed on the canvas
   final List<PlacedComponent> _placedComponents = [];
-  
+
   /// All wire connections in the circuit
   final List<WireConnection> _connections = [];
-  
+
   /// The simulator instance for evaluating the circuit
   Simulator? _simulator;
-  
+
   /// Currently selected component type for placement
   String? _selectedComponentType;
-  
+
   /// Component being dragged (if any)
   PlacedComponent? _draggingComponent;
-  
+
   /// Wire being drawn (source component and pin)
   ({String componentId, String pinName})? _wireDrawingStart;
-  
+
   /// Current simulation running state
   bool _isSimulating = false;
-  
+
   /// Simulation tick speed (ticks per second, 0 = instant)
   double _tickSpeed = 0.0;
-  
+
   /// Saved component states before simulation for reset
   Map<String, Map<String, int>>? _savedComponentStates;
-  
+
   /// Flag to cancel ongoing simulation
   bool _cancelSimulation = false;
-  
+
   /// Components that are currently being evaluated (for visualization)
   Set<String> _activeComponentIds = {};
-  
+
   /// Auto-increment counter for component IDs
   int _nextComponentId = 0;
 
   // Getters
-  List<PlacedComponent> get placedComponents => List.unmodifiable(_placedComponents);
+  List<PlacedComponent> get placedComponents =>
+      List.unmodifiable(_placedComponents);
   List<WireConnection> get connections => List.unmodifiable(_connections);
   String? get selectedComponentType => _selectedComponentType;
   PlacedComponent? get draggingComponent => _draggingComponent;
@@ -140,7 +150,8 @@ class SandboxState extends ChangeNotifier {
   double get tickSpeed => _tickSpeed;
   bool get canReset => _savedComponentStates != null;
   Set<String> get activeComponentIds => Set.unmodifiable(_activeComponentIds);
-  ({String componentId, String pinName})? get wireDrawingStart => _wireDrawingStart;
+  ({String componentId, String pinName})? get wireDrawingStart =>
+      _wireDrawingStart;
 
   /// Sets the currently selected component type for placement.
   void selectComponentType(String? type) {
@@ -151,8 +162,14 @@ class SandboxState extends ChangeNotifier {
   /// Adds a new component to the canvas at the specified position.
   ///
   /// Returns the ID of the newly placed component.
-  String placeComponent(String type, Offset position, Component component, {bool immovable = false, String? label}) {
-    final id = 'component_${_nextComponentId++}';
+  String placeComponent(
+    String type,
+    Offset position,
+    Component component, {
+    bool immovable = false,
+    String? label,
+  }) {
+    final id = '${_nextComponentId++}';
     final placed = PlacedComponent(
       type: type,
       component: component,
@@ -162,6 +179,7 @@ class SandboxState extends ChangeNotifier {
       label: label,
     );
     _placedComponents.add(placed);
+    print("Placed component with id: ${placed.id} and type ${placed.type}");
     notifyListeners();
     return id;
   }
@@ -172,8 +190,9 @@ class SandboxState extends ChangeNotifier {
   void removeComponent(String componentId) {
     _placedComponents.removeWhere((c) => c.id == componentId);
     _connections.removeWhere(
-      (conn) => conn.sourceComponentId == componentId || 
-                conn.targetComponentId == componentId,
+      (conn) =>
+          conn.sourceComponentId == componentId ||
+          conn.targetComponentId == componentId,
     );
     notifyListeners();
   }
@@ -210,6 +229,28 @@ class SandboxState extends ChangeNotifier {
     final sourceComponentId = _wireDrawingStart!.componentId;
     final sourcePinName = _wireDrawingStart!.pinName;
 
+    bool result = false;
+    if (addConnection(
+      sourceComponentId,
+      sourcePinName,
+      targetComponentId,
+      targetPinName,
+    )) {
+      result = true;
+    }
+    _wireDrawingStart = null;
+    notifyListeners();
+    return result;
+  }
+
+  bool addConnection(
+    String sourceComponentId,
+    String sourcePinName,
+    String targetComponentId,
+    String targetPinName,
+  ) {
+    bool result = false;
+
     // Find the components
     final sourceComponent = _placedComponents
         .firstWhere((c) => c.id == sourceComponentId)
@@ -227,21 +268,27 @@ class SandboxState extends ChangeNotifier {
       Wire(sourcePin, targetPin);
 
       // Track the connection
-      _connections.add(WireConnection(
-        sourceComponentId: sourceComponentId,
-        sourcePin: sourcePinName,
-        targetComponentId: targetComponentId,
-        targetPin: targetPinName,
-      ));
-
-      _wireDrawingStart = null;
-      notifyListeners();
-      return true;
+      _connections.add(
+        WireConnection(
+          sourceComponentId: sourceComponentId,
+          sourcePin: sourcePinName,
+          targetComponentId: targetComponentId,
+          targetPin: targetPinName,
+        ),
+      );
+      result = true;
+      print("Connection was added.");
+    } else {
+      print("Connection was not added.");
+      if(sourcePin == null) {
+        print("Source pin was null");
+      }
+      if(targetPin == null) {
+        print("Target pin was null");
+      }
     }
-
-    _wireDrawingStart = null;
     notifyListeners();
-    return false;
+    return result;
   }
 
   /// Cancels the current wire drawing operation.
@@ -282,9 +329,11 @@ class SandboxState extends ChangeNotifier {
 
     // Treat components with no inputs or explicit InputSources as starting points
     final inputStarts = _placedComponents
-      .where((pc) => pc.component.inputs.isEmpty || pc.component is InputSource)
-      .map((pc) => pc.component)
-      .toSet();
+        .where(
+          (pc) => pc.component.inputs.isEmpty || pc.component is InputSource,
+        )
+        .map((pc) => pc.component)
+        .toSet();
     final startingSet = inputStarts.isEmpty ? allComponents : inputStarts;
 
     _simulator = Simulator(
@@ -305,19 +354,21 @@ class SandboxState extends ChangeNotifier {
   /// Starts simulation with tick-based evaluation
   Future<void> startSimulation() async {
     if (_placedComponents.isEmpty) return;
-    
+
     // Save current state for reset
     _saveComponentStates();
     _cancelSimulation = false;
     _isSimulating = true;
     _activeComponentIds = {};
     notifyListeners();
-    
+
     final allComponents = _placedComponents.map((pc) => pc.component).toSet();
     final inputStarts = _placedComponents
-      .where((pc) => pc.component.inputs.isEmpty || pc.component is InputSource)
-      .map((pc) => pc.component)
-      .toSet();
+        .where(
+          (pc) => pc.component.inputs.isEmpty || pc.component is InputSource,
+        )
+        .map((pc) => pc.component)
+        .toSet();
     final startingSet = inputStarts.isEmpty ? allComponents : inputStarts;
 
     _simulator = Simulator(
@@ -342,11 +393,13 @@ class SandboxState extends ChangeNotifier {
         onWait: () async {
           if (_cancelSimulation) return;
           notifyListeners();
-          await Future.delayed(Duration(milliseconds: (1000 / _tickSpeed).round()));
+          await Future.delayed(
+            Duration(milliseconds: (1000 / _tickSpeed).round()),
+          );
         },
       );
     }
-    
+
     // Simulation complete
     _isSimulating = false;
     _activeComponentIds = {};
@@ -387,7 +440,7 @@ class SandboxState extends ChangeNotifier {
   /// Internal: Restore component output states
   void _restoreComponentStates() {
     if (_savedComponentStates == null) return;
-    
+
     for (final placed in _placedComponents) {
       final savedOutputs = _savedComponentStates![placed.id];
       if (savedOutputs != null) {
@@ -448,18 +501,18 @@ class SandboxState extends ChangeNotifier {
   bool loadCircuitFromJson(String jsonString) {
     try {
       final data = jsonDecode(jsonString) as Map<String, dynamic>;
-      
+
       // Stop any running simulation
       if (_isSimulating) {
         pauseSimulation();
       }
-      
+
       // Clear existing circuit
       _placedComponents.clear();
       _connections.clear();
       _wireDrawingStart = null;
       _savedComponentStates = null;
-      
+
       // Load components
       final components = data['components'] as List<dynamic>;
       for (final compData in components) {
@@ -472,7 +525,7 @@ class SandboxState extends ChangeNotifier {
         final id = compData['id'] as String;
         final immovable = compData['immovable'] as bool? ?? false;
         final label = compData['label'] as String?;
-        
+
         // Create component instance
         Component component;
         if (type == 'InputSource') {
@@ -482,38 +535,44 @@ class SandboxState extends ChangeNotifier {
         } else {
           // Find component in available components list
           try {
-            final componentType = availableComponents.firstWhere((ct) => ct.name == type);
+            final componentType = availableComponents.firstWhere(
+              (ct) => ct.name == type,
+            );
             component = componentType.createComponent();
           } catch (_) {
             print('Unknown component type: $type');
             continue;
           }
         }
-        
-        _placedComponents.add(PlacedComponent(
-          type: type,
-          component: component,
-          position: position,
-          id: id,
-          immovable: immovable,
-          label: label,
-        ));
+
+        _placedComponents.add(
+          PlacedComponent(
+            type: type,
+            component: component,
+            position: position,
+            id: id,
+            immovable: immovable,
+            label: label,
+          ),
+        );
       }
-      
+
       // Load connections
       final connections = data['connections'] as List<dynamic>;
       for (final connData in connections) {
-        _connections.add(WireConnection(
-          sourceComponentId: connData['sourceComponentId'] as String,
-          sourcePin: connData['sourcePin'] as String,
-          targetComponentId: connData['targetComponentId'] as String,
-          targetPin: connData['targetPin'] as String,
-        ));
+        _connections.add(
+          WireConnection(
+            sourceComponentId: connData['sourceComponentId'] as String,
+            sourcePin: connData['sourcePin'] as String,
+            targetComponentId: connData['targetComponentId'] as String,
+            targetPin: connData['targetPin'] as String,
+          ),
+        );
       }
-      
+
       // Rebuild wire connections
       _rebuildWireConnections();
-      
+
       notifyListeners();
       return true;
     } catch (e) {
@@ -530,16 +589,16 @@ class SandboxState extends ChangeNotifier {
         input.source = null;
       }
     }
-    
+
     // Recreate connections based on WireConnection list
     for (final conn in _connections) {
       final source = getComponent(conn.sourceComponentId);
       final target = getComponent(conn.targetComponentId);
-      
+
       if (source != null && target != null) {
         final sourceOutput = source.component.outputs[conn.sourcePin];
         final targetInput = target.component.inputs[conn.targetPin];
-        
+
         if (sourceOutput != null && targetInput != null) {
           Wire(sourceOutput, targetInput);
         }

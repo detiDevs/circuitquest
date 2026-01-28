@@ -33,7 +33,7 @@ class Multiplexer extends Component {
     inputs['sel'] = InputPin(this, bitWidth: selectBitWidth);
 
     // Create output
-    outputs['out'] = OutputPin(this, bitWidth: dataBitWidth);
+    outputs['outValue'] = OutputPin(this, bitWidth: dataBitWidth);
   }
 
   /// Evaluates the multiplexer and routes the selected input to the output.
@@ -51,7 +51,7 @@ class Multiplexer extends Component {
 
     // Forward selected data
     final int newValue = inputs['in$selectedIndex']!.value;
-    final OutputPin outPin = outputs['out']!;
+    final OutputPin outPin = outputs['outValue']!;
     final bool changed = outPin.value != newValue;
     outPin.value = newValue;
     return changed;

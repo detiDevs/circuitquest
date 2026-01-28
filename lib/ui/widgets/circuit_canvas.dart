@@ -41,7 +41,8 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   bool _initializedFromLevel = false;
 
   /// Controller for handling pan and zoom transformations
-  final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController =
+      TransformationController();
 
   @override
   void dispose() {
@@ -73,6 +74,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
     final state = ref.read(sandboxProvider);
     state.reset();
 
+    for(var c in level.components) {
+      print(c.type);
+    }
     for (final lc in level.components) {
       final resolved = _resolveComponentForLevelType(lc.type);
       if (resolved == null) continue;
@@ -90,12 +94,24 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         label: lc.label,
       );
     }
+    
+    for (final connection in level.connections) {
+      print("Adding connection: ${connection.toJson()}");
+      state.addConnection(
+        connection.sourceComponentId,
+        connection.sourcePin,
+        connection.targetComponentId,
+        connection.targetPin,
+      );
+    }
 
     _initializedFromLevel = true;
   }
 
   /// Maps a level component type to a concrete component and canonical type name.
-  ({String typeName, Component component})? _resolveComponentForLevelType(String type) {
+  ({String typeName, Component component})? _resolveComponentForLevelType(
+    String type,
+  ) {
     switch (type) {
       case 'Input':
         return (typeName: 'InputSource', component: InputSource());
@@ -125,11 +141,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
 
         // Create and place the component
         final component = details.data.createComponent();
-        ref.read(sandboxProvider).placeComponent(
-              details.data.name,
-              gridPosition,
-              component,
-            );
+        ref
+            .read(sandboxProvider)
+            .placeComponent(details.data.name, gridPosition, component);
       },
       builder: (context, candidateData, rejectedData) {
         return InteractiveViewer(
@@ -143,7 +157,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
               // Track mouse position for wire drawing feedback
               if (state.wireDrawingStart != null) {
                 setState(() {
-                  _currentPointerPosition = _transformPosition(event.localPosition);
+                  _currentPointerPosition = _transformPosition(
+                    event.localPosition,
+                  );
                 });
               }
             },
@@ -151,7 +167,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
               onTapDown: (details) {
                 // Cancel wire drawing only when tapping empty space
                 if (state.wireDrawingStart != null) {
-                  final transformedPos = _transformPosition(details.localPosition);
+                  final transformedPos = _transformPosition(
+                    details.localPosition,
+                  );
                   final hitComponent = _hitTestComponent(state, transformedPos);
                   if (hitComponent == null) {
                     state.cancelWireDrawing();
@@ -164,7 +182,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
               onPanUpdate: (details) {
                 // Track pointer position for wire drawing
                 setState(() {
-                  _currentPointerPosition = _transformPosition(details.localPosition);
+                  _currentPointerPosition = _transformPosition(
+                    details.localPosition,
+                  );
                 });
               },
               onPanEnd: (details) {
@@ -197,7 +217,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
                           key: ValueKey(placed.id),
                           placedComponent: placed,
                           gridSize: gridSize,
-                          isActive: state.activeComponentIds.contains(placed.id),
+                          isActive: state.activeComponentIds.contains(
+                            placed.id,
+                          ),
                         );
                       }),
                     ],
@@ -239,11 +261,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   Offset _transformPosition(Offset screenPosition) {
     final Matrix4 transform = _transformationController.value;
     final Matrix4 inverseTransform = Matrix4.inverted(transform);
-    final Vector3 transformed = inverseTransform.transform3(Vector3(
-      screenPosition.dx,
-      screenPosition.dy,
-      0,
-    ));
+    final Vector3 transformed = inverseTransform.transform3(
+      Vector3(screenPosition.dx, screenPosition.dy, 0),
+    );
     return Offset(transformed.x, transformed.y);
   }
 }
@@ -260,20 +280,12 @@ class _GridPainter extends CustomPainter {
 
     // Draw vertical lines
     for (double x = 0; x < size.width; x += gridSize) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x, size.height),
-        paint,
-      );
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
     }
 
     // Draw horizontal lines
     for (double y = 0; y < size.height; y += gridSize) {
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        paint,
-      );
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
     }
   }
 
@@ -308,14 +320,17 @@ class _WirePainter extends CustomPainter {
 
     // Draw existing connections
     for (final connection in connections) {
-      final sourceComponent = placedComponents
-          .firstWhere((c) => c.id == connection.sourceComponentId);
-      final targetComponent = placedComponents
-          .firstWhere((c) => c.id == connection.targetComponentId);
+      final sourceComponent = placedComponents.firstWhere(
+        (c) => c.id == connection.sourceComponentId,
+      );
+      final targetComponent = placedComponents.firstWhere(
+        (c) => c.id == connection.targetComponentId,
+      );
 
       // Check if this connection is active (either endpoint is being evaluated)
-      final isActive = activeComponentIds.contains(connection.sourceComponentId) ||
-                       activeComponentIds.contains(connection.targetComponentId);
+      final isActive =
+          activeComponentIds.contains(connection.sourceComponentId) ||
+          activeComponentIds.contains(connection.targetComponentId);
 
       // Calculate pin centers for the specific pins involved
       final sourcePos = _pinCenter(
@@ -343,8 +358,9 @@ class _WirePainter extends CustomPainter {
 
     // Draw wire being drawn
     if (wireDrawingStart != null && currentPointerPosition != null) {
-      final sourceComponent = placedComponents
-          .firstWhere((c) => c.id == wireDrawingStart!.componentId);
+      final sourceComponent = placedComponents.firstWhere(
+        (c) => c.id == wireDrawingStart!.componentId,
+      );
       final sourcePos = _pinCenter(
         sourceComponent,
         wireDrawingStart!.pinName,
@@ -369,9 +385,12 @@ class _WirePainter extends CustomPainter {
     final controlPoint2 = Offset(end.dx - 50, end.dy);
 
     path.cubicTo(
-      controlPoint1.dx, controlPoint1.dy,
-      controlPoint2.dx, controlPoint2.dy,
-      end.dx, end.dy,
+      controlPoint1.dx,
+      controlPoint1.dy,
+      controlPoint2.dx,
+      controlPoint2.dy,
+      end.dx,
+      end.dy,
     );
 
     canvas.drawPath(path, paint);
@@ -433,8 +452,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sandboxProvider);
-    final componentType = availableComponents
-        .firstWhere((ct) => ct.name == placedComponent.type);
+    final componentType = availableComponents.firstWhere(
+      (ct) => ct.name == placedComponent.type,
+    );
 
     return Positioned(
       left: placedComponent.position.dx,
@@ -444,7 +464,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
           if (placedComponent.immovable) return;
           // Move component
           final newPosition = placedComponent.position + details.delta;
-          ref.read(sandboxProvider).moveComponent(placedComponent.id, newPosition);
+          ref
+              .read(sandboxProvider)
+              .moveComponent(placedComponent.id, newPosition);
         },
         onPanEnd: (details) {
           if (placedComponent.immovable) return;
@@ -458,7 +480,11 @@ class _PlacedComponentWidget extends ConsumerWidget {
         onSecondaryTapDown: (details) {
           if (placedComponent.immovable) return;
           // Show context menu on right-click
-          _showContextMenu(context, details.globalPosition, ref.read(sandboxProvider));
+          _showContextMenu(
+            context,
+            details.globalPosition,
+            ref.read(sandboxProvider),
+          );
         },
         onLongPress: () {
           if (placedComponent.immovable) return;
@@ -480,53 +506,60 @@ class _PlacedComponentWidget extends ConsumerWidget {
               ),
             ],
           ),
-            child: placedComponent.component is InputSource
-                ? _buildInputControls(
-                    placedComponent.component as InputSource,
-                    placedComponent,
-                    ref,
-                  )
-                : placedComponent.component is OutputProbe
-                    ? _buildOutputProbe(
-                        placedComponent.component as OutputProbe,
-                        placedComponent,
-                        ref,
-                      )
-                    : Stack(
-                        children: [
-                          if (placedComponent.label != null)
-                            Positioned(
-                              top: 4,
-                              left: 6,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[50],
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(color: Colors.blue[200]!),
-                                ),
-                                child: Text(
-                                  placedComponent.label!,
-                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          // Component icon with fallback to name text
-                          Center(
-                            child: SvgPicture.asset(
-                              componentType.svgAsset,
-                              width: gridSize * 0.7,
-                              height: gridSize * 0.7,
-                              fit: BoxFit.contain,
-                              placeholderBuilder: (context) => Text(placedComponent.type),
+          child: placedComponent.component is InputSource
+              ? _buildInputControls(
+                  placedComponent.component as InputSource,
+                  placedComponent,
+                  ref,
+                )
+              : placedComponent.component is OutputProbe
+              ? _buildOutputProbe(
+                  placedComponent.component as OutputProbe,
+                  placedComponent,
+                  ref,
+                )
+              : Stack(
+                  children: [
+                    if (placedComponent.label != null)
+                      Positioned(
+                        top: 4,
+                        left: 6,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.blue[200]!),
+                          ),
+                          child: Text(
+                            placedComponent.label!,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          // Input pins (left side)
-                          ..._buildInputPins(context, state),
-                          // Output pins (right side)
-                          ..._buildOutputPins(context, state),
-                        ],
+                        ),
                       ),
+                    // Component icon with fallback to name text
+                    Center(
+                      child: SvgPicture.asset(
+                        componentType.svgAsset,
+                        width: gridSize * 0.7,
+                        height: gridSize * 0.7,
+                        fit: BoxFit.contain,
+                        placeholderBuilder: (context) =>
+                            Text(placedComponent.type),
+                      ),
+                    ),
+                    // Input pins (left side)
+                    ..._buildInputPins(context, state),
+                    // Output pins (right side)
+                    ..._buildOutputPins(context, state),
+                  ],
+                ),
         ),
       ),
     );
@@ -566,7 +599,11 @@ class _PlacedComponentWidget extends ConsumerWidget {
 
     for (int i = 0; i < inputs.length; i++) {
       final entry = inputs[i];
-      final pinPosition = _calculatePinPosition(i, inputs.length, isInput: true);
+      final pinPosition = _calculatePinPosition(
+        i,
+        inputs.length,
+        isInput: true,
+      );
 
       pins.add(
         Positioned(
@@ -581,7 +618,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
 
               // If already connected, delete the connection by tapping the input pin
               final existing = state.connections.where(
-                (c) => c.targetComponentId == placedComponent.id && c.targetPin == entry.key,
+                (c) =>
+                    c.targetComponentId == placedComponent.id &&
+                    c.targetPin == entry.key,
               );
               if (existing.isNotEmpty) {
                 state.removeConnection(existing.first);
@@ -594,13 +633,19 @@ class _PlacedComponentWidget extends ConsumerWidget {
                 color: entry.value.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.black, width: 1),
-                boxShadow: isActive ? [
-                  BoxShadow(
-                    color: (entry.value.value > 0 ? Colors.green : Colors.red).withOpacity(0.8),
-                    blurRadius: 8,
-                    spreadRadius: 2,
-                  ),
-                ] : null,
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color:
+                              (entry.value.value > 0
+                                      ? Colors.green
+                                      : Colors.red)
+                                  .withOpacity(0.8),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ]
+                    : null,
               ),
             ),
           ),
@@ -618,7 +663,11 @@ class _PlacedComponentWidget extends ConsumerWidget {
 
     for (int i = 0; i < outputs.length; i++) {
       final entry = outputs[i];
-      final pinPosition = _calculatePinPosition(i, outputs.length, isInput: false);
+      final pinPosition = _calculatePinPosition(
+        i,
+        outputs.length,
+        isInput: false,
+      );
 
       pins.add(
         Positioned(
@@ -636,13 +685,19 @@ class _PlacedComponentWidget extends ConsumerWidget {
                 color: entry.value.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.black, width: 1),
-                boxShadow: isActive ? [
-                  BoxShadow(
-                    color: (entry.value.value > 0 ? Colors.green : Colors.red).withOpacity(0.8),
-                    blurRadius: 8,
-                    spreadRadius: 2,
-                  ),
-                ] : null,
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color:
+                              (entry.value.value > 0
+                                      ? Colors.green
+                                      : Colors.red)
+                                  .withOpacity(0.8),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ]
+                    : null,
               ),
             ),
           ),
@@ -669,8 +724,11 @@ class _PlacedComponentWidget extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.componentMenuTitle(
-            placedComponent.type)),
+        title: Text(
+          AppLocalizations.of(
+            context,
+          )!.componentMenuTitle(placedComponent.type),
+        ),
         content: Text(AppLocalizations.of(context)!.componentMenuPrompt),
         actions: [
           TextButton(
@@ -684,8 +742,10 @@ class _PlacedComponentWidget extends ConsumerWidget {
               state.removeComponent(placedComponent.id);
               Navigator.of(context).pop();
             },
-            child: Text(AppLocalizations.of(context)!.delete, 
-                style: const TextStyle(color: Colors.red)),
+            child: Text(
+              AppLocalizations.of(context)!.delete,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
@@ -693,9 +753,13 @@ class _PlacedComponentWidget extends ConsumerWidget {
   }
 
   /// Shows a context menu at the cursor position (for right-click).
-  void _showContextMenu(BuildContext context, Offset position, SandboxState state) {
+  void _showContextMenu(
+    BuildContext context,
+    Offset position,
+    SandboxState state,
+  ) {
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    
+
     showMenu(
       context: context,
       position: RelativeRect.fromRect(

@@ -11,7 +11,7 @@ class ShiftLeft2 extends Component {
     _output = OutputPin(this, bitWidth: 32);
     
     inputs['in'] = _input;
-    outputs['out'] = _output;
+    outputs['outValue'] = _output;
   }
 
   @override

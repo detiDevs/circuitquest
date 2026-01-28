@@ -48,7 +48,7 @@
         },
         {
             "origin": 22,
-            "originKey": "outputValue",
+            "originKey": "outValue",
             "destination": 0,
             "destinationKey": "input"
         },
@@ -74,7 +74,7 @@
             "origin": 1,
             "originKey": "instruction",
             "destination": 4,
-            "destinationKey": "input1"
+            "destinationKey": "input"
         },
         {
             "origin": 4,
@@ -109,7 +109,7 @@
         
         {
             "origin": 18,
-            "originKey": "outputValue",
+            "originKey": "outValue",
             "destination": 8,
             "destinationKey": "writeData"
         },

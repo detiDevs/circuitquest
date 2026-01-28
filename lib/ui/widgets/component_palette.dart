@@ -1,6 +1,15 @@
 import 'package:circuitquest/core/components/combinational/collector.dart';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
+import 'package:circuitquest/core/components/combinational/shift_left2.dart';
+import 'package:circuitquest/core/components/combinational/sign_extend.dart';
 import 'package:circuitquest/core/components/combinational/splitter.dart';
+import 'package:circuitquest/core/components/cpu/alu_advanced.dart';
+import 'package:circuitquest/core/components/cpu/alu_control.dart';
+import 'package:circuitquest/core/components/cpu/control_unit.dart';
+import 'package:circuitquest/core/components/cpu/data_memory.dart';
+import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
+import 'package:circuitquest/core/components/cpu/program_counter.dart';
+import 'package:circuitquest/core/components/cpu/register_block.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
@@ -111,10 +120,19 @@ final List<ComponentType> availableComponents = [
   ComponentType(name: "Splitter8to1", displayName: "Splitter 8 to 1", svgAsset: "assets/gates/Splitter8to1", createComponent: () => Splitter(sliceCount: 8, sliceBitWidth: 1)),
   ComponentType(name: "Splitter32to8", displayName: "Splitter 32 to 8", svgAsset: "assets/gates/Splitter32to8", createComponent: () => Splitter(sliceCount: 4, sliceBitWidth: 1)),
   ComponentType(name: "Collector1to5", displayName: "Collector 1 to 5", svgAsset: "assets/gates/Collector1to5", createComponent: () => Collector(sliceCount: 5, sliceBitWidth: 1)),
-  ComponentType(name: "Collector1to5", displayName: "Collector 1 to 5", svgAsset: "assets/gates/Collector1to5", createComponent: () => Collector(sliceCount: 5, sliceBitWidth: 1)),
-  ComponentType(name: "Collector1to5", displayName: "Collector 1 to 5", svgAsset: "assets/gates/Collector8to16", createComponent: () => Collector(sliceCount: 2, sliceBitWidth: 8)),
+  ComponentType(name: "Collector1to6", displayName: "Collector 1 to 6", svgAsset: "assets/gates/Collector1to6", createComponent: () => Collector(sliceCount: 6, sliceBitWidth: 1)),
+  ComponentType(name: "Collector8to16", displayName: "Collector8to16", svgAsset: "assets/gates/Collector8to16", createComponent: () => Collector(sliceCount: 2, sliceBitWidth: 8)),
   ComponentType(name: "Multiplexer2Inp", displayName: "Multiplexer2Inp", svgAsset: "assets/gates/Multiplexer2Inp", createComponent: () => Multiplexer(inputCount: 2)),
-  ComponentType(name: "Adder32Bit", displayName: "Adder32bit", svgAsset: "assets/gates/Multiplexer2Inp", createComponent: () => RippleCarryAdder(bitWidth: 32))
+  ComponentType(name: "Adder32bit", displayName: "Adder32bit", svgAsset: "", createComponent: () => RippleCarryAdder(bitWidth: 32)),
+  ComponentType(name: "ProgramCounter", displayName: "ProgramCounter", svgAsset: "", createComponent: () => ProgramCounter()),
+  ComponentType(name: "InstructionMemory", displayName: "InstructionMemory", svgAsset: "", createComponent: () => InstructionMemory()),
+  ComponentType(name: "RegisterBlock", displayName: "RegisterBlock", svgAsset: "", createComponent: () => RegisterBlock()),
+  ComponentType(name: "ALUAdvanced", displayName: "ALUAdvanced", svgAsset: "", createComponent: () => ALUAdvanced()),
+  ComponentType(name: "SignExtend", displayName: "SignExtend", svgAsset: "", createComponent: () => SignExtend()),
+  ComponentType(name: "ControlUnit", displayName: "ControlUnit", svgAsset: "", createComponent: () => ControlUnit()),
+  ComponentType(name: "ALUControl", displayName: "ALUControl", svgAsset: "", createComponent: () => ALUControl()),
+  ComponentType(name: "DataMemory", displayName: "DataMemory", svgAsset: "", createComponent: () => DataMemory()),
+  ComponentType(name: "ShiftLeft2", displayName: "ShiftLeft2", svgAsset: "", createComponent: () => ShiftLeft2()),
 ];
 
 /// Component palette widget showing available components.
