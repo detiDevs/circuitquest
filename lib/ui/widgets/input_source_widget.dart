@@ -32,7 +32,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
   }
 
   void _initializeController() {
-    final outputPin = widget.inputComponent.outputs['output']!;
+    final outputPin = widget.inputComponent.outputs['outValue']!;
     _controller = TextEditingController(text: outputPin.value.toString());
   }
 
@@ -53,7 +53,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final outputPin = widget.inputComponent.outputs['output']!;
+    final outputPin = widget.inputComponent.outputs['outValue']!;
     final bitWidth = outputPin.bitWidth;
     final maxValue = (1 << bitWidth) - 1;
     final currentValue = outputPin.value;
@@ -84,8 +84,8 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                   newBitWidth = 1;
                 }
                 // Create new output pin with new bitwidth
-                widget.inputComponent.outputs['output'] =
-                    widget.inputComponent.outputs['output']!.copyWith(newBitWidth);
+                widget.inputComponent.outputs['outValue'] =
+                  widget.inputComponent.outputs['outValue']!.copyWith(newBitWidth);
 
                 setState(() {
                   _controller.text = currentValue.toString();
