@@ -159,11 +159,18 @@ class _LevelScreenBody extends ConsumerWidget {
 }
 
 /// Panel displaying level information.
-class _LevelInfoPanel extends ConsumerWidget {
+class _LevelInfoPanel extends ConsumerStatefulWidget {
   const _LevelInfoPanel();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_LevelInfoPanel> createState() => _LevelInfoPanelState();
+}
+
+class _LevelInfoPanelState extends ConsumerState<_LevelInfoPanel> {
+  bool _showHints = false;
+
+  @override
+  Widget build(BuildContext context) {
     // We need to pass the level through ModalRoute or similar
     // For now, we'll create a helper method to get it
     final level = _getCurrentLevel(context);
@@ -239,43 +246,58 @@ class _LevelInfoPanel extends ConsumerWidget {
 
             // Hints
             if (level.hints.isNotEmpty) ...[
-              Text(
-                AppLocalizations.of(context)!.levelHints,
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.levelHints,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _showHints = !_showHints;
+                      });
+                    },
+                    child: Text(_showHints ? 'Hide hints' : 'Show hints'),
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              ...level.hints.map(
-                (hint) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.yellow[50],
-                      border: Border.all(color: Colors.yellow[200]!),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          Icons.lightbulb,
-                          size: 16,
-                          color: Colors.yellow[700],
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            hint,
-                            style: Theme.of(context).textTheme.bodySmall,
+              if (_showHints) ...[
+                const SizedBox(height: 8),
+                ...level.hints.map(
+                  (hint) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.yellow[50],
+                        border: Border.all(color: Colors.yellow[200]!),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.lightbulb,
+                            size: 16,
+                            color: Colors.yellow[700],
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              hint,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ],
           ],
         ),
