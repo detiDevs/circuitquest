@@ -1,138 +1,211 @@
-import 'package:circuitquest/core/components/combinational/collector.dart';
-import 'package:circuitquest/core/components/combinational/multiplexer.dart';
-import 'package:circuitquest/core/components/combinational/shift_left2.dart';
-import 'package:circuitquest/core/components/combinational/sign_extend.dart';
-import 'package:circuitquest/core/components/combinational/splitter.dart';
-import 'package:circuitquest/core/components/cpu/alu_advanced.dart';
-import 'package:circuitquest/core/components/cpu/alu_control.dart';
-import 'package:circuitquest/core/components/cpu/control_unit.dart';
-import 'package:circuitquest/core/components/cpu/data_memory.dart';
-import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
-import 'package:circuitquest/core/components/cpu/program_counter.dart';
-import 'package:circuitquest/core/components/cpu/register_block.dart';
-import 'package:circuitquest/core/components/input_source.dart';
-import 'package:circuitquest/core/components/output_probe.dart';
+import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/components/gates/and_gate.dart';
-import '../../core/components/gates/or_gate.dart';
-import '../../core/components/gates/not_gate.dart';
-import '../../core/components/gates/nand_gate.dart';
-import '../../core/components/gates/nor_gate.dart';
-import '../../core/components/gates/xor_gate.dart';
-import '../../core/components/sequential/clock.dart';
-import '../../core/components/sequential/d_latch.dart';
-import '../../core/components/sequential/d_flip_flop.dart';
 import '../../core/components/base/component.dart';
+import '../../state/custom_component_library.dart';
 import '../../state/sandbox_state.dart';
-import '../../core/components/combinational/adder.dart';
+import '../../core/components/custom_component.dart';
 
 /// A draggable component type in the palette.
 class ComponentType {
   final String name;
   final String displayName;
-  final String svgAsset;
+  final String iconPath;
+  final bool isAsset;
   final Component Function() createComponent;
 
   const ComponentType({
     required this.name,
     required this.displayName,
-    required this.svgAsset,
+    required this.iconPath,
     required this.createComponent,
+    this.isAsset = true,
   });
 }
 
 /// Available component types in the palette.
 final List<ComponentType> availableComponents = [
-  ComponentType(name: "InputSource", displayName: "Input", svgAsset: 'assets/gates/Input.svg', createComponent: () => InputSource()),
-  ComponentType(name: "OutputProbe", displayName: "Output", svgAsset: 'assets/gates/Output.svg', createComponent: () => OutputProbe()),
+  ComponentType(
+    name: "InputSource",
+    displayName: "Input",
+    iconPath: 'assets/gates/Input.svg',
+    createComponent: () => createComponentByName('InputSource')!,
+  ),
+  ComponentType(
+    name: "OutputProbe",
+    displayName: "Output",
+    iconPath: 'assets/gates/Output.svg',
+    createComponent: () => createComponentByName('OutputProbe')!,
+  ),
   // Basic gates
   ComponentType(
     name: 'And',
     displayName: 'AND Gate',
-    svgAsset: 'assets/gates/And.svg',
-    createComponent: () => AndGate(),
+    iconPath: 'assets/gates/And.svg',
+    createComponent: () => createComponentByName('And')!,
   ),
   ComponentType(
     name: 'Or',
     displayName: 'OR Gate',
-    svgAsset: 'assets/gates/Or.svg',
-    createComponent: () => OrGate(),
+    iconPath: 'assets/gates/Or.svg',
+    createComponent: () => createComponentByName('Or')!,
   ),
   ComponentType(
     name: 'Not',
     displayName: 'NOT Gate',
-    svgAsset: 'assets/gates/Not.svg',
-    createComponent: () => NotGate(),
+    iconPath: 'assets/gates/Not.svg',
+    createComponent: () => createComponentByName('Not')!,
   ),
   ComponentType(
     name: 'Nand',
     displayName: 'NAND Gate',
-    svgAsset: 'assets/gates/Nand.svg',
-    createComponent: () => NandGate(),
+    iconPath: 'assets/gates/Nand.svg',
+    createComponent: () => createComponentByName('Nand')!,
   ),
   ComponentType(
     name: 'Nor',
     displayName: 'NOR Gate',
-    svgAsset: 'assets/gates/Nor.svg',
-    createComponent: () => NorGate(),
+    iconPath: 'assets/gates/Nor.svg',
+    createComponent: () => createComponentByName('Nor')!,
   ),
   ComponentType(
     name: 'Xor',
     displayName: 'XOR Gate',
-    svgAsset: 'assets/gates/Xor.svg',
-    createComponent: () => XorGate(),
+    iconPath: 'assets/gates/Xor.svg',
+    createComponent: () => createComponentByName('Xor')!,
   ),
   // Adders
   ComponentType(
     name: 'HalfAdder',
     displayName: 'Half Adder',
-    svgAsset: 'assets/gates/HalfAdder.svg',
-    createComponent: () => HalfAdder(),
+    iconPath: 'assets/gates/HalfAdder.svg',
+    createComponent: () => createComponentByName('HalfAdder')!,
   ),
   ComponentType(
     name: 'FullAdder',
     displayName: 'Full Adder',
-    svgAsset: 'assets/gates/FullAdder.svg',
-    createComponent: () => FullAdder(),
+    iconPath: 'assets/gates/FullAdder.svg',
+    createComponent: () => createComponentByName('FullAdder')!,
   ),
   // Sequential components
   ComponentType(
     name: 'Clock',
     displayName: 'Clock',
-    svgAsset: 'assets/gates/Register.svg', // Reuse register icon for now
-    createComponent: () => Clock(),
+    iconPath: 'assets/gates/Register.svg', // Reuse register icon for now
+    createComponent: () => createComponentByName('Clock')!,
   ),
   ComponentType(
     name: 'DLatch',
     displayName: 'D-Latch',
-    svgAsset: 'assets/gates/DLatch.svg',
-    createComponent: () => DLatch(),
+    iconPath: 'assets/gates/DLatch.svg',
+    createComponent: () => createComponentByName('DLatch')!,
   ),
   ComponentType(
     name: 'DFlipFlop',
     displayName: 'D-Flip-Flop',
-    svgAsset: 'assets/gates/Register.svg',
-    createComponent: () => DFlipFlop(),
+    iconPath: 'assets/gates/Register.svg',
+    createComponent: () => createComponentByName('DFlipFlop')!,
   ),
-  ComponentType(name: "Splitter8to1", displayName: "Splitter 8 to 1", svgAsset: "assets/gates/Splitter8to1", createComponent: () => Splitter(sliceCount: 8, sliceBitWidth: 1)),
-  ComponentType(name: "Splitter32to8", displayName: "Splitter 32 to 8", svgAsset: "assets/gates/Splitter32to8", createComponent: () => Splitter(sliceCount: 4, sliceBitWidth: 8)),
-  ComponentType(name: "Collector1to5", displayName: "Collector 1 to 5", svgAsset: "assets/gates/Collector1to5", createComponent: () => Collector(sliceCount: 5, sliceBitWidth: 1)),
-  ComponentType(name: "Collector1to6", displayName: "Collector 1 to 6", svgAsset: "assets/gates/Collector1to6", createComponent: () => Collector(sliceCount: 6, sliceBitWidth: 1)),
-  ComponentType(name: "Collector8to16", displayName: "Collector8to16", svgAsset: "assets/gates/Collector8to16", createComponent: () => Collector(sliceCount: 2, sliceBitWidth: 8)),
-  ComponentType(name: "Multiplexer2Inp", displayName: "Multiplexer2Inp", svgAsset: "assets/gates/Multiplexer2Inp", createComponent: () => Multiplexer(inputCount: 2)),
-  ComponentType(name: "Adder32bit", displayName: "Adder32bit", svgAsset: "", createComponent: () => RippleCarryAdder(bitWidth: 32)),
-  ComponentType(name: "ProgramCounter", displayName: "ProgramCounter", svgAsset: "", createComponent: () => ProgramCounter()),
-  ComponentType(name: "InstructionMemory", displayName: "InstructionMemory", svgAsset: "", createComponent: () => InstructionMemory()),
-  ComponentType(name: "RegisterBlock", displayName: "RegisterBlock", svgAsset: "", createComponent: () => RegisterBlock()),
-  ComponentType(name: "ALUAdvanced", displayName: "ALUAdvanced", svgAsset: "", createComponent: () => ALUAdvanced()),
-  ComponentType(name: "SignExtend", displayName: "SignExtend", svgAsset: "", createComponent: () => SignExtend()),
-  ComponentType(name: "ControlUnit", displayName: "ControlUnit", svgAsset: "", createComponent: () => ControlUnit()),
-  ComponentType(name: "ALUControl", displayName: "ALUControl", svgAsset: "", createComponent: () => ALUControl()),
-  ComponentType(name: "DataMemory", displayName: "DataMemory", svgAsset: "", createComponent: () => DataMemory()),
-  ComponentType(name: "ShiftLeft2", displayName: "ShiftLeft2", svgAsset: "", createComponent: () => ShiftLeft2()),
+  ComponentType(
+    name: "Splitter8to1",
+    displayName: "Splitter 8 to 1",
+    iconPath: "assets/gates/Splitter8to1",
+    createComponent: () => createComponentByName('Splitter8to1')!,
+  ),
+  ComponentType(
+    name: "Splitter32to8",
+    displayName: "Splitter 32 to 8",
+    iconPath: "assets/gates/Splitter32to8",
+    createComponent: () => createComponentByName('Splitter32to8')!,
+  ),
+  ComponentType(
+    name: "Collector1to5",
+    displayName: "Collector 1 to 5",
+    iconPath: "assets/gates/Collector1to5",
+    createComponent: () => createComponentByName('Collector1to5')!,
+  ),
+  ComponentType(
+    name: "Collector1to6",
+    displayName: "Collector 1 to 6",
+    iconPath: "assets/gates/Collector1to6",
+    createComponent: () => createComponentByName('Collector1to6')!,
+  ),
+  ComponentType(
+    name: "Collector8to16",
+    displayName: "Collector8to16",
+    iconPath: "assets/gates/Collector8to16",
+    createComponent: () => createComponentByName('Collector8to16')!,
+  ),
+  ComponentType(
+    name: "Multiplexer2Inp",
+    displayName: "Multiplexer2Inp",
+    iconPath: "assets/gates/Multiplexer2Inp",
+    createComponent: () => createComponentByName('Multiplexer2Inp')!,
+  ),
+  ComponentType(
+    name: "Adder32bit",
+    displayName: "Adder32bit",
+    iconPath: "",
+    createComponent: () => createComponentByName('Adder32bit')!,
+  ),
+  ComponentType(
+    name: "ProgramCounter",
+    displayName: "ProgramCounter",
+    iconPath: "",
+    createComponent: () => createComponentByName('ProgramCounter')!,
+  ),
+  ComponentType(
+    name: "InstructionMemory",
+    displayName: "InstructionMemory",
+    iconPath: "",
+    createComponent: () => createComponentByName('InstructionMemory')!,
+  ),
+  ComponentType(
+    name: "RegisterBlock",
+    displayName: "RegisterBlock",
+    iconPath: "",
+    createComponent: () => createComponentByName('RegisterBlock')!,
+  ),
+  ComponentType(
+    name: "ALUAdvanced",
+    displayName: "ALUAdvanced",
+    iconPath: "",
+    createComponent: () => createComponentByName('ALUAdvanced')!,
+  ),
+  ComponentType(
+    name: "SignExtend",
+    displayName: "SignExtend",
+    iconPath: "",
+    createComponent: () => createComponentByName('SignExtend')!,
+  ),
+  ComponentType(
+    name: "ControlUnit",
+    displayName: "ControlUnit",
+    iconPath: "",
+    createComponent: () => createComponentByName('ControlUnit')!,
+  ),
+  ComponentType(
+    name: "ALUControl",
+    displayName: "ALUControl",
+    iconPath: "",
+    createComponent: () => createComponentByName('ALUControl')!,
+  ),
+  ComponentType(
+    name: "DataMemory",
+    displayName: "DataMemory",
+    iconPath: "",
+    createComponent: () => createComponentByName('DataMemory')!,
+  ),
+  ComponentType(
+    name: "ShiftLeft2",
+    displayName: "ShiftLeft2",
+    iconPath: "",
+    createComponent: () => createComponentByName('ShiftLeft2')!,
+  ),
 ];
 
 /// Component palette widget showing available components.
@@ -143,6 +216,9 @@ class ComponentPalette extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final customLibrary = ref.watch(customComponentProvider);
+    final customEntries = customLibrary.components;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -159,12 +235,36 @@ class ComponentPalette extends ConsumerWidget {
         const Divider(height: 1),
         // Component list
         Expanded(
-          child: ListView.builder(
-            itemCount: availableComponents.length,
-            itemBuilder: (context, index) {
-              final componentType = availableComponents[index];
-              return _PaletteItem(componentType: componentType);
-            },
+          child: ListView(
+            children: [
+              ...availableComponents.map(
+                (componentType) => _PaletteItem(componentType: componentType),
+              ),
+              if (customEntries.isNotEmpty) ...[
+                const Divider(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    'Custom components',
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ...customEntries.map(
+                  (entry) => _PaletteItem(
+                    componentType: ComponentType(
+                      name: entry.data.name,
+                      displayName: entry.data.name,
+                      iconPath: entry.spritePath ?? '',
+                      isAsset: false,
+                      createComponent: () => CustomComponent(entry.data),
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ],
@@ -193,7 +293,8 @@ class _PaletteItem extends ConsumerWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: _ComponentIcon(
-            svgAsset: componentType.svgAsset,
+            iconPath: componentType.iconPath,
+            isAsset: componentType.isAsset,
             size: 60,
           ),
         ),
@@ -217,7 +318,8 @@ class _PaletteItem extends ConsumerWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(8),
         leading: _ComponentIcon(
-          svgAsset: componentType.svgAsset,
+          iconPath: componentType.iconPath,
+          isAsset: componentType.isAsset,
           size: 40,
         ),
         title: Text(
@@ -242,27 +344,62 @@ class _PaletteItem extends ConsumerWidget {
 
 /// Widget to display a component's SVG icon.
 class _ComponentIcon extends StatelessWidget {
-  final String svgAsset;
+  final String iconPath;
+  final bool isAsset;
   final double size;
 
   const _ComponentIcon({
-    required this.svgAsset,
+    required this.iconPath,
+    required this.isAsset,
     required this.size,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (iconPath.isEmpty) {
+      return Icon(
+        Icons.memory,
+        size: size * 0.6,
+        color: Colors.grey,
+      );
+    }
+
     return SizedBox(
       width: size,
       height: size,
-      child: SvgPicture.asset(
-        svgAsset,
+      child: isAsset
+          ? SvgPicture.asset(
+              iconPath,
+              fit: BoxFit.contain,
+              placeholderBuilder: (context) => Icon(
+                Icons.memory,
+                size: size * 0.6,
+                color: Colors.grey,
+              ),
+            )
+          : _buildFileIcon(),
+    );
+  }
+
+  Widget _buildFileIcon() {
+    if (iconPath.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.file(
+        File(iconPath),
         fit: BoxFit.contain,
         placeholderBuilder: (context) => Icon(
           Icons.memory,
           size: size * 0.6,
           color: Colors.grey,
         ),
+      );
+    }
+    return Image.file(
+      File(iconPath),
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) => Icon(
+        Icons.memory,
+        size: size * 0.6,
+        color: Colors.grey,
       ),
     );
   }

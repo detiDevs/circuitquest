@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,11 +8,14 @@ import '../core/logic/wire.dart';
 import '../core/simulation/simulator.dart';
 import '../core/components/input_source.dart';
 import '../core/components/output_probe.dart';
-import '../ui/widgets/component_palette.dart';
+import '../core/components/component_registry.dart';
+import '../core/components/custom_component.dart';
+import '../core/components/custom_component_data.dart';
+import '../state/custom_component_library.dart';
 
 /// Riverpod provider for sandbox state.
 final sandboxProvider = ChangeNotifierProvider<SandboxState>(
-  (ref) => SandboxState(),
+  (ref) => SandboxState(ref.read(customComponentProvider)),
 );
 
 /// Represents a component instance placed on the canvas.
@@ -104,6 +108,9 @@ class WireConnection {
 /// - Circuit simulation and evaluation
 /// - Drag and drop interactions
 class SandboxState extends ChangeNotifier {
+  SandboxState(this._customComponentLibrary);
+
+  final CustomComponentLibrary _customComponentLibrary;
   /// All components placed on the canvas
   final List<PlacedComponent> _placedComponents = [];
 
@@ -545,22 +552,19 @@ class SandboxState extends ChangeNotifier {
         final label = compData['label'] as String?;
 
         // Create component instance
-        Component component;
+        Component? component;
         if (type == 'InputSource') {
           component = InputSource();
         } else if (type == 'OutputProbe') {
           component = OutputProbe();
         } else {
-          // Find component in available components list
-          try {
-            final componentType = availableComponents.firstWhere(
-              (ct) => ct.name == type,
-            );
-            component = componentType.createComponent();
-          } catch (_) {
-            print('Unknown component type: $type');
-            continue;
-          }
+          component = createComponentByName(type);
+          component ??= _createCustomComponent(type);
+        }
+
+        if (component == null) {
+          print('Unknown component type: $type');
+          continue;
         }
 
         _placedComponents.add(
@@ -597,6 +601,68 @@ class SandboxState extends ChangeNotifier {
       print('Error loading circuit: $e');
       return false;
     }
+  }
+
+  CustomComponent? _createCustomComponent(String name) {
+    final data = _customComponentLibrary.getByName(name);
+    if (data == null) return null;
+    return CustomComponent(data);
+  }
+
+  CustomComponentData? buildCustomComponentData({
+    required String name,
+    required List<String> inputKeys,
+    required List<String> outputKeys,
+  }) {
+    final inputComponents = _placedComponents
+        .where((c) => c.component is InputSource)
+        .toList();
+    final outputComponents = _placedComponents
+        .where((c) => c.component is OutputProbe)
+        .toList();
+
+    if (inputKeys.length != inputComponents.length ||
+        outputKeys.length != outputComponents.length) {
+      return null;
+    }
+
+    final inputMap = LinkedHashMap<String, int>();
+    for (int i = 0; i < inputComponents.length; i++) {
+      final input = inputComponents[i].component as InputSource;
+      final bitWidth = input.outputs['outValue']?.bitWidth ?? 1;
+      inputMap[inputKeys[i]] = bitWidth;
+    }
+
+    final outputMap = LinkedHashMap<String, int>();
+    for (int i = 0; i < outputComponents.length; i++) {
+      final output = outputComponents[i].component as OutputProbe;
+      outputMap[outputKeys[i]] = output.bitWidth;
+    }
+
+    final components = _placedComponents.map((pc) => pc.type).toList();
+    final idToIndex = <String, int>{};
+    for (int i = 0; i < _placedComponents.length; i++) {
+      idToIndex[_placedComponents[i].id] = i;
+    }
+
+    final connections = _connections.map((conn) {
+      final origin = idToIndex[conn.sourceComponentId] ?? -1;
+      final destination = idToIndex[conn.targetComponentId] ?? -1;
+      return CustomComponentConnection(
+        origin: origin,
+        originKey: conn.sourcePin,
+        destination: destination,
+        destinationKey: conn.targetPin,
+      );
+    }).toList();
+
+    return CustomComponentData(
+      name: name,
+      inputMap: inputMap,
+      outputMap: outputMap,
+      components: components,
+      connections: connections,
+    );
   }
 
   /// Rebuilds wire connections between components

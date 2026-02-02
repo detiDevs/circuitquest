@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3, Matrix4;
@@ -14,6 +16,8 @@ import '../../core/components/base/component.dart';
 import 'component_palette.dart';
 import 'input_source_widget.dart';
 import 'output_probe_widget.dart';
+import '../../state/custom_component_library.dart';
+import '../../core/components/custom_component.dart';
 
 /// The main canvas where components are placed and connected.
 ///
@@ -470,9 +474,33 @@ class _PlacedComponentWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sandboxProvider);
-    final componentType = availableComponents.firstWhere(
-      (ct) => ct.name == placedComponent.type,
-    );
+    final customLibrary = ref.watch(customComponentProvider);
+    ComponentType? componentType;
+    try {
+      componentType = availableComponents.firstWhere(
+        (ct) => ct.name == placedComponent.type,
+      );
+    } catch (_) {
+      CustomComponentEntry? entry;
+      try {
+        entry = customLibrary.components.firstWhere(
+          (c) => c.data.name == placedComponent.type,
+        );
+      } catch (_) {
+        entry = null;
+      }
+      if (entry != null) {
+        final customData = entry.data;
+        final customSprite = entry.spritePath;
+        componentType = ComponentType(
+          name: customData.name,
+          displayName: customData.name,
+          iconPath: customSprite ?? '',
+          isAsset: false,
+          createComponent: () => CustomComponent(customData),
+        );
+      }
+    }
 
     return Positioned(
       left: placedComponent.position.dx,
@@ -563,13 +591,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
                       ),
                     // Component icon with fallback to name text
                     Center(
-                      child: SvgPicture.asset(
-                        componentType.svgAsset,
-                        width: gridSize * 0.7,
-                        height: gridSize * 0.7,
-                        fit: BoxFit.contain,
-                        placeholderBuilder: (context) =>
-                            Text(placedComponent.type),
+                      child: _buildComponentIcon(
+                        componentType,
+                        placedComponent.type,
                       ),
                     ),
                     // Input pins (left side)
@@ -580,6 +604,40 @@ class _PlacedComponentWidget extends ConsumerWidget {
                 ),
         ),
       ),
+    );
+  }
+
+  Widget _buildComponentIcon(ComponentType? componentType, String fallbackText) {
+    if (componentType == null || componentType.iconPath.isEmpty) {
+      return Text(fallbackText, textAlign: TextAlign.center);
+    }
+
+    if (componentType.isAsset) {
+      return SvgPicture.asset(
+        componentType.iconPath,
+        width: gridSize * 0.7,
+        height: gridSize * 0.7,
+        fit: BoxFit.contain,
+        placeholderBuilder: (context) => Text(fallbackText),
+      );
+    }
+
+    if (componentType.iconPath.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.file(
+        File(componentType.iconPath),
+        width: gridSize * 0.7,
+        height: gridSize * 0.7,
+        fit: BoxFit.contain,
+        placeholderBuilder: (context) => Text(fallbackText),
+      );
+    }
+
+    return Image.file(
+      File(componentType.iconPath),
+      width: gridSize * 0.7,
+      height: gridSize * 0.7,
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) => Text(fallbackText),
     );
   }
 

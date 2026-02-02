@@ -177,7 +177,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
             onTap: () {
               widget.ref
                   .read(sandboxProvider)
-                  .startWireDrawing(widget.placedComponent.id, 'output');
+                  .startWireDrawing(widget.placedComponent.id, 'outValue');
             },
             child: Container(
               width: 12,

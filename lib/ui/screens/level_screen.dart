@@ -435,7 +435,8 @@ class _PaletteItem extends ConsumerWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: _ComponentIcon(
-            svgAsset: componentType.svgAsset,
+            iconPath: componentType.iconPath,
+            isAsset: componentType.isAsset,
             size: 60,
           ),
         ),
@@ -459,7 +460,8 @@ class _PaletteItem extends ConsumerWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(8),
         leading: _ComponentIcon(
-          svgAsset: componentType.svgAsset,
+          iconPath: componentType.iconPath,
+          isAsset: componentType.isAsset,
           size: 40,
         ),
         title: Text(
@@ -482,21 +484,31 @@ class _PaletteItem extends ConsumerWidget {
 
 /// Widget to display a component's SVG icon.
 class _ComponentIcon extends StatelessWidget {
-  final String svgAsset;
+  final String iconPath;
+  final bool isAsset;
   final double size;
 
   const _ComponentIcon({
-    required this.svgAsset,
+    required this.iconPath,
+    required this.isAsset,
     required this.size,
   });
 
   @override
   Widget build(BuildContext context) {
+    if (iconPath.isEmpty) {
+      return Icon(
+        Icons.memory,
+        size: size * 0.6,
+        color: Colors.grey,
+      );
+    }
+
     return SizedBox(
       width: size,
       height: size,
       child: SvgPicture.asset(
-        svgAsset,
+        iconPath,
         fit: BoxFit.contain,
         placeholderBuilder: (context) => Icon(
           Icons.memory,

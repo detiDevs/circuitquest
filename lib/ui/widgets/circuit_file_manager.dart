@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../state/sandbox_state.dart';
+import '../../state/custom_component_library.dart';
+import '../../core/components/input_source.dart';
+import '../../core/components/output_probe.dart';
 
 /// Widget for saving and loading circuit files.
 class CircuitFileManager extends ConsumerWidget {
@@ -29,6 +32,20 @@ class CircuitFileManager extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 8),
+
+        // Save as custom component button
+        ElevatedButton.icon(
+          onPressed: state.placedComponents.isEmpty
+              ? null
+              : () => _saveAsCustomComponent(context, ref, state),
+          icon: const Icon(Icons.extension),
+          label: const Text('Save as Custom Component'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.indigo,
+            foregroundColor: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 8),
         
         // Load circuit button
         OutlinedButton.icon(
@@ -41,6 +58,212 @@ class CircuitFileManager extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _saveAsCustomComponent(
+    BuildContext context,
+    WidgetRef ref,
+    SandboxState state,
+  ) async {
+    final inputComponents = state.placedComponents
+        .where((c) => c.component is InputSource)
+        .toList();
+    final outputComponents = state.placedComponents
+        .where((c) => c.component is OutputProbe)
+        .toList();
+
+    if (inputComponents.isEmpty || outputComponents.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Custom components need at least one input and one output.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    final nameController = TextEditingController(text: 'My Custom Component');
+    final inputControllers = List.generate(
+      inputComponents.length,
+      (index) => TextEditingController(
+        text: _toCamelCase('Input ${index + 1}'),
+      ),
+    );
+    final outputControllers = List.generate(
+      outputComponents.length,
+      (index) => TextEditingController(
+        text: _toCamelCase('Output ${index + 1}'),
+      ),
+    );
+
+    String? spritePath;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Save as Custom Component'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Component Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Input keys',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ...List.generate(inputControllers.length, (index) {
+                  final input = inputComponents[index].component as InputSource;
+                  final bitWidth = input.outputs['outValue']?.bitWidth ?? 1;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: TextField(
+                      controller: inputControllers[index],
+                      decoration: InputDecoration(
+                        labelText: 'Input ${index + 1} (bitwidth: $bitWidth)',
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 8),
+                const Text(
+                  'Output keys',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                ...List.generate(outputControllers.length, (index) {
+                  final output = outputComponents[index].component as OutputProbe;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: TextField(
+                      controller: outputControllers[index],
+                      decoration: InputDecoration(
+                        labelText: 'Output ${index + 1} (bitwidth: ${output.bitWidth})',
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  );
+                }),
+                const SizedBox(height: 8),
+                OutlinedButton.icon(
+                  onPressed: () async {
+                    final result = await FilePicker.platform.pickFiles(
+                      dialogTitle: 'Select Component Image',
+                      type: FileType.custom,
+                      allowedExtensions: ['png', 'jpg', 'jpeg', 'svg'],
+                    );
+                    if (result != null && result.files.isNotEmpty) {
+                      setState(() {
+                        spritePath = result.files.single.path;
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.image),
+                  label: const Text('Select Image'),
+                ),
+                if (spritePath != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    'Selected: ${spritePath!.split(Platform.pathSeparator).last}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    final name = nameController.text.trim();
+    if (name.isEmpty) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Component name cannot be empty.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    final inputKeys = inputControllers.map((c) => c.text.trim()).toList();
+    final outputKeys = outputControllers.map((c) => c.text.trim()).toList();
+    if (inputKeys.any((k) => k.isEmpty) || outputKeys.any((k) => k.isEmpty)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Input/output keys cannot be empty.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    final data = state.buildCustomComponentData(
+      name: name,
+      inputKeys: inputKeys,
+      outputKeys: outputKeys,
+    );
+    if (data == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to build custom component data.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    final library = ref.read(customComponentProvider);
+    final success = await library.saveCustomComponent(
+      data,
+      spriteSourcePath: spritePath,
+    );
+    if (success) {
+      await library.refresh();
+    }
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            success
+                ? 'Custom component saved.'
+                : 'Failed to save custom component.',
+          ),
+          backgroundColor: success ? Colors.green : Colors.red,
+        ),
+      );
+    }
   }
 
   /// Shows dialog to save the circuit
@@ -234,5 +457,21 @@ class CircuitFileManager extends ConsumerWidget {
     final trimmed = input.trim();
     final base = trimmed.isEmpty ? 'circuit' : trimmed;
     return base.replaceAll(RegExp(r'[^a-zA-Z0-9._-]+'), '_');
+  }
+
+  String _toCamelCase(String input) {
+    final words = input
+        .replaceAll(RegExp(r'[_-]+'), ' ')
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((w) => w.isNotEmpty)
+        .toList();
+    if (words.isEmpty) return '';
+    final first = words.first.toLowerCase();
+    final rest = words.skip(1).map((w) {
+      if (w.isEmpty) return '';
+      return w[0].toUpperCase() + w.substring(1).toLowerCase();
+    }).join();
+    return '$first$rest';
   }
 }
