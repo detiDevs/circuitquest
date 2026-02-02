@@ -118,7 +118,7 @@ final List<ComponentType> availableComponents = [
     createComponent: () => DFlipFlop(),
   ),
   ComponentType(name: "Splitter8to1", displayName: "Splitter 8 to 1", svgAsset: "assets/gates/Splitter8to1", createComponent: () => Splitter(sliceCount: 8, sliceBitWidth: 1)),
-  ComponentType(name: "Splitter32to8", displayName: "Splitter 32 to 8", svgAsset: "assets/gates/Splitter32to8", createComponent: () => Splitter(sliceCount: 4, sliceBitWidth: 1)),
+  ComponentType(name: "Splitter32to8", displayName: "Splitter 32 to 8", svgAsset: "assets/gates/Splitter32to8", createComponent: () => Splitter(sliceCount: 4, sliceBitWidth: 8)),
   ComponentType(name: "Collector1to5", displayName: "Collector 1 to 5", svgAsset: "assets/gates/Collector1to5", createComponent: () => Collector(sliceCount: 5, sliceBitWidth: 1)),
   ComponentType(name: "Collector1to6", displayName: "Collector 1 to 6", svgAsset: "assets/gates/Collector1to6", createComponent: () => Collector(sliceCount: 6, sliceBitWidth: 1)),
   ComponentType(name: "Collector8to16", displayName: "Collector8to16", svgAsset: "assets/gates/Collector8to16", createComponent: () => Collector(sliceCount: 2, sliceBitWidth: 8)),

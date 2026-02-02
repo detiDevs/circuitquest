@@ -6,6 +6,9 @@ import '../../l10n/app_localizations.dart';
 import '../../state/sandbox_state.dart';
 import '../../core/components/input_source.dart';
 import '../../core/components/output_probe.dart';
+import '../../core/components/cpu/instruction_memory.dart';
+import '../../core/components/cpu/data_memory.dart';
+import '../../core/components/cpu/register_block.dart';
 import 'package:circuitquest/levels/level.dart';
 import '../../core/components/base/component.dart';
 import 'component_palette.dart';
@@ -85,6 +88,21 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         (lc.position[0]) * gridSize,
         (lc.position[1]) * gridSize,
       );
+
+      // Load memory contents if applicable
+      if (resolved.component is InstructionMemory && level.memoryContents != null) {
+        (resolved.component as InstructionMemory).loadInstructions(
+          level.memoryContents!.instructionMemory,
+        );
+      } else if (resolved.component is DataMemory && level.memoryContents != null) {
+        (resolved.component as DataMemory).loadData(
+          level.memoryContents!.dataMemory,
+        );
+      } else if (resolved.component is RegisterBlock && lc.initialRegisterValues != null) {
+        (resolved.component as RegisterBlock).loadRegisters(
+          lc.initialRegisterValues!,
+        );
+      }
 
       state.placeComponent(
         resolved.typeName,

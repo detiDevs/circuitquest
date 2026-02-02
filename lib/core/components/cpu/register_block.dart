@@ -11,7 +11,19 @@ class RegisterBlock extends Component {
   late OutputPin _readData1;
   late OutputPin _readData2;
 
-  final List<int> _registers = List.filled(32, 0);
+  List<int> _registers = List.filled(32, 0);
+
+  /// Load initial register values.
+  /// Only for testing and level initialization.
+  void loadRegisters(List<int> values) {
+    if (values.length <= 32) {
+      _registers = List.from(values);
+      // Pad with zeros if less than 32 values
+      while (_registers.length < 32) {
+        _registers.add(0);
+      }
+    }
+  }
 
   RegisterBlock() {
     _readAddress1 = InputPin(this, bitWidth: 5);
@@ -24,7 +36,7 @@ class RegisterBlock extends Component {
     
     inputs['readReg1'] = _readAddress1;
     inputs['readReg2'] = _readAddress2;
-    inputs['regWrite'] = _writeAddress;
+    inputs['writeReg'] = _writeAddress;
     inputs['writeData'] = _writeData;
     inputs['writeEnable'] = _writeEnable;
     outputs['readData1'] = _readData1;

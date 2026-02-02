@@ -10,8 +10,8 @@ class SignExtend extends Component {
     _input = InputPin(this, bitWidth: 16);
     _output = OutputPin(this, bitWidth: 32);
     
-    inputs['in'] = _input;
-    outputs['out'] = _output;
+    inputs['input'] = _input;
+    outputs['outValue'] = _output;
   }
 
   @override

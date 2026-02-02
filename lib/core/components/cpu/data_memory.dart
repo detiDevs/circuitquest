@@ -25,6 +25,14 @@ class DataMemory extends Component {
     outputs['readData'] = _readData;
   }
 
+  /// Load a list of data into the data memory.
+  /// Only for testing and level initialization.
+  void loadData(List<int> data) {
+    for (int i = 0; i < data.length; i++) {
+      _memory[i * 4] = data[i]; // Store at byte addresses (0, 4, 8, ...)
+    }
+  }
+
   @override
   bool evaluate() {
     if (_memRead.value == 1) {

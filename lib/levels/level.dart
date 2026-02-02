@@ -6,20 +6,34 @@ class LevelComponent {
   final List<int> position;
   final bool immovable;
   final String? label;
+  final int? initialValue;
+  final int? initialBitWidth;
+  final List<int>? initialRegisterValues;
 
   LevelComponent({
     required this.type,
     required this.position,
     required this.immovable,
     this.label,
+    this.initialValue,
+    this.initialBitWidth,
+    this.initialRegisterValues,
   });
 
   factory LevelComponent.fromJson(Map<String, dynamic> json) {
+    final initialValueJson = json['initialValue'];
+    final bool isListValue = initialValueJson is List;
+    
     return LevelComponent(
       type: json['type'] as String,
       position: (json['position'] as List<dynamic>).cast<int>(),
       immovable: json['immovable'] as bool? ?? false,
       label: json['label'] as String?,
+      initialValue: isListValue ? null : (initialValueJson as int?),
+      initialBitWidth: json['initialBitWidth'] as int?,
+      initialRegisterValues: isListValue
+          ? List<int>.from(initialValueJson)
+          : null,
     );
   }
 
@@ -29,6 +43,9 @@ class LevelComponent {
       'position': position,
       'immovable': immovable,
       if (label != null) 'label': label,
+      if (initialValue != null) 'initialValue': initialValue,
+      if (initialBitWidth != null) 'initialBitWidth': initialBitWidth,
+      if (initialRegisterValues != null) 'initialValue': initialRegisterValues,
     };
   }
 }
@@ -71,6 +88,31 @@ class LevelTest {
   }
 }
 
+/// Memory contents for level initialization
+class MemoryContents {
+  final List<int> instructionMemory;
+  final List<int> dataMemory;
+
+  MemoryContents({
+    required this.instructionMemory,
+    required this.dataMemory,
+  });
+
+  factory MemoryContents.fromJson(Map<String, dynamic> json) {
+    return MemoryContents(
+      instructionMemory: (json['instructionMemory'] as List<dynamic>? ?? []).cast<int>(),
+      dataMemory: (json['dataMemory'] as List<dynamic>? ?? []).cast<int>(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'instructionMemory': instructionMemory,
+      'dataMemory': dataMemory,
+    };
+  }
+}
+
 /// Data model representing a complete level
 class Level {
   final int levelId;
@@ -83,6 +125,7 @@ class Level {
   final List<WireConnection> connections;
   final List<String> hints;
   final List<LevelTest> tests;
+  final MemoryContents? memoryContents;
 
   Level({
     required this.levelId,
@@ -95,6 +138,7 @@ class Level {
     required this.connections,
     required this.hints,
     required this.tests,
+    this.memoryContents,
   });
 
   factory Level.fromJson(Map<String, dynamic> json) {
@@ -117,6 +161,9 @@ class Level {
       tests: ((json['tests'] ?? []) as List<dynamic>)
           .map((e) => LevelTest.fromJson(e as Map<String, dynamic>))
           .toList(),
+      memoryContents: json['memoryContents'] != null
+          ? MemoryContents.fromJson(json['memoryContents'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -133,6 +180,7 @@ class Level {
           .toList(),
       'hints': hints,
       'tests': tests.map((t) => t.toJson()).toList(),
+      if (memoryContents != null) 'memoryContents': memoryContents!.toJson(),
     };
   }
 }

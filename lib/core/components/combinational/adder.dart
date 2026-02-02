@@ -73,7 +73,7 @@ class RippleCarryAdder extends Component {
     inputs['inputA'] = InputPin(this, bitWidth: bitWidth);
     inputs['inputB'] = InputPin(this, bitWidth: bitWidth);
     inputs['carryIn'] = InputPin(this, bitWidth: 1);
-    outputs['sum'] = OutputPin(this, bitWidth: bitWidth);
+    outputs['outSum'] = OutputPin(this, bitWidth: bitWidth);
     outputs['carryOut'] = OutputPin(this, bitWidth: 1);
   }
 
@@ -93,9 +93,9 @@ class RippleCarryAdder extends Component {
     final int newSum = raw & mask;
     final int newCarry = (raw >> bitWidth) & 0x1;
 
-    final bool sumChanged = outputs['sum']!.value != newSum;
+    final bool sumChanged = outputs['outSum']!.value != newSum;
     final bool carryChanged = outputs['carryOut']!.value != newCarry;
-    outputs['sum']!.value = newSum;
+    outputs['outSum']!.value = newSum;
     outputs['carryOut']!.value = newCarry;
     return sumChanged || carryChanged;
   }

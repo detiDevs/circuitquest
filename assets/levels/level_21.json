@@ -78,21 +78,21 @@
         },
         {
             "origin": 4,
-            "originKey": "outValue4",
+            "originKey": "outValue8",
             "destination": 5,
-            "destinationKey": "input1"
+            "destinationKey": "input"
         },
         {
             "origin": 4,
-            "originKey": "outValue3",
+            "originKey": "outValue4",
             "destination": 6,
-            "destinationKey": "input1"
+            "destinationKey": "input"
         },
         {
             "origin": 4,
             "originKey": "outValue2",
             "destination": 7,
-            "destinationKey": "input1"
+            "destinationKey": "input"
         },
         {
             "origin": 11,
@@ -117,7 +117,7 @@
             "origin": 21,
             "originKey": "RegWrite",
             "destination": 8,
-            "destinationKey": "regWrite"
+            "destinationKey": "writeReg"
         },
         {
             "origin": 7,
@@ -268,7 +268,7 @@
             "origin": 15,
             "originKey": "outValue",
             "destination": 16,
-            "destinationKey": "input1"
+            "destinationKey": "input"
         },
         {
             "origin": 13,
@@ -400,7 +400,7 @@
             "origin": 4,
             "originKey": "outValue1",
             "destination": 25,
-            "destinationKey": "input1"
+            "destinationKey": "input"
         },
         {
             "origin": 25,
@@ -442,7 +442,7 @@
             "origin": 16,
             "originKey": "outValue",
             "destination": 27,
-            "destinationKey": "input1"
+            "destinationKey": "input"
         },
         {
             "origin": 27,
@@ -452,13 +452,13 @@
         },
         {
             "origin": 18,
-            "originKey": "outputValue",
+            "originKey": "outValue",
             "destination": 8,
             "destinationKey": "writeData"
         },
         {
             "origin": 12,
-            "originKey": "outputValue",
+            "originKey": "outValue",
             "destination": 8,
             "destinationKey": "writeReg"
         },
@@ -488,13 +488,13 @@
         },
         {
             "origin": 22,
-            "originKey": "outputValue",
+            "originKey": "outValue",
             "destination": 0,
             "destinationKey": "input"
         },
         {
             "origin": 14,
-            "originKey": "outputValue",
+            "originKey": "outValue",
             "destination": 13,
             "destinationKey": "input2"
         }

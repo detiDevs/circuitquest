@@ -3,24 +3,24 @@ import 'package:circuitquest/core/logic/pin.dart';
 
 abstract class BinaryGate extends Component {
   BinaryGate() {
-    inputs["inputA"] = InputPin(this);
-    inputs["inputB"] = InputPin(this);
-    outputs["output"] = OutputPin(this);
+    inputs["input1"] = InputPin(this);
+    inputs["input2"] = InputPin(this);
+    outputs["outValue"] = OutputPin(this);
   }
 
   int compute(int a, int b);
 
   @override
   bool evaluate() {
-    inputs["inputA"]!.updateFromSource();
-    inputs["inputB"]!.updateFromSource();
+    inputs["input1"]!.updateFromSource();
+    inputs["input2"]!.updateFromSource();
     
-    int a = inputs["inputA"]!.value;
-    int b = inputs["inputB"]!.value;
-    int out = outputs["output"]!.value;
+    int a = inputs["input1"]!.value;
+    int b = inputs["input2"]!.value;
+    int out = outputs["outValue"]!.value;
     int newValue = compute(a, b);
     bool valueChanged = newValue != out;
-    outputs["output"]!.value = newValue;
+    outputs["outValue"]!.value = newValue;
     return valueChanged;
   }
 }

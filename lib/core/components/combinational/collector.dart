@@ -19,7 +19,7 @@ class Collector extends Component {
     outputBitWidth = sliceCount * sliceBitWidth;
 
     for (int i = 0; i < sliceCount; i++) {
-      inputs['input${2 << i}'] = InputPin(this, bitWidth: sliceBitWidth);
+      inputs['input${1 << i}'] = InputPin(this, bitWidth: sliceBitWidth);
     }
     outputs['outValue'] = OutputPin(this, bitWidth: outputBitWidth);
   }
@@ -29,12 +29,12 @@ class Collector extends Component {
   bool evaluate() {
     // Update all inputs
     for (int i = 0; i < sliceCount; i++) {
-      inputs['in$i']!.updateFromSource();
+      inputs['input${1 << i}']!.updateFromSource();
     }
 
     int aggregated = 0;
     for (int i = 0; i < sliceCount; i++) {
-      final int slice = inputs['input${2 << i}']!.value & ((1 << sliceBitWidth) - 1);
+      final int slice = inputs['input${1 << i}']!.value & ((1 << sliceBitWidth) - 1);
       aggregated |= (slice << (i * sliceBitWidth));
     }
 

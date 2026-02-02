@@ -35,7 +35,7 @@ class Splitter extends Component {
     for (int i = 0; i < sliceCount; i++) {
       final int shifted = value >> (i * sliceBitWidth);
       final int slice = shifted & sliceMask;
-      final OutputPin outPin = outputs['outValue${2 << i}']!;
+      final OutputPin outPin = outputs['outValue${1 << i}']!;
       if (outPin.value != slice) {
         changed = true;
         outPin.value = slice;

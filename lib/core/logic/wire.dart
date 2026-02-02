@@ -6,7 +6,8 @@ class Wire {
 
   Wire(this.from, this.to) {
     // Allow connecting to a wider input; still block narrowing to avoid data loss surprises.
-    if (from.bitWidth > to.bitWidth) {
+    // To allow any bitwidth, set it to 0
+    if (to.bitWidth != 0 && from.bitWidth > to.bitWidth) {
       throw ArgumentError(
         'Bitwidth mismatch: ${from.bitWidth} -> ${to.bitWidth}',
       );

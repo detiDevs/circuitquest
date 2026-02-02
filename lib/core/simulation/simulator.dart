@@ -19,9 +19,21 @@ class Simulator {
     // Determine starting components
     Set<Component> current =
         startingComponents?.toSet() ?? inputComponents.toSet();
+    print("current: $current");
 
     if (current.isEmpty) {
+      print("current is empty");
       return false;
+    }
+
+    // Check if there's an InstructionMemory and increase max cycles accordingly
+    int actualMaxCycles = maxEvalCycles;
+    for (final component in components) {
+      if (component.runtimeType.toString() == 'InstructionMemory') {
+        // Increase max cycles to allow all instructions to execute
+        actualMaxCycles = maxEvalCycles + 500;
+        break;
+      }
     }
 
     int tick = 0;
@@ -39,6 +51,8 @@ class Simulator {
               next.add(wire.to.component);
             }
           }
+        } else {
+          print("No change");
         }
       }
 
@@ -50,7 +64,7 @@ class Simulator {
       current = next;
       tick++;
 
-      if (tick > maxEvalCycles * components.length) {
+      if (tick > actualMaxCycles * components.length) {
         // Likely oscillation / unstable feedback
         return false;
       }

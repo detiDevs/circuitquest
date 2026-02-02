@@ -16,7 +16,10 @@ class Multiplexer extends Component {
   /// Bit width of the select input, derived from [inputCount].
   late final int selectBitWidth;
 
-  Multiplexer({required this.inputCount, this.dataBitWidth = 1}) {
+  Multiplexer({
+    required this.inputCount,
+    this.dataBitWidth = 0 // accept any bitwidth by default
+  }) {
     if (inputCount < 2) {
       throw ArgumentError('Multiplexer requires at least 2 inputs');
     }
@@ -26,11 +29,11 @@ class Multiplexer extends Component {
 
     // Create data inputs
     for (int i = 0; i < inputCount; i++) {
-      inputs['in$i'] = InputPin(this, bitWidth: dataBitWidth);
+      inputs['input${i+1}'] = InputPin(this, bitWidth: dataBitWidth);
     }
 
     // Create select input
-    inputs['sel'] = InputPin(this, bitWidth: selectBitWidth);
+    inputs['selection'] = InputPin(this, bitWidth: selectBitWidth);
 
     // Create output
     outputs['outValue'] = OutputPin(this, bitWidth: dataBitWidth);
@@ -41,16 +44,16 @@ class Multiplexer extends Component {
   bool evaluate() {
     // Refresh all input values from their sources
     for (int i = 0; i < inputCount; i++) {
-      inputs['in$i']!.updateFromSource();
+      inputs['input${i+1}']!.updateFromSource();
     }
-    inputs['sel']!.updateFromSource();
+    inputs['selection']!.updateFromSource();
 
     // Determine selected index, wrap into range to avoid invalid access
-    final int rawSel = inputs['sel']!.value;
+    final int rawSel = inputs['selection']!.value;
     final int selectedIndex = inputCount == 0 ? 0 : rawSel % inputCount;
 
     // Forward selected data
-    final int newValue = inputs['in$selectedIndex']!.value;
+    final int newValue = inputs['input${selectedIndex+1}']!.value;
     final OutputPin outPin = outputs['outValue']!;
     final bool changed = outPin.value != newValue;
     outPin.value = newValue;

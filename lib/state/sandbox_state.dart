@@ -334,7 +334,16 @@ class SandboxState extends ChangeNotifier {
         )
         .map((pc) => pc.component)
         .toSet();
-    final startingSet = inputStarts.isEmpty ? allComponents : inputStarts;
+    
+    // Also include ProgramCounter components as starting points (for processor simulation)
+    final programCounters = _placedComponents
+        .where((pc) => pc.component.runtimeType.toString() == 'ProgramCounter')
+        .map((pc) => pc.component)
+        .toSet();
+    
+    final startingSet = inputStarts.isEmpty 
+        ? (programCounters.isEmpty ? allComponents : programCounters)
+        : inputStarts..addAll(programCounters);
 
     _simulator = Simulator(
       components: allComponents,
@@ -369,7 +378,16 @@ class SandboxState extends ChangeNotifier {
         )
         .map((pc) => pc.component)
         .toSet();
-    final startingSet = inputStarts.isEmpty ? allComponents : inputStarts;
+    
+    // Also include ProgramCounter components as starting points (for processor simulation)
+    final programCounters = _placedComponents
+        .where((pc) => pc.component.runtimeType.toString() == 'ProgramCounter')
+        .map((pc) => pc.component)
+        .toSet();
+    
+    final startingSet = inputStarts.isEmpty 
+        ? (programCounters.isEmpty ? allComponents : programCounters)
+        : inputStarts..addAll(programCounters);
 
     _simulator = Simulator(
       components: allComponents,

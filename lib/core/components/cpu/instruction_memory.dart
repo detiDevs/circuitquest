@@ -6,10 +6,7 @@ class InstructionMemory extends Component {
   late InputPin _addressInput;
   late OutputPin _instructionOutput;
 
-  // Simple instruction memory with pre-loaded instruction
-  final Map<int, int> _memory = {
-    0: 4392992, // add $3, $1, $2
-  };
+  List<int> _instructionList = [];
 
   InstructionMemory() {
     _addressInput = InputPin(this, bitWidth: 32);
@@ -19,10 +16,22 @@ class InstructionMemory extends Component {
     outputs['instruction'] = _instructionOutput;
   }
 
+  /// Load a list of instructions into the instruction memory.
+  /// Only for testing and level initialization.
+  void loadInstructions(List<int> instructions) {
+    _instructionList = instructions;
+  }
+
   @override
   bool evaluate() {
-    final instruction = _memory[_addressInput.value] ?? 0;
-    _instructionOutput.value = instruction;
+    final address = _addressInput.value ~/ 4; // Convert byte address to word address
+    final instruction = address < _instructionList.length ? _instructionList[address] : 0;
+    print("Instruction: $instruction");
+    
+    if (_instructionOutput.value != instruction) {
+      _instructionOutput.value = instruction;
+      return true;
+    }
     return false;
   }
 }
