@@ -208,6 +208,79 @@ final List<ComponentType> availableComponents = [
   ),
 ];
 
+/// Helper function to build a responsive component list widget
+/// Used by both ComponentPalette and limited palettes to show consistent behavior
+Widget buildResponsiveComponentList(
+  BuildContext context, {
+  required List<ComponentType> components,
+  bool showHeader = true,
+  String? headerText,
+}) {
+  final isMobile = MediaQuery.of(context).size.width < 600;
+
+  if (isMobile) {
+    // Horizontal scrollable list on mobile
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showHeader)
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              headerText ?? 'Components',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+        if (showHeader) const Divider(height: 1),
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: components
+                  .map(
+                    (componentType) => SizedBox(
+                      width: 70,
+                      child: _PaletteItem(componentType: componentType),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ),
+      ],
+    );
+  } else {
+    // Vertical list on desktop
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showHeader)
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              headerText ?? 'Components',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+        if (showHeader) const Divider(height: 1),
+        Expanded(
+          child: ListView.builder(
+            itemCount: components.length,
+            itemBuilder: (context, index) {
+              final componentType = components[index];
+              return _PaletteItem(componentType: componentType);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 /// Component palette widget showing available components.
 ///
 /// Users can drag components from the palette onto the canvas.

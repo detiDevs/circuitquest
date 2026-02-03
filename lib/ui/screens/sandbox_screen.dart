@@ -105,7 +105,7 @@ class _SandboxBody extends StatelessWidget {
                 child: CircuitCanvas(),
               ),
               // Control panel at bottom
-              const ExpandableControlPanel(),
+              const ExpandableControlPanel(isSandbox: true,),
             ],
           );
         }

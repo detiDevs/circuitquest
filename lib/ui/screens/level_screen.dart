@@ -1,59 +1,89 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/widgets/expandable_control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:circuitquest/levels/levels.dart';
 import 'package:circuitquest/constants.dart';
 import '../widgets/component_palette.dart';
 import '../widgets/circuit_canvas.dart';
 import '../widgets/control_panel.dart';
-import '../../state/sandbox_state.dart';
 
 /// Screen for playing a specific level.
 ///
 /// This screen displays:
-/// - Level information (title, description, objectives)
 /// - Circuit canvas with grid
 /// - Limited component palette (only components available for the level)
 /// - Control panel for simulation
-/// - Level test cases and hints
-class LevelScreen extends ConsumerWidget {
+/// - Level info accessible via dialog and FAB
+class LevelScreen extends ConsumerStatefulWidget {
   final Level level;
 
   const LevelScreen({super.key, required this.level});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LevelScreen> createState() => _LevelScreenState();
+}
+
+class _LevelScreenState extends ConsumerState<LevelScreen> {
+  bool _dialogShown = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Show level info dialog on first entry
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_dialogShown && mounted) {
+        _showLevelInfoDialog();
+        _dialogShown = true;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${Constants.kAppName} - ${level.name}'),
+        title: Text('${Constants.kAppName} - ${widget.level.name}'),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
       ),
-      body: const _LevelScreenBody(),
+      body: _LevelScreenBody(level: widget.level),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showLevelInfoDialog,
+        tooltip: 'Level Information',
+        child: const Icon(Icons.info),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+    );
+  }
+
+  void _showLevelInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => _LevelInfoDialog(level: widget.level),
     );
   }
 }
 
 /// Main body of the level screen with responsive layout.
-class _LevelScreenBody extends ConsumerWidget {
-  const _LevelScreenBody();
+class _LevelScreenBody extends StatelessWidget {
+  final Level level;
+
+  const _LevelScreenBody({required this.level});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Get the current level from the router or params
-    // For now, we'll access it through the widget above
+  Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWideScreen = constraints.maxWidth > 1200;
+        final isWideScreen = constraints.maxWidth > 800;
 
         if (isWideScreen) {
-          // Desktop layout: Info panel, Canvas, Palette, Controls
+          // Desktop layout: Palette on left, Canvas in center, Controls on right
           return Row(
             children: [
-              // Left: Level Info Panel
+              // Left panel: Component Palette
               SizedBox(
-                width: 300,
+                width: 200,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
@@ -61,27 +91,14 @@ class _LevelScreenBody extends ConsumerWidget {
                       right: BorderSide(color: Colors.grey[300]!),
                     ),
                   ),
-                  child: const _LevelInfoPanel(),
-                ),
-              ),
-              // Center-left: Component Palette
-              SizedBox(
-                width: 180,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    border: Border(
-                      right: BorderSide(color: Colors.grey[300]!),
-                    ),
-                  ),
-                  child: const _LimitedComponentPalette(),
+                  child: _LimitedComponentPalette(level: level),
                 ),
               ),
               // Center: Circuit Canvas
               Expanded(
-                child: CircuitCanvas(level: _getCurrentLevel(context)),
+                child: CircuitCanvas(level: level),
               ),
-              // Right: Control Panel
+              // Right panel: Control Panel
               SizedBox(
                 width: 250,
                 child: Container(
@@ -91,66 +108,42 @@ class _LevelScreenBody extends ConsumerWidget {
                       left: BorderSide(color: Colors.grey[300]!),
                     ),
                   ),
-                  child: ControlPanel(level: _getCurrentLevel(context)),
+                  child: ControlPanel(level: level),
                 ),
               ),
             ],
           );
         } else {
-          // Mobile/Tablet layout: Vertical arrangement
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                // Level Info Section
-                Container(
+          // Mobile layout: Vertical stack with collapsible sections
+          return Column(
+            children: [
+              // Collapsible palette at top
+              Container(
+                decoration: BoxDecoration(
                   color: Colors.grey[100],
-                  child: const _LevelInfoPanel(),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey[300]!),
+                  ),
                 ),
-                // Component Palette (collapsible)
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300]!),
+                child: ExpansionTile(
+                  title: Text(AppLocalizations.of(context)!.availableComponents),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  initiallyExpanded: false,
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      child: _LimitedComponentPalette(level: level),
                     ),
-                  ),
-                  child: ExpansionTile(
-                    title: Text(AppLocalizations.of(context)!.availableComponents),
-                    initiallyExpanded: false,
-                    children: const [
-                      SizedBox(
-                        height: 200,
-                        child: _LimitedComponentPalette(),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-                // Canvas
-                Container(
-                  constraints: const BoxConstraints(minHeight: 400),
-                  color: Colors.white,
-                  child: CircuitCanvas(level: _getCurrentLevel(context)),
-                ),
-                // Control Panel (collapsible)
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    border: Border(
-                      top: BorderSide(color: Colors.grey[300]!),
-                    ),
-                  ),
-                  child: ExpansionTile(
-                    title: Text(AppLocalizations.of(context)!.controlsTitle),
-                    initiallyExpanded: false,
-                    children: [
-                      SizedBox(
-                        child: ControlPanel(level: _getCurrentLevel(context)),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+              // Canvas takes remaining space
+              Expanded(
+                child: CircuitCanvas(level: level),
+              ),
+              // Control panel at bottom
+              ExpandableControlPanel(level: level),
+            ],
           );
         }
       },
@@ -158,46 +151,43 @@ class _LevelScreenBody extends ConsumerWidget {
   }
 }
 
-/// Panel displaying level information.
-class _LevelInfoPanel extends ConsumerStatefulWidget {
-  const _LevelInfoPanel();
+/// Dialog displaying level information.
+class _LevelInfoDialog extends StatefulWidget {
+  final Level level;
+
+  const _LevelInfoDialog({required this.level});
 
   @override
-  ConsumerState<_LevelInfoPanel> createState() => _LevelInfoPanelState();
+  State<_LevelInfoDialog> createState() => _LevelInfoDialogState();
 }
 
-class _LevelInfoPanelState extends ConsumerState<_LevelInfoPanel> {
+class _LevelInfoDialogState extends State<_LevelInfoDialog> {
   bool _showHints = false;
 
   @override
   Widget build(BuildContext context) {
-    // We need to pass the level through ModalRoute or similar
-    // For now, we'll create a helper method to get it
-    final level = _getCurrentLevel(context);
-
-    if (level == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(widget.level.name),
+                const SizedBox(height: 8),
+                _DifficultyBadge(difficulty: widget.level.difficulty),
+              ],
+            ),
+          ),
+        ],
+      ),
+      content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Level Title and Difficulty
-            Text(
-              level.name,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            _DifficultyBadge(difficulty: level.difficulty),
-            const SizedBox(height: 16),
-
             // Description
             Text(
               AppLocalizations.of(context)!.levelDescription,
@@ -207,7 +197,7 @@ class _LevelInfoPanelState extends ConsumerState<_LevelInfoPanel> {
             ),
             const SizedBox(height: 8),
             Text(
-              level.description,
+              widget.level.description,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
@@ -220,7 +210,7 @@ class _LevelInfoPanelState extends ConsumerState<_LevelInfoPanel> {
                   ),
             ),
             const SizedBox(height: 8),
-            ...level.objectives.asMap().entries.map(
+            ...widget.level.objectives.asMap().entries.map(
               (entry) => Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Row(
@@ -242,10 +232,10 @@ class _LevelInfoPanelState extends ConsumerState<_LevelInfoPanel> {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
 
             // Hints
-            if (level.hints.isNotEmpty) ...[
+            if (widget.level.hints.isNotEmpty) ...[
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -261,13 +251,13 @@ class _LevelInfoPanelState extends ConsumerState<_LevelInfoPanel> {
                         _showHints = !_showHints;
                       });
                     },
-                    child: Text(_showHints ? 'Hide hints' : 'Show hints'),
+                    child: Text(_showHints ? 'Hide' : 'Show'),
                   ),
                 ],
               ),
               if (_showHints) ...[
                 const SizedBox(height: 8),
-                ...level.hints.map(
+                ...widget.level.hints.map(
                   (hint) => Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Container(
@@ -302,6 +292,12 @@ class _LevelInfoPanelState extends ConsumerState<_LevelInfoPanel> {
           ],
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('OK'),
+        ),
+      ],
     );
   }
 }
@@ -370,163 +366,22 @@ class _DifficultyBadge extends StatelessWidget {
 
 /// Component palette limited to components available for this level.
 class _LimitedComponentPalette extends ConsumerWidget {
-  const _LimitedComponentPalette();
+  final Level level;
+
+  const _LimitedComponentPalette({required this.level});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final level = _getCurrentLevel(context);
-
-    if (level == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
     // Filter available components based on level requirements
     final limitedComponents = availableComponents.where((comp) {
       return level.availableComponents.any((ac) => ac.type == comp.name);
     }).toList();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            AppLocalizations.of(context)!.availableComponents,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ),
-        const Divider(height: 1),
-        Expanded(
-          child: ListView.builder(
-            itemCount: limitedComponents.length,
-            itemBuilder: (context, index) {
-              final componentType = limitedComponents[index];
-              return _PaletteItem(componentType: componentType);
-            },
-          ),
-        ),
-      ],
+    // Reuse the responsive component list builder from component_palette.dart
+    return buildResponsiveComponentList(
+      context,
+      components: limitedComponents,
+      headerText: AppLocalizations.of(context)!.availableComponents,
     );
-  }
-}
-
-/// Individual palette item that can be dragged (reused from sandbox).
-class _PaletteItem extends ConsumerWidget {
-  final ComponentType componentType;
-
-  const _PaletteItem({required this.componentType});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Draggable<ComponentType>(
-      data: componentType,
-      feedback: Material(
-        elevation: 4.0,
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.blue, width: 2),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: _ComponentIcon(
-            iconPath: componentType.iconPath,
-            isAsset: componentType.isAsset,
-            size: 60,
-          ),
-        ),
-      ),
-      childWhenDragging: Opacity(
-        opacity: 0.3,
-        child: _buildChild(context, ref),
-      ),
-      child: _buildChild(context, ref),
-    );
-  }
-
-  Widget _buildChild(BuildContext context, WidgetRef ref) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(8),
-        leading: _ComponentIcon(
-          iconPath: componentType.iconPath,
-          isAsset: componentType.isAsset,
-          size: 40,
-        ),
-        title: Text(
-          componentType.displayName,
-          style: const TextStyle(fontSize: 11),
-        ),
-        onTap: () {
-          ref.read(sandboxProvider).selectComponentType(componentType.name);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${AppLocalizations.of(context)!.selected}: ${componentType.displayName}'),
-              duration: const Duration(seconds: 1),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-/// Widget to display a component's SVG icon.
-class _ComponentIcon extends StatelessWidget {
-  final String iconPath;
-  final bool isAsset;
-  final double size;
-
-  const _ComponentIcon({
-    required this.iconPath,
-    required this.isAsset,
-    required this.size,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (iconPath.isEmpty) {
-      return Icon(
-        Icons.memory,
-        size: size * 0.6,
-        color: Colors.grey,
-      );
-    }
-
-    return SizedBox(
-      width: size,
-      height: size,
-      child: SvgPicture.asset(
-        iconPath,
-        fit: BoxFit.contain,
-        placeholderBuilder: (context) => Icon(
-          Icons.memory,
-          size: size * 0.6,
-          color: Colors.grey,
-        ),
-      ),
-    );
-  }
-}
-
-/// Helper function to get the current level from the widget tree.
-Level? _getCurrentLevel(BuildContext context) {
-  // Try to get the level from LevelScreen
-  try {
-    final widget = context.findAncestorWidgetOfExactType<LevelScreen>();
-    return widget?.level;
-  } catch (e) {
-    return null;
   }
 }

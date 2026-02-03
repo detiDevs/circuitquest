@@ -1,8 +1,19 @@
 import 'package:circuitquest/ui/widgets/control_panel.dart';
+import 'package:circuitquest/levels/levels.dart';
 import 'package:flutter/material.dart';
 
 class ExpandableControlPanel extends StatefulWidget {
-  const ExpandableControlPanel({super.key});
+  /// When true, shows sandbox-only controls like save/load circuit.
+  final bool isSandbox;
+
+  /// The current level being played (if in level mode).
+  final Level? level;
+
+  const ExpandableControlPanel({
+    super.key,
+    this.isSandbox = false,
+    this.level,
+  });
 
   @override
   State<ExpandableControlPanel> createState() => _ExpandableControlPanelState();
@@ -12,7 +23,6 @@ class _ExpandableControlPanelState extends State<ExpandableControlPanel> {
   bool _expanded = false;
 
   static const double collapsedHeight = 220;
-  static const double expandedHeight = 500; // or MediaQuery-based
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +73,12 @@ class _ExpandableControlPanelState extends State<ExpandableControlPanel> {
           const Divider(height: 1),
 
           // ─── Scrollable Control Panel ─────────────────────────
-          const Expanded(
+          Expanded(
             child: SingleChildScrollView(
-              child: ControlPanel(isSandbox: true),
+              child: ControlPanel(
+                isSandbox: widget.isSandbox,
+                level: widget.level,
+              ),
             ),
           ),
         ],
