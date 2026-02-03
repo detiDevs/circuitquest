@@ -1,4 +1,5 @@
 import 'package:circuitquest/constants.dart';
+import 'package:circuitquest/ui/widgets/expandable_control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/component_palette.dart';
@@ -104,18 +105,7 @@ class _SandboxBody extends StatelessWidget {
                 child: CircuitCanvas(),
               ),
               // Control panel at bottom
-              Container(
-                constraints: const BoxConstraints(maxHeight: 200),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border(
-                    top: BorderSide(color: Colors.grey[300]!),
-                  ),
-                ),
-                child: const SingleChildScrollView(
-                  child: ControlPanel(isSandbox: true),
-                ),
-              ),
+              const ExpandableControlPanel(),
             ],
           );
         }

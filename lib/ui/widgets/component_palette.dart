@@ -218,6 +218,7 @@ class ComponentPalette extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final customLibrary = ref.watch(customComponentProvider);
     final customEntries = customLibrary.components;
+    final isMobile = MediaQuery.of(context).size.width < 600;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,39 +236,78 @@ class ComponentPalette extends ConsumerWidget {
         const Divider(height: 1),
         // Component list
         Expanded(
-          child: ListView(
-            children: [
-              ...availableComponents.map(
-                (componentType) => _PaletteItem(componentType: componentType),
-              ),
-              if (customEntries.isNotEmpty) ...[
-                const Divider(height: 24),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Text(
-                    'Custom components',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ...customEntries.map(
-                  (entry) => _PaletteItem(
-                    componentType: ComponentType(
-                      name: entry.data.name,
-                      displayName: entry.data.name,
-                      iconPath: entry.spritePath ?? '',
-                      isAsset: false,
-                      createComponent: () => CustomComponent(entry.data),
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
+          child: isMobile
+              ? _buildHorizontalList(context, customEntries)
+              : _buildVerticalList(context, customEntries),
         ),
       ],
+    );
+  }
+
+  Widget _buildVerticalList(BuildContext context, List<CustomComponentEntry> customEntries) {
+    return ListView(
+      children: [
+        ...availableComponents.map(
+          (componentType) => _PaletteItem(componentType: componentType),
+        ),
+        if (customEntries.isNotEmpty) ...[
+          const Divider(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Text(
+              'Custom components',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...customEntries.map(
+            (entry) => _PaletteItem(
+              componentType: ComponentType(
+                name: entry.data.name,
+                displayName: entry.data.name,
+                iconPath: entry.spritePath ?? '',
+                isAsset: false,
+                createComponent: () => CustomComponent(entry.data),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildHorizontalList(BuildContext context, List<CustomComponentEntry> customEntries) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          ...availableComponents.map(
+            (componentType) => SizedBox(
+              width: 70,
+              child: _PaletteItem(componentType: componentType),
+            ),
+          ),
+          if (customEntries.isNotEmpty) ...[
+            const VerticalDivider(width: 1),
+            ...customEntries.map(
+              (entry) => SizedBox(
+                width: 70,
+                child: _PaletteItem(
+                  componentType: ComponentType(
+                    name: entry.data.name,
+                    displayName: entry.data.name,
+                    iconPath: entry.spritePath ?? '',
+                    isAsset: false,
+                    createComponent: () => CustomComponent(entry.data),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -280,6 +320,8 @@ class _PaletteItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
     return Draggable<ComponentType>(
       data: componentType,
       feedback: Material(
@@ -301,13 +343,55 @@ class _PaletteItem extends ConsumerWidget {
       ),
       childWhenDragging: Opacity(
         opacity: 0.3,
-        child: _buildChild(context, ref),
+        child: _buildChild(context, ref, isMobile),
       ),
-      child: _buildChild(context, ref),
+      child: _buildChild(context, ref, isMobile),
     );
   }
 
-  Widget _buildChild(BuildContext context, WidgetRef ref) {
+  Widget _buildChild(BuildContext context, WidgetRef ref, bool isMobile) {
+    if (isMobile) {
+      return _buildMobileChild(context, ref);
+    } else {
+      return _buildDesktopChild(context, ref);
+    }
+  }
+
+  Widget _buildMobileChild(BuildContext context, WidgetRef ref) {
+    return Tooltip(
+      message: componentType.displayName,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: InkWell(
+          onTap: () {
+            ref.read(sandboxProvider).selectComponentType(componentType.name);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.componentSelected(
+                    componentType.displayName)),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: _ComponentIcon(
+              iconPath: componentType.iconPath,
+              isAsset: componentType.isAsset,
+              size: 40,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopChild(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(

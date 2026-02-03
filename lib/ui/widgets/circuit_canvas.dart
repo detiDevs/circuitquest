@@ -156,10 +156,12 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
 
     return DragTarget<ComponentType>(
       onAcceptWithDetails: (details) {
-        // Convert global drop offset into local canvas coordinates then snap to grid
+        // Convert global drop offset into local canvas coordinates, accounting for zoom/pan
         final renderBox = context.findRenderObject() as RenderBox;
         final localPosition = renderBox.globalToLocal(details.offset);
-        final gridPosition = _snapToGrid(localPosition);
+        // Transform the position to account for zoom and pan
+        final transformedPosition = _transformPosition(localPosition);
+        final gridPosition = _snapToGrid(transformedPosition);
 
         // Create and place the component
         final component = details.data.createComponent();
@@ -174,45 +176,45 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
           minScale: 0.1,
           maxScale: 4.0,
           constrained: false,
-          child: MouseRegion(
-            onHover: (event) {
-              // Track mouse position for wire drawing feedback
+          child: GestureDetector(
+            onTapDown: (details) {
+              // Cancel wire drawing only when tapping empty space
               if (state.wireDrawingStart != null) {
-                setState(() {
-                  _currentPointerPosition = _transformPosition(
-                    event.localPosition,
-                  );
-                });
+                final transformedPos = _transformPosition(
+                  details.localPosition,
+                );
+                final hitComponent = _hitTestComponent(state, transformedPos);
+                if (hitComponent == null) {
+                  state.cancelWireDrawing();
+                  setState(() {
+                    _currentPointerPosition = null;
+                  });
+                }
               }
             },
-            child: GestureDetector(
-              onTapDown: (details) {
-                // Cancel wire drawing only when tapping empty space
+            onPanUpdate: (details) {
+              // Track pointer position for wire drawing
+              setState(() {
+                _currentPointerPosition = _transformPosition(
+                  details.localPosition,
+                );
+              });
+            },
+            onPanEnd: (details) {
+              setState(() {
+                _currentPointerPosition = null;
+              });
+            },
+            child: MouseRegion(
+              onHover: (event) {
+                // Track mouse position for wire drawing feedback
                 if (state.wireDrawingStart != null) {
-                  final transformedPos = _transformPosition(
-                    details.localPosition,
-                  );
-                  final hitComponent = _hitTestComponent(state, transformedPos);
-                  if (hitComponent == null) {
-                    state.cancelWireDrawing();
-                    setState(() {
-                      _currentPointerPosition = null;
-                    });
-                  }
+                  setState(() {
+                    _currentPointerPosition = _transformPosition(
+                      event.localPosition,
+                    );
+                  });
                 }
-              },
-              onPanUpdate: (details) {
-                // Track pointer position for wire drawing
-                setState(() {
-                  _currentPointerPosition = _transformPosition(
-                    details.localPosition,
-                  );
-                });
-              },
-              onPanEnd: (details) {
-                setState(() {
-                  _currentPointerPosition = null;
-                });
               },
               child: SizedBox(
                 width: 4000,
@@ -295,7 +297,7 @@ class _GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.grey[300]!
+      ..color = Colors.grey[500]!
       ..strokeWidth = 0.5;
 
     const gridSize = 80.0;
