@@ -18,82 +18,86 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 60),
-            // App Logo
-            _buildAppLogo(),
-            const SizedBox(height: 40),
-            // App Title
-            Text(
-              Constants.kAppName,
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue[800],
-                  ),
-            ),
-            const SizedBox(height: 16),
-            // Subtitle
-            Text(
-              AppLocalizations.of(context)!.appDescription,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey[600],
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 60),
+              // App Logo
+              _buildAppLogo(),
+              const SizedBox(height: 40),
+              // App Title
+              Text(
+                Constants.kAppName,
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue[800],
+                    ),
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 60),
-            // Mode Selection Buttons
-            SizedBox(
-              width: 350,
-              child: Column(
-                children: [
-                  // Level Mode Button
-                  _ModeButton(
-                    title: AppLocalizations.of(context)!.levelModeTitle,
-                    description: AppLocalizations.of(context)!.levelModeDescription,
-                    icon: Icons.school,
-                    color: Colors.green,
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LevelSelectionScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 24),
-                  // Sandbox Mode Button
-                  _ModeButton(
-                    title: AppLocalizations.of(context)!.sandboxModeTitle,
-                    description: AppLocalizations.of(context)!.sandboxModeDescription,
-                    icon: Icons.construction,
-                    color: Colors.orange,
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const SandboxScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  _ModeButton(
-                    title: AppLocalizations.of(context)!.settings,
-                    description: "",
-                    icon: Icons.settings,
-                    color: Colors.blue,
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => const SettingsScreen())
-                      );
-                    },
-                  )
-                ],
+              const SizedBox(height: 16),
+              // Subtitle
+              Text(
+                AppLocalizations.of(context)!.appDescription,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(height: 60),
-          ],
+              const SizedBox(height: 16),
+              // Mode Selection Buttons
+              SizedBox(
+                width: 350,
+                child: Column(
+                  children: [
+                    // Level Mode Button
+                    _ModeButton(
+                      title: AppLocalizations.of(context)!.levelModeTitle,
+                      description: AppLocalizations.of(context)!.levelModeDescription,
+                      icon: Icons.school,
+                      color: Colors.green,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const LevelSelectionScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    // Sandbox Mode Button
+                    _ModeButton(
+                      title: AppLocalizations.of(context)!.sandboxModeTitle,
+                      description: AppLocalizations.of(context)!.sandboxModeDescription,
+                      icon: Icons.construction,
+                      color: Colors.orange,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const SandboxScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    _ModeButton(
+                      title: AppLocalizations.of(context)!.settings,
+                      description: "",
+                      icon: Icons.settings,
+                      color: Colors.blue,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => const SettingsScreen())
+                        );
+                      },
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 60),
+            ],
+          ),
         ),
       ),
     );
@@ -146,6 +150,7 @@ class _ModeButton extends StatelessWidget {
         onTap: onPressed,
         borderRadius: BorderRadius.circular(12),
         child: Container(
+          width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: color, width: 2),

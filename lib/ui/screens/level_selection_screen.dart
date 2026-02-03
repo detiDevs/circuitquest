@@ -115,8 +115,8 @@ class _LevelCategory extends StatelessWidget {
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: _getCrossAxisCount(context),
               childAspectRatio: 1.2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
@@ -133,6 +133,12 @@ class _LevelCategory extends StatelessWidget {
         const SizedBox(height: 16),
       ],
     );
+  }
+
+  int _getCrossAxisCount(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    // Use 3 columns on wider screens (>= 600 dp), 2 columns on narrower screens
+    return width >= 600 ? 3 : 2;
   }
 }
 
