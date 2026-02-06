@@ -218,6 +218,66 @@ abstract class AppLocalizations {
   /// **'Stop Simulation'**
   String get stopSimulation;
 
+  /// No description provided for @simulationSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Simulation speed'**
+  String get simulationSpeed;
+
+  /// No description provided for @simulationSpeedInstant.
+  ///
+  /// In en, this message translates to:
+  /// **'Instant'**
+  String get simulationSpeedInstant;
+
+  /// No description provided for @resetCircuitToInitialState.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset to Initial State'**
+  String get resetCircuitToInitialState;
+
+  /// No description provided for @circuitWasResetToInitialState.
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit reset to initial state'**
+  String get circuitWasResetToInitialState;
+
+  /// No description provided for @fileOperationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'File Operations'**
+  String get fileOperationsTitle;
+
+  /// No description provided for @saveCircuit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Circuit'**
+  String get saveCircuit;
+
+  /// No description provided for @saveAsCustomComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as Custom Component'**
+  String get saveAsCustomComponent;
+
+  /// No description provided for @customComponentsNeedInputOutputError.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom components need at least one input and one output.'**
+  String get customComponentsNeedInputOutputError;
+
+  /// No description provided for @loadCircuit.
+  ///
+  /// In en, this message translates to:
+  /// **'Load Circuit'**
+  String get loadCircuit;
+
+  /// No description provided for @checkSolution.
+  ///
+  /// In en, this message translates to:
+  /// **'Check solution'**
+  String get checkSolution;
+
   /// Button to clear all components from canvas
   ///
   /// In en, this message translates to:
@@ -422,18 +482,6 @@ abstract class AppLocalizations {
   /// **'What would you like to do?'**
   String get componentMenuPrompt;
 
-  /// Cancel button
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
-
-  /// Delete button
-  ///
-  /// In en, this message translates to:
-  /// **'Delete'**
-  String get delete;
-
   /// Tooltip for bitwidth toggle button
   ///
   /// In en, this message translates to:
@@ -457,6 +505,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{min} .. {max}'**
   String rangeLabel(String min, String max);
+
+  /// No description provided for @customComponentName.
+  ///
+  /// In en, this message translates to:
+  /// **'Component name'**
+  String get customComponentName;
+
+  /// Default name for a new custom component
+  ///
+  /// In en, this message translates to:
+  /// **'My Custom Component'**
+  String get customComponentDefaultName;
+
+  /// Section title for custom component input keys
+  ///
+  /// In en, this message translates to:
+  /// **'Input keys'**
+  String get customComponentInputKeysLabel;
+
+  /// Section title for custom component output keys
+  ///
+  /// In en, this message translates to:
+  /// **'Output keys'**
+  String get customComponentOutputKeysLabel;
+
+  /// Label for custom component input name field
+  ///
+  /// In en, this message translates to:
+  /// **'Input {index} (bitwidth: {bitWidth})'**
+  String customComponentInputLabel(int index, int bitWidth);
+
+  /// Label for custom component output name field
+  ///
+  /// In en, this message translates to:
+  /// **'Output {index} (bitwidth: {bitWidth})'**
+  String customComponentOutputLabel(int index, int bitWidth);
+
+  /// No description provided for @customComponentSelectImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select image'**
+  String get customComponentSelectImage;
+
+  /// No description provided for @customComponentNameCannotBeEmptyError.
+  ///
+  /// In en, this message translates to:
+  /// **'Component name cannot be empty.'**
+  String get customComponentNameCannotBeEmptyError;
+
+  /// No description provided for @customComponentKeysCannotBeEmptyError.
+  ///
+  /// In en, this message translates to:
+  /// **'Input/output keys cannot be empty.'**
+  String get customComponentKeysCannotBeEmptyError;
+
+  /// No description provided for @customComponentBuildDataError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to build custom component data.'**
+  String get customComponentBuildDataError;
+
+  /// No description provided for @customComponentSavingError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save custom component.'**
+  String get customComponentSavingError;
+
+  /// No description provided for @customComponentSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom component saved.'**
+  String get customComponentSaved;
+
+  /// Default name for a new circuit
+  ///
+  /// In en, this message translates to:
+  /// **'My Circuit'**
+  String get circuitDefaultName;
+
+  /// Default description for a new circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit created in sandbox mode'**
+  String get circuitDefaultDescription;
+
+  /// Label for circuit name text field
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit Name'**
+  String get circuitNameLabel;
+
+  /// Snackbar message after saving a circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit saved to {path}'**
+  String circuitSavedTo(String path);
+
+  /// Snackbar message when saving a circuit fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving circuit: {error}'**
+  String circuitSaveError(String error);
+
+  /// Confirmation message before loading a circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Loading a circuit will clear the current circuit. Continue?'**
+  String get loadCircuitConfirmMessage;
+
+  /// Button label to confirm loading a circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Load'**
+  String get loadCircuitAction;
+
+  /// Snackbar message after loading a circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit loaded successfully'**
+  String get circuitLoadedSuccess;
+
+  /// Snackbar message when circuit loading fails
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading circuit'**
+  String get circuitLoadedError;
+
+  /// Snackbar message when circuit loading throws an error
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading circuit: {error}'**
+  String circuitLoadError(String error);
 
   /// No description provided for @settings.
   ///
@@ -493,6 +673,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Selected'**
   String get selected;
+
+  /// Label to show details or hints
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get show;
+
+  /// Label to hide details or hints
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get hide;
+
+  /// OK button label
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// Tooltip for level info button
+  ///
+  /// In en, this message translates to:
+  /// **'Level Information'**
+  String get levelInformationTooltip;
+
+  /// Cancel button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Delete button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
 }
 
 class _AppLocalizationsDelegate

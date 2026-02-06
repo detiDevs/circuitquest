@@ -71,6 +71,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get stopSimulation => 'Stop Simulation';
 
   @override
+  String get simulationSpeed => 'Simulation speed';
+
+  @override
+  String get simulationSpeedInstant => 'Instant';
+
+  @override
+  String get resetCircuitToInitialState => 'Reset to Initial State';
+
+  @override
+  String get circuitWasResetToInitialState => 'Circuit reset to initial state';
+
+  @override
+  String get fileOperationsTitle => 'File Operations';
+
+  @override
+  String get saveCircuit => 'Save Circuit';
+
+  @override
+  String get saveAsCustomComponent => 'Save as Custom Component';
+
+  @override
+  String get customComponentsNeedInputOutputError =>
+      'Custom components need at least one input and one output.';
+
+  @override
+  String get loadCircuit => 'Load Circuit';
+
+  @override
+  String get checkSolution => 'Check solution';
+
+  @override
   String get clearCircuit => 'Clear Circuit';
 
   @override
@@ -182,12 +213,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get componentMenuPrompt => 'What would you like to do?';
 
   @override
-  String get cancel => 'Cancel';
-
-  @override
-  String get delete => 'Delete';
-
-  @override
   String get toggleBitwidth => 'Toggle bitwidth';
 
   @override
@@ -203,6 +228,86 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String rangeLabel(String min, String max) {
     return '$min .. $max';
+  }
+
+  @override
+  String get customComponentName => 'Component name';
+
+  @override
+  String get customComponentDefaultName => 'My Custom Component';
+
+  @override
+  String get customComponentInputKeysLabel => 'Input keys';
+
+  @override
+  String get customComponentOutputKeysLabel => 'Output keys';
+
+  @override
+  String customComponentInputLabel(int index, int bitWidth) {
+    return 'Input $index (bitwidth: $bitWidth)';
+  }
+
+  @override
+  String customComponentOutputLabel(int index, int bitWidth) {
+    return 'Output $index (bitwidth: $bitWidth)';
+  }
+
+  @override
+  String get customComponentSelectImage => 'Select image';
+
+  @override
+  String get customComponentNameCannotBeEmptyError =>
+      'Component name cannot be empty.';
+
+  @override
+  String get customComponentKeysCannotBeEmptyError =>
+      'Input/output keys cannot be empty.';
+
+  @override
+  String get customComponentBuildDataError =>
+      'Unable to build custom component data.';
+
+  @override
+  String get customComponentSavingError => 'Failed to save custom component.';
+
+  @override
+  String get customComponentSaved => 'Custom component saved.';
+
+  @override
+  String get circuitDefaultName => 'My Circuit';
+
+  @override
+  String get circuitDefaultDescription => 'Circuit created in sandbox mode';
+
+  @override
+  String get circuitNameLabel => 'Circuit Name';
+
+  @override
+  String circuitSavedTo(String path) {
+    return 'Circuit saved to $path';
+  }
+
+  @override
+  String circuitSaveError(String error) {
+    return 'Error saving circuit: $error';
+  }
+
+  @override
+  String get loadCircuitConfirmMessage =>
+      'Loading a circuit will clear the current circuit. Continue?';
+
+  @override
+  String get loadCircuitAction => 'Load';
+
+  @override
+  String get circuitLoadedSuccess => 'Circuit loaded successfully';
+
+  @override
+  String get circuitLoadedError => 'Error loading circuit';
+
+  @override
+  String circuitLoadError(String error) {
+    return 'Error loading circuit: $error';
   }
 
   @override
@@ -222,4 +327,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get selected => 'Selected';
+
+  @override
+  String get show => 'Show';
+
+  @override
+  String get hide => 'Hide';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get levelInformationTooltip => 'Level Information';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get description => 'Description';
 }

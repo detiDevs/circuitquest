@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:circuitquest/constants.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -25,7 +26,7 @@ class CircuitFileManager extends ConsumerWidget {
               ? null
               : () => _saveCircuit(context, state),
           icon: const Icon(Icons.save),
-          label: const Text('Save Circuit'),
+          label: Text(AppLocalizations.of(context)!.saveCircuit),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blue,
             foregroundColor: Colors.white,
@@ -39,22 +40,20 @@ class CircuitFileManager extends ConsumerWidget {
               ? null
               : () => _saveAsCustomComponent(context, ref, state),
           icon: const Icon(Icons.extension),
-          label: const Text('Save as Custom Component'),
+          label: Text(AppLocalizations.of(context)!.saveAsCustomComponent),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.indigo,
             foregroundColor: Colors.white,
           ),
         ),
         const SizedBox(height: 8),
-        
+
         // Load circuit button
         OutlinedButton.icon(
           onPressed: () => _loadCircuit(context, state),
           icon: const Icon(Icons.folder_open),
-          label: const Text('Load Circuit'),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.blue,
-          ),
+          label: Text(AppLocalizations.of(context)!.loadCircuit),
+          style: OutlinedButton.styleFrom(foregroundColor: Colors.blue),
         ),
       ],
     );
@@ -75,8 +74,12 @@ class CircuitFileManager extends ConsumerWidget {
     if (inputComponents.isEmpty || outputComponents.isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Custom components need at least one input and one output.'),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.customComponentsNeedInputOutputError,
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -84,18 +87,18 @@ class CircuitFileManager extends ConsumerWidget {
       return;
     }
 
-    final nameController = TextEditingController(text: 'My Custom Component');
+    final nameController = TextEditingController(
+      text: AppLocalizations.of(context)!.customComponentDefaultName,
+    );
     final inputControllers = List.generate(
       inputComponents.length,
-      (index) => TextEditingController(
-        text: _toCamelCase('Input ${index + 1}'),
-      ),
+      (index) =>
+          TextEditingController(text: _toCamelCase('Input ${index + 1}')),
     );
     final outputControllers = List.generate(
       outputComponents.length,
-      (index) => TextEditingController(
-        text: _toCamelCase('Output ${index + 1}'),
-      ),
+      (index) =>
+          TextEditingController(text: _toCamelCase('Output ${index + 1}')),
     );
 
     String? spritePath;
@@ -104,7 +107,7 @@ class CircuitFileManager extends ConsumerWidget {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Save as Custom Component'),
+          title: Text(AppLocalizations.of(context)!.saveAsCustomComponent),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -112,15 +115,17 @@ class CircuitFileManager extends ConsumerWidget {
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Component Name',
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(
+                      context,
+                    )!.customComponentName,
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Input keys',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Text(
+                  AppLocalizations.of(context)!.customComponentInputKeysLabel,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 ...List.generate(inputControllers.length, (index) {
@@ -131,26 +136,33 @@ class CircuitFileManager extends ConsumerWidget {
                     child: TextField(
                       controller: inputControllers[index],
                       decoration: InputDecoration(
-                        labelText: 'Input ${index + 1} (bitwidth: $bitWidth)',
+                        labelText: AppLocalizations.of(
+                          context,
+                        )!.customComponentInputLabel(index + 1, bitWidth),
                         border: const OutlineInputBorder(),
                       ),
                     ),
                   );
                 }),
                 const SizedBox(height: 8),
-                const Text(
-                  'Output keys',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                Text(
+                  AppLocalizations.of(context)!.customComponentOutputKeysLabel,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
                 ...List.generate(outputControllers.length, (index) {
-                  final output = outputComponents[index].component as OutputProbe;
+                  final output =
+                      outputComponents[index].component as OutputProbe;
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: TextField(
                       controller: outputControllers[index],
                       decoration: InputDecoration(
-                        labelText: 'Output ${index + 1} (bitwidth: ${output.bitWidth})',
+                        labelText: AppLocalizations.of(context)!
+                            .customComponentOutputLabel(
+                              index + 1,
+                              output.bitWidth,
+                            ),
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -160,7 +172,9 @@ class CircuitFileManager extends ConsumerWidget {
                 OutlinedButton.icon(
                   onPressed: () async {
                     final result = await FilePicker.platform.pickFiles(
-                      dialogTitle: 'Select Component Image',
+                      dialogTitle: AppLocalizations.of(
+                        context,
+                      )!.customComponentSelectImage,
                       type: FileType.custom,
                       allowedExtensions: ['png', 'jpg', 'jpeg', 'svg'],
                     );
@@ -171,12 +185,14 @@ class CircuitFileManager extends ConsumerWidget {
                     }
                   },
                   icon: const Icon(Icons.image),
-                  label: const Text('Select Image'),
+                  label: Text(
+                    AppLocalizations.of(context)!.customComponentSelectImage,
+                  ),
                 ),
                 if (spritePath != null) ...[
                   const SizedBox(height: 6),
                   Text(
-                    'Selected: ${spritePath!.split(Platform.pathSeparator).last}',
+                    '${AppLocalizations.of(context)!.selected}: ${spritePath!.split(Platform.pathSeparator).last}',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],
@@ -186,11 +202,11 @@ class CircuitFileManager extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Save'),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         ),
@@ -203,8 +219,12 @@ class CircuitFileManager extends ConsumerWidget {
     if (name.isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Component name cannot be empty.'),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.customComponentNameCannotBeEmptyError,
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -217,8 +237,12 @@ class CircuitFileManager extends ConsumerWidget {
     if (inputKeys.any((k) => k.isEmpty) || outputKeys.any((k) => k.isEmpty)) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Input/output keys cannot be empty.'),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.customComponentKeysCannotBeEmptyError,
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -234,8 +258,10 @@ class CircuitFileManager extends ConsumerWidget {
     if (data == null) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Unable to build custom component data.'),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.customComponentBuildDataError,
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -257,8 +283,8 @@ class CircuitFileManager extends ConsumerWidget {
         SnackBar(
           content: Text(
             success
-                ? 'Custom component saved.'
-                : 'Failed to save custom component.',
+                ? AppLocalizations.of(context)!.customComponentSaved
+                : AppLocalizations.of(context)!.customComponentSavingError,
           ),
           backgroundColor: success ? Colors.green : Colors.red,
         ),
@@ -268,30 +294,32 @@ class CircuitFileManager extends ConsumerWidget {
 
   /// Shows dialog to save the circuit
   Future<void> _saveCircuit(BuildContext context, SandboxState state) async {
-    final nameController = TextEditingController(text: 'My Circuit');
+    final nameController = TextEditingController(
+      text: AppLocalizations.of(context)!.circuitDefaultName,
+    );
     final descriptionController = TextEditingController(
-      text: 'Circuit created in sandbox mode',
+      text: AppLocalizations.of(context)!.circuitDefaultDescription,
     );
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Save Circuit'),
+        title: Text(AppLocalizations.of(context)!.save),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Circuit Name',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.circuitNameLabel,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description',
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.description,
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -301,11 +329,11 @@ class CircuitFileManager extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Save'),
+            child: Text(AppLocalizations.of(context)!.save),
           ),
         ],
       ),
@@ -328,7 +356,7 @@ class CircuitFileManager extends ConsumerWidget {
 
       // Get save location
       final result = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save Circuit',
+        dialogTitle: AppLocalizations.of(context)!.save,
         fileName: defaultFileName,
         initialDirectory: defaultDir,
         type: FileType.custom,
@@ -347,7 +375,9 @@ class CircuitFileManager extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Circuit saved to ${file.path}'),
+            content: Text(
+              AppLocalizations.of(context)!.circuitSavedTo(file.path),
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -356,7 +386,9 @@ class CircuitFileManager extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error saving circuit: $e'),
+            content: Text(
+              AppLocalizations.of(context)!.circuitSaveError(e.toString()),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -372,7 +404,7 @@ class CircuitFileManager extends ConsumerWidget {
 
       // Pick file
       final result = await FilePicker.platform.pickFiles(
-        dialogTitle: 'Load Circuit',
+        dialogTitle: AppLocalizations.of(context)!.loadCircuit,
         initialDirectory: defaultDir,
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -388,21 +420,19 @@ class CircuitFileManager extends ConsumerWidget {
         final confirmed = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Load Circuit'),
-            content: const Text(
-              'Loading a circuit will clear the current circuit. Continue?',
+            title: Text(AppLocalizations.of(context)!.loadCircuit),
+            content: Text(
+              AppLocalizations.of(context)!.loadCircuitConfirmMessage,
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
+                child: Text(AppLocalizations.of(context)!.cancel),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                ),
-                child: const Text('Load'),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                child: Text(AppLocalizations.of(context)!.loadCircuitAction),
               ),
             ],
           ),
@@ -419,8 +449,8 @@ class CircuitFileManager extends ConsumerWidget {
           SnackBar(
             content: Text(
               success
-                  ? 'Circuit loaded successfully'
-                  : 'Error loading circuit',
+                  ? AppLocalizations.of(context)!.circuitLoadedSuccess
+                  : AppLocalizations.of(context)!.circuitLoadedError,
             ),
             backgroundColor: success ? Colors.green : Colors.red,
           ),
@@ -430,7 +460,9 @@ class CircuitFileManager extends ConsumerWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error loading circuit: $e'),
+            content: Text(
+              AppLocalizations.of(context)!.circuitLoadError(e.toString()),
+            ),
             backgroundColor: Colors.red,
           ),
         );
@@ -440,11 +472,15 @@ class CircuitFileManager extends ConsumerWidget {
 
   /// Returns (and creates if needed) the default save/load directory.
   Future<String> _ensureDefaultDirectory() async {
-    final home = Platform.environment['HOME'] ??
+    final home =
+        Platform.environment['HOME'] ??
         Platform.environment['USERPROFILE'] ??
         Directory.current.path;
-    final dirPath = [home, Constants.kAppName, 'Saved Circuits']
-        .join(Platform.pathSeparator);
+    final dirPath = [
+      home,
+      Constants.kAppName,
+      'Saved Circuits',
+    ].join(Platform.pathSeparator);
     final dir = Directory(dirPath);
     if (!await dir.exists()) {
       await dir.create(recursive: true);

@@ -44,6 +44,19 @@
   "@stopSimulation": {
     "description": "Schaltfläche zum Stoppen der kontinuierlichen Simulation"
   },
+  "simulationSpeed": "Geschwindigkeit",
+  "simulationSpeedInstant": "Ohne Verzögerung",
+  "resetCircuitToInitialState": "Auf Ausgangszustand zurücksetzen",
+  "circuitWasResetToInitialState": "Auf Ausgangszustand zurückgesetzt",
+  
+  "fileOperationsTitle": "Dateioptionen",
+  "saveCircuit": "Schaltkreis speichern",
+  "saveAsCustomComponent": "Als eigene Komponente speichern",
+  "customComponentsNeedInputOutputError": "Eigene Komponenten brauchen mindestens einen Input und einen Output.",
+  "loadCircuit": "Schaltkreis laden",
+
+  "checkSolution": "Lösung überprüfen",
+
   "clearCircuit": "Schaltkreis löschen",
   "@clearCircuit": {
     "description": "Schaltfläche zum Löschen aller Komponenten von der Arbeitsfläche"
@@ -164,14 +177,6 @@
   "@componentMenuPrompt": {
     "description": "Aufforderung im Komponenten-Kontextmenü"
   },
-  "cancel": "Abbrechen",
-  "@cancel": {
-    "description": "Schaltfläche Abbrechen"
-  },
-  "delete": "Löschen",
-  "@delete": {
-    "description": "Schaltfläche Löschen"
-  },
 
   "toggleBitwidth": "Bitbreite umschalten",
   "@toggleBitwidth": {
@@ -213,11 +218,144 @@
     }  
   },
 
+  "customComponentName": "Komponentenname",
+  "customComponentDefaultName": "Meine eigene Komponente",
+  "@customComponentDefaultName": {
+    "description": "Standardname für eine neue eigene Komponente"
+  },
+  "customComponentInputKeysLabel": "Eingangsschlüssel",
+  "@customComponentInputKeysLabel": {
+    "description": "Abschnittstitel für Eingangsschlüssel der eigenen Komponente"
+  },
+  "customComponentOutputKeysLabel": "Ausgangsschlüssel",
+  "@customComponentOutputKeysLabel": {
+    "description": "Abschnittstitel für Ausgangsschlüssel der eigenen Komponente"
+  },
+  "customComponentInputLabel": "Eingang {index} (Bitbreite: {bitWidth})",
+  "@customComponentInputLabel": {
+    "description": "Beschriftung für Eingabefeld eines eigenen Komponenteneingangs",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "1"
+      },
+      "bitWidth": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+  "customComponentOutputLabel": "Ausgang {index} (Bitbreite: {bitWidth})",
+  "@customComponentOutputLabel": {
+    "description": "Beschriftung für Eingabefeld eines eigenen Komponentenausgangs",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "1"
+      },
+      "bitWidth": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+  "customComponentSelectImage": "Bild wählen",
+  "customComponentNameCannotBeEmptyError": "Komponentenname darf nicht leer sein",
+  "customComponentKeysCannotBeEmptyError": "Input/output keys dürfen nicht leer sein",
+  "customComponentBuildDataError": "Fehler beim Erstellen der Komponentendaten",
+  "customComponentSavingError": "Fehler beim Speichern der Komponente",
+  "customComponentSaved": "Komponente gespeichert",
+
+  "circuitDefaultName": "Mein Schaltkreis",
+  "@circuitDefaultName": {
+    "description": "Standardname für einen neuen Schaltkreis"
+  },
+  "circuitDefaultDescription": "Schaltkreis im Sandbox-Modus erstellt",
+  "@circuitDefaultDescription": {
+    "description": "Standardbeschreibung für einen neuen Schaltkreis"
+  },
+  "circuitNameLabel": "Schaltkreisname",
+  "@circuitNameLabel": {
+    "description": "Beschriftung für das Textfeld des Schaltkreisnamens"
+  },
+  "circuitSavedTo": "Schaltkreis gespeichert unter {path}",
+  "@circuitSavedTo": {
+    "description": "Snackbar-Nachricht nach dem Speichern eines Schaltkreises",
+    "placeholders": {
+      "path": {
+        "type": "String",
+        "example": "/home/user/CircuitQuest/Saved Circuits/mein_schaltkreis.json"
+      }
+    }
+  },
+  "circuitSaveError": "Fehler beim Speichern des Schaltkreises: {error}",
+  "@circuitSaveError": {
+    "description": "Snackbar-Nachricht wenn das Speichern eines Schaltkreises fehlschlägt",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Zugriff verweigert"
+      }
+    }
+  },
+  "loadCircuitConfirmMessage": "Beim Laden wird der aktuelle Schaltkreis gelöscht. Fortfahren?",
+  "@loadCircuitConfirmMessage": {
+    "description": "Bestätigungsnachricht vor dem Laden eines Schaltkreises"
+  },
+  "loadCircuitAction": "Laden",
+  "@loadCircuitAction": {
+    "description": "Schaltflächenbeschriftung zum Bestätigen des Ladens"
+  },
+  "circuitLoadedSuccess": "Schaltkreis erfolgreich geladen",
+  "@circuitLoadedSuccess": {
+    "description": "Snackbar-Nachricht nach dem Laden eines Schaltkreises"
+  },
+  "circuitLoadedError": "Fehler beim Laden des Schaltkreises",
+  "@circuitLoadedError": {
+    "description": "Snackbar-Nachricht wenn das Laden des Schaltkreises fehlschlägt"
+  },
+  "circuitLoadError": "Fehler beim Laden des Schaltkreises: {error}",
+  "@circuitLoadError": {
+    "description": "Snackbar-Nachricht wenn das Laden eines Schaltkreises einen Fehler auslöst",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Ungültiges JSON"
+      }
+    }
+  },
+
   "settings": "Einstellungen",
   "language": "Sprache",
   "systemDefault": "Systemeinstellung",
 
   "util": "",
   "retry": "Erneut versuchen",
-  "selected": "Ausgewählt"
+  "selected": "Ausgewählt",
+  "show": "Anzeigen",
+  "@show": {
+    "description": "Beschriftung zum Anzeigen von Details oder Tipps"
+  },
+  "hide": "Ausblenden",
+  "@hide": {
+    "description": "Beschriftung zum Ausblenden von Details oder Tipps"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK-Schaltflächenbeschriftung"
+  },
+  "levelInformationTooltip": "Level-Informationen",
+  "@levelInformationTooltip": {
+    "description": "Tooltip für den Level-Info-Button"
+  },
+  "cancel": "Abbrechen",
+  "@cancel": {
+    "description": "Schaltfläche Abbrechen"
+  },
+  "delete": "Löschen",
+  "@delete": {
+    "description": "Schaltfläche Löschen"
+  },
+  "save": "Speichern",
+  "description": "Beschreibung"
 }

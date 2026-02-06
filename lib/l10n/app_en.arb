@@ -44,6 +44,19 @@
   "@stopSimulation": {
     "description": "Button to stop continuous simulation"
   },
+  "simulationSpeed": "Simulation speed",
+  "simulationSpeedInstant": "Instant",
+  "resetCircuitToInitialState": "Reset to Initial State",
+  "circuitWasResetToInitialState": "Circuit reset to initial state",
+
+  "fileOperationsTitle": "File Operations",
+  "saveCircuit": "Save Circuit",
+  "saveAsCustomComponent": "Save as Custom Component",
+  "customComponentsNeedInputOutputError": "Custom components need at least one input and one output.",
+  "loadCircuit": "Load Circuit",
+
+  "checkSolution": "Check solution",
+
   "clearCircuit": "Clear Circuit",
   "@clearCircuit": {
     "description": "Button to clear all components from canvas"
@@ -164,14 +177,6 @@
   "@componentMenuPrompt": {
     "description": "Prompt in component context menu"
   },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Cancel button"
-  },
-  "delete": "Delete",
-  "@delete": {
-    "description": "Delete button"
-  },
 
   "toggleBitwidth": "Toggle bitwidth",
   "@toggleBitwidth": {
@@ -214,11 +219,144 @@
     }
   },
 
+  "customComponentName": "Component name",
+  "customComponentDefaultName": "My Custom Component",
+  "@customComponentDefaultName": {
+    "description": "Default name for a new custom component"
+  },
+  "customComponentInputKeysLabel": "Input keys",
+  "@customComponentInputKeysLabel": {
+    "description": "Section title for custom component input keys"
+  },
+  "customComponentOutputKeysLabel": "Output keys",
+  "@customComponentOutputKeysLabel": {
+    "description": "Section title for custom component output keys"
+  },
+  "customComponentInputLabel": "Input {index} (bitwidth: {bitWidth})",
+  "@customComponentInputLabel": {
+    "description": "Label for custom component input name field",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "1"
+      },
+      "bitWidth": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+  "customComponentOutputLabel": "Output {index} (bitwidth: {bitWidth})",
+  "@customComponentOutputLabel": {
+    "description": "Label for custom component output name field",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "1"
+      },
+      "bitWidth": {
+        "type": "int",
+        "example": "8"
+      }
+    }
+  },
+  "customComponentSelectImage": "Select image",
+  "customComponentNameCannotBeEmptyError": "Component name cannot be empty.",
+  "customComponentKeysCannotBeEmptyError": "Input/output keys cannot be empty.",
+  "customComponentBuildDataError": "Unable to build custom component data.",
+  "customComponentSavingError": "Failed to save custom component.",
+  "customComponentSaved": "Custom component saved.",
+
+  "circuitDefaultName": "My Circuit",
+  "@circuitDefaultName": {
+    "description": "Default name for a new circuit"
+  },
+  "circuitDefaultDescription": "Circuit created in sandbox mode",
+  "@circuitDefaultDescription": {
+    "description": "Default description for a new circuit"
+  },
+  "circuitNameLabel": "Circuit Name",
+  "@circuitNameLabel": {
+    "description": "Label for circuit name text field"
+  },
+  "circuitSavedTo": "Circuit saved to {path}",
+  "@circuitSavedTo": {
+    "description": "Snackbar message after saving a circuit",
+    "placeholders": {
+      "path": {
+        "type": "String",
+        "example": "/home/user/CircuitQuest/Saved Circuits/my_circuit.json"
+      }
+    }
+  },
+  "circuitSaveError": "Error saving circuit: {error}",
+  "@circuitSaveError": {
+    "description": "Snackbar message when saving a circuit fails",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Permission denied"
+      }
+    }
+  },
+  "loadCircuitConfirmMessage": "Loading a circuit will clear the current circuit. Continue?",
+  "@loadCircuitConfirmMessage": {
+    "description": "Confirmation message before loading a circuit"
+  },
+  "loadCircuitAction": "Load",
+  "@loadCircuitAction": {
+    "description": "Button label to confirm loading a circuit"
+  },
+  "circuitLoadedSuccess": "Circuit loaded successfully",
+  "@circuitLoadedSuccess": {
+    "description": "Snackbar message after loading a circuit"
+  },
+  "circuitLoadedError": "Error loading circuit",
+  "@circuitLoadedError": {
+    "description": "Snackbar message when circuit loading fails"
+  },
+  "circuitLoadError": "Error loading circuit: {error}",
+  "@circuitLoadError": {
+    "description": "Snackbar message when circuit loading throws an error",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "example": "Invalid JSON"
+      }
+    }
+  },
+
   "settings": "Settings",
   "language": "Language",
   "systemDefault": "System default",
 
   "util": "",
   "retry": "Retry",
-  "selected": "Selected"
+  "selected": "Selected",
+  "show": "Show",
+  "@show": {
+    "description": "Label to show details or hints"
+  },
+  "hide": "Hide",
+  "@hide": {
+    "description": "Label to hide details or hints"
+  },
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button label"
+  },
+  "levelInformationTooltip": "Level Information",
+  "@levelInformationTooltip": {
+    "description": "Tooltip for level info button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button"
+  },
+  "save": "Save",
+  "description": "Description"
 }

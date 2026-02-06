@@ -64,8 +64,8 @@ class ControlPanel extends ConsumerWidget {
               ),
               label: Text(
                 state.isSimulating 
-                    ? 'Pause Simulation'
-                    : 'Start Simulation',
+                    ? AppLocalizations.of(context)!.stopSimulation
+                    : AppLocalizations.of(context)!.startSimulation,
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor:
@@ -83,13 +83,13 @@ class ControlPanel extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Simulation Speed',
+                      AppLocalizations.of(context)!.simulationSpeed,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      _getSpeedDisplayValue(state.tickSpeed) == 0 ? 'Instant' : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
+                      _getSpeedDisplayValue(state.tickSpeed) == 0 ? AppLocalizations.of(context)!.simulationSpeedInstant : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.blue[700],
                         fontWeight: FontWeight.bold,
@@ -103,7 +103,7 @@ class ControlPanel extends ConsumerWidget {
                   min: 1,
                   max: 11,
                   divisions: 10,
-                  label: _getSpeedDisplayValue(state.tickSpeed) == 0 ? 'Instant' : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
+                  label: _getSpeedDisplayValue(state.tickSpeed) == 0 ? AppLocalizations.of(context)!.simulationSpeedInstant : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
                   onChanged: (value) {
                     state.setTickSpeed(_getTickSpeedFromSlider(value));
                   },
@@ -120,7 +120,7 @@ class ControlPanel extends ConsumerWidget {
                       style: TextStyle(fontSize: 10, color: Colors.grey[600]),
                     ),
                     Text(
-                      'Instant',
+                      AppLocalizations.of(context)!.simulationSpeedInstant,
                       style: TextStyle(fontSize: 10, color: Colors.grey[600]),
                     ),
                   ],
@@ -135,14 +135,14 @@ class ControlPanel extends ConsumerWidget {
                 onPressed: () {
                   state.resetSimulation();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Circuit reset to initial state'),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.circuitWasResetToInitialState),
                       duration: Duration(seconds: 1),
                     ),
                   );
                 },
                 icon: const Icon(Icons.restore),
-                label: const Text('Reset to Initial State'),
+                label: Text(AppLocalizations.of(context)!.resetCircuitToInitialState),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.blue,
                 ),
@@ -158,7 +158,7 @@ class ControlPanel extends ConsumerWidget {
                     ? null
                     : () => _checkSolution(context, ref, state, level!),
                 icon: const Icon(Icons.check_circle),
-                label: const Text('Check Solution'),
+                label: Text(AppLocalizations.of(context)!.checkSolution),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
                   foregroundColor: Colors.white,
@@ -173,7 +173,7 @@ class ControlPanel extends ConsumerWidget {
 
               // File operations (sandbox only)
               Text(
-                'File Operations',
+                AppLocalizations.of(context)!.fileOperationsTitle,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

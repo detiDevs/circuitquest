@@ -50,7 +50,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
       body: _LevelScreenBody(level: widget.level),
       floatingActionButton: FloatingActionButton(
         onPressed: _showLevelInfoDialog,
-        tooltip: 'Level Information',
+        tooltip: AppLocalizations.of(context)!.levelInformationTooltip,
         child: const Icon(Icons.info),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
@@ -251,7 +251,11 @@ class _LevelInfoDialogState extends State<_LevelInfoDialog> {
                         _showHints = !_showHints;
                       });
                     },
-                    child: Text(_showHints ? 'Hide' : 'Show'),
+                    child: Text(
+                      _showHints
+                          ? AppLocalizations.of(context)!.hide
+                          : AppLocalizations.of(context)!.show,
+                    ),
                   ),
                 ],
               ),
@@ -295,7 +299,7 @@ class _LevelInfoDialogState extends State<_LevelInfoDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('OK'),
+          child: Text(AppLocalizations.of(context)!.ok),
         ),
       ],
     );

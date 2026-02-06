@@ -71,6 +71,38 @@ class AppLocalizationsDe extends AppLocalizations {
   String get stopSimulation => 'Simulation stoppen';
 
   @override
+  String get simulationSpeed => 'Geschwindigkeit';
+
+  @override
+  String get simulationSpeedInstant => 'Ohne Verzögerung';
+
+  @override
+  String get resetCircuitToInitialState => 'Auf Ausgangszustand zurücksetzen';
+
+  @override
+  String get circuitWasResetToInitialState =>
+      'Auf Ausgangszustand zurückgesetzt';
+
+  @override
+  String get fileOperationsTitle => 'Dateioptionen';
+
+  @override
+  String get saveCircuit => 'Schaltkreis speichern';
+
+  @override
+  String get saveAsCustomComponent => 'Als eigene Komponente speichern';
+
+  @override
+  String get customComponentsNeedInputOutputError =>
+      'Eigene Komponenten brauchen mindestens einen Input und einen Output.';
+
+  @override
+  String get loadCircuit => 'Schaltkreis laden';
+
+  @override
+  String get checkSolution => 'Lösung überprüfen';
+
+  @override
   String get clearCircuit => 'Schaltkreis löschen';
 
   @override
@@ -184,12 +216,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get componentMenuPrompt => 'Was möchten Sie tun?';
 
   @override
-  String get cancel => 'Abbrechen';
-
-  @override
-  String get delete => 'Löschen';
-
-  @override
   String get toggleBitwidth => 'Bitbreite umschalten';
 
   @override
@@ -205,6 +231,88 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String rangeLabel(String min, String max) {
     return '$min .. $max';
+  }
+
+  @override
+  String get customComponentName => 'Komponentenname';
+
+  @override
+  String get customComponentDefaultName => 'Meine eigene Komponente';
+
+  @override
+  String get customComponentInputKeysLabel => 'Eingangsschlüssel';
+
+  @override
+  String get customComponentOutputKeysLabel => 'Ausgangsschlüssel';
+
+  @override
+  String customComponentInputLabel(int index, int bitWidth) {
+    return 'Eingang $index (Bitbreite: $bitWidth)';
+  }
+
+  @override
+  String customComponentOutputLabel(int index, int bitWidth) {
+    return 'Ausgang $index (Bitbreite: $bitWidth)';
+  }
+
+  @override
+  String get customComponentSelectImage => 'Bild wählen';
+
+  @override
+  String get customComponentNameCannotBeEmptyError =>
+      'Komponentenname darf nicht leer sein';
+
+  @override
+  String get customComponentKeysCannotBeEmptyError =>
+      'Input/output keys dürfen nicht leer sein';
+
+  @override
+  String get customComponentBuildDataError =>
+      'Fehler beim Erstellen der Komponentendaten';
+
+  @override
+  String get customComponentSavingError =>
+      'Fehler beim Speichern der Komponente';
+
+  @override
+  String get customComponentSaved => 'Komponente gespeichert';
+
+  @override
+  String get circuitDefaultName => 'Mein Schaltkreis';
+
+  @override
+  String get circuitDefaultDescription =>
+      'Schaltkreis im Sandbox-Modus erstellt';
+
+  @override
+  String get circuitNameLabel => 'Schaltkreisname';
+
+  @override
+  String circuitSavedTo(String path) {
+    return 'Schaltkreis gespeichert unter $path';
+  }
+
+  @override
+  String circuitSaveError(String error) {
+    return 'Fehler beim Speichern des Schaltkreises: $error';
+  }
+
+  @override
+  String get loadCircuitConfirmMessage =>
+      'Beim Laden wird der aktuelle Schaltkreis gelöscht. Fortfahren?';
+
+  @override
+  String get loadCircuitAction => 'Laden';
+
+  @override
+  String get circuitLoadedSuccess => 'Schaltkreis erfolgreich geladen';
+
+  @override
+  String get circuitLoadedError => 'Fehler beim Laden des Schaltkreises';
+
+  @override
+  String circuitLoadError(String error) {
+    return 'Fehler beim Laden des Schaltkreises: $error';
   }
 
   @override
@@ -224,4 +332,28 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get selected => 'Ausgewählt';
+
+  @override
+  String get show => 'Anzeigen';
+
+  @override
+  String get hide => 'Ausblenden';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get levelInformationTooltip => 'Level-Informationen';
+
+  @override
+  String get cancel => 'Abbrechen';
+
+  @override
+  String get delete => 'Löschen';
+
+  @override
+  String get save => 'Speichern';
+
+  @override
+  String get description => 'Beschreibung';
 }

@@ -1,4 +1,5 @@
 import 'package:circuitquest/constants.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/widgets/expandable_control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +22,7 @@ class SandboxScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('${Constants.kAppName} - Sandbox Mode'),
+        title: Text('${Constants.kAppName} - ${AppLocalizations.of(context)!.sandboxModeTitle}'),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
       ),
