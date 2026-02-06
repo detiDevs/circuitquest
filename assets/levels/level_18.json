@@ -9,44 +9,260 @@
         "When op = 11, produce an ALU output that is zero on all ALU result bits except the least-significant output which should be 1 when A is strictly less than B, otherwise 0.",
         "Keep the previous operation mapping intact: 00 -> AND, 01 -> OR, 10 -> ADD/SUB (use `binvert` to select subtract)."
     ],
-
-   "components": [
-        {"type": "Input", "position": [0,1], "immovable": false, "label": "A1"},
-        {"type": "Input", "position": [0,3], "immovable": false, "label": "B1"},
-        {"type": "Input", "position": [12,5], "immovable": false, "label": "op0"},
-        {"type": "Input", "position": [12,6], "immovable": false, "label": "op1"},
-        {"type": "Input", "position": [5,6], "immovable": false, "label": "binvert"},
-        {"type": "Collector1to2", "position": [13,5], "immovable": false},
-        {"type": "FullAdder", "position": [11,0], "immovable":false},
-        {"type": "And", "position": [11,2], "immovable":false},
-        {"type": "Or", "position": [11,4], "immovable":false},
-        {"type": "Multiplexer4Inp", "position": [14,3], "immovable":false},
-        {"type": "Output", "position": [16,3], "immovable": false, "label": "OUT"},
-        {"type": "Not","position":[5,3], "immovable": false, "label": "NotBinvert"},
-        {"type": "Multiplexer2Inp", "position": [6,3], "immovable": false, "label": "MUXbinvert"},
-        {"type": "Input", "position": [3,6], "immovable": false, "label": "ainvert"},
-        {"type": "Not", "position": [3,1], "immovable": false, "label": "NotAinvert"},
-        {"type": "Multiplexer2Inp", "position": [4,1], "immovable": false, "label": "ainvertMux"},
-
-
-        {"type": "Input", "position": [0,9], "immovable": false, "label": "A2"},
-        {"type": "Input", "position": [0,11], "immovable": false, "label": "B2"},
-        {"type": "FullAdder", "position": [11,8], "immovable":false},
-        {"type": "And", "position": [11,10], "immovable":false},
-        {"type": "Or", "position": [11,12], "immovable":false},
-        {"type": "Multiplexer4Inp", "position": [14,11], "immovable":false},
-        {"type": "Output", "position": [13,9], "immovable": false, "label": "Carry_out"},
-        {"type": "Output", "position": [16,11], "immovable": false, "label": "OUT"},
-        {"type": "Not","position":[5,11], "immovable": false, "label": "NotBinvert"},
-        {"type": "Multiplexer2Inp", "position": [6,11], "immovable": false, "label": "MUXbinvert"},
-        {"type": "Not", "position": [3,9], "immovable": false, "label": "NotAinvert"},
-        {"type": "Multiplexer2Inp", "position": [4,9], "immovable": false, "label": "ainvertMux"},
-
-        {"type": "Input", "position": [0,13], "immovable": true, "label": "Constant Zero"}
-
-       
+    "components": [
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": false,
+            "label": "A1"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": false,
+            "label": "B1"
+        },
+        {
+            "type": "Input",
+            "position": [
+                12,
+                5
+            ],
+            "immovable": false,
+            "label": "op0"
+        },
+        {
+            "type": "Input",
+            "position": [
+                12,
+                6
+            ],
+            "immovable": false,
+            "label": "op1"
+        },
+        {
+            "type": "Input",
+            "position": [
+                5,
+                6
+            ],
+            "immovable": false,
+            "label": "binvert"
+        },
+        {
+            "type": "Collector1to2",
+            "position": [
+                13,
+                5
+            ],
+            "immovable": false
+        },
+        {
+            "type": "FullAdder",
+            "position": [
+                11,
+                0
+            ],
+            "immovable": false
+        },
+        {
+            "type": "And",
+            "position": [
+                11,
+                2
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Or",
+            "position": [
+                11,
+                4
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Multiplexer4Inp",
+            "position": [
+                14,
+                3
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Output",
+            "position": [
+                16,
+                3
+            ],
+            "immovable": false,
+            "label": "OUT"
+        },
+        {
+            "type": "Not",
+            "position": [
+                5,
+                3
+            ],
+            "immovable": false,
+            "label": "NotBinvert"
+        },
+        {
+            "type": "Multiplexer2Inp",
+            "position": [
+                6,
+                3
+            ],
+            "immovable": false,
+            "label": "MUXbinvert"
+        },
+        {
+            "type": "Input",
+            "position": [
+                3,
+                6
+            ],
+            "immovable": false,
+            "label": "ainvert"
+        },
+        {
+            "type": "Not",
+            "position": [
+                3,
+                1
+            ],
+            "immovable": false,
+            "label": "NotAinvert"
+        },
+        {
+            "type": "Multiplexer2Inp",
+            "position": [
+                4,
+                1
+            ],
+            "immovable": false,
+            "label": "ainvertMux"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                9
+            ],
+            "immovable": false,
+            "label": "A2"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                11
+            ],
+            "immovable": false,
+            "label": "B2"
+        },
+        {
+            "type": "FullAdder",
+            "position": [
+                11,
+                8
+            ],
+            "immovable": false
+        },
+        {
+            "type": "And",
+            "position": [
+                11,
+                10
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Or",
+            "position": [
+                11,
+                12
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Multiplexer4Inp",
+            "position": [
+                14,
+                11
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Output",
+            "position": [
+                13,
+                9
+            ],
+            "immovable": false,
+            "label": "Carry_out"
+        },
+        {
+            "type": "Output",
+            "position": [
+                16,
+                11
+            ],
+            "immovable": false,
+            "label": "OUT"
+        },
+        {
+            "type": "Not",
+            "position": [
+                5,
+                11
+            ],
+            "immovable": false,
+            "label": "NotBinvert"
+        },
+        {
+            "type": "Multiplexer2Inp",
+            "position": [
+                6,
+                11
+            ],
+            "immovable": false,
+            "label": "MUXbinvert"
+        },
+        {
+            "type": "Not",
+            "position": [
+                3,
+                9
+            ],
+            "immovable": false,
+            "label": "NotAinvert"
+        },
+        {
+            "type": "Multiplexer2Inp",
+            "position": [
+                4,
+                9
+            ],
+            "immovable": false,
+            "label": "ainvertMux"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                13
+            ],
+            "immovable": true,
+            "label": "Constant Zero"
+        }
     ],
-
     "connections": [
         {
             "origin": 0,
@@ -72,7 +288,7 @@
             "destination": 14,
             "destinationKey": "input"
         },
-                {
+        {
             "origin": 15,
             "originKey": "outputValue",
             "destination": 6,
@@ -120,8 +336,7 @@
             "destination": 11,
             "destinationKey": "input"
         },
-        
-         {
+        {
             "origin": 2,
             "originKey": "outValue",
             "destination": 5,
@@ -133,7 +348,7 @@
             "destination": 5,
             "destinationKey": "input2"
         },
-                {
+        {
             "origin": 12,
             "originKey": "outputValue",
             "destination": 8,
@@ -150,13 +365,13 @@
             "originKey": "outputValue",
             "destination": 6,
             "destinationKey": "inputB"
-        },     
+        },
         {
             "origin": 15,
             "originKey": "outputValue",
             "destination": 6,
             "destinationKey": "inputA"
-        }, 
+        },
         {
             "origin": 5,
             "originKey": "outValue",
@@ -193,14 +408,14 @@
             "destination": 26,
             "destinationKey": "input"
         },
-         {
-            "origin": 16 ,
+        {
+            "origin": 16,
             "originKey": "outValue",
-            "destination":27 ,
+            "destination": 27,
             "destinationKey": "input1"
         },
-         {
-            "origin":26 ,
+        {
+            "origin": 26,
             "originKey": "outValue",
             "destination": 27,
             "destinationKey": "input2"
@@ -211,20 +426,20 @@
             "destination": 27,
             "destinationKey": "selection"
         },
-         {
+        {
             "origin": 17,
             "originKey": "outValue",
             "destination": 24,
             "destinationKey": "input"
         },
-         {
-            "origin": 17 ,
+        {
+            "origin": 17,
             "originKey": "outValue",
-            "destination":25 ,
+            "destination": 25,
             "destinationKey": "input1"
         },
-         {
-            "origin":24 ,
+        {
+            "origin": 24,
             "originKey": "outValue",
             "destination": 25,
             "destinationKey": "input2"
@@ -234,19 +449,19 @@
             "originKey": "outValue",
             "destination": 25,
             "destinationKey": "selection"
-        },  
+        },
         {
             "origin": 27,
             "originKey": "outputValue",
             "destination": 18,
             "destinationKey": "inputA"
-        }, 
+        },
         {
             "origin": 27,
             "originKey": "outputValue",
             "destination": 19,
             "destinationKey": "input1"
-        },    
+        },
         {
             "origin": 27,
             "originKey": "outputValue",
@@ -258,13 +473,13 @@
             "originKey": "outputValue",
             "destination": 18,
             "destinationKey": "inputB"
-        }, 
+        },
         {
             "origin": 25,
             "originKey": "outputValue",
             "destination": 19,
             "destinationKey": "input2"
-        },    
+        },
         {
             "origin": 25,
             "originKey": "outputValue",
@@ -313,33 +528,140 @@
             "destination": 23,
             "destinationKey": "input"
         }
-         
     ],
-
     "available_components": [
-        {"type": "Or"},
-        {"type": "Not"}
-    ],
-
-    "hints": [
-        
-    "How SLT works (concept): To determine whether A is less than B, compute A minus B using two's-complement arithmetic. If the result is negative, then A is less than B. In a multi-bit ALU, the sign is simply the result of the last ALU-slice, in this case the output of the bootom adder.",
-    "Capture the MSB from the top slice after subtraction, because that bit indicates whether A minus B is negative. When the opcode is 11, use that sign bit to produce the SLT output: zero on all bits except the LSB, which carries the comparison bit.",
-    "use the Constant Zero input to force all output bits (except the output from slice 1) to zero when op = 11.",
-    "Since this ALU is only 2 bits wide, we can an overflow relatively easy. This Level is only here to show you the principle, when we extend the ALU to more bits, you have to take care of the overflow."
-],
-
-
-    "solution": "",
-
-    "tests": [
         {
-            "inputs": [[0,1], [0,1], [1,1], [1,1], [1,1],[0,1], [0,1], [0,1],[0,1]],
-            "expected_output": [[0,1],[1,1],[0,1]]
+            "type": "Or"
         },
         {
-            "inputs": [[0,1], [0,1], [1,1], [1,1], [1,1],[0,1], [0,1], [1,1],[0,1]],
-            "expected_output": [[1,1],[0,1],[0,1]]
+            "type": "Not"
         }
-    ]
+    ],
+    "hints": [
+        "How SLT works (concept): To determine whether A is less than B, compute A minus B using two's-complement arithmetic. If the result is negative, then A is less than B. In a multi-bit ALU, the sign is simply the result of the last ALU-slice, in this case the output of the bootom adder.",
+        "Capture the MSB from the top slice after subtraction, because that bit indicates whether A minus B is negative. When the opcode is 11, use that sign bit to produce the SLT output: zero on all bits except the LSB, which carries the comparison bit.",
+        "use the Constant Zero input to force all output bits (except the output from slice 1) to zero when op = 11.",
+        "Since this ALU is only 2 bits wide, we can an overflow relatively easy. This Level is only here to show you the principle, when we extend the ALU to more bits, you have to take care of the overflow."
+    ],
+    "solution": "",
+    "tests": [
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
+    ],
+    "name_de": "SLT (Setze-Kleiner-Als)",
+    "description_de": "SLT (Set-Less-Than) führt einen Vergleich mit Vorzeichen durch: Es gibt true zurück, wenn A streng kleiner als B ist, sonst false. In der Zweierkomplement-Arithmetik wird dieser Vergleich durchgeführt, indem A minus B berechnet wird und das Vorzeichen (das höchstwertige Bit) dieses Subtraktionsergebnisses überprüft wird – ein Wert von 1 im MSB bedeutet, dass das Ergebnis negativ ist und daher A kleiner als B ist. In dieser winzigen 2-Bit-ALU muss die SLT-Operation eine Ausgabe erzeugen, die Null auf allen Bits ist, außer auf dem niederwertigsten, das das Vorzeichen von A minus B enthalten sollte (1 wenn A kleiner als B ist, sonst 0). Um SLT in die existierenden zwei 1-Bit-ALU-Schichten zu integrieren, führe Subtraktion durch, indem du binvert auf B aktivierst und Carry-In gleich 1 auf der niederwertigsten Schicht verwendest; erfasse dann das MSB von der oberen Schicht als Vergleichsergebnis. Wenn der Opcode \"11\" ist, verwende die Multiplexer der ALU, um nur diesen Vergleichsbit im LSB auszugeben und alle anderen Bits auf Null zu setzen; für alle anderen Opcodes behalte das bisherige Mapping (00 = UND, 01 = ODER, 10 = ADD oder SUB).",
+    "difficulty_de": "Schwer",
+    "objectives_de": [
+        "Erweitere die bestehende 2-Bit-ALU so, dass op = `11` SLT implementiert.",
+        "Verwende Subtraktion (A + NOT(B) + 1), um A - B zu berechnen und sein Vorzeichen (MSB) zu bestimmen.",
+        "Wenn op = 11, erzeuge einen ALU-Ausgang, der Null auf allen ALU-Ergebnis-Bits ist, außer der niederwertigsten Ausgabe, die 1 sein sollte, wenn A streng kleiner als B ist, sonst 0.",
+        "Behalte das vorherige Operationsmapping intakt: 00 -> UND, 01 -> ODER, 10 -> ADD/SUB (verwende `binvert` zum Auswählen von Subtraktion)."
+    ],
+    "hints_de": []
 }

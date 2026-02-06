@@ -1,8 +1,11 @@
 	{
 	"level_id": 8,
 	"name": "Decoder",
+	"name_de": "Decoder",
 	"description": "A decoder translates a 3-bit wire into 8 single-bit outputs. Each output corresponds to one of the possible values of the 3-bit input (except in this level the 000 case should produce all zeros).",
+	"description_de": "Ein Decoder übersetzt ein 3-Bit-Kabel in 8 Single-Bit-Ausgänge. Jeder Ausgang entspricht einem der möglichen Werte der 3-Bit-Eingabe (außer in dieser Stufe sollte der Fall 000 alle Nullen erzeugen).",
 	"difficulty": "Medium",
+	"difficulty_de": "Mittel",
 	"objectives": [
 		"Build a decoder that maps a 3-bit input to 8 outputs as follows:",
 		"[0,0,0] => all outputs are 0",
@@ -11,6 +14,15 @@
 		"[0,1,1] => output 3 is 1, everything else 0",
 		"...",
 		"[1,1,1] => output 7 is 1, everything else 0"
+	],
+	"objectives_de": [
+		"Erstelle einen Decoder, der eine 3-Bit-Eingabe wie folgt auf 8 Ausgänge abbildet:",
+		"[0,0,0] => alle Ausgänge sind 0",
+		"[0,0,1] => Ausgang 1 ist 1, alles andere 0",
+		"[0,1,0] => Ausgang 2 ist 1, alles andere 0",
+		"[0,1,1] => Ausgang 3 ist 1, alles andere 0",
+		"...",
+		"[1,1,1] => Ausgang 7 ist 1, alles andere 0"
 	],
 	"components": [
 		{"type": "Input", "position": [0,1], "immovable": true, "label": "B2"},
@@ -34,6 +46,11 @@
 		"Use NOT gates to invert bits that should be 0 for a given output, then AND the three (or fewer) signals together to generate the correct output line.",
 		"For example, to generate output 3 (binary 011) you need B2=0, B1=1, B0=1 -> use NOT(B2) AND B1 AND B0.",
 		"This level intentionally requires you to handle the special case: input 000 must produce all-zero outputs (no active line)."
+	],
+	"hints_de": [
+		"Verwende NICHT-Gatter, um Bits zu invertieren, die für einen bestimmten Ausgang 0 sein sollten, und kombiniere dann die drei (oder weniger) Signale mit UND-Gattern, um die korrekte Ausgangsleitung zu erzeugen.",
+		"Zum Beispiel, um Ausgang 3 (binär 011) zu erzeugen, benötigst du B2=0, B1=1, B0=1 -> verwende NICHT(B2) UND B1 UND B0.",
+		"Diese Stufe erfordert absichtlich, dass du den Spezialfall behandelst: Eingabe 000 muss alle Nullen-Ausgänge erzeugen (keine aktive Leitung)."
 	],
 	"solution": "",
 	"tests": [

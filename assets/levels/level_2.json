@@ -1,10 +1,16 @@
 {
     "level_id": 2,
     "name": "NOT Gate",
+    "name_de": "NICHT-Gatter",
     "description": "The NOT gate simply inverts the given input.  If it recieves a 1 it will return 0, and vice versa.",
+    "description_de": "Das NICHT-Gatter invertiert die Eingabe einfach. Wenn es 1 erhält, gibt es 0 zurück, und umgekehrt.",
     "difficulty": "Easy",
+    "difficulty_de": "Einfach",
     "objectives": [
         "Connect the input to the NOT gate. Then connect the NOT gate to the Output"
+    ],
+    "objectives_de": [
+        "Verbinde die Eingabe mit dem NICHT-Gatter. Verbinde dann das NICHT-Gatter mit dem Ausgang"
     ],
     "components": [
         {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
@@ -15,6 +21,9 @@
     ],
     "hints": [
         "The NOT gate is very useful when combined with other gates"
+    ],
+    "hints_de": [
+        "Das NICHT-Gatter ist sehr nützlich, wenn es mit anderen Gattern kombiniert wird"
     ],
     "tests": [
         {"inputs": [[0,1]], "expected_output": [[1,1]]},

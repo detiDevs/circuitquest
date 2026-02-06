@@ -1,10 +1,16 @@
 {
     "level_id": 6,
     "name": "Multiplexer",
+    "name_de": "Multiplexer",
     "description": "A Multiplexer (or MUX) selects one of two inputs (A or B) based on a control input S and forwards it to the output.\n\nThis level teaches the basic 2-to-1 multiplexer: when S=0 the output follows A, and when S=1 the output follows B. Multiplexers are used whenever you need to route one of several signals to a single destination — for example selecting between different register outputs, choosing between ALU results, or steering input data into a bus.",
+    "description_de": "Ein Multiplexer (oder MUX) wählt einen von zwei Eingängen (A oder B) basierend auf einem Steuereingng S aus und leitet ihn an den Ausgang weiter.\n\nDiese Stufe vermittelt den grundlegenden 2-zu-1-Multiplexer: Wenn S=0, folgt der Ausgang A, und wenn S=1, folgt der Ausgang B. Multiplexer werden verwendet, wenn du eines von mehreren Signalen zu einem einzigen Ziel leiten musst – zum Beispiel bei der Auswahl zwischen verschiedenen Registerausgängen, der Auswahl zwischen ALU-Ergebnissen oder der Leitung von Eingabedaten in einen Bus.",
     "difficulty": "Medium",
+    "difficulty_de": "Mittel",
     "objectives": [
         "Given inputs A and B and control S, build a circuit so that:\n- if S=0 the Output equals A\n- if S=1 the Output equals B"
+    ],
+    "objectives_de": [
+        "Erstelle bei Eingängen A und B und Steuerung S eine Schaltung, so dass:\n- wenn S=0, ist der Ausgang gleich A\n- wenn S=1, ist der Ausgang gleich B"
     ],
     "components": [
         {"type": "Input", "position": [0,1], "immovable": true, "label": "S"},
@@ -21,6 +27,11 @@
         "S is the selector: use it to choose A or B.",
         "A common construction: (A AND NOT S) OR (B AND S).",
         "You can use NOT, AND and OR to implement that formula."
+    ],
+    "hints_de": [
+        "S ist die Auswahl: verwende sie, um A oder B zu wählen.",
+        "Eine häufige Konstruktion: (A UND NICHT S) ODER (B UND S).",
+        "Du kannst NICHT, UND und ODER verwenden, um diese Formel zu implementieren."
     ],
     "tests": [
         {"inputs": [[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},

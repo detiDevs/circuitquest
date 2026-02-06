@@ -6,28 +6,98 @@
     "objectives": [
         "Create a register block wich lets you select two different registers from an array of four registers and outputs their values.",
         "The Input has to be a value between 0 and 3 to select one of the four registers."
-
-        
     ],
     "components": [
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "read register 1", "initialBitWidth": 8},
-        {"type": "Input", "position": [0,4], "immovable": true, "label": "read register 2","initialBitWidth": 8},
-        {"type": "Output", "position": [7,3], "immovable": true, "label": "read data 1"},
-        {"type": "Output", "position": [7,4], "immovable": true, "label": "read data 2"},
-        {"type": "Register", "position": [3,2], "immovable": true, "label": "Register 0","initialValue": 42},
-        {"type": "Register", "position": [3,3], "immovable": true, "label": "Register 1","initialValue": 84},
-        {"type": "Register", "position": [3,4], "immovable": true, "label": "Register 2","initialValue": 126},
-        {"type": "Register", "position": [3,5], "immovable": true, "label": "Register 3","initialValue": 168}
-
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "read register 1",
+            "initialBitWidth": 8
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                4
+            ],
+            "immovable": true,
+            "label": "read register 2",
+            "initialBitWidth": 8
+        },
+        {
+            "type": "Output",
+            "position": [
+                7,
+                3
+            ],
+            "immovable": true,
+            "label": "read data 1"
+        },
+        {
+            "type": "Output",
+            "position": [
+                7,
+                4
+            ],
+            "immovable": true,
+            "label": "read data 2"
+        },
+        {
+            "type": "Register",
+            "position": [
+                3,
+                2
+            ],
+            "immovable": true,
+            "label": "Register 0",
+            "initialValue": 42
+        },
+        {
+            "type": "Register",
+            "position": [
+                3,
+                3
+            ],
+            "immovable": true,
+            "label": "Register 1",
+            "initialValue": 84
+        },
+        {
+            "type": "Register",
+            "position": [
+                3,
+                4
+            ],
+            "immovable": true,
+            "label": "Register 2",
+            "initialValue": 126
+        },
+        {
+            "type": "Register",
+            "position": [
+                3,
+                5
+            ],
+            "immovable": true,
+            "label": "Register 3",
+            "initialValue": 168
+        }
     ],
-    "connections": [
-    ],
-
+    "connections": [],
     "available_components": [
-        {"type": "Multiplexer4Inp"},
-        {"type": "Collector1to2"},
-        {"type": "Splitter8to1"}
-
+        {
+            "type": "Multiplexer4Inp"
+        },
+        {
+            "type": "Collector1to2"
+        },
+        {
+            "type": "Splitter8to1"
+        }
     ],
     "hints": [
         "Use two 4-input multiplexers to select the registers.",
@@ -35,26 +105,369 @@
         "Use splitters to convert the 8 bit input to 1 bit outputs and collect them again to form 2 bit inputs for the multiplexers."
     ],
     "tests": [
-        {   "inputs": [[0,8], [0,8]],"expected_output": [[42,32], [42,32]]},
-        {   "inputs": [[0,8], [1,8]],"expected_output": [[42,32], [84,32]]},
-        {   "inputs": [[0,8], [2,8]],"expected_output": [[42,32], [126,32]]},
-        {   "inputs": [[0,8], [3,8]],"expected_output": [[42,32], [168,32]]},
-
-        {   "inputs": [[1,8], [0,8]],"expected_output": [[84,32], [42,32]]},
-        {   "inputs": [[1,8], [1,8]],"expected_output": [[84,32], [84,32]]},
-        {   "inputs": [[1,8], [2,8]],"expected_output": [[84,32], [126,32]]},
-        {   "inputs": [[1,8], [3,8]],"expected_output": [[84,32], [168,32]]},
-
-        {   "inputs": [[2,8], [0,8]],"expected_output": [[126,32], [42,32]]},
-        {   "inputs": [[2,8], [1,8]],"expected_output": [[126,32], [84,32]]},
-        {   "inputs": [[2,8], [2,8]],"expected_output": [[126,32], [126,32]]},
-        {   "inputs": [[2,8], [3,8]],"expected_output": [[126,32], [168,32]]},
-
-        {   "inputs": [[3,8], [0,8]],"expected_output": [[168,32], [42,32]]},
-        {   "inputs": [[3,8], [1,8]],"expected_output": [[168,32], [84,32]]},
-        {   "inputs": [[3,8], [2,8]],"expected_output": [[168,32], [126,32]]},
-        {   "inputs": [[3,8], [3,8]],"expected_output": [[168,32], [168,32]]}
-
+        {
+            "inputs": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    42,
+                    32
+                ],
+                [
+                    42,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    1,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    42,
+                    32
+                ],
+                [
+                    84,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    2,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    42,
+                    32
+                ],
+                [
+                    126,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    3,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    42,
+                    32
+                ],
+                [
+                    168,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    8
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    84,
+                    32
+                ],
+                [
+                    42,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    8
+                ],
+                [
+                    1,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    84,
+                    32
+                ],
+                [
+                    84,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    8
+                ],
+                [
+                    2,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    84,
+                    32
+                ],
+                [
+                    126,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    8
+                ],
+                [
+                    3,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    84,
+                    32
+                ],
+                [
+                    168,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    2,
+                    8
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    126,
+                    32
+                ],
+                [
+                    42,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    2,
+                    8
+                ],
+                [
+                    1,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    126,
+                    32
+                ],
+                [
+                    84,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    2,
+                    8
+                ],
+                [
+                    2,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    126,
+                    32
+                ],
+                [
+                    126,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    2,
+                    8
+                ],
+                [
+                    3,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    126,
+                    32
+                ],
+                [
+                    168,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    3,
+                    8
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    168,
+                    32
+                ],
+                [
+                    42,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    3,
+                    8
+                ],
+                [
+                    1,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    168,
+                    32
+                ],
+                [
+                    84,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    3,
+                    8
+                ],
+                [
+                    2,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    168,
+                    32
+                ],
+                [
+                    126,
+                    32
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    3,
+                    8
+                ],
+                [
+                    3,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    168,
+                    32
+                ],
+                [
+                    168,
+                    32
+                ]
+            ]
+        }
+    ],
+    "name_de": "Register-Block",
+    "description_de": "Wir haben bereits untersucht, wie einzelne Register funktionieren. Jetzt wollen wir steuern, wie wir von ihnen lesen und sie im Kontext unseres Prozessors verwenden.",
+    "difficulty_de": "Einfach",
+    "objectives_de": [
+        "Erstelle einen Register-Block, mit dem du zwei verschiedene Register aus einer Anordnung von vier Registern auswählen und ihre Werte ausgeben kannst.",
+        "Der Eingang muss ein Wert zwischen 0 und 3 sein, um eines der vier Register auszuwählen."
+    ],
+    "hints_de": [
+        "Verwende zwei 4-Eingang-Multiplexer, um die Register auszuwählen.",
+        "Die zwei 8-Bit-Eingänge müssen in 2-Bit-Eingänge für die Multiplexer konvertiert werden.",
+        "Verwende Splitter, um die 8-Bit-Eingabe in 1-Bit-Ausgänge zu konvertieren und kombiniere sie dann wieder, um 2-Bit-Eingänge für die Multiplexer zu bilden."
     ]
-
 }

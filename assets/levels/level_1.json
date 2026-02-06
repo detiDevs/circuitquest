@@ -1,10 +1,16 @@
 {
     "level_id": 1,
     "name": "OR Gate",
+    "name_de": "ODER-Gatter",
     "description": "The OR gate checks if either A or B are true, if either are true, it will return 1, otherwise it returns 0.",
+    "description_de": "Das ODER-Gatter prüft, ob entweder A oder B wahr ist. Wenn eines der beiden wahr ist, gibt es 1 zurück, sonst 0.",
     "difficulty": "Easy",
+    "difficulty_de": "Einfach",
     "objectives": [
         "Connect the inputs with an OR gate. Then connect the OR gate to the Output"
+    ],
+    "objectives_de": [
+        "Verbinde die Eingänge mit einem ODER-Gatter. Verbinde dann das ODER-Gatter mit dem Ausgang"
     ],
     "components": [
         {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
@@ -16,6 +22,9 @@
     ],
     "hints": [
         "The OR gate will only return false if both A and B are 0."
+    ],
+    "hints_de": [
+        "Das ODER-Gatter gibt nur dann falsch zurück, wenn sowohl A als auch B 0 sind."
     ],
     "tests": [
         {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},

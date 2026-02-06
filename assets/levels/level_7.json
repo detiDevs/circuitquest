@@ -1,10 +1,16 @@
 {
 	"level_id": 7,
 	"name": "8bit Collector, and bigger MUX",
+	"name_de": "8-Bit-Kollektor und größerer MUX",
 	"description":"What if we want to select from more than 2 input values with a MUX? This cannot be done with a 0 or 1 control signal. Collectors allow you to combine several inputs to a signal with a larger bit width. For example, combining 2 inputs gives a 2-bit selector which can choose among 2^2 = 4 values in a 4-input MUX.",
+	"description_de":"Was ist, wenn wir mit einem MUX aus mehr als 2 Eingabewerten wählen möchten? Dies kann nicht mit einem 0- oder 1-Steuersignal erreicht werden. Kollektoren ermöglichen es dir, mehrere Eingänge zu einem Signal mit einer größeren Bitbreite zu kombinieren. Zum Beispiel gibt das Kombinieren von 2 Eingängen einen 2-Bit-Selektor, der unter 2^2 = 4 Werten in einem 4-Eingang-MUX wählen kann.",
 	"difficulty": "Medium",
+	"difficulty_de": "Mittel",
 	"objectives": [
 		"Combine single-bit Inputs to make a 2-bit selector compatible with a 4-input Multiplexer (Multiplexer4Inp)."
+	],
+	"objectives_de": [
+		"Kombiniere Single-Bit-Eingänge, um einen 2-Bit-Selektor zu erstellen, der mit einem 4-Eingang-Multiplexer (Multiplexer4Inp) kompatibel ist."
 	],
 	"components": [
 		{"type": "Input", "position": [0,1], "immovable": true, "label": "S0"},
@@ -24,6 +30,11 @@
 		"Use 4 of the inputs as the data inputs (A,B,C,D) for the 4-input MUX and combine the remaining 2 inputs with the Collector to form a 2-bit selector.",
 		"A typical mapping: Inputs 0-3 = data inputs A..D, Inputs 4-5 = selector bits S0 (LSB), S1 (MSB).",
 		"The collector will pack the two selector bits into a 2-bit control signal for the 4-input MUX."
+	],
+	"hints_de": [
+		"Verwende 4 der Eingänge als Daten (A,B,C,D) für den 4-Eingang-MUX und kombiniere die verbleibenden 2 Eingänge mit dem Kollektor, um einen 2-Bit-Selektor zu bilden.",
+		"Eine typische Zuordnung: Eingänge 0-3 = Daten A..D, Eingänge 4-5 = Selektor-Bits S0 (LSB), S1 (MSB).",
+		"Der Kollektor packt die zwei Selektor-Bits in ein 2-Bit-Steuersignal für den 4-Eingang-MUX."
 	],
 	"solution": "",
 	"tests": [

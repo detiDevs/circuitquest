@@ -1,10 +1,16 @@
 {
     "level_id": 4,
     "name": "Functional Completeness 2",
+    "name_de": "Funktionale Vollständigkeit 2",
     "description": "NAND gates can also create any function, similar to NOR gates.",
+    "description_de": "Ähnlich wie NOR-Gatter können NAND-Gatter auch jede Funktion erstellen.",
     "difficulty": "Medium",
+    "difficulty_de": "Mittel",
     "objectives": [
         "Create a combination of NAND gates which is functionally identical to an AND gate."
+    ],
+    "objectives_de": [
+        "Erstelle eine Kombination von NAND-Gattern, die funktional identisch mit einem UND-Gatter ist."
     ],
     "components": [
         {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
@@ -16,6 +22,9 @@
     ],
     "hints": [
         "Try placing only 3 NAND gates."
+    ],
+    "hints_de": [
+        "Versuche, nur 3 NAND-Gatter zu platzieren."
     ],
     "tests": [
         {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},

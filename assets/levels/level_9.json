@@ -1,10 +1,16 @@
 {
     "level_id": 9,
     "name": "RS-FLipflop",
+    "name_de": "RS-Flipflop",
     "description": "An RS-Flipflop stores 1-Bit by storing the last value of the input and returning it on the next clock cycle. \nS (Set) forces the output to 1, R (Reset) forces it to **0`.\nIf both inputs are 0, the circuit keeps its previous value due to feedback.\nThis is the fundamental memory element showing how state is preserved.",
+    "description_de": "Ein RS-Flipflop speichert 1-Bit, indem es den letzten Wert der Eingabe speichert und ihn im nächsten Taktzyklus zurückgibt.\nS (Set) zwingt den Ausgang auf 1, R (Reset) zwingt ihn auf 0.\nWenn beide Eingänge 0 sind, behält die Schaltung ihren vorherigen Wert aufgrund von Rückkopplung.\nDies ist das fundamentale Speicherelement, das zeigt, wie der Zustand erhalten bleibt.",
     "difficulty": "Middle",
+    "difficulty_de": "Mittel",
     "objectives": [
         "Build an RS flip-flop using two NOR gates."," Ensure that:"," \nS = 1 → Q = 1 ","\nR = 1 → Q = 0 ","\nS = 0 and R = 0 → Q keeps its old value ","\nNote: S = 1 and R = 1 is invalid (undefined state)"
+    ],
+    "objectives_de": [
+        "Erstelle ein RS-Flipflop mit zwei NOR-Gattern."," Stelle sicher, dass:"," \nS = 1 → Q = 1 ","\nR = 1 → Q = 0 ","\nS = 0 und R = 0 → Q behält seinen alten Wert ","\nHinweis: S = 1 und R = 1 ist ungültig (undefinierter Zustand)"
     ],
     "components": [
         {"type": "Input", "position": [0,1], "immovable": true},
@@ -20,6 +26,16 @@
         "Try connecting outputs of the NOR gates with inputs of the NOR gates.",
         "Each of the given inputs, has to be connected to exactly one NOR Gate.",
         "Connect the outputs of the NOR Gates with the remaining input on the other NOR-Gate"
+    ],
+    "hints_de": [
+        "Versuche, Ausgänge der NOR-Gatter mit Eingängen der NOR-Gatter zu verbinden.",
+        "Jeder der gegebenen Eingänge muss mit genau einem NOR-Gatter verbunden werden.",
+        "Verbinde die Ausgänge der NOR-Gatter mit dem verbleibenden Eingang am anderen NOR-Gatter"
+    ],
+    "hints_de": [
+        "Versuche, Ausgänge der NOR-Gatter mit Eingängen der NOR-Gatter zu verbinden.",
+        "Jeder der gegebenen Eingänge muss mit genau einem NOR-Gatter verbunden werden.",
+        "Verbinde die Ausgänge der NOR-Gatter mit dem verbleibenden Eingang am anderen NOR-Gatter"
     ],
     "tests": [
         {

@@ -1,12 +1,20 @@
 {
     "level_id": 0,
     "name": "AND Gate",
-    "description": "Welcome to CircuitQuest, a puzzle-driven journey into the inner workings of a MIPS-based processor. In this game, you’ll explore how digital circuits come together to form the logic that drives real computer architectures. Each level focuses on a core concept—from simple logic gates to more advanced components like ALUs, multiplexers, and control units. By solving interactive circuit challenges, you’ll gain an intuitive understanding of how processors make decisions, perform calculations, and execute instructions. Whether you’re new to digital logic or brushing up on fundamentals, CircuitQuest aims to teach through hands-on, creative problem-solving. In this first Level you will learn what an AND-Gate is, and how to use it.The AND gate checks if A and B are true, if this is the case, it will return 1, otherwise it returns 0.",
+    "name_de": "UND-Gatter",
+    "description": "Welcome to CircuitQuest, a puzzle-driven journey into the inner workings of a MIPS-based processor. In this game, you'll explore how digital circuits come together to form the logic that drives real computer architectures. Each level focuses on a core concept—from simple logic gates to more advanced components like ALUs, multiplexers, and control units. By solving interactive circuit challenges, you'll gain an intuitive understanding of how processors make decisions, perform calculations, and execute instructions. Whether you're new to digital logic or brushing up on fundamentals, CircuitQuest aims to teach through hands-on, creative problem-solving. In this first Level you will learn what an AND-Gate is, and how to use it.The AND gate checks if A and B are true, if this is the case, it will return 1, otherwise it returns 0.",
+    "description_de": "Willkommen bei CircuitQuest, einer Puzzle-gesteuerten Reise in die inneren Mechanismen eines MIPS-basierten Prozessors. In diesem Spiel erkundest du, wie digitale Schaltungen zusammenkommen, um die Logik zu bilden, die echte Computerarchitekturen antreibt. Jede Stufe konzentriert sich auf ein Kernkonzept – von einfachen Logikgattern bis zu fortgeschrittenen Komponenten wie ALUs, Multiplexern und Steuereinheiten. Durch das Lösen interaktiver Schaltungsaufgaben gewinnst du ein intuitives Verständnis dafür, wie Prozessoren Entscheidungen treffen, Berechnungen durchführen und Befehle ausführen. Ob du neu in digitaler Logik bist oder die Grundlagen auffrischst, CircuitQuest zielt darauf ab, durch praktisches, kreatives Problemlösen zu unterrichten. In dieser ersten Stufe lernst du, was ein UND-Gatter ist und wie man es verwendet. Das UND-Gatter prüft, ob A und B wahr sind. Wenn dies der Fall ist, gibt es 1 zurück, sonst 0.",
     "difficulty": "Easy",
+    "difficulty_de": "Einfach",
     "objectives": [
         "Connect the inputs with an AND gate. Then connect the AND gate to the Output",
         "when you are done, press the Check solution button, to see if your circuit works correctly.",
         "if you want to see the calculation of the circuit, tune down the slider in the top right corner to addjust the speed of the simulation."
+    ],
+    "objectives_de": [
+        "Verbinde die Eingänge mit einem UND-Gatter. Verbinde dann das UND-Gatter mit dem Ausgang",
+        "Wenn du fertig bist, drücke die Schaltfläche \"Lösung überprüfen\", um zu sehen, ob deine Schaltung richtig funktioniert.",
+        "Wenn du die Berechnung der Schaltung sehen möchtest, stelle den Schieberegler in der oberen rechten Ecke herunter, um die Geschwindigkeit der Simulation anzupassen."
     ],
     "components": [
         {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
@@ -20,6 +28,9 @@
 
     "hints": [
         "Gates on the left can be dragged into the grid"
+    ],
+    "hints_de": [
+        "Gatter auf der linken Seite können in das Raster gezogen werden"
     ],
 
     "tests": [

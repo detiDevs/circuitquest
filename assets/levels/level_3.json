@@ -1,10 +1,16 @@
 {
     "level_id": 3,
     "name": "Functional Completeness 1",
+    "name_de": "Funktionale Vollständigkeit 1",
     "description": "Fun fact: Theoretically any function can be created using only NOR gates!",
+    "description_de": "Spaßfakt: Theoretisch kann jede Funktion nur mit NOR-Gattern erstellt werden!",
     "difficulty": "Easy",
+    "difficulty_de": "Einfach",
     "objectives": [
         "Create a combination of NOR gates which is functionally identical to an OR gate."
+    ],
+    "objectives_de": [
+        "Erstelle eine Kombination von NOR-Gattern, die funktional identisch mit einem ODER-Gatter ist."
     ],
     "components": [
         {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
@@ -16,6 +22,9 @@
     ],
     "hints": [
         "Try making a NOT gate first."
+    ],
+    "hints_de": [
+        "Versuche zuerst, ein NICHT-Gatter zu erstellen."
     ],
     "tests": [
         {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},

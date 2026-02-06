@@ -117,26 +117,36 @@ class MemoryContents {
 class Level {
   final int levelId;
   final String name;
+  final String? nameDe;
   final String description;
+  final String? descriptionDe;
   final String difficulty;
+  final String? difficultyDe;
   final List<String> objectives;
+  final List<String>? objectivesDe;
   final List<LevelComponent> components;
   final List<AvailableComponent> availableComponents;
   final List<WireConnection> connections;
   final List<String> hints;
+  final List<String>? hintsDe;
   final List<LevelTest> tests;
   final MemoryContents? memoryContents;
 
   Level({
     required this.levelId,
     required this.name,
+    this.nameDe,
     required this.description,
+    this.descriptionDe,
     required this.difficulty,
+    this.difficultyDe,
     required this.objectives,
+    this.objectivesDe,
     required this.components,
     required this.availableComponents,
     required this.connections,
     required this.hints,
+    this.hintsDe,
     required this.tests,
     this.memoryContents,
   });
@@ -145,9 +155,13 @@ class Level {
     return Level(
       levelId: json['level_id'] as int,
       name: json['name'] as String,
+      nameDe: json['name_de'] as String?,
       description: json['description'] as String,
+      descriptionDe: json['description_de'] as String?,
       difficulty: json['difficulty'] as String,
+      difficultyDe: json['difficulty_de'] as String?,
       objectives: (json['objectives'] as List<dynamic>).cast<String>(),
+      objectivesDe: (json['objectives_de'] as List<dynamic>?)?.cast<String>(),
       components: (json['components'] as List<dynamic>)
           .map((e) => LevelComponent.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -158,6 +172,7 @@ class Level {
           .map((e) => WireConnection.fromJson(e as Map<String, dynamic>))
           .toList(),
       hints: (json['hints'] as List<dynamic>).cast<String>(),
+      hintsDe: (json['hints_de'] as List<dynamic>?)?.cast<String>(),
       tests: ((json['tests'] ?? []) as List<dynamic>)
           .map((e) => LevelTest.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -171,17 +186,50 @@ class Level {
     return {
       'level_id': levelId,
       'name': name,
+      if (nameDe != null) 'name_de': nameDe,
       'description': description,
+      if (descriptionDe != null) 'description_de': descriptionDe,
       'difficulty': difficulty,
+      if (difficultyDe != null) 'difficulty_de': difficultyDe,
       'objectives': objectives,
+      if (objectivesDe != null) 'objectives_de': objectivesDe,
       'components': components.map((c) => c.toJson()).toList(),
       'available_components': availableComponents
           .map((c) => c.toJson())
           .toList(),
       'hints': hints,
+      if (hintsDe != null) 'hints_de': hintsDe,
       'tests': tests.map((t) => t.toJson()).toList(),
       if (memoryContents != null) 'memoryContents': memoryContents!.toJson(),
     };
+  }
+
+  /// Get localized string for the given field and locale code.
+  /// Falls back to English if translation not available.
+  String getLocalizedString(String field, String localeCode) {
+    switch (field) {
+      case 'name':
+        return localeCode == 'de' && nameDe != null ? nameDe! : name;
+      case 'description':
+        return localeCode == 'de' && descriptionDe != null ? descriptionDe! : description;
+      case 'difficulty':
+        return localeCode == 'de' && difficultyDe != null ? difficultyDe! : difficulty;
+      default:
+        return '';
+    }
+  }
+
+  /// Get localized string list for the given field and locale code.
+  /// Falls back to English if translation not available.
+  List<String> getLocalizedStringList(String field, String localeCode) {
+    switch (field) {
+      case 'objectives':
+        return localeCode == 'de' && objectivesDe != null ? objectivesDe! : objectives;
+      case 'hints':
+        return localeCode == 'de' && hintsDe != null ? hintsDe! : hints;
+      default:
+        return [];
+    }
   }
 }
 
@@ -189,11 +237,13 @@ class Level {
 class LevelBlockItem {
   final int id;
   final String name;
+  final String? nameDe;
   final bool recommended;
 
   LevelBlockItem({
     required this.id,
     required this.name,
+    this.nameDe,
     this.recommended = false,
   });
 
@@ -201,12 +251,24 @@ class LevelBlockItem {
     return LevelBlockItem(
       id: json['id'] as int,
       name: json['name'] as String,
+      nameDe: json['name_de'] as String?,
       recommended: json['recommended'] as bool? ?? false,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'name': name, 'recommended': recommended};
+    return {
+      'id': id,
+      'name': name,
+      if (nameDe != null) 'name_de': nameDe,
+      'recommended': recommended,
+    };
+  }
+
+  /// Get localized name for the given locale code.
+  /// Falls back to English if translation not available.
+  String getLocalizedName(String localeCode) {
+    return localeCode == 'de' && nameDe != null ? nameDe! : name;
   }
 }
 

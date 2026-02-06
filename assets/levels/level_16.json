@@ -7,26 +7,138 @@
         "expand the previous processor to also handle NOR. ",
         "Use the seperate control input `ainvert` so that when `ainvert`=1 and op selects the OR operation, the circuit computes A NOR B."
     ],
-
-   "components": [
-        {"type": "Input", "position": [0,5], "immovable": false, "label": "A"},
-        {"type": "Input", "position": [0,7], "immovable": false, "label": "B"},
-        {"type": "Input", "position": [12,10], "immovable": false, "label": "op0"},
-        {"type": "Input", "position": [12,11], "immovable": false, "label": "op1"},
-        {"type": "Input", "position": [6,11], "immovable": false, "label": "binvert"},
-        {"type": "Collector1to2", "position": [13,10], "immovable": false},
-        {"type": "FullAdder", "position": [11,2], "immovable":false},
-        {"type": "And", "position": [11,5], "immovable":false},
-        {"type": "Or", "position": [11,8], "immovable":false},
-        {"type": "Multiplexer4Inp", "position": [14,5], "immovable":false},
-        {"type": "Output", "position": [13,3], "immovable": false, "label": "Carry_out"},
-        {"type": "Output", "position": [16,5], "immovable": false, "label": "OUT"},
-        {"type": "Not","position":[5,7], "immovable": false, "label": "NotBinvert"},
-        {"type": "Multiplexer2Inp", "position": [6,7], "immovable": false, "label": "MUXbinvert"},
-        {"type": "Input", "position": [3,11], "immovable": false, "label": "ainvert"}
-       
+    "components": [
+        {
+            "type": "Input",
+            "position": [
+                0,
+                5
+            ],
+            "immovable": false,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                7
+            ],
+            "immovable": false,
+            "label": "B"
+        },
+        {
+            "type": "Input",
+            "position": [
+                12,
+                10
+            ],
+            "immovable": false,
+            "label": "op0"
+        },
+        {
+            "type": "Input",
+            "position": [
+                12,
+                11
+            ],
+            "immovable": false,
+            "label": "op1"
+        },
+        {
+            "type": "Input",
+            "position": [
+                6,
+                11
+            ],
+            "immovable": false,
+            "label": "binvert"
+        },
+        {
+            "type": "Collector1to2",
+            "position": [
+                13,
+                10
+            ],
+            "immovable": false
+        },
+        {
+            "type": "FullAdder",
+            "position": [
+                11,
+                2
+            ],
+            "immovable": false
+        },
+        {
+            "type": "And",
+            "position": [
+                11,
+                5
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Or",
+            "position": [
+                11,
+                8
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Multiplexer4Inp",
+            "position": [
+                14,
+                5
+            ],
+            "immovable": false
+        },
+        {
+            "type": "Output",
+            "position": [
+                13,
+                3
+            ],
+            "immovable": false,
+            "label": "Carry_out"
+        },
+        {
+            "type": "Output",
+            "position": [
+                16,
+                5
+            ],
+            "immovable": false,
+            "label": "OUT"
+        },
+        {
+            "type": "Not",
+            "position": [
+                5,
+                7
+            ],
+            "immovable": false,
+            "label": "NotBinvert"
+        },
+        {
+            "type": "Multiplexer2Inp",
+            "position": [
+                6,
+                7
+            ],
+            "immovable": false,
+            "label": "MUXbinvert"
+        },
+        {
+            "type": "Input",
+            "position": [
+                3,
+                11
+            ],
+            "immovable": false,
+            "label": "ainvert"
+        }
     ],
-
     "connections": [
         {
             "origin": 4,
@@ -34,7 +146,6 @@
             "destination": 6,
             "destinationKey": "inputCin"
         },
-        
         {
             "origin": 4,
             "originKey": "outValue",
@@ -59,8 +170,7 @@
             "destination": 12,
             "destinationKey": "input"
         },
-        
-         {
+        {
             "origin": 2,
             "originKey": "outValue",
             "destination": 5,
@@ -72,7 +182,7 @@
             "destination": 5,
             "destinationKey": "input2"
         },
-                {
+        {
             "origin": 13,
             "originKey": "outputValue",
             "destination": 8,
@@ -89,7 +199,7 @@
             "originKey": "outputValue",
             "destination": 6,
             "destinationKey": "inputB"
-        },     
+        },
         {
             "origin": 5,
             "originKey": "outValue",
@@ -127,40 +237,186 @@
             "destinationKey": "input"
         }
     ],
-
     "available_components": [
-        {"type": "Not"},
-        {"type": "Multiplexer2Inp"}
+        {
+            "type": "Not"
+        },
+        {
+            "type": "Multiplexer2Inp"
+        }
     ],
-
     "hints": [
         "Remember: A NOR B = NOT (A OR B) = NOT(A) AND NOT(B).",
         "You can use the ainvert signal to invert A before it goes into the OR gate.",
         "Use a NOT gate to invert the A input when ainvert=1, then feed that into the OR gate along with B.",
-        "The output of the OR gate will then be inverted if ainvert=1, giving you the NOR result."  
+        "The output of the OR gate will then be inverted if ainvert=1, giving you the NOR result."
     ],
-
     "solution": "",
-
     "tests": [
-
         {
-            "inputs": [[0,1], [0,1], [0,1], [0,1], [1,1],[1,1]],
-            "expected_output": [[1,1],[1,1]]
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
         },
         {
-            "inputs": [[0,1], [1,1], [0,1], [0,1], [1,1],[1,1]],
-            "expected_output": [[1,1],[0,1]]
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
         },
         {
-            "inputs": [[1,1], [0,1], [0,1], [0,1], [1,1],[1,1]],
-            "expected_output": [[1,1],[0,1]]
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
         },
         {
-            "inputs": [[1,1], [1,1], [0,1], [0,1], [1,1],[1,1]],
-            "expected_output": [[0,1],[0,1]]
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
         }
-
-
+    ],
+    "name_de": "Addition von NOR",
+    "description_de": "Wir wollen, dass unsere ALU auch die NOR-Operation handhaben kann. Wiederum müssen wir kein anderes Gatter implementieren, sondern können das Signal vielmehr verändern, um das gleiche Ergebnis zu erreichen. Denke daran: A NOR B = NOT (A ODER B) = NOT(A) UND NOT(B). Diese Stufe fügt ein separates Steuersignal `ainvert` hinzu, um NOR-Operation zu aktivieren.",
+    "difficulty_de": "Mittel",
+    "objectives_de": [
+        "Erweitere den bisherigen Prozessor auch um NOR.",
+        "Verwende den separaten Steuereingangn `ainvert` so, dass wenn `ainvert`=1 und op die ODER-Operation auswählt, die Schaltung A NOR B berechnet."
+    ],
+    "hints_de": [
+        "Denke daran: A NOR B = NOT (A ODER B) = NOT(A) UND NOT(B).",
+        "Du kannst das ainvert-Signal verwenden, um A zu invertieren, bevor es ins ODER-Gatter geht.",
+        "Verwende ein NICHT-Gatter, um die A-Eingabe zu invertieren, wenn ainvert=1, dann speise das ins ODER-Gatter zusammen mit B.",
+        "Der Ausgang des ODER-Gatters wird dann invertiert, wenn ainvert=1, was dir das NOR-Ergebnis gibt."
     ]
 }

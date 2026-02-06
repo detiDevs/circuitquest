@@ -166,6 +166,7 @@ class _LevelInfoDialogState extends State<_LevelInfoDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final localeCode = Localizations.localeOf(context).languageCode;
     return AlertDialog(
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,9 +176,11 @@ class _LevelInfoDialogState extends State<_LevelInfoDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(widget.level.name),
+                Text(widget.level.getLocalizedString('name', localeCode)),
                 const SizedBox(height: 8),
-                _DifficultyBadge(difficulty: widget.level.difficulty),
+                _DifficultyBadge(
+                  difficulty: widget.level.getLocalizedString('difficulty', localeCode),
+                ),
               ],
             ),
           ),
@@ -197,7 +200,7 @@ class _LevelInfoDialogState extends State<_LevelInfoDialog> {
             ),
             const SizedBox(height: 8),
             Text(
-              widget.level.description,
+              widget.level.getLocalizedString('description', localeCode),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
@@ -210,7 +213,7 @@ class _LevelInfoDialogState extends State<_LevelInfoDialog> {
                   ),
             ),
             const SizedBox(height: 8),
-            ...widget.level.objectives.asMap().entries.map(
+            ...widget.level.getLocalizedStringList('objectives', localeCode).asMap().entries.map(
               (entry) => Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Row(
@@ -234,7 +237,7 @@ class _LevelInfoDialogState extends State<_LevelInfoDialog> {
             ),
 
             // Hints
-            if (widget.level.hints.isNotEmpty) ...[
+            if (widget.level.getLocalizedStringList('hints', localeCode).isNotEmpty) ...[
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -261,7 +264,7 @@ class _LevelInfoDialogState extends State<_LevelInfoDialog> {
               ),
               if (_showHints) ...[
                 const SizedBox(height: 8),
-                ...widget.level.hints.map(
+                ...widget.level.getLocalizedStringList('hints', localeCode).map(
                   (hint) => Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Container(

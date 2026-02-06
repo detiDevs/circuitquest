@@ -8,51 +8,564 @@
         "Output should be:\n- AND when op = 00\n- OR when op = 01\n- Sum (A + B, sum bit) when op = 10"
     ],
     "components": [
-        {"type": "Input", "position": [12,11], "immovable": true, "label": "op0"},
-        {"type": "Input", "position": [12,10], "immovable": true, "label": "op1"},
-        {"type": "Collector1to2", "position": [13,10], "immovable": true},
-        {"type": "Input", "position": [0,5], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,7], "immovable": true, "label": "B"},
-        {"type": "Input", "position": [6,11], "immovable": true, "label": "carry_in"},
-        {"type": "Output", "position": [16,5], "immovable": true, "label": "OUT"},
-        {"type": "Output", "position": [16,3], "immovable": true, "label": "Carry_out"}
+        {
+            "type": "Input",
+            "position": [
+                12,
+                11
+            ],
+            "immovable": true,
+            "label": "op0"
+        },
+        {
+            "type": "Input",
+            "position": [
+                12,
+                10
+            ],
+            "immovable": true,
+            "label": "op1"
+        },
+        {
+            "type": "Collector1to2",
+            "position": [
+                13,
+                10
+            ],
+            "immovable": true
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                5
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                7
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Input",
+            "position": [
+                6,
+                11
+            ],
+            "immovable": true,
+            "label": "carry_in"
+        },
+        {
+            "type": "Output",
+            "position": [
+                16,
+                5
+            ],
+            "immovable": true,
+            "label": "OUT"
+        },
+        {
+            "type": "Output",
+            "position": [
+                16,
+                3
+            ],
+            "immovable": true,
+            "label": "Carry_out"
+        }
     ],
-
     "available_components": [
-        {"type": "And"},
-        {"type": "Or"},
-        {"type": "FullAdder"},
-        {"type": "Multiplexer4Inp"}
+        {
+            "type": "And"
+        },
+        {
+            "type": "Or"
+        },
+        {
+            "type": "FullAdder"
+        },
+        {
+            "type": "Multiplexer4Inp"
+        }
     ],
-
-       "connections": [
-        {"origin": 0, "originKey": "outValue", "destination": 2, "destinationKey": "input2"},
-        {"origin": 1, "originKey": "outValue", "destination": 2, "destinationKey": "input1"}
+    "connections": [
+        {
+            "origin": 0,
+            "originKey": "outValue",
+            "destination": 2,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 1,
+            "originKey": "outValue",
+            "destination": 2,
+            "destinationKey": "input1"
+        }
     ],
-
     "hints": [
         "Create three candidate signals: A AND B, A OR B, and the sum bit from a FullAdder (ignore carry). Feed these as three data inputs to the MUX.",
         "Map the MUX data inputs so that selector 00 -> AND, 01 -> OR, 10 -> SUM. The unused selector (11) can be tied to 0 or any value (tests do not use it)."
     ],
-
     "solution": "",
-
     "tests": [
-        
-        {"inputs": [[0,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1],[0,1]]},
-        {"inputs": [[0,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1],[0,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1],[0,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[1,1],[0,1]], "expected_output": [[1,1],[1,1]]},
-        
-        {"inputs": [[0,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1],[0,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1],[0,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1],[0,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[1,1],[0,1]], "expected_output": [[1,1],[1,1]]},
-        
-        {"inputs": [[1,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1],[0,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1],[0,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1],[0,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[1,1],[0,1]], "expected_output": [[0,1],[1,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1],[1,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        }
+    ],
+    "name_de": "1-Bit-ALU",
+    "description_de": "Wir sind jetzt im Prozess, einen Prozessor zusammenzustellen. Die tatsächliche Berechnung erfolgt in der Arithmetic-Logical-Unit (ALU). In dieser Stufe bauen wir eine einfache 1-Bit-ALU, die A UND B, A ODER B oder A + B (Summenbit) berechnen kann. Ein 2-Bit-Steuersignal `op` wählt die Operation. Später wollen wir die ALU auf mehr Bits erweitern, also muss unser Addierer einen Carry-In und einen Carry-Out haben. Verwende für jetzt einen separaten \"Dummy\"-Eingang als Carry-In mit 0 verbunden und verbinde den Carry-Out mit dem gekennzeichneten Ausgang.",
+    "difficulty_de": "Mittel",
+    "objectives_de": [
+        "Baue eine 1-Bit-ALU mit Eingängen A und B und einem 2-Bit-Operationscode `op` (op1,op0).",
+        "Der Ausgang sollte sein:\n- UND wenn op = 00\n- ODER wenn op = 01\n- Summe (A + B, Summenbit) wenn op = 10"
+    ],
+    "hints_de": [
+        "Erstelle drei Kandidaten-Signale: A UND B, A ODER B und das Summenbit aus einem FullAdder (ignoriere Carry). Füttere diese als drei Daten-Eingänge in den MUX.",
+        "Ordne die MUX-Daten-Eingänge so zu, dass Selektor 00 -> UND, 01 -> ODER, 10 -> SUMME. Der ungenutzte Selektor (11) kann auf 0 oder einen beliebigen Wert gesetzt werden (Tests verwenden ihn nicht)."
     ]
 }
