@@ -4,6 +4,7 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../state/sandbox_state.dart';
 import '../../state/custom_component_library.dart';
 import '../../core/components/input_source.dart';
@@ -472,12 +473,9 @@ class CircuitFileManager extends ConsumerWidget {
 
   /// Returns (and creates if needed) the default save/load directory.
   Future<String> _ensureDefaultDirectory() async {
-    final home =
-        Platform.environment['HOME'] ??
-        Platform.environment['USERPROFILE'] ??
-        Directory.current.path;
+    final documentsDir = await getApplicationDocumentsDirectory();
     final dirPath = [
-      home,
+      documentsDir.path,
       Constants.kAppName,
       'Saved Circuits',
     ].join(Platform.pathSeparator);

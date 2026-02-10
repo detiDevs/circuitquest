@@ -163,10 +163,8 @@ class LevelLoader {
 
   /// Get the path to the user meta file
   Future<File> _getUserMetaFile() async {
-    final home = Platform.environment['HOME'] ??
-        Platform.environment['USERPROFILE'] ??
-        Directory.current.path;
-    final dirPath = [home, Constants.kAppName]
+    final documentsDir = await getApplicationDocumentsDirectory();
+    final dirPath = [documentsDir.path, Constants.kAppName]
         .join(Platform.pathSeparator);
     final dir = Directory(dirPath);
     if (!await dir.exists()) {

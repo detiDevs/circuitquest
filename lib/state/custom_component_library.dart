@@ -5,6 +5,7 @@ import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/components/custom_component_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 
 final customComponentProvider = ChangeNotifierProvider<CustomComponentLibrary>(
   (ref) => CustomComponentLibrary()..load(),
@@ -82,10 +83,8 @@ class CustomComponentLibrary extends ChangeNotifier {
   }
 
   Future<Directory> _ensureBaseDirectory() async {
-    final home = Platform.environment['HOME'] ??
-        Platform.environment['USERPROFILE'] ??
-        Directory.current.path;
-    final dirPath = [home, Constants.kAppName, 'Custom Components']
+    final documentsDir = await getApplicationDocumentsDirectory();
+    final dirPath = [documentsDir.path, Constants.kAppName, 'Custom Components']
         .join(Platform.pathSeparator);
     final dir = Directory(dirPath);
     if (!await dir.exists()) {

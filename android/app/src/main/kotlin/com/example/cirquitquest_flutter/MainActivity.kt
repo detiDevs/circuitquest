@@ -1,4 +1,4 @@
-package com.example.cirquitquest_flutter
+package com.example.circuitquest
 
 import io.flutter.embedding.android.FlutterActivity
 
