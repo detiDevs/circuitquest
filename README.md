@@ -1,16 +1,36 @@
-# circuitquest
+# CircuitQuest
 
-A new Flutter project. Test
+Welcome to CircuitQuest, an educational software with gamification elements, all about logic gates and circuits.
 
-## Getting Started
+## Background
 
-This project is a starting point for a Flutter application.
+This app is based on a semester project by a group of exchange students at the University of Agder, Norway.
+The original Python project can be found [here](https://github.com/Vlogenz/ICT-Project).
+The idea for this project arised because some of us had a lecture in Computer Architecture before and we wanted to create a software that would help future students to learn the subject more easily.
+This lecture was held at the home university of four of us in Münster, Germany by Prof. Paula Herber, which in turn was largely based on the book [Computer Organization and Design by David Patterson and John Hennessy](https://nsec.sjtu.edu.cn/data/MK.Computer.Organization.and.Design.4th.Edition.Oct.2011.pdf).
+We based the contents of the levels, etc. mainly on this lecture.
 
-A few resources to get you started if this is your first Flutter project:
+After we finished the project at UiA, two of us decided to continue it. To make the app available cross-platform, we ported it to the Flutter framework. This version is what you see here.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Perspectively, we want to release this app on the PlayStore and on the AppStore and also make it available as an executable for PC/Mac. Currently, you still have to clone the project and start it using `flutter run` (Flutter installation required).
+
+## Features
+
+### Sandbox Mode
+
+In this mode, you can freely use all available components and build your own circuits without restrictions. You can:
+
+- Evaluate circuits with different speeds and watch the animation
+- Save circuits to continue working on them later
+- Save circuits as custom components
+
+### Level Mode
+
+In this mode, you learn about computer architecture step-by-step. 
+Starting with basic components like AND, OR, etc. you work your way up to an entire processor.
+
+### The app directory
+
+Circuits, custom components as well as your level progress are saved as JSON files in a CircuitQuest app directory. On Linux, Windows and Mac, this can be found inside your user's Documents folder.
