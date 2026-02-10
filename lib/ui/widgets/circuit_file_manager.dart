@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
@@ -352,32 +353,29 @@ class CircuitFileManager extends ConsumerWidget {
         description: descriptionController.text,
       );
 
+      // Convert to bytes for mobile compatibility
+      final bytes = utf8.encode(jsonString);
+
       // Build default file name
       final defaultFileName = '${_sanitizeFileName(nameController.text)}.json';
 
-      // Get save location
+      // Save file (bytes required for Android/iOS)
       final result = await FilePicker.platform.saveFile(
         dialogTitle: AppLocalizations.of(context)!.save,
         fileName: defaultFileName,
         initialDirectory: defaultDir,
         type: FileType.custom,
         allowedExtensions: ['json'],
+        bytes: bytes,
       );
 
       if (result == null) return;
-
-      // Ensure .json extension
-      final normalizedPath = result.endsWith('.json') ? result : '$result.json';
-
-      // Write file
-      final file = File(normalizedPath);
-      await file.writeAsString(jsonString);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              AppLocalizations.of(context)!.circuitSavedTo(file.path),
+              AppLocalizations.of(context)!.circuitSavedTo(result),
             ),
             backgroundColor: Colors.green,
           ),
