@@ -171,8 +171,8 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
         ),
         // Output pin on the right edge
         Positioned(
-          left: widget.gridSize - 6,
-          top: widget.gridSize / 2 - 6,
+          left: widget.gridSize - 20,
+          top: widget.gridSize / 2 - 10,
           child: GestureDetector(
             onTap: () {
               widget.ref
@@ -180,8 +180,8 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                   .startWireDrawing(widget.placedComponent.id, 'outValue');
             },
             child: Container(
-              width: 12,
-              height: 12,
+              width: 20,
+              height: 20,
               decoration: BoxDecoration(
                 color: outputPin.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,

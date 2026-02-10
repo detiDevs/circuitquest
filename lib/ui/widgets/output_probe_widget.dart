@@ -72,7 +72,7 @@ class OutputProbeWidget extends ConsumerWidget {
         ),
         // Input pin on the left edge
         Positioned(
-          left: -6,
+          left: 0,
           top: gridSize / 2 - 6,
           child: GestureDetector(
             onTap: () {
@@ -90,8 +90,8 @@ class OutputProbeWidget extends ConsumerWidget {
               }
             },
             child: Container(
-              width: 12,
-              height: 12,
+              width: 20,
+              height: 20,
               decoration: BoxDecoration(
                 color: inputPin.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,

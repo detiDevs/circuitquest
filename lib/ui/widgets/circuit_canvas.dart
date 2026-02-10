@@ -705,8 +705,8 @@ class _PlacedComponentWidget extends ConsumerWidget {
               }
             },
             child: Container(
-              width: 12,
-              height: 12,
+              width: 20,
+              height: 20,
               decoration: BoxDecoration(
                 color: entry.value.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
@@ -757,8 +757,8 @@ class _PlacedComponentWidget extends ConsumerWidget {
               state.startWireDrawing(placedComponent.id, entry.key);
             },
             child: Container(
-              width: 12,
-              height: 12,
+              width: 20,
+              height: 20,
               decoration: BoxDecoration(
                 color: entry.value.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
@@ -789,10 +789,10 @@ class _PlacedComponentWidget extends ConsumerWidget {
   /// Calculates pin position based on index and total count.
   Offset _calculatePinPosition(int index, int total, {required bool isInput}) {
     final spacing = gridSize / (total + 1);
-    final y = spacing * (index + 1) - 6; // -6 to center the 12px pin
+    final y = spacing * (index + 1) - 10; // -6 to center the 12px pin
 
     return Offset(
-      isInput ? -6 : gridSize - 6, // Left or right edge
+      isInput ? 0 : gridSize - 20, // Left or right edge
       y,
     );
   }
