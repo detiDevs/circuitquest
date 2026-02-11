@@ -43,24 +43,22 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
   }
 
   Widget _buildBody() {
-    final levelBlocksAsync = ref.watch(levelBlocksProvider);
+    final levelCategoriesAsync = ref.watch(levelCategoriesProvider);
 
-    return levelBlocksAsync.when(
-      data: (levelBlocks) {
-        if (levelBlocks.isEmpty) {
+    return levelCategoriesAsync.when(
+      data: (categories) {
+        if (categories.isEmpty) {
           return Center(
             child: Text(AppLocalizations.of(context)!.noLevelsAvailable),
           );
         }
 
         return ListView.builder(
-          itemCount: levelBlocks.length,
+          itemCount: categories.length,
           itemBuilder: (context, index) {
-            final category = levelBlocks.keys.elementAt(index);
-            final levels = levelBlocks[category]!;
+            final category = categories[index];
             return _LevelCategory(
               category: category,
-              levels: levels,
             );
           },
         );
@@ -78,7 +76,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(levelBlocksProvider);
+                ref.invalidate(levelCategoriesProvider);
               },
               child: Text(AppLocalizations.of(context)!.retry),
             ),
@@ -91,19 +89,21 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
 
 /// Widget displaying a category of levels.
 class _LevelCategory extends StatelessWidget {
-  final String category;
-  final List<LevelBlockItem> levels;
+  final LevelCategory category;
 
   const _LevelCategory({
     required this.category,
-    required this.levels,
   });
 
   @override
   Widget build(BuildContext context) {
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final categoryName = category.getLocalizedName(localeCode);
+    final levels = category.levels;
+    
     return ExpansionTile(
       title: Text(
-        category,
+        categoryName,
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -152,6 +152,8 @@ class _LevelCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final levelName = levelItem.getLocalizedName(localeCode);
     final isCompletedAsync = ref.watch(levelCompletedProvider(levelItem.id));
     final canAccessAsync = ref.watch(levelAccessProvider(levelItem.id));
 
@@ -250,9 +252,9 @@ class _LevelCard extends ConsumerWidget {
                             color: Colors.grey[600],
                           ),
                     ),
-                    // Level name
+                    // Level name (now localized)
                     Text(
-                      levelItem.name,
+                      levelName,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
