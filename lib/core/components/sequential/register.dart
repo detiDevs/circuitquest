@@ -9,7 +9,8 @@ class Register extends Component {
   Register({int bitWidth = 32}) {
     inputs['data'] = InputPin(this, bitWidth: bitWidth);
     inputs['clock'] = InputPin(this, bitWidth: 1);
-    outputs['output'] = OutputPin(this, bitWidth: bitWidth);
+    outputs['outValue'] = OutputPin(this, bitWidth: bitWidth);
+    outputs['outValue']!.value = 0;
   }
 
   @override

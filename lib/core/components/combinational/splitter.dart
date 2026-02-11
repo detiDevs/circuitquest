@@ -21,6 +21,7 @@ class Splitter extends Component {
     inputs['input'] = InputPin(this, bitWidth: inputBitWidth);
     for (int i = 0; i < sliceCount; i++) {
       outputs['outValue${1 << i}'] = OutputPin(this, bitWidth: sliceBitWidth);
+      outputs['outValue${1 << i}']!.value = 0;
     }
   }
 

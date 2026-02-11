@@ -11,9 +11,10 @@ class InstructionMemory extends Component {
   InstructionMemory() {
     _addressInput = InputPin(this, bitWidth: 32);
     _instructionOutput = OutputPin(this, bitWidth: 32);
-    
+
     inputs['readAddress'] = _addressInput;
     outputs['instruction'] = _instructionOutput;
+    outputs['instruction']!.value = 0;
   }
 
   /// Load a list of instructions into the instruction memory.
@@ -24,10 +25,13 @@ class InstructionMemory extends Component {
 
   @override
   bool evaluate() {
-    final address = _addressInput.value ~/ 4; // Convert byte address to word address
-    final instruction = address < _instructionList.length ? _instructionList[address] : 0;
+    final address =
+        _addressInput.value ~/ 4; // Convert byte address to word address
+    final instruction = address < _instructionList.length
+        ? _instructionList[address]
+        : 0;
     print("Instruction: $instruction");
-    
+
     if (_instructionOutput.value != instruction) {
       _instructionOutput.value = instruction;
       return true;

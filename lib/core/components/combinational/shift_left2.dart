@@ -9,15 +9,16 @@ class ShiftLeft2 extends Component {
   ShiftLeft2() {
     _input = InputPin(this, bitWidth: 32);
     _output = OutputPin(this, bitWidth: 32);
-    
+
     inputs['input'] = _input;
     outputs['outValue'] = _output;
+    outputs['outValue']!.value = 0;
   }
 
   @override
   bool evaluate() {
     final shifted = (_input.value << 2) & 0xFFFFFFFF;
-    
+
     if (_output.value != shifted) {
       _output.value = shifted;
       return true;

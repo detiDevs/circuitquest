@@ -22,6 +22,7 @@ class Collector extends Component {
       inputs['input${1 << i}'] = InputPin(this, bitWidth: sliceBitWidth);
     }
     outputs['outValue'] = OutputPin(this, bitWidth: outputBitWidth);
+    outputs['outValue']!.value = 0;
   }
 
   /// Concatenates the input slices into a single wide value.
@@ -34,7 +35,8 @@ class Collector extends Component {
 
     int aggregated = 0;
     for (int i = 0; i < sliceCount; i++) {
-      final int slice = inputs['input${1 << i}']!.value & ((1 << sliceBitWidth) - 1);
+      final int slice =
+          inputs['input${1 << i}']!.value & ((1 << sliceBitWidth) - 1);
       aggregated |= (slice << (i * sliceBitWidth));
     }
 
