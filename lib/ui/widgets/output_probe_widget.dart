@@ -34,6 +34,7 @@ class OutputProbeWidget extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Label for the current bitwidth of the output
               Text(
                 AppLocalizations.of(context)!.outputLabel(bitWidth),
                 style: const TextStyle(
@@ -50,6 +51,7 @@ class OutputProbeWidget extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: Colors.blueGrey.shade200),
                 ),
+                // Text field for the output value
                 child: Text(
                   value.toString(),
                   style: const TextStyle(
@@ -57,14 +59,6 @@ class OutputProbeWidget extends ConsumerWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                AppLocalizations.of(context)!.rangeLabel('0', maxVal.toString()),
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey[700],
                 ),
               ),
             ],

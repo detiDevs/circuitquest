@@ -26,7 +26,7 @@ class _ExpandableControlPanelState extends State<ExpandableControlPanel> {
 
   @override
   Widget build(BuildContext context) {
-    final maxHeight = MediaQuery.of(context).size.height * 0.85;
+    final maxHeight = MediaQuery.of(context).size.height * 0.6;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
