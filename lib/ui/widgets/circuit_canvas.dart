@@ -176,44 +176,40 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
           minScale: 0.1,
           maxScale: 4.0,
           constrained: false,
-          child: GestureDetector(
-            onTapDown: (details) {
-              // Cancel wire drawing only when tapping empty space
-              if (state.wireDrawingStart != null) {
-                final transformedPos = _transformPosition(
-                  details.localPosition,
-                );
-                final hitComponent = _hitTestComponent(state, transformedPos);
-                if (hitComponent == null) {
-                  state.cancelWireDrawing();
-                  setState(() {
-                    _currentPointerPosition = null;
-                  });
-                }
-              }
-            },
-            onPanUpdate: (details) {
-              // Track pointer position for wire drawing
-              setState(() {
-                _currentPointerPosition = _transformPosition(
-                  details.localPosition,
-                );
-              });
-            },
-            onPanEnd: (details) {
+          onInteractionEnd: (details) {
+            // Cancel wire drawing when zoom/pan interaction ends
+            if (state.wireDrawingStart != null) {
+              state.cancelWireDrawing();
               setState(() {
                 _currentPointerPosition = null;
               });
+            }
+          },
+          child: MouseRegion(
+            onHover: (event) {
+              // Track mouse position for wire drawing feedback
+              if (state.wireDrawingStart != null) {
+                setState(() {
+                  _currentPointerPosition = _transformPosition(
+                    event.localPosition,
+                  );
+                });
+              }
             },
-            child: MouseRegion(
-              onHover: (event) {
-                // Track mouse position for wire drawing feedback
+            child: GestureDetector(
+              onTapDown: (details) {
+                // Cancel wire drawing only when tapping empty space
                 if (state.wireDrawingStart != null) {
-                  setState(() {
-                    _currentPointerPosition = _transformPosition(
-                      event.localPosition,
-                    );
-                  });
+                  final transformedPos = _transformPosition(
+                    details.localPosition,
+                  );
+                  final hitComponent = _hitTestComponent(state, transformedPos);
+                  if (hitComponent == null) {
+                    state.cancelWireDrawing();
+                    setState(() {
+                      _currentPointerPosition = null;
+                    });
+                  }
                 }
               },
               child: SizedBox(
