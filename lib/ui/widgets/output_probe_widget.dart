@@ -25,25 +25,41 @@ class OutputProbeWidget extends ConsumerWidget {
     final inputPin = outputComponent.inputs['input']!;
     final bitWidth = outputComponent.bitWidth;
     final value = outputComponent.value;
-    final maxVal = (1 << bitWidth) - 1;
 
     return Stack(
       children: [
         Padding(
-          padding: const EdgeInsets.all(4.0),
+          padding: const EdgeInsets.fromLTRB(20, 4, 4, 4),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              if(placedComponent.label != null) Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Text(
+                  placedComponent.label!,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
               // Label for the current bitwidth of the output
               Text(
-                AppLocalizations.of(context)!.outputLabel(bitWidth),
+                '$bitWidth-Bit',
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                 decoration: BoxDecoration(
