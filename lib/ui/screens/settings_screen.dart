@@ -2,6 +2,7 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/locale_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -21,7 +22,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _localeChoice = savedLocale?.languageCode ?? 'sys-default';
   }
 
-  void _updateLocale(String? value) {
+  Future<void> _updateLocale(String? value) async {
     final choice = value ?? 'sys-default';
     setState(() {
       _localeChoice = choice;
@@ -32,6 +33,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       notifier.state = null; // Use device locale
     } else {
       notifier.state = Locale(choice);
+    }
+
+    final prefs = await SharedPreferences.getInstance();
+    if (choice == 'sys-default') {
+      await prefs.remove(kLocalePrefsKey);
+    } else {
+      await prefs.setString(kLocalePrefsKey, choice);
     }
   }
 
