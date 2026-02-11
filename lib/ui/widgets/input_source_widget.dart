@@ -69,7 +69,26 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
           padding: const EdgeInsets.all(4.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if(widget.placedComponent.label != null) Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Text(
+                  widget.placedComponent.label!,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
           // Bitwidth toggle button
           Tooltip(
             message: AppLocalizations.of(context)!.toggleBitwidth,

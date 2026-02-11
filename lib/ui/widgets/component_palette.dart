@@ -28,6 +28,7 @@ class ComponentType {
 }
 
 /// Available component types in the palette.
+//TODO: Create dynamically by mapping component registry
 final List<ComponentType> availableComponents = [
   ComponentType(
     name: "InputSource",
@@ -123,6 +124,12 @@ final List<ComponentType> availableComponents = [
     createComponent: () => createComponentByName('Splitter32to8')!,
   ),
   ComponentType(
+    name: "Collector1to2",
+    displayName: "Collector 1 to 2",
+    iconPath: "assets/gates/Collector1to2",
+    createComponent: () => createComponentByName('Collector1to2')!,
+  ),
+  ComponentType(
     name: "Collector1to5",
     displayName: "Collector 1 to 5",
     iconPath: "assets/gates/Collector1to5",
@@ -145,6 +152,18 @@ final List<ComponentType> availableComponents = [
     displayName: "Multiplexer2Inp",
     iconPath: "assets/gates/Multiplexer2Inp",
     createComponent: () => createComponentByName('Multiplexer2Inp')!,
+  ),
+  ComponentType(
+    name: "Multiplexer4Inp",
+    displayName: "Multiplexer4Inp",
+    iconPath: "assets/gates/Multiplexer4Inp",
+    createComponent: () => createComponentByName('Multiplexer4Inp')!,
+  ),
+  ComponentType(
+    name: "Multiplexer8Inp",
+    displayName: "Multiplexer8Inp",
+    iconPath: "assets/gates/Multiplexer8Inp",
+    createComponent: () => createComponentByName('Multiplexer8Inp')!,
   ),
   ComponentType(
     name: "Adder32bit",
