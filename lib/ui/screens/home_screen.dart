@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:circuitquest/constants.dart';
 import 'sandbox_screen.dart';
 import 'level_selection_screen.dart';
+import 'dart:io';
 
 /// Home screen for CircuitQuest.
 ///
@@ -32,17 +33,17 @@ class HomeScreen extends StatelessWidget {
               Text(
                 Constants.kAppName,
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue[800],
+                ),
               ),
               const SizedBox(height: 16),
               // Subtitle
               Text(
                 AppLocalizations.of(context)!.appDescription,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -54,7 +55,9 @@ class HomeScreen extends StatelessWidget {
                     // Level Mode Button
                     _ModeButton(
                       title: AppLocalizations.of(context)!.levelModeTitle,
-                      description: AppLocalizations.of(context)!.levelModeDescription,
+                      description: AppLocalizations.of(
+                        context,
+                      )!.levelModeDescription,
                       icon: Icons.school,
                       color: Colors.green,
                       onPressed: () {
@@ -69,7 +72,9 @@ class HomeScreen extends StatelessWidget {
                     // Sandbox Mode Button
                     _ModeButton(
                       title: AppLocalizations.of(context)!.sandboxModeTitle,
-                      description: AppLocalizations.of(context)!.sandboxModeDescription,
+                      description: AppLocalizations.of(
+                        context,
+                      )!.sandboxModeDescription,
                       icon: Icons.construction,
                       color: Colors.orange,
                       onPressed: () {
@@ -88,10 +93,22 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.blue,
                       onPressed: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => const SettingsScreen())
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsScreen(),
+                          ),
                         );
                       },
-                    )
+                    ),
+                    const SizedBox(height: 8),
+                    _ModeButton(
+                      title: "Leave Game",
+                      description: "",
+                      icon: Icons.exit_to_app_sharp,
+                      color: Colors.red,
+                      onPressed: (){
+                        exit(0);
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -116,11 +133,7 @@ class HomeScreen extends StatelessWidget {
             color: Colors.blue[100],
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(
-            Icons.memory,
-            size: 80,
-            color: Colors.blue[800],
-          ),
+          child: Icon(Icons.memory, size: 80, color: Colors.blue[800]),
         ),
       ),
     );
@@ -159,25 +172,21 @@ class _ModeButton extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              Icon(
-                icon,
-                size: 64,
-                color: color,
-              ),
+              Icon(icon, size: 64, color: color),
               const SizedBox(height: 16),
               Text(
                 title,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: color,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 description,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
             ],
