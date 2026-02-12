@@ -351,4 +351,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get description => 'Description';
+
+  @override
+  String get cantChangeBitwidth =>
+      'Cannot change bitwidth if input has active wires';
 }

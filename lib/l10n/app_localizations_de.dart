@@ -356,4 +356,8 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get description => 'Beschreibung';
+
+  @override
+  String get cantChangeBitwidth =>
+      'Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt';
 }

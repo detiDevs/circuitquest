@@ -285,6 +285,9 @@ class SandboxState extends ChangeNotifier {
       );
       result = true;
       print("Connection was added.");
+      
+      // Trigger event-driven evaluation starting from the target component
+      _evaluateCircuitFromComponent(targetComponent);
     } else {
       print("Connection was not added.");
       if(sourcePin == null) {
@@ -325,6 +328,8 @@ class SandboxState extends ChangeNotifier {
       }
     }
 
+    _evaluateCircuitFromComponent(targetComponent);
+
     _connections.remove(connection);
     notifyListeners();
   }
@@ -361,10 +366,46 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Evaluates the circuit starting from a specific component.
+  /// This is used when a new connection is added to trigger evaluation
+  /// starting from the target component of the connection.
+  void _evaluateCircuitFromComponent(Component targetComponent) {
+    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
+    if (allComponents.isEmpty) return;
+
+    // Create or update simulator with current components
+    _simulator = Simulator(
+      components: allComponents,
+      inputComponents: {targetComponent}, // Only the target component as input
+    );
+
+    // Run event-driven evaluation starting from the target component
+    _simulator!.evaluateEventDriven(startingComponents: {targetComponent});
+    
+    // Note: We don't call notifyListeners() here since addConnection already does it
+  }
+
   /// Sets the tick speed for simulation (0 = instant, >0 = ticks per second)
   void setTickSpeed(double ticksPerSecond) {
     _tickSpeed = ticksPerSecond;
     notifyListeners();
+  }
+
+  /// Triggers event-driven evaluation starting from a specific component.
+  /// This is used when an input source value changes to propagate the change.
+  void evaluateFromComponent(Component component) {
+    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
+    if (allComponents.isEmpty) return;
+
+    // Create or update simulator with current components
+    _simulator = Simulator(
+      components: allComponents,
+      inputComponents: {component}, // Use the changed component as starting point
+    );
+
+    // Run event-driven evaluation starting from the changed component
+    _simulator!.evaluateEventDriven(startingComponents: {component});
+    notifyListeners(); // Notify UI to update with new component states
   }
 
   /// Starts simulation with tick-based evaluation

@@ -31,6 +31,8 @@ class InputPin extends Pin {
   void updateFromSource() {
     if (source != null) {
       value = source!.value;
+    }else{
+      value = 0;
     }
   }
 }

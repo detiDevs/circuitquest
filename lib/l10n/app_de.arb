@@ -357,5 +357,6 @@
     "description": "Schaltfläche Löschen"
   },
   "save": "Speichern",
-  "description": "Beschreibung"
+  "description": "Beschreibung",
+  "cantChangeBitwidth": "Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt"
 }
