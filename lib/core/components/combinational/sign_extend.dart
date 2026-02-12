@@ -9,9 +9,10 @@ class SignExtend extends Component {
   SignExtend() {
     _input = InputPin(this, bitWidth: 16);
     _output = OutputPin(this, bitWidth: 32);
-    
+
     inputs['input'] = _input;
     outputs['outValue'] = _output;
+    outputs['outValue']!.value = 0;
   }
 
   @override
@@ -19,7 +20,7 @@ class SignExtend extends Component {
     final value = _input.value & 0xFFFF;
     // Check sign bit (bit 15)
     final signBit = (value >> 15) & 1;
-    
+
     // Sign extend: if sign bit is 1, fill upper bits with 1s
     int extended;
     if (signBit == 1) {
@@ -27,7 +28,7 @@ class SignExtend extends Component {
     } else {
       extended = value & 0x0000FFFF;
     }
-    
+
     if (_output.value != extended) {
       _output.value = extended;
       return true;

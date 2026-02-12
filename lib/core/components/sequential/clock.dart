@@ -6,6 +6,7 @@ import 'package:circuitquest/core/logic/pin.dart';
 class Clock extends Component {
   Clock() {
     outputs['clock'] = OutputPin(this, bitWidth: 1);
+    outputs['clock']!.value = 0;
   }
 
   void setClock(int value) {

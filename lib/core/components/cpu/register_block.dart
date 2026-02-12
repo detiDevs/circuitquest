@@ -33,7 +33,7 @@ class RegisterBlock extends Component {
     _writeEnable = InputPin(this, bitWidth: 1);
     _readData1 = OutputPin(this, bitWidth: 32);
     _readData2 = OutputPin(this, bitWidth: 32);
-    
+
     inputs['readReg1'] = _readAddress1;
     inputs['readReg2'] = _readAddress2;
     inputs['writeReg'] = _writeAddress;
@@ -41,16 +41,18 @@ class RegisterBlock extends Component {
     inputs['writeEnable'] = _writeEnable;
     outputs['readData1'] = _readData1;
     outputs['readData2'] = _readData2;
+    outputs['readData1']!.value = 0;
+    outputs['readData2']!.value = 0;
   }
 
   @override
   bool evaluate() {
     final addr1 = _readAddress1.value & 0x1F;
     final addr2 = _readAddress2.value & 0x1F;
-    
+
     final data1 = _registers[addr1];
     final data2 = _registers[addr2];
-    
+
     bool changed = false;
     if (_readData1.value != data1) {
       _readData1.value = data1;

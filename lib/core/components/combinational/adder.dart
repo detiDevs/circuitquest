@@ -8,6 +8,8 @@ class HalfAdder extends Component {
     inputs['inputB'] = InputPin(this, bitWidth: 1);
     outputs['outSum'] = OutputPin(this, bitWidth: 1);
     outputs['carryOut'] = OutputPin(this, bitWidth: 1);
+    outputs['outSum']!.value = 0;
+    outputs['carryOut']!.value = 0;
   }
 
   /// Evaluates sum = A xor B, carry = A & B.
@@ -37,6 +39,8 @@ class FullAdder extends Component {
     inputs['carryIn'] = InputPin(this, bitWidth: 1);
     outputs['outSum'] = OutputPin(this, bitWidth: 1);
     outputs['carryOut'] = OutputPin(this, bitWidth: 1);
+    outputs['outSum']!.value = 0;
+    outputs['carryOut']!.value = 0;
   }
 
   /// Evaluates sum = A xor B xor Cin; carry = majority(A,B,Cin).
