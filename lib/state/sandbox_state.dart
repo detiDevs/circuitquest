@@ -285,6 +285,9 @@ class SandboxState extends ChangeNotifier {
       );
       result = true;
       print("Connection was added.");
+      
+      // Trigger event-driven evaluation starting from the target component
+      _evaluateCircuitFromComponent(targetComponent);
     } else {
       print("Connection was not added.");
       if(sourcePin == null) {
@@ -359,6 +362,25 @@ class SandboxState extends ChangeNotifier {
 
     _simulator!.evaluateEventDriven(startingComponents: startingSet);
     notifyListeners();
+  }
+
+  /// Evaluates the circuit starting from a specific component.
+  /// This is used when a new connection is added to trigger evaluation
+  /// starting from the target component of the connection.
+  void _evaluateCircuitFromComponent(Component targetComponent) {
+    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
+    if (allComponents.isEmpty) return;
+
+    // Create or update simulator with current components
+    _simulator = Simulator(
+      components: allComponents,
+      inputComponents: {targetComponent}, // Only the target component as input
+    );
+
+    // Run event-driven evaluation starting from the target component
+    _simulator!.evaluateEventDriven(startingComponents: {targetComponent});
+    
+    // Note: We don't call notifyListeners() here since addConnection already does it
   }
 
   /// Sets the tick speed for simulation (0 = instant, >0 = ticks per second)
