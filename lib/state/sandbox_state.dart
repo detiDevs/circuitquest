@@ -328,6 +328,8 @@ class SandboxState extends ChangeNotifier {
       }
     }
 
+    _evaluateCircuitFromComponent(targetComponent);
+
     _connections.remove(connection);
     notifyListeners();
   }
@@ -387,6 +389,23 @@ class SandboxState extends ChangeNotifier {
   void setTickSpeed(double ticksPerSecond) {
     _tickSpeed = ticksPerSecond;
     notifyListeners();
+  }
+
+  /// Triggers event-driven evaluation starting from a specific component.
+  /// This is used when an input source value changes to propagate the change.
+  void evaluateFromComponent(Component component) {
+    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
+    if (allComponents.isEmpty) return;
+
+    // Create or update simulator with current components
+    _simulator = Simulator(
+      components: allComponents,
+      inputComponents: {component}, // Use the changed component as starting point
+    );
+
+    // Run event-driven evaluation starting from the changed component
+    _simulator!.evaluateEventDriven(startingComponents: {component});
+    notifyListeners(); // Notify UI to update with new component states
   }
 
   /// Starts simulation with tick-based evaluation

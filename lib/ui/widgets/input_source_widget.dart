@@ -51,6 +51,12 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
     super.dispose();
   }
 
+  /// Triggers event-driven evaluation when input value changes
+  void _triggerEvaluation() {
+    final sandboxState = ref.read(sandboxProvider);
+    sandboxState.evaluateFromComponent(widget.inputComponent);
+  }
+
   @override
   Widget build(BuildContext context) {
     final outputPin = widget.inputComponent.outputs['outValue']!;
@@ -94,6 +100,17 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
             message: AppLocalizations.of(context)!.toggleBitwidth,
             child: GestureDetector(
               onTap: () {
+                print("OutputWires: ${outputPin.connections}");
+                if (outputPin.connections.isNotEmpty){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.cantChangeBitwidth),
+                      backgroundColor: Color.fromARGB(255, 251, 108, 108),
+                      duration: Duration(seconds: 2),
+                    )
+                  );
+                  return;
+                }
                 int newBitWidth;
                 if (bitWidth == 1) {
                   newBitWidth = 8;
@@ -105,6 +122,9 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                 // Create new output pin with new bitwidth
                 widget.inputComponent.outputs['outValue'] =
                   widget.inputComponent.outputs['outValue']!.copyWith(newBitWidth);
+
+                // Trigger evaluation after bitwidth change
+                _triggerEvaluation();
 
                 setState(() {
                   _controller.text = currentValue.toString();
@@ -134,6 +154,10 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
             GestureDetector(
               onTap: () {
                 widget.inputComponent.setValue(currentValue == 0 ? 1 : 0);
+                
+                // Trigger evaluation after value change
+                _triggerEvaluation();
+                
                 setState(() {
                   _controller.text = (currentValue == 0 ? 1 : 0).toString();
                 });
@@ -174,6 +198,9 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                   final intValue = int.tryParse(value) ?? 0;
                   final constrainedValue = intValue.clamp(0, maxValue);
                   widget.inputComponent.setValue(constrainedValue);
+
+                  // Trigger evaluation after value change
+                  _triggerEvaluation();
 
                   // Update display only if the value was out of range
                   if (constrainedValue != intValue) {
