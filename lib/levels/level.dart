@@ -272,6 +272,43 @@ class LevelBlockItem {
   }
 }
 
+/// Data model representing a level category
+class LevelCategory {
+  final String name;
+  final String? nameDe;
+  final List<LevelBlockItem> levels;
+
+  LevelCategory({
+    required this.name,
+    this.nameDe,
+    required this.levels,
+  });
+
+  factory LevelCategory.fromJson(Map<String, dynamic> json) {
+    return LevelCategory(
+      name: json['name'] as String,
+      nameDe: json['name_de'] as String?,
+      levels: (json['levels'] as List<dynamic>)
+          .map((item) => LevelBlockItem.fromJson(item as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      if (nameDe != null) 'name_de': nameDe,
+      'levels': levels.map((l) => l.toJson()).toList(),
+    };
+  }
+
+  /// Get localized name for the given locale code.
+  /// Falls back to English if translation not available.
+  String getLocalizedName(String localeCode) {
+    return localeCode == 'de' && nameDe != null ? nameDe! : name;
+  }
+}
+
 /// Data model representing level progression metadata
 class LevelMeta {
   final List<int> completedLevels;

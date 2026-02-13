@@ -31,6 +31,12 @@ final levelBlocksProvider = FutureProvider<Map<String, List<LevelBlockItem>>>((r
   return await loader.loadLevelBlocks();
 });
 
+/// Provider for level categories with localization support
+final levelCategoriesProvider = FutureProvider<List<LevelCategory>>((ref) async {
+  final loader = ref.watch(levelLoaderProvider);
+  return await loader.loadLevelCategories();
+});
+
 /// Helper method to mark a level as completed and refresh the state
 Future<void> markLevelCompleted(WidgetRef ref, int levelId) async {
   final loader = ref.read(levelLoaderProvider);

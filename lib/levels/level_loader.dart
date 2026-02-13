@@ -95,11 +95,25 @@ class LevelLoader {
       
       final Map<String, List<LevelBlockItem>> blocks = {};
       
-      jsonData.forEach((category, items) {
-        blocks[category] = (items as List<dynamic>)
-            .map((item) => LevelBlockItem.fromJson(item as Map<String, dynamic>))
-            .toList();
-      });
+      // Check if using new structure with categories array
+      if (jsonData.containsKey('categories')) {
+        final categories = jsonData['categories'] as List<dynamic>;
+        for (final categoryData in categories) {
+          final categoryMap = categoryData as Map<String, dynamic>;
+          final categoryName = categoryMap['name'] as String;
+          final levels = (categoryMap['levels'] as List<dynamic>)
+              .map((item) => LevelBlockItem.fromJson(item as Map<String, dynamic>))
+              .toList();
+          blocks[categoryName] = levels;
+        }
+      } else {
+        // Fallback to old structure for backwards compatibility
+        jsonData.forEach((category, items) {
+          blocks[category] = (items as List<dynamic>)
+              .map((item) => LevelBlockItem.fromJson(item as Map<String, dynamic>))
+              .toList();
+        });
+      }
       
       // Cache the result
       _levelBlocks = blocks;
@@ -107,6 +121,42 @@ class LevelLoader {
       return blocks;
     } catch (e) {
       throw Exception('Failed to load level blocks: $e');
+    }
+  }
+
+  /// Load the level categories with localization support
+  /// 
+  /// Returns a list of LevelCategory objects containing category metadata and levels.
+  Future<List<LevelCategory>> loadLevelCategories() async {
+    try {
+      final String jsonString = await rootBundle.loadString(
+        'assets/levels/level_blocks.json',
+      );
+      
+      final Map<String, dynamic> jsonData = json.decode(jsonString);
+      
+      // Check if using new structure with categories array
+      if (jsonData.containsKey('categories')) {
+        final categories = (jsonData['categories'] as List<dynamic>)
+            .map((categoryData) => LevelCategory.fromJson(categoryData as Map<String, dynamic>))
+            .toList();
+        return categories;
+      } else {
+        // Fallback to old structure - create categories without translations
+        final List<LevelCategory> categories = [];
+        jsonData.forEach((categoryName, items) {
+          final levels = (items as List<dynamic>)
+              .map((item) => LevelBlockItem.fromJson(item as Map<String, dynamic>))
+              .toList();
+          categories.add(LevelCategory(
+            name: categoryName as String,
+            levels: levels,
+          ));
+        });
+        return categories;
+      }
+    } catch (e) {
+      throw Exception('Failed to load level categories: $e');
     }
   }
 
