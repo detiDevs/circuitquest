@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/components/output_probe.dart';
 import '../../state/sandbox_state.dart';
+import '../utils/snackbar_utils.dart';
 
 /// UI for output probe components: shows bitwidth and current value, with input pin on the left.
 class OutputProbeWidget extends ConsumerWidget {
@@ -87,7 +88,11 @@ class OutputProbeWidget extends ConsumerWidget {
           child: GestureDetector(
             onTap: () {
               if (state.wireDrawingStart != null) {
-                state.completeWireDrawing(placedComponent.id, 'input');
+                state.completeWireDrawing(
+                  placedComponent.id, 
+                  'input',
+                  onError: (message) => SnackBarUtils.showError(context, message),
+                );
                 return;
               }
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -75,16 +76,9 @@ class CircuitFileManager extends ConsumerWidget {
 
     if (inputComponents.isEmpty || outputComponents.isEmpty) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(
+        SnackBarUtils.showError(context, AppLocalizations.of(
                 context,
-              )!.customComponentsNeedInputOutputError,
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
+              )!.customComponentsNeedInputOutputError);
       }
       return;
     }

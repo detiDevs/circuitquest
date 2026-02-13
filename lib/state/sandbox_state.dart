@@ -230,7 +230,11 @@ class SandboxState extends ChangeNotifier {
   /// Completes a wire connection to the specified target component pin.
   ///
   /// Returns true if the connection was created successfully.
-  bool completeWireDrawing(String targetComponentId, String targetPinName) {
+  bool completeWireDrawing(
+    String targetComponentId, 
+    String targetPinName, {
+    void Function(String message)? onError,
+  }) {
     if (_wireDrawingStart == null) return false;
 
     final sourceComponentId = _wireDrawingStart!.componentId;
@@ -242,6 +246,7 @@ class SandboxState extends ChangeNotifier {
       sourcePinName,
       targetComponentId,
       targetPinName,
+      onError: onError,
     )) {
       result = true;
     }
@@ -254,8 +259,9 @@ class SandboxState extends ChangeNotifier {
     String sourceComponentId,
     String sourcePinName,
     String targetComponentId,
-    String targetPinName,
-  ) {
+    String targetPinName, {
+    void Function(String message)? onError,
+  }) {
     bool result = false;
 
     // Find the components
@@ -271,6 +277,10 @@ class SandboxState extends ChangeNotifier {
     final targetPin = targetComponent.inputs[targetPinName];
 
     if (sourcePin != null && targetPin != null) {
+      if (targetPin.hasSource){
+        onError?.call("This input pin already has a connection!");
+        return false;
+      }
       // Wire constructor automatically connects the pins
       Wire(sourcePin, targetPin);
 
