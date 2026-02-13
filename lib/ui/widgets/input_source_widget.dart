@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/app_localizations.dart';
 import '../../core/components/input_source.dart';
 import '../../state/sandbox_state.dart';
+import '../utils/snackbar_utils.dart';
 
 /// A stateful widget to manage input source controls properly.
 class InputSourceWidget extends ConsumerStatefulWidget {
@@ -102,13 +103,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
               onTap: () {
                 print("OutputWires: ${outputPin.connections}");
                 if (outputPin.connections.isNotEmpty){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)!.cantChangeBitwidth),
-                      backgroundColor: Color.fromARGB(255, 251, 108, 108),
-                      duration: Duration(seconds: 2),
-                    )
-                  );
+                  SnackBarUtils.showError(context, AppLocalizations.of(context)!.cantChangeBitwidth);
                   return;
                 }
                 int newBitWidth;

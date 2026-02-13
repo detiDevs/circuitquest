@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -75,15 +76,9 @@ class CircuitFileManager extends ConsumerWidget {
 
     if (inputComponents.isEmpty || outputComponents.isEmpty) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(
-                context,
-              )!.customComponentsNeedInputOutputError,
-            ),
-            backgroundColor: Colors.red,
-          ),
+        SnackBarUtils.showError(
+          context,
+          AppLocalizations.of(context)!.customComponentsNeedInputOutputError,
         );
       }
       return;
@@ -220,15 +215,9 @@ class CircuitFileManager extends ConsumerWidget {
     final name = nameController.text.trim();
     if (name.isEmpty) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(
-                context,
-              )!.customComponentNameCannotBeEmptyError,
-            ),
-            backgroundColor: Colors.red,
-          ),
+        SnackBarUtils.showError(
+          context,
+          AppLocalizations.of(context)!.customComponentNameCannotBeEmptyError,
         );
       }
       return;
@@ -238,15 +227,9 @@ class CircuitFileManager extends ConsumerWidget {
     final outputKeys = outputControllers.map((c) => c.text.trim()).toList();
     if (inputKeys.any((k) => k.isEmpty) || outputKeys.any((k) => k.isEmpty)) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(
-                context,
-              )!.customComponentKeysCannotBeEmptyError,
-            ),
-            backgroundColor: Colors.red,
-          ),
+        SnackBarUtils.showError(
+          context,
+          AppLocalizations.of(context)!.customComponentKeysCannotBeEmptyError,
         );
       }
       return;
@@ -259,13 +242,9 @@ class CircuitFileManager extends ConsumerWidget {
     );
     if (data == null) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.customComponentBuildDataError,
-            ),
-            backgroundColor: Colors.red,
-          ),
+        SnackBarUtils.showError(
+          context,
+          AppLocalizations.of(context)!.customComponentBuildDataError,
         );
       }
       return;
@@ -281,16 +260,15 @@ class CircuitFileManager extends ConsumerWidget {
     }
 
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            success
-                ? AppLocalizations.of(context)!.customComponentSaved
-                : AppLocalizations.of(context)!.customComponentSavingError,
-          ),
-          backgroundColor: success ? Colors.green : Colors.red,
-        ),
-      );
+      success
+          ? SnackBarUtils.showSuccess(
+              context,
+              AppLocalizations.of(context)!.customComponentSaved,
+            )
+          : SnackBarUtils.showError(
+              context,
+              AppLocalizations.of(context)!.customComponentSavingError,
+            );
     }
   }
 
@@ -372,24 +350,16 @@ class CircuitFileManager extends ConsumerWidget {
       if (result == null) return;
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.circuitSavedTo(result),
-            ),
-            backgroundColor: Colors.green,
-          ),
+        SnackBarUtils.showSuccess(
+          context,
+          Text(AppLocalizations.of(context)!.circuitSavedTo(result)) as String,
         );
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.circuitSaveError(e.toString()),
-            ),
-            backgroundColor: Colors.red,
-          ),
+        SnackBarUtils.showError(
+          context,
+          AppLocalizations.of(context)!.circuitSaveError(e.toString()),
         );
       }
     }
@@ -444,27 +414,19 @@ class CircuitFileManager extends ConsumerWidget {
       final success = state.loadCircuitFromJson(jsonString);
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              success
-                  ? AppLocalizations.of(context)!.circuitLoadedSuccess
-                  : AppLocalizations.of(context)!.circuitLoadedError,
-            ),
-            backgroundColor: success ? Colors.green : Colors.red,
-          ),
-        );
+        success
+            ? SnackBarUtils.showSuccess(
+                context,
+                AppLocalizations.of(context)!.circuitLoadedSuccess,
+              )
+            : SnackBarUtils.showError(
+                context,
+                AppLocalizations.of(context)!.circuitLoadedError,
+              );
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.circuitLoadError(e.toString()),
-            ),
-            backgroundColor: Colors.red,
-          ),
-        );
+        SnackBarUtils.showError(context, AppLocalizations.of(context)!.circuitLoadError(e.toString()));
       }
     }
   }

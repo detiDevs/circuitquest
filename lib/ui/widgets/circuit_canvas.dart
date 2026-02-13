@@ -18,6 +18,7 @@ import 'input_source_widget.dart';
 import 'output_probe_widget.dart';
 import '../../state/custom_component_library.dart';
 import '../../core/components/custom_component.dart';
+import '../utils/snackbar_utils.dart';
 
 /// The main canvas where components are placed and connected.
 ///
@@ -686,7 +687,11 @@ class _PlacedComponentWidget extends ConsumerWidget {
           child: GestureDetector(
             onTap: () {
               if (state.wireDrawingStart != null) {
-                state.completeWireDrawing(placedComponent.id, entry.key);
+                state.completeWireDrawing(
+                  placedComponent.id, 
+                  entry.key,
+                  onError: (message) => SnackBarUtils.showError(context, message),
+                );
                 return;
               }
 
