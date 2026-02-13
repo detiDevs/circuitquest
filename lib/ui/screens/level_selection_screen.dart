@@ -14,11 +14,11 @@ class LevelSelectionScreen extends ConsumerStatefulWidget {
   const LevelSelectionScreen({super.key});
 
   @override
-  ConsumerState<LevelSelectionScreen> createState() => _LevelSelectionScreenState();
+  ConsumerState<LevelSelectionScreen> createState() =>
+      _LevelSelectionScreenState();
 }
 
 class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,16 +59,11 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
           itemBuilder: (context, index) {
             final category = levelBlocks.keys.elementAt(index);
             final levels = levelBlocks[category]!;
-            return _LevelCategory(
-              category: category,
-              levels: levels,
-            );
+            return _LevelCategory(category: category, levels: levels);
           },
         );
       },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -95,19 +90,16 @@ class _LevelCategory extends StatelessWidget {
   final String category;
   final List<LevelBlockItem> levels;
 
-  const _LevelCategory({
-    required this.category,
-    required this.levels,
-  });
+  const _LevelCategory({required this.category, required this.levels});
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
       title: Text(
         category,
-        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+        style: Theme.of(
+          context,
+        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
       ),
       subtitle: Text('${levels.length} levels'),
       children: [
@@ -125,9 +117,7 @@ class _LevelCategory extends StatelessWidget {
             itemCount: levels.length,
             itemBuilder: (context, index) {
               final levelItem = levels[index];
-              return _LevelCard(
-                levelItem: levelItem,
-              );
+              return _LevelCard(levelItem: levelItem);
             },
           ),
         ),
@@ -147,9 +137,7 @@ class _LevelCategory extends StatelessWidget {
 class _LevelCard extends ConsumerWidget {
   final LevelBlockItem levelItem;
 
-  const _LevelCard({
-    required this.levelItem,
-  });
+  const _LevelCard({required this.levelItem});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -247,16 +235,16 @@ class _LevelCard extends ConsumerWidget {
                     // Level number
                     Text(
                       'Level ${levelItem.id}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                     ),
                     // Level name
                     Text(
                       levelItem.name,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -272,11 +260,7 @@ class _LevelCard extends ConsumerWidget {
                   color: Colors.black.withOpacity(0.5),
                 ),
                 child: const Center(
-                  child: Icon(
-                    Icons.lock,
-                    color: Colors.white,
-                    size: 32,
-                  ),
+                  child: Icon(Icons.lock, color: Colors.white, size: 32),
                 ),
               ),
           ],
@@ -291,15 +275,16 @@ class _LevelCard extends ConsumerWidget {
       final level = await loader.loadLevel(levelItem.id);
       if (context.mounted) {
         await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => LevelScreen(level: level),
-          ),
+          MaterialPageRoute(builder: (context) => LevelScreen(level: level)),
         );
         // No need to manually reload - Riverpod will handle the refresh
       }
     } catch (e) {
       if (context.mounted) {
-        SnackBarUtils.showError(context, '${AppLocalizations.of(context)!.failedToLoadLevel}: $e');
+        SnackBarUtils.showError(
+          context,
+          '${AppLocalizations.of(context)!.failedToLoadLevel}: $e',
+        );
       }
     }
   }

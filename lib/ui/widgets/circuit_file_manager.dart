@@ -426,7 +426,10 @@ class CircuitFileManager extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        SnackBarUtils.showError(context, AppLocalizations.of(context)!.circuitLoadError(e.toString()));
+        SnackBarUtils.showError(
+          context,
+          AppLocalizations.of(context)!.circuitLoadError(e.toString()),
+        );
       }
     }
   }

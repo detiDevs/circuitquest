@@ -1,6 +1,7 @@
 import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/components/combinational/adder.dart';
 import 'package:circuitquest/core/components/combinational/collector.dart';
+import 'package:circuitquest/core/components/combinational/decoder.dart';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
 import 'package:circuitquest/core/components/combinational/shift_left2.dart';
 import 'package:circuitquest/core/components/combinational/sign_extend.dart';
@@ -38,6 +39,7 @@ final Map<String, Component Function()> componentFactoryByName = {
   'Clock': () => Clock(),
   'DLatch': () => DLatch(),
   'DFlipFlop': () => DFlipFlop(),
+  'Decoder': ()=> Decoder(selectBitWidth: 3),
   'Splitter8to1': () => Splitter(sliceCount: 8, sliceBitWidth: 1),
   'Splitter32to8': () => Splitter(sliceCount: 4, sliceBitWidth: 8),
   'Collector1to2': () => Collector(sliceCount: 2, sliceBitWidth: 1),
