@@ -1,4 +1,5 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../state/sandbox_state.dart';
@@ -35,13 +36,13 @@ class ControlPanel extends ConsumerWidget {
         padding: const EdgeInsets.all(12.0),
         child: Text(
           AppLocalizations.of(context)!.controlsTitle,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
       const Divider(height: 1),
-      
+
       // Control buttons
       Padding(
         padding: const EdgeInsets.all(12.0),
@@ -59,22 +60,21 @@ class ControlPanel extends ConsumerWidget {
                         state.startSimulation();
                       }
                     },
-              icon: Icon(
-                state.isSimulating ? Icons.pause : Icons.play_arrow,
-              ),
+              icon: Icon(state.isSimulating ? Icons.pause : Icons.play_arrow),
               label: Text(
-                state.isSimulating 
+                state.isSimulating
                     ? AppLocalizations.of(context)!.stopSimulation
                     : AppLocalizations.of(context)!.startSimulation,
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    state.isSimulating ? Colors.orange : Colors.green,
+                backgroundColor: state.isSimulating
+                    ? Colors.orange
+                    : Colors.green,
                 foregroundColor: Colors.white,
               ),
             ),
             const SizedBox(height: 12),
-            
+
             // Speed slider
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +89,9 @@ class ControlPanel extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      _getSpeedDisplayValue(state.tickSpeed) == 0 ? AppLocalizations.of(context)!.simulationSpeedInstant : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
+                      _getSpeedDisplayValue(state.tickSpeed) == 0
+                          ? AppLocalizations.of(context)!.simulationSpeedInstant
+                          : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Colors.blue[700],
                         fontWeight: FontWeight.bold,
@@ -103,7 +105,9 @@ class ControlPanel extends ConsumerWidget {
                   min: 1,
                   max: 11,
                   divisions: 10,
-                  label: _getSpeedDisplayValue(state.tickSpeed) == 0 ? AppLocalizations.of(context)!.simulationSpeedInstant : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
+                  label: _getSpeedDisplayValue(state.tickSpeed) == 0
+                      ? AppLocalizations.of(context)!.simulationSpeedInstant
+                      : '${_getSpeedDisplayValue(state.tickSpeed).toStringAsFixed(0)} tick/s',
                   onChanged: (value) {
                     state.setTickSpeed(_getTickSpeedFromSlider(value));
                   },
@@ -128,28 +132,26 @@ class ControlPanel extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 8),
-            
+
             // Reset button (only show if simulation was paused)
             if (state.canReset) ...[
               OutlinedButton.icon(
                 onPressed: () {
                   state.resetSimulation();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)!.circuitWasResetToInitialState),
-                      duration: Duration(seconds: 1),
-                    ),
+                  SnackBarUtils.showInfo(
+                    context,
+                    AppLocalizations.of(context)!.circuitWasResetToInitialState,
                   );
                 },
                 icon: const Icon(Icons.restore),
-                label: Text(AppLocalizations.of(context)!.resetCircuitToInitialState),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.blue,
+                label: Text(
+                  AppLocalizations.of(context)!.resetCircuitToInitialState,
                 ),
+                style: OutlinedButton.styleFrom(foregroundColor: Colors.blue),
               ),
               const SizedBox(height: 8),
             ],
-            
+
             // Check Solution button (level mode only)
             if (!isSandbox && level != null) ...[
               const SizedBox(height: 8),
@@ -174,9 +176,9 @@ class ControlPanel extends ConsumerWidget {
               // File operations (sandbox only)
               Text(
                 AppLocalizations.of(context)!.fileOperationsTitle,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               const CircuitFileManager(),
@@ -194,16 +196,14 @@ class ControlPanel extends ConsumerWidget {
                     },
               icon: const Icon(Icons.delete_outline),
               label: Text(AppLocalizations.of(context)!.clearCircuit),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.red,
-              ),
+              style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
             ),
           ],
         ),
       ),
-      
+
       const Divider(),
-      
+
       // Circuit info
       Padding(
         padding: const EdgeInsets.all(12.0),
@@ -212,9 +212,9 @@ class ControlPanel extends ConsumerWidget {
           children: [
             Text(
               AppLocalizations.of(context)!.circuitInfoTitle,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             _InfoRow(
@@ -227,17 +227,17 @@ class ControlPanel extends ConsumerWidget {
             ),
             _InfoRow(
               label: AppLocalizations.of(context)!.statusLabel,
-              value: state.isSimulating 
-                  ? AppLocalizations.of(context)!.statusRunning 
+              value: state.isSimulating
+                  ? AppLocalizations.of(context)!.statusRunning
                   : AppLocalizations.of(context)!.statusStopped,
               valueColor: state.isSimulating ? Colors.green : Colors.grey,
             ),
           ],
         ),
       ),
-      
+
       const Divider(),
-      
+
       // Instructions
       Padding(
         padding: const EdgeInsets.all(12.0),
@@ -246,9 +246,9 @@ class ControlPanel extends ConsumerWidget {
           children: [
             Text(
               AppLocalizations.of(context)!.instructionsTitle,
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             _InstructionItem(
@@ -285,18 +285,12 @@ class ControlPanel extends ConsumerWidget {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, 
-                    size: 16, 
-                    color: Colors.blue[700],
-                  ),
+                  Icon(Icons.info_outline, size: 16, color: Colors.blue[700]),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       AppLocalizations.of(context)!.pinColorsInfo,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.blue[900],
-                      ),
+                      style: TextStyle(fontSize: 11, color: Colors.blue[900]),
                     ),
                   ),
                 ],
@@ -320,29 +314,32 @@ class ControlPanel extends ConsumerWidget {
   }
 
   /// Shows a dialog and checks if the player's solution is correct
-  void _checkSolution(BuildContext context, WidgetRef ref, SandboxState state, Level level) async {
+  void _checkSolution(
+    BuildContext context,
+    WidgetRef ref,
+    SandboxState state,
+    Level level,
+  ) async {
     // Import LevelValidator at top
     // For now, implement inline validation
     try {
       // Get all input components and set their values from the test
       // Run all tests and collect results
-      
+
       final inputSources = state.placedComponents
           .where((c) => c.component is InputSource)
           .toList();
-      
+
       final outputProbes = state.placedComponents
           .where((c) => c.component is OutputProbe)
           .toList();
 
       if (inputSources.isEmpty || outputProbes.isEmpty) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Circuit must have inputs and outputs'),
-              backgroundColor: Colors.red,
-            ),
-          );
+          SnackBarUtils.showError(
+            context,
+            'Circuit must have inputs and outputs',
+          ); //TODO: translation!
         }
         return;
       }
@@ -355,7 +352,11 @@ class ControlPanel extends ConsumerWidget {
         final test = level.tests[testIndex];
 
         // Set input values
-        for (int i = 0; i < test.inputs.length && i < inputSources.length; i++) {
+        for (
+          int i = 0;
+          i < test.inputs.length && i < inputSources.length;
+          i++
+        ) {
           final inputValues = test.inputs[i];
           final inputComponent = inputSources[i].component as InputSource;
           if (inputValues.isNotEmpty) {
@@ -371,14 +372,19 @@ class ControlPanel extends ConsumerWidget {
 
         // Check output values after simulation completes
         bool testPassed = true;
-        for (int i = 0; i < test.expectedOutput.length && i < outputProbes.length; i++) {
+        for (
+          int i = 0;
+          i < test.expectedOutput.length && i < outputProbes.length;
+          i++
+        ) {
           final expectedValues = test.expectedOutput[i];
           final outputComponent = outputProbes[i].component as OutputProbe;
           final actualValue = outputComponent.value;
 
           if (expectedValues.isEmpty || expectedValues[0] != actualValue) {
             testPassed = false;
-            failureReason = 'Test ${testIndex + 1} failed: Input ${test.inputs} expected ${expectedValues[0]} but got $actualValue';
+            failureReason =
+                'Test ${testIndex + 1} failed: Input ${test.inputs} expected ${expectedValues[0]} but got $actualValue';
             break;
           }
         }
@@ -403,7 +409,9 @@ class ControlPanel extends ConsumerWidget {
                 actions: [
                   ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
                     child: const Text('Continue'),
                   ),
                 ],
@@ -428,12 +436,7 @@ class ControlPanel extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error checking solution: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        SnackBarUtils.showError(context, 'Error checking solution: $e');
       }
     }
   }
@@ -461,9 +464,7 @@ class ControlPanel extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.clearCircuitConfirmTitle),
-        content: Text(
-          AppLocalizations.of(context)!.clearCircuitConfirmMessage,
-        ),
+        content: Text(AppLocalizations.of(context)!.clearCircuitConfirmMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -473,12 +474,7 @@ class ControlPanel extends ConsumerWidget {
             onPressed: () {
               state.clearCircuit();
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.circuitCleared),
-                  duration: const Duration(seconds: 1),
-                ),
-              );
+              SnackBarUtils.showInfo(context, AppLocalizations.of(context)!.circuitCleared);
             },
             child: Text(
               AppLocalizations.of(context)!.clear,
@@ -497,11 +493,7 @@ class _InfoRow extends StatelessWidget {
   final String value;
   final Color? valueColor;
 
-  const _InfoRow({
-    required this.label,
-    required this.value,
-    this.valueColor,
-  });
+  const _InfoRow({required this.label, required this.value, this.valueColor});
 
   @override
   Widget build(BuildContext context) {
@@ -510,10 +502,7 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12),
-          ),
+          Text(label, style: const TextStyle(fontSize: 12)),
           Text(
             value,
             style: TextStyle(
@@ -533,10 +522,7 @@ class _InstructionItem extends StatelessWidget {
   final IconData icon;
   final String text;
 
-  const _InstructionItem({
-    required this.icon,
-    required this.text,
-  });
+  const _InstructionItem({required this.icon, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -550,10 +536,7 @@ class _InstructionItem extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey[800],
-              ),
+              style: TextStyle(fontSize: 11, color: Colors.grey[800]),
             ),
           ),
         ],

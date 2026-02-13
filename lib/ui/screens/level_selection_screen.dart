@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/levels/levels.dart';
 import '../../state/level_state.dart';
 import 'level_screen.dart';
+import '../utils/snackbar_utils.dart';
 
 /// Screen for selecting a level to play.
 ///
@@ -298,9 +299,7 @@ class _LevelCard extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${AppLocalizations.of(context)!.failedToLoadLevel}: $e')),
-        );
+        SnackBarUtils.showError(context, '${AppLocalizations.of(context)!.failedToLoadLevel}: $e');
       }
     }
   }

@@ -1,5 +1,6 @@
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -462,13 +463,8 @@ class _PaletteItem extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             ref.read(sandboxProvider).selectComponentType(componentType.name);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.componentSelected(
-                    componentType.displayName)),
-                duration: const Duration(seconds: 1),
-              ),
-            );
+            SnackBarUtils.showInfo(context, AppLocalizations.of(context)!.componentSelected(
+                    componentType.displayName));
           },
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -505,13 +501,8 @@ class _PaletteItem extends ConsumerWidget {
         onTap: () {
           // Select this component type
           ref.read(sandboxProvider).selectComponentType(componentType.name);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.componentSelected(
-                  componentType.displayName)),
-              duration: const Duration(seconds: 1),
-            ),
-          );
+          SnackBarUtils.showInfo(context, AppLocalizations.of(context)!.componentSelected(
+                  componentType.displayName));
         },
       ),
     );
