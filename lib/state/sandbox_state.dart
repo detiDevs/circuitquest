@@ -290,7 +290,7 @@ class SandboxState extends ChangeNotifier {
     if ((targetComponent is Multiplexer)&&targetPin.bitWidth == 0){
       targetComponent.setBitwidth(sourcePin.bitWidth);
     }
-      if (sourcePin.bitWidth != targetPin.bitWidth){
+      if ((targetComponent is! OutputProbe)&&sourcePin.bitWidth != targetPin.bitWidth){
       onError?.call("Bitwidths are not the same"); //TODO translate
       return false;
     }
