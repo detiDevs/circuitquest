@@ -195,12 +195,13 @@ class SandboxState extends ChangeNotifier {
   ///
   /// Also removes all connections involving this component.
   void removeComponent(String componentId) {
+    for (final conn in connections){
+      if (conn.sourceComponentId == componentId ||
+          conn.targetComponentId == componentId){
+            removeConnection(conn);
+          }
+    }
     _placedComponents.removeWhere((c) => c.id == componentId);
-    _connections.removeWhere(
-      (conn) =>
-          conn.sourceComponentId == componentId ||
-          conn.targetComponentId == componentId,
-    );
     notifyListeners();
   }
 
