@@ -41,9 +41,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noLevelsAvailable => 'Keine Level verfügbar';
 
   @override
-  String get recommendedLevel => 'Empfohlenes level';
-
-  @override
   String get availableComponents => 'Verfügbare Komponenten';
 
   @override

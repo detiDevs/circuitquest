@@ -63,7 +63,6 @@ Alternatively:
 - ✅ Loads levels from JSON
 - ✅ Categories with expandable sections
 - ✅ Grid layout with level cards
-- ✅ Recommended level badges
 - ✅ Error handling & retry
 - ✅ Async loading indicators
 
