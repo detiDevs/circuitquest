@@ -171,25 +171,7 @@ class _LevelCard extends ConsumerWidget {
                     // Status badges
                     Row(
                       children: [
-                        if (levelItem.recommended)
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.orange,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            child: Text(
-                              AppLocalizations.of(context)!.recommendedLevel,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                        
                         const Spacer(),
                         if (isCompleted)
                           Container(
@@ -291,14 +273,12 @@ class _LevelCard extends ConsumerWidget {
 
   Color _getCardBorderColor(bool isCompleted, bool canAccess) {
     if (isCompleted) return Colors.green;
-    if (levelItem.recommended) return Colors.orange;
     if (canAccess) return Colors.blue;
     return Colors.grey;
   }
 
   Color? _getCardBackgroundColor(bool isCompleted, bool canAccess) {
     if (isCompleted) return Colors.green[50];
-    if (levelItem.recommended) return Colors.orange[50];
     if (canAccess) return Colors.blue[50];
     return Colors.grey[50];
   }

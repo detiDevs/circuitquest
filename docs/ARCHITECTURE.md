@@ -94,7 +94,6 @@ Navigator.push(MaterialPageRoute(
 
 **Key Features**:
 - Loads levels from JSON
-- Shows recommended badge
 - Level metadata display
 - Graceful error handling
 
@@ -306,7 +305,6 @@ availableComponents (all)  ──┬──→ ComponentPalette (Sandbox)
 2. Reads mode descriptions
 3. Selects "Level Mode"
 4. Browsed organized levels
-5. Selects first recommended level
 6. Sees level info and hints
 7. Uses limited palette to build solution
 8. Tests circuit against level requirements

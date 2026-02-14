@@ -2,8 +2,7 @@
   "Basic Gates": [
     {
       "id": 0,
-      "name": "AND Gate",
-      "recommended": true
+      "name": "AND Gate"
     },
     {
       "id": 1,
@@ -29,8 +28,7 @@
   "Further Gates": [
     {
       "id": 6,
-      "name": "Multiplexer",
-      "recommended": true
+      "name": "Multiplexer"
     },
     {
       "id": 7,
@@ -76,8 +74,7 @@
     },
     {
       "id": 16,
-      "name": "Adding NOR",
-      "recommended": true
+      "name": "Adding NOR"
     },
     {
       "id": 17,
@@ -85,8 +82,7 @@
     },
     {
       "id": 18,
-      "name": "SLT (Set-on-Less-Than)",
-      "recommended": true
+      "name": "SLT (Set-on-Less-Than)"
     }
   ],
   "Registers": [
@@ -96,15 +92,13 @@
     },
     {
       "id": 20,
-      "name": "Adding the write option to Register Block",
-      "recommended": true
+      "name": "Adding the write option to Register Block"
     }
   ],
   "Full Processor": [
     {
       "id": 21,
-      "name": "Limited MIPS Processor",
-      "recommended": true
+      "name": "Limited MIPS Processor"
     }
   ]
 }

@@ -29,7 +29,6 @@
   - [x] Loads levels via LevelLoader
   - [x] Categories with expandable sections
   - [x] Grid layout for level cards
-  - [x] Recommended level badges
   - [x] Level metadata display
   - [x] Async loading indicators
   - [x] Error handling with retry
@@ -201,7 +200,6 @@ home: const HomeScreen(),  // Changed from SandboxScreen ✅
 - [x] Categories organize levels
 - [x] Expansion tiles work
 - [x] Grid layout displays levels
-- [x] Recommended badges show
 - [x] Loading indicator displays
 - [x] Error handling works
 - [x] Retry button functional

@@ -27,7 +27,6 @@ Displays all available levels organized by category.
 - Organizes levels by category blocks (e.g., "Basic Gates", "Further Gates")
 - Expandable category sections for clean UI
 - Grid layout of level cards
-- Recommended level badges
 - Tap to start playing a level
 - Error handling with retry functionality
 
