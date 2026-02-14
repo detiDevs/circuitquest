@@ -11,7 +11,7 @@ class Multiplexer extends Component {
   final int inputCount;
 
   /// Bit width of each data input and the output.
-  final int dataBitWidth;
+  int dataBitWidth;
 
   /// Bit width of the select input, derived from [inputCount].
   late final int selectBitWidth;
@@ -59,5 +59,14 @@ class Multiplexer extends Component {
     final bool changed = outPin.value != newValue;
     outPin.value = newValue;
     return changed;
+  }
+
+  bool setBitwidth(int bitwidth){
+    dataBitWidth = bitwidth;
+    for (int i = 0; i < inputCount; i++) {
+      inputs['input${i + 1}']!.bitWidth = bitwidth;
+    }
+    outputs['outValue']!.bitWidth = bitwidth;
+    return true;
   }
 }

@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'package:circuitquest/core/components/combinational/multiplexer.dart';
+import 'package:circuitquest/core/components/combinational/shift_left2.dart';
+import 'package:circuitquest/ui/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -272,14 +275,27 @@ class SandboxState extends ChangeNotifier {
     final targetComponent = _placedComponents
         .firstWhere((c) => c.id == targetComponentId)
         .component;
+   
 
     // Create the actual wire connection in the component graph
     final sourcePin = sourceComponent.outputs[sourcePinName];
     final targetPin = targetComponent.inputs[targetPinName];
 
     if (sourcePin != null && targetPin != null) {
+      if (sourcePin.bitWidth == 0){
+      onError?.call("The source Component does not have a specified Bitwidth yet. Please connect something to the source of your Source component");//TODO: Translate
+      return false;
+    }
+
+    if ((targetComponent is Multiplexer)&&targetPin.bitWidth == 0){
+      targetComponent.setBitwidth(sourcePin.bitWidth);
+    }
+      if (sourcePin.bitWidth != targetPin.bitWidth){
+      onError?.call("Bitwidths are not the same"); //TODO translate
+      return false;
+    }
       if (targetPin.hasSource){
-        onError?.call("This input pin already has a connection!");
+        onError?.call("This input pin already has a connection!"); //TODO Translate
         return false;
       }
       // Wire constructor automatically connects the pins

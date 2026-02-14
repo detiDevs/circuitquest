@@ -17,6 +17,7 @@ class ShiftLeft2 extends Component {
 
   @override
   bool evaluate() {
+    _input.updateFromSource();
     final shifted = (_input.value << 2) & 0xFFFFFFFF;
 
     if (_output.value != shifted) {
