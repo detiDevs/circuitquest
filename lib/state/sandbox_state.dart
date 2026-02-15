@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
-import 'package:circuitquest/core/components/combinational/shift_left2.dart';
-import 'package:circuitquest/ui/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -15,6 +13,8 @@ import '../core/components/component_registry.dart';
 import '../core/components/custom_component.dart';
 import '../core/components/custom_component_data.dart';
 import '../state/custom_component_library.dart';
+import '../core/commands/command_controller.dart';
+import '../core/commands/add_connection_command.dart';
 
 /// Riverpod provider for sandbox state.
 final sandboxProvider = ChangeNotifierProvider<SandboxState>(
@@ -163,6 +163,24 @@ class SandboxState extends ChangeNotifier {
   ({String componentId, String pinName})? get wireDrawingStart =>
       _wireDrawingStart;
 
+  // Undo/Redo getters
+  bool get canUndo => CommandController.canUndo;
+  bool get canRedo => CommandController.canRedo;
+
+  /// Undo the last command
+  void undo() {
+    if (CommandController.undo()) {
+      notifyListeners();
+    }
+  }
+
+  /// Redo the last undone command  
+  void redo() {
+    if (CommandController.redo()) {
+      notifyListeners();
+    }
+  }
+
   /// Sets the currently selected component type for placement.
   void selectComponentType(String? type) {
     _selectedComponentType = type;
@@ -208,6 +226,20 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Internal method to restore a component with its original ID.
+  /// Used by undo/redo operations to maintain ID consistency.
+  /// DO NOT USE DIRECTLY - Use placeComponent instead for regular placement.
+  void restoreComponentWithId(PlacedComponent component) {
+    // Update the next component ID counter if needed
+    final componentIdNum = int.tryParse(component.id);
+    if (componentIdNum != null && componentIdNum >= _nextComponentId) {
+      _nextComponentId = componentIdNum + 1;
+    }
+    
+    _placedComponents.add(component);
+    notifyListeners();
+  }
+
   /// Moves a component to a new position.
   void moveComponent(String componentId, Offset newPosition) {
     final index = _placedComponents.indexWhere((c) => c.id == componentId);
@@ -243,31 +275,37 @@ class SandboxState extends ChangeNotifier {
 
     final sourceComponentId = _wireDrawingStart!.componentId;
     final sourcePinName = _wireDrawingStart!.pinName;
+    
+    // Store connection count before command execution
+    final connectionCountBefore = _connections.length;
 
-    bool result = false;
-    if (addConnection(
+    // Use command pattern for undo/redo support
+    final command = AddConnectionCommand(
+      this,
       sourceComponentId,
       sourcePinName,
       targetComponentId,
       targetPinName,
       onError: onError,
-    )) {
-      result = true;
-    }
+    );
+    
+    // Execute the command
+    CommandController.executeCommand(command);
+    
     _wireDrawingStart = null;
     notifyListeners();
-    return result;
+    
+    // Return whether a new connection was added
+    return _connections.length > connectionCountBefore;
   }
 
-  bool addConnection(
+  WireConnection? addConnection(
     String sourceComponentId,
     String sourcePinName,
     String targetComponentId,
     String targetPinName, {
     void Function(String message)? onError,
   }) {
-    bool result = false;
-
     // Find the components
     final sourceComponent = _placedComponents
         .firstWhere((c) => c.id == sourceComponentId)
@@ -275,8 +313,6 @@ class SandboxState extends ChangeNotifier {
     final targetComponent = _placedComponents
         .firstWhere((c) => c.id == targetComponentId)
         .component;
-   
-
     // Create the actual wire connection in the component graph
     final sourcePin = sourceComponent.outputs[sourcePinName];
     final targetPin = targetComponent.inputs[targetPinName];
@@ -284,7 +320,7 @@ class SandboxState extends ChangeNotifier {
     if (sourcePin != null && targetPin != null) {
       if (sourcePin.bitWidth == 0){
       onError?.call("The source Component does not have a specified Bitwidth yet. Please connect something to the source of your Source component");//TODO: Translate
-      return false;
+      return null;
     }
 
     if ((targetComponent is Multiplexer)&&targetPin.bitWidth == 0){
@@ -292,29 +328,30 @@ class SandboxState extends ChangeNotifier {
     }
       if ((targetComponent is! OutputProbe)&&sourcePin.bitWidth != targetPin.bitWidth){
       onError?.call("Bitwidths are not the same"); //TODO translate
-      return false;
+      return null;
     }
       if (targetPin.hasSource){
         onError?.call("This input pin already has a connection!"); //TODO Translate
-        return false;
+        return null;
       }
       // Wire constructor automatically connects the pins
       Wire(sourcePin, targetPin);
 
       // Track the connection
-      _connections.add(
-        WireConnection(
-          sourceComponentId: sourceComponentId,
-          sourcePin: sourcePinName,
-          targetComponentId: targetComponentId,
-          targetPin: targetPinName,
-        ),
+      final connection = WireConnection(
+        sourceComponentId: sourceComponentId,
+        sourcePin: sourcePinName,
+        targetComponentId: targetComponentId,
+        targetPin: targetPinName,
       );
-      result = true;
+      _connections.add(connection);
       print("Connection was added.");
       
       // Trigger event-driven evaluation starting from the target component
       _evaluateCircuitFromComponent(targetComponent);
+      
+      notifyListeners();
+      return connection;
     } else {
       print("Connection was not added.");
       if(sourcePin == null) {
@@ -323,9 +360,9 @@ class SandboxState extends ChangeNotifier {
       if(targetPin == null) {
         print("Target pin was null");
       }
+      notifyListeners();
+      return null;
     }
-    notifyListeners();
-    return result;
   }
 
   /// Cancels the current wire drawing operation.

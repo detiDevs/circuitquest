@@ -35,29 +35,16 @@ class RemoveComponentCommand extends Command {
   void undo() {
     if (_removedComponent == null) return;
     
-    // Re-add the component with the same ID by temporarily storing it
-    final originalId = _removedComponent!.id;
+    // Restore the component with its original ID using internal method
+    _sandboxState.restoreComponentWithId(_removedComponent!);
     
-    // Place component (this will generate a new ID)
-    final newId = _sandboxState.placeComponent(
-      _removedComponent!.type,
-      _removedComponent!.position,
-      _removedComponent!.component,
-      immovable: _removedComponent!.immovable,
-      label: _removedComponent!.label,
-    );
-    
-    // We need to update the connection IDs to match the new component ID
-    // For now, we'll restore connections with the new ID
+    // Restore all connections
     for (final conn in _removedConnections) {
-      final sourceId = conn.sourceComponentId == originalId ? newId : conn.sourceComponentId;
-      final targetId = conn.targetComponentId == originalId ? newId : conn.targetComponentId;
-      
       // Add the connection back (addConnection will create the WireConnection automatically)
       _sandboxState.addConnection(
-        sourceId,
+        conn.sourceComponentId,
         conn.sourcePin,
-        targetId,
+        conn.targetComponentId,
         conn.targetPin,
       );
     }

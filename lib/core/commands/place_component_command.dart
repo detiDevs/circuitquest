@@ -12,7 +12,8 @@ class PlaceComponentCommand extends Command {
   final bool _immovable;
   final String? _label;
   
-  String? _componentId; // Will be set after execution
+  String? _componentId; // Will be set after first execution
+  PlacedComponent? _placedComponent; // Store the full component for restoration
 
   PlaceComponentCommand(
     this._sandboxState,
@@ -26,13 +27,21 @@ class PlaceComponentCommand extends Command {
 
   @override
   void execute() {
-    _componentId = _sandboxState.placeComponent(
-      _componentType,
-      _position,
-      _component,
-      immovable: _immovable,
-      label: _label,
-    );
+    if (_placedComponent != null) {
+      // This is a redo - restore the component with its original ID
+      _sandboxState.restoreComponentWithId(_placedComponent!);
+    } else {
+      // This is the first execution - create new component
+      _componentId = _sandboxState.placeComponent(
+        _componentType,
+        _position,
+        _component,
+        immovable: _immovable,
+        label: _label,
+      );
+      // Store the placed component for future redo operations
+      _placedComponent = _sandboxState.getComponent(_componentId!);
+    }
   }
 
   @override

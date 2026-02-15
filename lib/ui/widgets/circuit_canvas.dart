@@ -1,3 +1,4 @@
+import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -19,6 +20,9 @@ import 'output_probe_widget.dart';
 import '../../state/custom_component_library.dart';
 import '../../core/components/custom_component.dart';
 import '../utils/snackbar_utils.dart';
+import '../../core/commands/place_component_command.dart';
+import '../../core/commands/remove_component_command.dart';
+import '../../core/commands/remove_connection_command.dart';
 
 /// The main canvas where components are placed and connected.
 ///
@@ -164,11 +168,19 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         final transformedPosition = _transformPosition(localPosition);
         final gridPosition = _snapToGrid(transformedPosition);
 
-        // Create and place the component
+        // Create and place the component using command pattern
         final component = details.data.createComponent();
-        ref
-            .read(sandboxProvider)
-            .placeComponent(details.data.name, gridPosition, component);
+        final sandboxState = ref.read(sandboxProvider);
+        
+        final command = PlaceComponentCommand(
+          sandboxState,
+          details.data.name,
+          gridPosition,
+          component,
+        );
+        
+        // Execute command (this will also add it to undo history if SandboxState supports it)
+        CommandController.executeCommand(command);
       },
       builder: (context, candidateData, rejectedData) {
         return InteractiveViewer(
@@ -702,7 +714,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
                     c.targetPin == entry.key,
               );
               if (existing.isNotEmpty) {
-                state.removeConnection(existing.first);
+                // Use command pattern for undo/redo support
+                final command = RemoveConnectionCommand(state, existing.first);
+                CommandController.executeCommand(command);
               }
             },
             child: Container(
@@ -818,7 +832,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () {
-              state.removeComponent(placedComponent.id);
+              // Use command pattern for undo/redo support
+              final command = RemoveComponentCommand(state, placedComponent.id);
+              CommandController.executeCommand(command);
               Navigator.of(context).pop();
             },
             child: Text(
@@ -857,7 +873,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
           onTap: () {
             // Use Future.delayed to avoid closing before tap completes
             Future.delayed(Duration.zero, () {
-              state.removeComponent(placedComponent.id);
+              // Use command pattern for undo/redo support
+              final command = RemoveComponentCommand(state, placedComponent.id);
+              CommandController.executeCommand(command);
             });
           },
         ),

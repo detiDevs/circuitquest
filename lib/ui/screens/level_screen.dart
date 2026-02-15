@@ -7,6 +7,8 @@ import 'package:circuitquest/constants.dart';
 import '../widgets/component_palette.dart';
 import '../widgets/circuit_canvas.dart';
 import '../widgets/control_panel.dart';
+import '../../state/sandbox_state.dart';
+import '../../core/commands/command_controller.dart';
 
 /// Screen for playing a specific level.
 ///
@@ -40,12 +42,35 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   }
 
   @override
+  void dispose() {
+    // Clear undo/redo stacks when leaving level
+    CommandController.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final sandboxState = ref.watch(sandboxProvider);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('${Constants.kAppName} - ${widget.level.name}'),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
+        actions: [
+          // Undo button
+          IconButton(
+            onPressed: sandboxState.canUndo ? sandboxState.undo : null,
+            icon: const Icon(Icons.undo),
+            tooltip: 'Undo',
+          ),
+          // Redo button
+          IconButton(
+            onPressed: sandboxState.canRedo ? sandboxState.redo : null,
+            icon: const Icon(Icons.redo),
+            tooltip: 'Redo',
+          ),
+        ],
       ),
       body: _LevelScreenBody(level: widget.level),
       floatingActionButton: FloatingActionButton(
