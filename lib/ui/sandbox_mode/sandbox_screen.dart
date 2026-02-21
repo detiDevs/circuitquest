@@ -1,11 +1,11 @@
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/widgets/expandable_control_panel.dart';
+import 'package:circuitquest/ui/shared/widgets/expandable_control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../widgets/component_palette.dart';
-import '../widgets/circuit_canvas.dart';
-import '../widgets/control_panel.dart';
+import '../shared/widgets/component_palette.dart';
+import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
+import '../shared/widgets/control_panel.dart';
 import '../../state/sandbox_state.dart';
 import '../../core/commands/command_controller.dart';
 

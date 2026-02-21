@@ -1,15 +1,15 @@
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/utils/snackbar_utils.dart';
+import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/components/base/component.dart';
-import '../../state/custom_component_library.dart';
-import '../../state/sandbox_state.dart';
-import '../../core/components/custom_component.dart';
+import '../../../core/components/base/component.dart';
+import '../../../state/custom_component_library.dart';
+import '../../../state/sandbox_state.dart';
+import '../../../core/components/custom_component.dart';
 
 /// A draggable component type in the palette.
 class ComponentType {
