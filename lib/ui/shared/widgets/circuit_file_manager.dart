@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/utils/snackbar_utils.dart';
+import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../state/sandbox_state.dart';
-import '../../state/custom_component_library.dart';
-import '../../core/components/input_source.dart';
-import '../../core/components/output_probe.dart';
+import '../../../state/sandbox_state.dart';
+import '../../../state/custom_component_library.dart';
+import '../../../core/components/input_source.dart';
+import '../../../core/components/output_probe.dart';
 
 /// Widget for saving and loading circuit files.
 class CircuitFileManager extends ConsumerWidget {
