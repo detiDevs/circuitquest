@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../l10n/app_localizations.dart';
-import '../../core/components/output_probe.dart';
-import '../../state/sandbox_state.dart';
-import '../utils/snackbar_utils.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../core/components/output_probe.dart';
+import '../../../../state/sandbox_state.dart';
+import '../../utils/snackbar_utils.dart';
 
 /// UI for output probe components: shows bitwidth and current value, with input pin on the left.
 class OutputProbeWidget extends ConsumerWidget {

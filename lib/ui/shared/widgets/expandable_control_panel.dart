@@ -1,4 +1,4 @@
-import 'package:circuitquest/ui/widgets/control_panel.dart';
+import 'package:circuitquest/ui/shared/widgets/control_panel.dart';
 import 'package:circuitquest/levels/levels.dart';
 import 'package:flutter/material.dart';
 

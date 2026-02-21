@@ -1,10 +1,11 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/screens/settings_screen.dart';
+import 'package:circuitquest/ui/home/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:circuitquest/constants.dart';
-import 'sandbox_screen.dart';
-import 'level_selection_screen.dart';
+import '../sandbox_mode/sandbox_screen.dart';
+import '../level_selection/level_selection_screen.dart';
+import 'package:circuitquest/ui/shared/widgets/rich_button.dart';
 import 'dart:io';
 
 /// Home screen for CircuitQuest.
@@ -53,7 +54,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     // Level Mode Button
-                    _ModeButton(
+                    RichButton(
                       title: AppLocalizations.of(context)!.levelModeTitle,
                       description: AppLocalizations.of(
                         context,
@@ -70,7 +71,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     // Sandbox Mode Button
-                    _ModeButton(
+                    RichButton(
                       title: AppLocalizations.of(context)!.sandboxModeTitle,
                       description: AppLocalizations.of(
                         context,
@@ -86,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 8),
-                    _ModeButton(
+                    RichButton(
                       title: AppLocalizations.of(context)!.settings,
                       description: "",
                       icon: Icons.settings,
@@ -100,7 +101,7 @@ class HomeScreen extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 8),
-                    _ModeButton(
+                    RichButton(
                       title: "Leave Game",
                       description: "",
                       icon: Icons.exit_to_app_sharp,
@@ -134,63 +135,6 @@ class HomeScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(Icons.memory, size: 80, color: Colors.blue[800]),
-        ),
-      ),
-    );
-  }
-}
-
-/// A button for selecting a game mode.
-class _ModeButton extends StatelessWidget {
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onPressed;
-
-  const _ModeButton({
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.color,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: color, width: 2),
-            color: color.withAlpha((0.1 * 255).toInt()),
-          ),
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              Icon(icon, size: 64, color: color),
-              const SizedBox(height: 16),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                description,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
         ),
       ),
     );
