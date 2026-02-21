@@ -1,3 +1,7 @@
+import 'package:circuitquest/core/commands/command_controller.dart';
+import 'package:circuitquest/core/commands/move_component_command.dart';
+import 'package:circuitquest/core/commands/remove_component_command.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
@@ -19,6 +23,8 @@ import 'output_probe_widget.dart';
 import '../../state/custom_component_library.dart';
 import '../../core/components/custom_component.dart';
 import '../utils/snackbar_utils.dart';
+import '../../core/commands/place_component_command.dart';
+import '../../core/commands/remove_connection_command.dart';
 
 /// The main canvas where components are placed and connected.
 ///
@@ -82,7 +88,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
     final state = ref.read(sandboxProvider);
     state.reset();
 
-    for(var c in level.components) {
+    for (var c in level.components) {
       print(c.type);
     }
     for (final lc in level.components) {
@@ -95,15 +101,18 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
       );
 
       // Load memory contents if applicable
-      if (resolved.component is InstructionMemory && level.memoryContents != null) {
+      if (resolved.component is InstructionMemory &&
+          level.memoryContents != null) {
         (resolved.component as InstructionMemory).loadInstructions(
           level.memoryContents!.instructionMemory,
         );
-      } else if (resolved.component is DataMemory && level.memoryContents != null) {
+      } else if (resolved.component is DataMemory &&
+          level.memoryContents != null) {
         (resolved.component as DataMemory).loadData(
           level.memoryContents!.dataMemory,
         );
-      } else if (resolved.component is RegisterBlock && lc.initialRegisterValues != null) {
+      } else if (resolved.component is RegisterBlock &&
+          lc.initialRegisterValues != null) {
         (resolved.component as RegisterBlock).loadRegisters(
           lc.initialRegisterValues!,
         );
@@ -117,7 +126,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         label: lc.label,
       );
     }
-    
+
     for (final connection in level.connections) {
       print("Adding connection: ${connection.toJson()}");
       state.addConnection(
@@ -164,11 +173,19 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         final transformedPosition = _transformPosition(localPosition);
         final gridPosition = _snapToGrid(transformedPosition);
 
-        // Create and place the component
+        // Create and place the component using command pattern
         final component = details.data.createComponent();
-        ref
-            .read(sandboxProvider)
-            .placeComponent(details.data.name, gridPosition, component);
+        final sandboxState = ref.read(sandboxProvider);
+
+        final command = PlaceComponentCommand(
+          sandboxState,
+          details.data.name,
+          gridPosition,
+          component,
+        );
+
+        // Execute command (this will also add it to undo history if SandboxState supports it)
+        CommandController.executeCommand(command);
       },
       builder: (context, candidateData, rejectedData) {
         return InteractiveViewer(
@@ -458,7 +475,7 @@ class _WirePainter extends CustomPainter {
 }
 
 /// Widget representing a placed component on the canvas.
-class _PlacedComponentWidget extends ConsumerWidget {
+class _PlacedComponentWidget extends ConsumerStatefulWidget {
   final PlacedComponent placedComponent;
   final double gridSize;
   final bool isActive;
@@ -471,19 +488,33 @@ class _PlacedComponentWidget extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_PlacedComponentWidget> createState() => _PlacedComponentWidgetState();
+}
+
+class _PlacedComponentWidgetState extends ConsumerState<_PlacedComponentWidget> {
+  bool paning = false;
+  late Offset oldPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    oldPosition = widget.placedComponent.position;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(sandboxProvider);
     final customLibrary = ref.watch(customComponentProvider);
     ComponentType? componentType;
     try {
       componentType = availableComponents.firstWhere(
-        (ct) => ct.name == placedComponent.type,
+        (ct) => ct.name == widget.placedComponent.type,
       );
     } catch (_) {
       CustomComponentEntry? entry;
       try {
         entry = customLibrary.components.firstWhere(
-          (c) => c.data.name == placedComponent.type,
+          (c) => c.data.name == widget.placedComponent.type,
         );
       } catch (_) {
         entry = null;
@@ -500,30 +531,41 @@ class _PlacedComponentWidget extends ConsumerWidget {
         );
       }
     }
-
+    if (!paning) {
+      oldPosition = widget.placedComponent.position;
+    }
     return Positioned(
-      left: placedComponent.position.dx,
-      top: placedComponent.position.dy,
+      left: widget.placedComponent.position.dx,
+      top: widget.placedComponent.position.dy,
       child: GestureDetector(
         onPanUpdate: (details) {
-          if (placedComponent.immovable) return;
+          if (widget.placedComponent.immovable) return;
+          paning = true;
           // Move component
-          final newPosition = placedComponent.position + details.delta;
+          final newPosition = widget.placedComponent.position + details.delta;
           ref
               .read(sandboxProvider)
-              .moveComponent(placedComponent.id, newPosition);
+              .moveComponent(widget.placedComponent.id, newPosition);
         },
         onPanEnd: (details) {
-          if (placedComponent.immovable) return;
+          if (widget.placedComponent.immovable) return;
           // Snap to grid when done dragging
+          paning = false;
           final snapped = Offset(
-            (placedComponent.position.dx / gridSize).round() * gridSize,
-            (placedComponent.position.dy / gridSize).round() * gridSize,
+            (widget.placedComponent.position.dx / widget.gridSize).round() * widget.gridSize,
+            (widget.placedComponent.position.dy / widget.gridSize).round() * widget.gridSize,
           );
-          ref.read(sandboxProvider).moveComponent(placedComponent.id, snapped);
+          final command = MoveComponentCommand(
+            state,
+            widget.placedComponent.id,
+            snapped,
+            oldPosition,
+          );
+          CommandController.executeCommand(command);
+          //ref.read(sandboxProvider).moveComponent(widget.placedComponent.id, snapped);
         },
         onSecondaryTapDown: (details) {
-          if (placedComponent.immovable) return;
+          if (widget.placedComponent.immovable) return;
           // Show context menu on right-click
           _showContextMenu(
             context,
@@ -532,13 +574,13 @@ class _PlacedComponentWidget extends ConsumerWidget {
           );
         },
         onLongPress: () {
-          if (placedComponent.immovable) return;
+          if (widget.placedComponent.immovable) return;
           // Show context menu on long press (for touch devices)
           _showComponentMenu(context, ref.read(sandboxProvider));
         },
         child: Container(
-          width: gridSize,
-          height: gridSize,
+          width: widget.gridSize,
+          height: widget.gridSize,
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.blue[700]!, width: 2),
@@ -551,21 +593,23 @@ class _PlacedComponentWidget extends ConsumerWidget {
               ),
             ],
           ),
-          child: placedComponent.component is InputSource
+          child: widget.placedComponent.component is InputSource
               ? _buildInputControls(
-                  placedComponent.component as InputSource,
-                  placedComponent,
+                  widget.placedComponent.component as InputSource,
+                  widget.placedComponent,
                   ref,
+                  widget.gridSize,
                 )
-              : placedComponent.component is OutputProbe
+              : widget.placedComponent.component is OutputProbe
               ? _buildOutputProbe(
-                  placedComponent.component as OutputProbe,
-                  placedComponent,
+                  widget.placedComponent.component as OutputProbe,
+                  widget.placedComponent,
                   ref,
+                  widget.gridSize,
                 )
               : Stack(
                   children: [
-                    if (placedComponent.label != null)
+                    if (widget.placedComponent.label != null)
                       Positioned(
                         top: 4,
                         left: 6,
@@ -580,7 +624,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
                             border: Border.all(color: Colors.blue[200]!),
                           ),
                           child: Text(
-                            placedComponent.label!,
+                            widget.placedComponent.label!,
                             style: const TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -592,7 +636,8 @@ class _PlacedComponentWidget extends ConsumerWidget {
                     Center(
                       child: _buildComponentIcon(
                         componentType,
-                        placedComponent.type,
+                        widget.placedComponent.type,
+                        widget.gridSize,
                       ),
                     ),
                     // Input pins (left side)
@@ -606,7 +651,11 @@ class _PlacedComponentWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildComponentIcon(ComponentType? componentType, String fallbackText) {
+  Widget _buildComponentIcon(
+    ComponentType? componentType,
+    String fallbackText,
+    double gridSize,
+  ) {
     if (componentType == null || componentType.iconPath.isEmpty) {
       return Text(fallbackText, textAlign: TextAlign.center);
     }
@@ -645,6 +694,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
     InputSource inputComponent,
     PlacedComponent placed,
     WidgetRef ref,
+    double gridSize,
   ) {
     return InputSourceWidget(
       inputComponent: inputComponent,
@@ -658,6 +708,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
     OutputProbe outputComponent,
     PlacedComponent placed,
     WidgetRef ref,
+    double gridSize,
   ) {
     return OutputProbeWidget(
       outputComponent: outputComponent,
@@ -669,7 +720,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
 
   /// Builds interactive input pin widgets.
   List<Widget> _buildInputPins(BuildContext context, SandboxState state) {
-    final inputs = placedComponent.component.inputs.entries.toList();
+    final inputs = widget.placedComponent.component.inputs.entries.toList();
     final pins = <Widget>[];
 
     for (int i = 0; i < inputs.length; i++) {
@@ -688,9 +739,10 @@ class _PlacedComponentWidget extends ConsumerWidget {
             onTap: () {
               if (state.wireDrawingStart != null) {
                 state.completeWireDrawing(
-                  placedComponent.id, 
+                  widget.placedComponent.id,
                   entry.key,
-                  onError: (message) => SnackBarUtils.showError(context, message),
+                  onError: (message) =>
+                      SnackBarUtils.showError(context, message),
                 );
                 return;
               }
@@ -698,11 +750,13 @@ class _PlacedComponentWidget extends ConsumerWidget {
               // If already connected, delete the connection by tapping the input pin
               final existing = state.connections.where(
                 (c) =>
-                    c.targetComponentId == placedComponent.id &&
+                    c.targetComponentId == widget.placedComponent.id &&
                     c.targetPin == entry.key,
               );
               if (existing.isNotEmpty) {
-                state.removeConnection(existing.first);
+                // Use command pattern for undo/redo support
+                final command = RemoveConnectionCommand(state, existing.first);
+                CommandController.executeCommand(command);
               }
             },
             child: Container(
@@ -712,7 +766,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
                 color: entry.value.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.black, width: 1),
-                boxShadow: isActive
+                boxShadow: widget.isActive
                     ? [
                         BoxShadow(
                           color:
@@ -737,7 +791,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
 
   /// Builds interactive output pin widgets.
   List<Widget> _buildOutputPins(BuildContext context, SandboxState state) {
-    final outputs = placedComponent.component.outputs.entries.toList();
+    final outputs = widget.placedComponent.component.outputs.entries.toList();
     final pins = <Widget>[];
 
     for (int i = 0; i < outputs.length; i++) {
@@ -755,7 +809,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
           child: GestureDetector(
             onTap: () {
               // Start wire drawing from this output
-              state.startWireDrawing(placedComponent.id, entry.key);
+              state.startWireDrawing(widget.placedComponent.id, entry.key);
             },
             child: Container(
               width: 20,
@@ -764,7 +818,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
                 color: entry.value.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.black, width: 1),
-                boxShadow: isActive
+                boxShadow: widget.isActive
                     ? [
                         BoxShadow(
                           color:
@@ -789,11 +843,11 @@ class _PlacedComponentWidget extends ConsumerWidget {
 
   /// Calculates pin position based on index and total count.
   Offset _calculatePinPosition(int index, int total, {required bool isInput}) {
-    final spacing = gridSize / (total + 1);
+    final spacing = widget.gridSize / (total + 1);
     final y = spacing * (index + 1) - 10; // -6 to center the 12px pin
 
     return Offset(
-      isInput ? 0 : gridSize - 20, // Left or right edge
+      isInput ? 0 : widget.gridSize - 20, // Left or right edge
       y,
     );
   }
@@ -806,7 +860,7 @@ class _PlacedComponentWidget extends ConsumerWidget {
         title: Text(
           AppLocalizations.of(
             context,
-          )!.componentMenuTitle(placedComponent.type),
+          )!.componentMenuTitle(widget.placedComponent.type),
         ),
         content: Text(AppLocalizations.of(context)!.componentMenuPrompt),
         actions: [
@@ -818,7 +872,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () {
-              state.removeComponent(placedComponent.id);
+              // Use command pattern for undo/redo support
+              final command = RemoveComponentCommand(state, widget.placedComponent.id);
+              CommandController.executeCommand(command);
               Navigator.of(context).pop();
             },
             child: Text(
@@ -857,7 +913,9 @@ class _PlacedComponentWidget extends ConsumerWidget {
           onTap: () {
             // Use Future.delayed to avoid closing before tap completes
             Future.delayed(Duration.zero, () {
-              state.removeComponent(placedComponent.id);
+              // Use command pattern for undo/redo support
+              final command = RemoveComponentCommand(state, widget.placedComponent.id);
+              CommandController.executeCommand(command);
             });
           },
         ),

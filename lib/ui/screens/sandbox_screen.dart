@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/component_palette.dart';
 import '../widgets/circuit_canvas.dart';
 import '../widgets/control_panel.dart';
+import '../../state/sandbox_state.dart';
+import '../../core/commands/command_controller.dart';
 
 /// Main sandbox screen where users can design and simulate circuits.
 ///
@@ -15,16 +17,45 @@ import '../widgets/control_panel.dart';
 /// - Control panel for circuit evaluation and simulation
 ///
 /// The layout adapts for mobile (vertical) and desktop (horizontal) layouts.
-class SandboxScreen extends ConsumerWidget {
+class SandboxScreen extends ConsumerStatefulWidget {
   const SandboxScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SandboxScreen> createState() => _SandboxScreenState();
+}
+
+class _SandboxScreenState extends ConsumerState<SandboxScreen> {
+  @override
+  void dispose() {
+    // Clear undo/redo stacks when leaving sandbox
+    CommandController.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final sandboxState = ref.watch(sandboxProvider);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('${Constants.kAppName} - ${AppLocalizations.of(context)!.sandboxModeTitle}'),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
+        actions: [
+          // Undo Button
+          IconButton(
+            onPressed: sandboxState.canUndo ? () => sandboxState.undo() : null,
+            icon: const Icon(Icons.undo),
+            tooltip: 'Undo',
+          ),
+          // Redo Button
+          IconButton(
+            onPressed: sandboxState.canRedo ? () => sandboxState.redo() : null,
+            icon: const Icon(Icons.redo),
+            tooltip: 'Redo',
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: const _SandboxBody(),
     );
