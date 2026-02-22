@@ -47,19 +47,19 @@ class FullAdder extends Component {
   @override
   bool evaluate() {
     inputs['inputA']!.updateFromSource();
-    inputs['inputA']!.updateFromSource();
+    inputs['inputB']!.updateFromSource();
     inputs['carryIn']!.updateFromSource();
 
-    final int a = inputs['A']!.value;
-    final int b = inputs['B']!.value;
+    final int a = inputs['inputA']!.value;
+    final int b = inputs['inputB']!.value;
     final int cin = inputs['carryIn']!.value;
 
     final int newSum = a ^ b ^ cin;
     final int newCarry = (a & b) | (a & cin) | (b & cin);
 
-    final bool sumChanged = outputs['sum']!.value != newSum;
+    final bool sumChanged = outputs['outSum']!.value != newSum;
     final bool carryChanged = outputs['carryOut']!.value != newCarry;
-    outputs['sum']!.value = newSum;
+    outputs['outSum']!.value = newSum;
     outputs['carryOut']!.value = newCarry;
     return sumChanged || carryChanged;
   }
