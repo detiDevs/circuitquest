@@ -41,9 +41,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noLevelsAvailable => 'Keine Level verfügbar';
 
   @override
-  String get recommendedLevel => 'Empfohlenes level';
-
-  @override
   String get availableComponents => 'Verfügbare Komponenten';
 
   @override
@@ -356,4 +353,8 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get description => 'Beschreibung';
+
+  @override
+  String get cantChangeBitwidth =>
+      'Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt';
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../l10n/app_localizations.dart';
-import '../../core/components/input_source.dart';
-import '../../state/sandbox_state.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../core/components/input_source.dart';
+import '../../../../state/sandbox_state.dart';
+import '../../utils/snackbar_utils.dart';
 
 /// A stateful widget to manage input source controls properly.
 class InputSourceWidget extends ConsumerStatefulWidget {
@@ -51,6 +52,12 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
     super.dispose();
   }
 
+  /// Triggers event-driven evaluation when input value changes
+  void _triggerEvaluation() {
+    final sandboxState = ref.read(sandboxProvider);
+    sandboxState.evaluateFromComponent(widget.inputComponent);
+  }
+
   @override
   Widget build(BuildContext context) {
     final outputPin = widget.inputComponent.outputs['outValue']!;
@@ -69,12 +76,36 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
           padding: const EdgeInsets.all(4.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if(widget.placedComponent.label != null) Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                  vertical: 2,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Text(
+                  widget.placedComponent.label!,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
           // Bitwidth toggle button
           Tooltip(
             message: AppLocalizations.of(context)!.toggleBitwidth,
             child: GestureDetector(
               onTap: () {
+                print("OutputWires: ${outputPin.connections}");
+                if (outputPin.connections.isNotEmpty){
+                  SnackBarUtils.showError(context, AppLocalizations.of(context)!.cantChangeBitwidth);
+                  return;
+                }
                 int newBitWidth;
                 if (bitWidth == 1) {
                   newBitWidth = 8;
@@ -86,6 +117,9 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                 // Create new output pin with new bitwidth
                 widget.inputComponent.outputs['outValue'] =
                   widget.inputComponent.outputs['outValue']!.copyWith(newBitWidth);
+
+                // Trigger evaluation after bitwidth change
+                _triggerEvaluation();
 
                 setState(() {
                   _controller.text = currentValue.toString();
@@ -115,6 +149,10 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
             GestureDetector(
               onTap: () {
                 widget.inputComponent.setValue(currentValue == 0 ? 1 : 0);
+                
+                // Trigger evaluation after value change
+                _triggerEvaluation();
+                
                 setState(() {
                   _controller.text = (currentValue == 0 ? 1 : 0).toString();
                 });
@@ -155,6 +193,9 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                   final intValue = int.tryParse(value) ?? 0;
                   final constrainedValue = intValue.clamp(0, maxValue);
                   widget.inputComponent.setValue(constrainedValue);
+
+                  // Trigger evaluation after value change
+                  _triggerEvaluation();
 
                   // Update display only if the value was out of range
                   if (constrainedValue != intValue) {

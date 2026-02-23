@@ -3,11 +3,25 @@ import 'package:circuitquest/core/logic/wire.dart';
 
 abstract class Pin {
   final Component component;
-  final int bitWidth;
+  int _bitWidth;
 
   int _value = 0;
   
-  Pin(this.component, {this.bitWidth = 1});
+  Pin(this.component, {int bitWidth = 1}) : _bitWidth = bitWidth;
+
+  /// Gets the bit width of this pin
+  int get bitWidth => _bitWidth;
+
+  /// Sets the bit width of this pin and updates the value mask
+  set bitWidth(int newBitWidth) {
+    if (newBitWidth <= 0) {
+      throw ArgumentError('bitWidth must be positive');
+    }
+    _bitWidth = newBitWidth;
+    // Re-apply mask to current value to ensure it fits the new bit width
+    final mask = (1 << _bitWidth) - 1;
+    _value = _value & mask;
+  }
 
   int get value => _value;
 
@@ -31,6 +45,8 @@ class InputPin extends Pin {
   void updateFromSource() {
     if (source != null) {
       value = source!.value;
+    }else{
+      value = 0;
     }
   }
 }

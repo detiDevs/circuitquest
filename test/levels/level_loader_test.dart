@@ -47,13 +47,6 @@ void main() {
       expect(meta.allLevelsUnlocked, isA<bool>());
     });
 
-    test('Get recommended levels', () async {
-      final recommendedIds = await levelLoader.getRecommendedLevels();
-      
-      expect(recommendedIds, isNotEmpty);
-      expect(recommendedIds, contains(0));
-    });
-
     test('Get levels by category', () async {
       final categorized = await levelLoader.getLevelsByCategory();
       

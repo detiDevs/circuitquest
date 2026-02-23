@@ -11,14 +11,14 @@ class Multiplexer extends Component {
   final int inputCount;
 
   /// Bit width of each data input and the output.
-  final int dataBitWidth;
+  int dataBitWidth;
 
   /// Bit width of the select input, derived from [inputCount].
   late final int selectBitWidth;
 
   Multiplexer({
     required this.inputCount,
-    this.dataBitWidth = 0 // accept any bitwidth by default
+    this.dataBitWidth = 0, // accept any bitwidth by default
   }) {
     if (inputCount < 2) {
       throw ArgumentError('Multiplexer requires at least 2 inputs');
@@ -29,7 +29,7 @@ class Multiplexer extends Component {
 
     // Create data inputs
     for (int i = 0; i < inputCount; i++) {
-      inputs['input${i+1}'] = InputPin(this, bitWidth: dataBitWidth);
+      inputs['input${i + 1}'] = InputPin(this, bitWidth: dataBitWidth);
     }
 
     // Create select input
@@ -37,6 +37,7 @@ class Multiplexer extends Component {
 
     // Create output
     outputs['outValue'] = OutputPin(this, bitWidth: dataBitWidth);
+    outputs['outValue']!.value = 0;
   }
 
   /// Evaluates the multiplexer and routes the selected input to the output.
@@ -44,7 +45,7 @@ class Multiplexer extends Component {
   bool evaluate() {
     // Refresh all input values from their sources
     for (int i = 0; i < inputCount; i++) {
-      inputs['input${i+1}']!.updateFromSource();
+      inputs['input${i + 1}']!.updateFromSource();
     }
     inputs['selection']!.updateFromSource();
 
@@ -53,10 +54,19 @@ class Multiplexer extends Component {
     final int selectedIndex = inputCount == 0 ? 0 : rawSel % inputCount;
 
     // Forward selected data
-    final int newValue = inputs['input${selectedIndex+1}']!.value;
+    final int newValue = inputs['input${selectedIndex + 1}']!.value;
     final OutputPin outPin = outputs['outValue']!;
     final bool changed = outPin.value != newValue;
     outPin.value = newValue;
     return changed;
+  }
+
+  bool setBitwidth(int bitwidth){
+    dataBitWidth = bitwidth;
+    for (int i = 0; i < inputCount; i++) {
+      inputs['input${i + 1}']!.bitWidth = bitwidth;
+    }
+    outputs['outValue']!.bitWidth = bitwidth;
+    return true;
   }
 }

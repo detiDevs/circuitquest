@@ -18,7 +18,9 @@ class Decoder extends Component {
     inputs['input'] = InputPin(this, bitWidth: selectBitWidth);
     for (int i = 0; i < outputCount; i++) {
       outputs['out$i'] = OutputPin(this, bitWidth: 1);
+      outputs['out$i']!.value = 0;
     }
+    outputs['out0']!.value = 1;
   }
 
   /// Drives exactly one output high corresponding to the input value.

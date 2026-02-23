@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'package:circuitquest/core/components/combinational/multiplexer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -12,6 +13,8 @@ import '../core/components/component_registry.dart';
 import '../core/components/custom_component.dart';
 import '../core/components/custom_component_data.dart';
 import '../state/custom_component_library.dart';
+import '../core/commands/command_controller.dart';
+import '../core/commands/add_connection_command.dart';
 
 /// Riverpod provider for sandbox state.
 final sandboxProvider = ChangeNotifierProvider<SandboxState>(
@@ -160,6 +163,24 @@ class SandboxState extends ChangeNotifier {
   ({String componentId, String pinName})? get wireDrawingStart =>
       _wireDrawingStart;
 
+  // Undo/Redo getters
+  bool get canUndo => CommandController.canUndo;
+  bool get canRedo => CommandController.canRedo;
+
+  /// Undo the last command
+  void undo() {
+    if (CommandController.undo()) {
+      notifyListeners();
+    }
+  }
+
+  /// Redo the last undone command  
+  void redo() {
+    if (CommandController.redo()) {
+      notifyListeners();
+    }
+  }
+
   /// Sets the currently selected component type for placement.
   void selectComponentType(String? type) {
     _selectedComponentType = type;
@@ -195,12 +216,27 @@ class SandboxState extends ChangeNotifier {
   ///
   /// Also removes all connections involving this component.
   void removeComponent(String componentId) {
+    for (final conn in connections){
+      if (conn.sourceComponentId == componentId ||
+          conn.targetComponentId == componentId){
+            removeConnection(conn);
+          }
+    }
     _placedComponents.removeWhere((c) => c.id == componentId);
-    _connections.removeWhere(
-      (conn) =>
-          conn.sourceComponentId == componentId ||
-          conn.targetComponentId == componentId,
-    );
+    notifyListeners();
+  }
+
+  /// Internal method to restore a component with its original ID.
+  /// Used by undo/redo operations to maintain ID consistency.
+  /// DO NOT USE DIRECTLY - Use placeComponent instead for regular placement.
+  void restoreComponentWithId(PlacedComponent component) {
+    // Update the next component ID counter if needed
+    final componentIdNum = int.tryParse(component.id);
+    if (componentIdNum != null && componentIdNum >= _nextComponentId) {
+      _nextComponentId = componentIdNum + 1;
+    }
+    
+    _placedComponents.add(component);
     notifyListeners();
   }
 
@@ -230,34 +266,46 @@ class SandboxState extends ChangeNotifier {
   /// Completes a wire connection to the specified target component pin.
   ///
   /// Returns true if the connection was created successfully.
-  bool completeWireDrawing(String targetComponentId, String targetPinName) {
+  bool completeWireDrawing(
+    String targetComponentId, 
+    String targetPinName, {
+    void Function(String message)? onError,
+  }) {
     if (_wireDrawingStart == null) return false;
 
     final sourceComponentId = _wireDrawingStart!.componentId;
     final sourcePinName = _wireDrawingStart!.pinName;
+    
+    // Store connection count before command execution
+    final connectionCountBefore = _connections.length;
 
-    bool result = false;
-    if (addConnection(
+    // Use command pattern for undo/redo support
+    final command = AddConnectionCommand(
+      this,
       sourceComponentId,
       sourcePinName,
       targetComponentId,
       targetPinName,
-    )) {
-      result = true;
-    }
+      onError: onError,
+    );
+    
+    // Execute the command
+    CommandController.executeCommand(command);
+    
     _wireDrawingStart = null;
     notifyListeners();
-    return result;
+    
+    // Return whether a new connection was added
+    return _connections.length > connectionCountBefore;
   }
 
-  bool addConnection(
+  WireConnection? addConnection(
     String sourceComponentId,
     String sourcePinName,
     String targetComponentId,
-    String targetPinName,
-  ) {
-    bool result = false;
-
+    String targetPinName, {
+    void Function(String message)? onError,
+  }) {
     // Find the components
     final sourceComponent = _placedComponents
         .firstWhere((c) => c.id == sourceComponentId)
@@ -265,26 +313,45 @@ class SandboxState extends ChangeNotifier {
     final targetComponent = _placedComponents
         .firstWhere((c) => c.id == targetComponentId)
         .component;
-
     // Create the actual wire connection in the component graph
     final sourcePin = sourceComponent.outputs[sourcePinName];
     final targetPin = targetComponent.inputs[targetPinName];
 
     if (sourcePin != null && targetPin != null) {
+      if (sourcePin.bitWidth == 0){
+      onError?.call("The source Component does not have a specified Bitwidth yet. Please connect something to the source of your Source component");//TODO: Translate
+      return null;
+    }
+
+    if ((targetComponent is Multiplexer)&&targetPin.bitWidth == 0){
+      targetComponent.setBitwidth(sourcePin.bitWidth);
+    }
+      if ((targetComponent is! OutputProbe)&&sourcePin.bitWidth != targetPin.bitWidth){
+      onError?.call("Bitwidths are not the same"); //TODO translate
+      return null;
+    }
+      if (targetPin.hasSource){
+        onError?.call("This input pin already has a connection!"); //TODO Translate
+        return null;
+      }
       // Wire constructor automatically connects the pins
       Wire(sourcePin, targetPin);
 
       // Track the connection
-      _connections.add(
-        WireConnection(
-          sourceComponentId: sourceComponentId,
-          sourcePin: sourcePinName,
-          targetComponentId: targetComponentId,
-          targetPin: targetPinName,
-        ),
+      final connection = WireConnection(
+        sourceComponentId: sourceComponentId,
+        sourcePin: sourcePinName,
+        targetComponentId: targetComponentId,
+        targetPin: targetPinName,
       );
-      result = true;
+      _connections.add(connection);
       print("Connection was added.");
+      
+      // Trigger event-driven evaluation starting from the target component
+      _evaluateCircuitFromComponent(targetComponent);
+      
+      notifyListeners();
+      return connection;
     } else {
       print("Connection was not added.");
       if(sourcePin == null) {
@@ -293,9 +360,9 @@ class SandboxState extends ChangeNotifier {
       if(targetPin == null) {
         print("Target pin was null");
       }
+      notifyListeners();
+      return null;
     }
-    notifyListeners();
-    return result;
   }
 
   /// Cancels the current wire drawing operation.
@@ -324,6 +391,8 @@ class SandboxState extends ChangeNotifier {
         targetPin.source = null;
       }
     }
+
+    _evaluateCircuitFromComponent(targetComponent);
 
     _connections.remove(connection);
     notifyListeners();
@@ -361,10 +430,46 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Evaluates the circuit starting from a specific component.
+  /// This is used when a new connection is added to trigger evaluation
+  /// starting from the target component of the connection.
+  void _evaluateCircuitFromComponent(Component targetComponent) {
+    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
+    if (allComponents.isEmpty) return;
+
+    // Create or update simulator with current components
+    _simulator = Simulator(
+      components: allComponents,
+      inputComponents: {targetComponent}, // Only the target component as input
+    );
+
+    // Run event-driven evaluation starting from the target component
+    _simulator!.evaluateEventDriven(startingComponents: {targetComponent});
+    
+    // Note: We don't call notifyListeners() here since addConnection already does it
+  }
+
   /// Sets the tick speed for simulation (0 = instant, >0 = ticks per second)
   void setTickSpeed(double ticksPerSecond) {
     _tickSpeed = ticksPerSecond;
     notifyListeners();
+  }
+
+  /// Triggers event-driven evaluation starting from a specific component.
+  /// This is used when an input source value changes to propagate the change.
+  void evaluateFromComponent(Component component) {
+    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
+    if (allComponents.isEmpty) return;
+
+    // Create or update simulator with current components
+    _simulator = Simulator(
+      components: allComponents,
+      inputComponents: {component}, // Use the changed component as starting point
+    );
+
+    // Run event-driven evaluation starting from the changed component
+    _simulator!.evaluateEventDriven(startingComponents: {component});
+    notifyListeners(); // Notify UI to update with new component states
   }
 
   /// Starts simulation with tick-based evaluation

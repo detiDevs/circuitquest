@@ -12,6 +12,8 @@ class DFlipFlop extends Component {
     inputs['clock'] = InputPin(this, bitWidth: 1);
     outputs['Q'] = OutputPin(this, bitWidth: bitWidth);
     outputs['!Q'] = OutputPin(this, bitWidth: bitWidth);
+    outputs['Q']!.value = 0;
+    outputs['!Q']!.value = 1;
   }
 
   @override

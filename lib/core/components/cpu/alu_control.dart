@@ -23,6 +23,9 @@ class ALUControl extends Component {
     outputs['ainvert'] = _ainvert;
     outputs['binvert'] = _binvert;
     outputs['operation'] = _operation;
+    outputs['ainvert']!.value = 0;
+    outputs['binvert']!.value = 0;
+    outputs['operation']!.value = 0;
   }
 
   @override
@@ -34,36 +37,45 @@ class ALUControl extends Component {
     int binvert = 0;
     int operation = 0;
 
-    if (aluOp == 0) { // lw or sw
+    if (aluOp == 0) {
+      // lw or sw
       ainvert = 0;
       binvert = 0;
       operation = 0; // ADD
-    } else if (aluOp == 1) { // beq
+    } else if (aluOp == 1) {
+      // beq
       ainvert = 0;
       binvert = 1;
       operation = 2; // SUBTRACT
-    } else if (aluOp == 2) { // R-type
-      if (funct == 0) { // ADD
+    } else if (aluOp == 2) {
+      // R-type
+      if (funct == 0) {
+        // ADD
         ainvert = 0;
         binvert = 0;
         operation = 2;
-      } else if (funct == 2) { // SUBTRACT
+      } else if (funct == 2) {
+        // SUBTRACT
         ainvert = 0;
         binvert = 1;
         operation = 2;
-      } else if (funct == 4) { // AND
+      } else if (funct == 4) {
+        // AND
         ainvert = 0;
         binvert = 0;
         operation = 0;
-      } else if (funct == 5) { // OR
+      } else if (funct == 5) {
+        // OR
         ainvert = 0;
         binvert = 0;
         operation = 1;
-      } else if (funct == 10) { // SLT
+      } else if (funct == 10) {
+        // SLT
         ainvert = 0;
         binvert = 1;
         operation = 3;
-      } else { // Default to ADD
+      } else {
+        // Default to ADD
         ainvert = 0;
         binvert = 0;
         operation = 0;

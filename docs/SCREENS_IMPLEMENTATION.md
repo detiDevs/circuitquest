@@ -24,7 +24,6 @@ Browse and select levels with:
 - Categories organized by level blocks
 - Expandable category sections
 - Grid layout for level cards
-- Recommended level badges (⭐)
 - Async loading with error handling
 - Retry mechanism for failed loads
 
@@ -137,7 +136,6 @@ _DifficultyBadge(difficulty: 'Easy')
 ### Level Card
 ```dart
 _LevelCard(levelItem: item, levelLoader: loader)
-// Shows: Level title, number, recommended badge if applicable
 ```
 
 ### Mode Button

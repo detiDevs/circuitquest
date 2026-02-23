@@ -134,8 +134,7 @@ flutter run
 
 ### LevelSelectionScreen
 ✅ 22 levels from JSON  
-✅ Category organization  
-✅ Recommended badges  
+✅ Category organization   
 ✅ Error handling  
 
 ### LevelScreen

@@ -39,7 +39,6 @@ flutter run
 #### 2. LevelSelectionScreen
 - Browse 22 circuit challenge levels
 - Organized by category (Basic Gates, Further Gates, etc.)
-- Recommended level badges
 - Async loading with error recovery
 
 #### 3. LevelScreen

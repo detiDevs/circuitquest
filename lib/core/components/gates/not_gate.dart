@@ -4,20 +4,21 @@ import 'package:circuitquest/core/logic/pin.dart';
 class NotGate extends Component {
   NotGate() {
     inputs["input"] = InputPin(this);
-    outputs["output"] = OutputPin(this);
+    outputs["outValue"] = OutputPin(this);
+    outputs['outValue']!.value = 1;
   }
 
   @override
   bool evaluate() {
     inputs["input"]!.updateFromSource();
-    
+
     final input = inputs["input"]!.value;
-    final mask = (1 << outputs["output"]!.bitWidth) - 1;
+    final mask = (1 << outputs["outValue"]!.bitWidth) - 1;
 
     final newValue = ~input & mask;
-    final changed = outputs["output"]!.value != newValue;
+    final changed = outputs["outValue"]!.value != newValue;
 
-    outputs["output"]!.value = newValue;
+    outputs["outValue"]!.value = newValue;
     return changed;
   }
 }

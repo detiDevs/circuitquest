@@ -17,7 +17,6 @@
   "failedToLoadLevel": "Failed to load level",
   "selectALevel": "Select a level",
   "noLevelsAvailable": "No levels available",
-  "recommendedLevel": "Recommended level",
   "availableComponents": "Available components",
   "levelDescription": "Description",
   "levelObjectives": "Objectives",
@@ -358,5 +357,6 @@
     "description": "Delete button"
   },
   "save": "Save",
-  "description": "Description"
+  "description": "Description",
+  "cantChangeBitwidth": "Cannot change bitwidth if input has active wires"
 }

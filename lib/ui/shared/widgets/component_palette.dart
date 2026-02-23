@@ -1,14 +1,15 @@
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/components/base/component.dart';
-import '../../state/custom_component_library.dart';
-import '../../state/sandbox_state.dart';
-import '../../core/components/custom_component.dart';
+import '../../../core/components/base/component.dart';
+import '../../../state/custom_component_library.dart';
+import '../../../state/sandbox_state.dart';
+import '../../../core/components/custom_component.dart';
 
 /// A draggable component type in the palette.
 class ComponentType {
@@ -28,6 +29,7 @@ class ComponentType {
 }
 
 /// Available component types in the palette.
+//TODO: Create dynamically by mapping component registry
 final List<ComponentType> availableComponents = [
   ComponentType(
     name: "InputSource",
@@ -111,99 +113,123 @@ final List<ComponentType> availableComponents = [
     createComponent: () => createComponentByName('DFlipFlop')!,
   ),
   ComponentType(
+    name: 'Decoder',
+    displayName: 'Decoder',
+    iconPath: "assets/gates/DecoderThreeBit.svg",
+    createComponent: () => createComponentByName('Decoder')!,
+  ),
+  ComponentType(
     name: "Splitter8to1",
     displayName: "Splitter 8 to 1",
-    iconPath: "assets/gates/Splitter8to1",
+    iconPath: "assets/gates/Splitter8to1.svg",
     createComponent: () => createComponentByName('Splitter8to1')!,
   ),
   ComponentType(
     name: "Splitter32to8",
     displayName: "Splitter 32 to 8",
-    iconPath: "assets/gates/Splitter32to8",
+    iconPath: "assets/gates/Splitter32to8.svg",
     createComponent: () => createComponentByName('Splitter32to8')!,
+  ),
+  ComponentType(
+    name: "Collector1to2",
+    displayName: "Collector 1 to 2",
+    iconPath: "assets/gates/Collector1to2.svg",
+    createComponent: () => createComponentByName('Collector1to2')!,
   ),
   ComponentType(
     name: "Collector1to5",
     displayName: "Collector 1 to 5",
-    iconPath: "assets/gates/Collector1to5",
+    iconPath: "assets/gates/Collector1to5.svg",
     createComponent: () => createComponentByName('Collector1to5')!,
   ),
   ComponentType(
     name: "Collector1to6",
     displayName: "Collector 1 to 6",
-    iconPath: "assets/gates/Collector1to6",
+    iconPath: "assets/gates/Collector1to6.svg",
     createComponent: () => createComponentByName('Collector1to6')!,
   ),
   ComponentType(
     name: "Collector8to16",
     displayName: "Collector8to16",
-    iconPath: "assets/gates/Collector8to16",
+    iconPath: "assets/gates/Collector8to16.svg",
     createComponent: () => createComponentByName('Collector8to16')!,
   ),
   ComponentType(
     name: "Multiplexer2Inp",
     displayName: "Multiplexer2Inp",
-    iconPath: "assets/gates/Multiplexer2Inp",
+    iconPath: "assets/gates/Multiplexer2Inp.svg",
     createComponent: () => createComponentByName('Multiplexer2Inp')!,
+  ),
+  ComponentType(
+    name: "Multiplexer4Inp",
+    displayName: "Multiplexer4Inp",
+    iconPath: "assets/gates/Multiplexer4Inp.svg",
+    createComponent: () => createComponentByName('Multiplexer4Inp')!,
+  ),
+  ComponentType(
+    name: "Multiplexer8Inp",
+    displayName: "Multiplexer8Inp",
+    iconPath: "assets/gates/Multiplexer8Inp.svg",
+    createComponent: () => createComponentByName('Multiplexer8Inp')!,
   ),
   ComponentType(
     name: "Adder32bit",
     displayName: "Adder32bit",
-    iconPath: "",
+    iconPath: "assets/gates/Adder32bit.svg",
     createComponent: () => createComponentByName('Adder32bit')!,
   ),
   ComponentType(
     name: "ProgramCounter",
     displayName: "ProgramCounter",
-    iconPath: "",
+    iconPath: "assets/gates/ProgramCounter.svg",
     createComponent: () => createComponentByName('ProgramCounter')!,
   ),
   ComponentType(
     name: "InstructionMemory",
     displayName: "InstructionMemory",
-    iconPath: "",
+    iconPath: "assets/gates/InstructionMemory.svg",
     createComponent: () => createComponentByName('InstructionMemory')!,
   ),
   ComponentType(
     name: "RegisterBlock",
     displayName: "RegisterBlock",
-    iconPath: "",
+    iconPath: "assets/gates/RegisterBlock.svg",
     createComponent: () => createComponentByName('RegisterBlock')!,
   ),
   ComponentType(
     name: "ALUAdvanced",
     displayName: "ALUAdvanced",
-    iconPath: "",
+    iconPath: "assets/gates/ALUAdvanced.svg",
     createComponent: () => createComponentByName('ALUAdvanced')!,
   ),
   ComponentType(
     name: "SignExtend",
     displayName: "SignExtend",
-    iconPath: "",
+    iconPath: "assets/gates/SignExtend.svg",
     createComponent: () => createComponentByName('SignExtend')!,
   ),
   ComponentType(
     name: "ControlUnit",
     displayName: "ControlUnit",
-    iconPath: "",
+    iconPath: "assets/gates/ControlUnit.svg",
     createComponent: () => createComponentByName('ControlUnit')!,
   ),
   ComponentType(
     name: "ALUControl",
     displayName: "ALUControl",
-    iconPath: "",
+    iconPath: "assets/gates/ALUControl.svg",
     createComponent: () => createComponentByName('ALUControl')!,
   ),
   ComponentType(
     name: "DataMemory",
     displayName: "DataMemory",
-    iconPath: "",
+    iconPath: "assets/gates/DataMemory.svg",
     createComponent: () => createComponentByName('DataMemory')!,
   ),
   ComponentType(
     name: "ShiftLeft2",
     displayName: "ShiftLeft2",
-    iconPath: "",
+    iconPath: "assets/gates/ShiftLeft2.svg",
     createComponent: () => createComponentByName('ShiftLeft2')!,
   ),
 ];
@@ -228,9 +254,9 @@ Widget buildResponsiveComponentList(
             padding: const EdgeInsets.all(12.0),
             child: Text(
               headerText ?? 'Components',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
         if (showHeader) const Divider(height: 1),
@@ -261,9 +287,9 @@ Widget buildResponsiveComponentList(
             padding: const EdgeInsets.all(12.0),
             child: Text(
               headerText ?? 'Components',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
         if (showHeader) const Divider(height: 1),
@@ -301,9 +327,9 @@ class ComponentPalette extends ConsumerWidget {
           padding: const EdgeInsets.all(12.0),
           child: Text(
             AppLocalizations.of(context)!.componentPaletteTitle,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         const Divider(height: 1),
@@ -317,7 +343,10 @@ class ComponentPalette extends ConsumerWidget {
     );
   }
 
-  Widget _buildVerticalList(BuildContext context, List<CustomComponentEntry> customEntries) {
+  Widget _buildVerticalList(
+    BuildContext context,
+    List<CustomComponentEntry> customEntries,
+  ) {
     return ListView(
       children: [
         ...availableComponents.map(
@@ -329,9 +358,9 @@ class ComponentPalette extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
               'Custom components',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
           ),
           const SizedBox(height: 8),
@@ -351,7 +380,10 @@ class ComponentPalette extends ConsumerWidget {
     );
   }
 
-  Widget _buildHorizontalList(BuildContext context, List<CustomComponentEntry> customEntries) {
+  Widget _buildHorizontalList(
+    BuildContext context,
+    List<CustomComponentEntry> customEntries,
+  ) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -443,12 +475,11 @@ class _PaletteItem extends ConsumerWidget {
         child: InkWell(
           onTap: () {
             ref.read(sandboxProvider).selectComponentType(componentType.name);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.componentSelected(
-                    componentType.displayName)),
-                duration: const Duration(seconds: 1),
-              ),
+            SnackBarUtils.showInfo(
+              context,
+              AppLocalizations.of(
+                context,
+              )!.componentSelected(componentType.displayName),
             );
           },
           child: Padding(
@@ -486,12 +517,11 @@ class _PaletteItem extends ConsumerWidget {
         onTap: () {
           // Select this component type
           ref.read(sandboxProvider).selectComponentType(componentType.name);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.componentSelected(
-                  componentType.displayName)),
-              duration: const Duration(seconds: 1),
-            ),
+          SnackBarUtils.showInfo(
+            context,
+            AppLocalizations.of(
+              context,
+            )!.componentSelected(componentType.displayName),
           );
         },
       ),
@@ -514,11 +544,7 @@ class _ComponentIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (iconPath.isEmpty) {
-      return Icon(
-        Icons.memory,
-        size: size * 0.6,
-        color: Colors.grey,
-      );
+      return Icon(Icons.memory, size: size * 0.6, color: Colors.grey);
     }
 
     return SizedBox(
@@ -528,11 +554,8 @@ class _ComponentIcon extends StatelessWidget {
           ? SvgPicture.asset(
               iconPath,
               fit: BoxFit.contain,
-              placeholderBuilder: (context) => Icon(
-                Icons.memory,
-                size: size * 0.6,
-                color: Colors.grey,
-              ),
+              placeholderBuilder: (context) =>
+                  Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
             )
           : _buildFileIcon(),
     );
@@ -543,21 +566,15 @@ class _ComponentIcon extends StatelessWidget {
       return SvgPicture.file(
         File(iconPath),
         fit: BoxFit.contain,
-        placeholderBuilder: (context) => Icon(
-          Icons.memory,
-          size: size * 0.6,
-          color: Colors.grey,
-        ),
+        placeholderBuilder: (context) =>
+            Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
       );
     }
     return Image.file(
       File(iconPath),
       fit: BoxFit.contain,
-      errorBuilder: (context, error, stackTrace) => Icon(
-        Icons.memory,
-        size: size * 0.6,
-        color: Colors.grey,
-      ),
+      errorBuilder: (context, error, stackTrace) =>
+          Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
     );
   }
 }

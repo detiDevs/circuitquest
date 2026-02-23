@@ -41,9 +41,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noLevelsAvailable => 'No levels available';
 
   @override
-  String get recommendedLevel => 'Recommended level';
-
-  @override
   String get availableComponents => 'Available components';
 
   @override
@@ -351,4 +348,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get description => 'Description';
+
+  @override
+  String get cantChangeBitwidth =>
+      'Cannot change bitwidth if input has active wires';
 }

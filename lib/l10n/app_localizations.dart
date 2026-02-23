@@ -158,12 +158,6 @@ abstract class AppLocalizations {
   /// **'No levels available'**
   String get noLevelsAvailable;
 
-  /// No description provided for @recommendedLevel.
-  ///
-  /// In en, this message translates to:
-  /// **'Recommended level'**
-  String get recommendedLevel;
-
   /// No description provided for @availableComponents.
   ///
   /// In en, this message translates to:
@@ -721,6 +715,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Description'**
   String get description;
+
+  /// No description provided for @cantChangeBitwidth.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot change bitwidth if input has active wires'**
+  String get cantChangeBitwidth;
 }
 
 class _AppLocalizationsDelegate

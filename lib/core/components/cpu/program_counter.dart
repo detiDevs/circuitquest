@@ -11,22 +11,23 @@ class ProgramCounter extends Component {
   ProgramCounter() {
     _nextPcInput = InputPin(this, bitWidth: 32);
     _pcOutput = OutputPin(this, bitWidth: 32);
-    
+
     inputs['input'] = _nextPcInput;
     outputs['outValue'] = _pcOutput;
+    outputs['outValue']!.value = 0;
   }
 
   @override
   bool evaluate() {
     final nextValue = _nextPcInput.value;
     _pcOutput.value = nextValue;
-    
+
     // On first evaluation, always propagate to trigger downstream components
     if (_firstEval) {
       _firstEval = false;
       return true;
     }
-    
+
     if (_currentPC != nextValue) {
       _currentPC = nextValue;
       return true;

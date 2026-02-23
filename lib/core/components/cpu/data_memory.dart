@@ -17,12 +17,13 @@ class DataMemory extends Component {
     _memWrite = InputPin(this, bitWidth: 1);
     _memRead = InputPin(this, bitWidth: 1);
     _readData = OutputPin(this, bitWidth: 32);
-    
+
     inputs['address'] = _address;
     inputs['writeData'] = _writeData;
     inputs['memWrite'] = _memWrite;
     inputs['memRead'] = _memRead;
     outputs['readData'] = _readData;
+    outputs['readData']!.value = 0;
   }
 
   /// Load a list of data into the data memory.

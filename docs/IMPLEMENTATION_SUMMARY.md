@@ -58,9 +58,6 @@ blocks.forEach((category, items) {
   print('$category: ${items.length} levels');
 });
 
-// Get recommended levels
-final recommended = await loader.getRecommendedLevels();
-
 // Check player progress
 final meta = await loader.loadLevelMeta();
 print('Completed: ${meta.completedLevels.length} levels');
@@ -87,8 +84,7 @@ test/levels/
 ✅ Load multiple levels at once  
 ✅ Load all available levels  
 ✅ Organize levels by category  
-✅ Track player progress  
-✅ Query recommended levels  
+✅ Track player progress   
 ✅ Intelligent caching  
 ✅ Error handling  
 ✅ Validation utilities  

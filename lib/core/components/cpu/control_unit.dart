@@ -2,13 +2,13 @@ import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 
 /// Control Unit for a simplified MIPS processor.
-/// 
+///
 /// Supports R-type, lw, sw, and beq instructions.
 /// Takes a 6-bit opcode as input and generates control signals.
-/// 
+///
 /// Inputs:
 ///   - input: 6-bit opcode from instruction
-/// 
+///
 /// Outputs:
 ///   - RegDst: 1-bit - Register destination (0=rt, 1=rd)
 ///   - Branch: 1-bit - Branch signal
@@ -21,7 +21,7 @@ import 'package:circuitquest/core/logic/pin.dart';
 class ControlUnit extends Component {
   ControlUnit() {
     inputs['input'] = InputPin(this, bitWidth: 6);
-    
+
     outputs['RegDst'] = OutputPin(this, bitWidth: 1);
     outputs['Branch'] = OutputPin(this, bitWidth: 1);
     outputs['MemRead'] = OutputPin(this, bitWidth: 1);
@@ -30,6 +30,15 @@ class ControlUnit extends Component {
     outputs['MemWrite'] = OutputPin(this, bitWidth: 1);
     outputs['AluSrc'] = OutputPin(this, bitWidth: 1);
     outputs['RegWrite'] = OutputPin(this, bitWidth: 1);
+
+    outputs['RegDst']!.value = 0;
+    outputs['Branch']!.value = 0;
+    outputs['MemRead']!.value = 0;
+    outputs['MemtoReg']!.value = 0;
+    outputs['AluOp']!.value = 0;
+    outputs['MemWrite']!.value = 0;
+    outputs['AluSrc']!.value = 0;
+    outputs['RegWrite']!.value = 0;
   }
 
   @override

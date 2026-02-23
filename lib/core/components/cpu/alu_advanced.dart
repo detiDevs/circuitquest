@@ -19,7 +19,7 @@ class ALUAdvanced extends Component {
     _bnegate = InputPin(this, bitWidth: 1);
     _outValue = OutputPin(this, bitWidth: 32);
     _zero = OutputPin(this, bitWidth: 1);
-    
+
     inputs['input1'] = _input1;
     inputs['input2'] = _input2;
     inputs['OP'] = _op;
@@ -27,6 +27,8 @@ class ALUAdvanced extends Component {
     inputs['Bnegate'] = _bnegate;
     outputs['outValue'] = _outValue;
     outputs['zero'] = _zero;
+    outputs['outValue']!.value = 0;
+    outputs['zero']!.value = 0;
   }
 
   @override
@@ -36,7 +38,7 @@ class ALUAdvanced extends Component {
     final op = _op.value;
     final ainvert = _ainvert.value;
     final bnegate = _bnegate.value;
-    
+
     // Apply inversion if needed
     if (ainvert == 1) {
       a = (~a) & 0xFFFFFFFF; // Bitwise NOT and mask to 32 bits
@@ -44,7 +46,7 @@ class ALUAdvanced extends Component {
     if (bnegate == 1) {
       b = (~b + 1) & 0xFFFFFFFF; // Two's complement negation
     }
-    
+
     int result;
     switch (op) {
       case 0: // AND
@@ -65,9 +67,9 @@ class ALUAdvanced extends Component {
       default:
         result = 0;
     }
-    
+
     final zeroFlag = result == 0 ? 1 : 0;
-    
+
     bool changed = false;
     if (_outValue.value != result) {
       _outValue.value = result;
