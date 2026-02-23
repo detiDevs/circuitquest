@@ -1,4 +1,5 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/levels/level.dart';
 import 'package:circuitquest/ui/level_selection/level_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,22 +43,21 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
   }
 
   Widget _buildBody() {
-    final levelBlocksAsync = ref.watch(levelBlocksProvider);
+    final levelCategoriesAsync = ref.watch(levelCategoriesProvider);
 
-    return levelBlocksAsync.when(
-      data: (levelBlocks) {
-        if (levelBlocks.isEmpty) {
+    return levelCategoriesAsync.when(
+      data: (categories) {
+        if (categories.isEmpty) {
           return Center(
             child: Text(AppLocalizations.of(context)!.noLevelsAvailable),
           );
         }
 
         return ListView.builder(
-          itemCount: levelBlocks.length,
+          itemCount: categories.length,
           itemBuilder: (context, index) {
-            final category = levelBlocks.keys.elementAt(index);
-            final levels = levelBlocks[category]!;
-            return LevelCategory(category: category, levels: levels);
+            final category = categories[index];
+            return LevelCategoryWidget(category: category);
           },
         );
       },
@@ -72,7 +72,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(levelBlocksProvider);
+                ref.invalidate(levelCategoriesProvider);
               },
               child: Text(AppLocalizations.of(context)!.retry),
             ),

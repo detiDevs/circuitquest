@@ -14,6 +14,8 @@ class LevelCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+     final localeCode = Localizations.localeOf(context).languageCode;
+    final levelName = levelItem.getLocalizedName(localeCode);
     final isCompletedAsync = ref.watch(levelCompletedProvider(levelItem.id));
     final canAccessAsync = ref.watch(levelAccessProvider(levelItem.id));
 
@@ -96,7 +98,7 @@ class LevelCard extends ConsumerWidget {
                     ),
                     // Level name
                     Text(
-                      levelItem.name,
+                      levelName,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
