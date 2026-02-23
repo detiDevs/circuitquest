@@ -65,7 +65,6 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
 
   @override
   void dispose() {
-    print("Disposing widget");
     _transformationController.dispose();
     _sandboxState.reset();
     super.dispose();
