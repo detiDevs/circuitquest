@@ -60,22 +60,26 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   final TransformationController _transformationController =
       TransformationController();
 
+  /// Cached reference to sandbox state for cleanup
+  late final SandboxState _sandboxState;
+
   @override
   void dispose() {
     _transformationController.dispose();
+    _sandboxState.reset();
     super.dispose();
   }
 
   @override
   void deactivate() {
-    final state = ref.watch(sandboxProvider);
-    state.reset();
     super.deactivate();
   }
 
   @override
   void initState() {
     super.initState();
+    // Store sandbox state reference for cleanup in dispose
+    _sandboxState = ref.read(sandboxProvider);
     // Try to initialize from level after first frame to ensure provider readiness
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeFromLevelIfNeeded();
