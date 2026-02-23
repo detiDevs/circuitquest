@@ -21,7 +21,6 @@ import 'package:circuitquest/core/components/gates/or_gate.dart';
 import 'package:circuitquest/core/components/gates/xor_gate.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
-import 'package:circuitquest/core/components/sequential/clock.dart';
 import 'package:circuitquest/core/components/sequential/d_flip_flop.dart';
 import 'package:circuitquest/core/components/sequential/d_latch.dart';
 
@@ -36,7 +35,6 @@ final Map<String, Component Function()> componentFactoryByName = {
   'Xor': () => XorGate(),
   'HalfAdder': () => HalfAdder(),
   'FullAdder': () => FullAdder(),
-  'Clock': () => Clock(),
   'DLatch': () => DLatch(),
   'DFlipFlop': () => DFlipFlop(),
   'Decoder': ()=> Decoder(selectBitWidth: 3),
