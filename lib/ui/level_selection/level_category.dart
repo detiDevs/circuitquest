@@ -1,19 +1,25 @@
 import 'package:circuitquest/levels/levels.dart';
 import 'package:flutter/material.dart';
 import './level_card.dart';
+import '../../state/level_state.dart';
 
 /// Widget displaying a category of levels.
-class LevelCategory extends StatelessWidget {
-  final String category;
-  final List<LevelBlockItem> levels;
+class LevelCategoryWidget extends StatelessWidget {
+  final LevelCategory category;
 
-  const LevelCategory({super.key, required this.category, required this.levels});
+  const LevelCategoryWidget({
+    required this.category,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final localeCode = Localizations.localeOf(context).languageCode;
+    final categoryName = category.getLocalizedName(localeCode);
+    final levels = category.levels;
+
     return ExpansionTile(
       title: Text(
-        category,
+        categoryName,
         style: Theme.of(
           context,
         ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

@@ -1,104 +1,162 @@
 {
-  "Basic Gates": [
+  "categories": [
     {
-      "id": 0,
-      "name": "AND Gate"
+      "name": "Basic Gates",
+      "name_de": "Grundlegende Gatter",
+      "levels": [
+        {
+          "id": 0,
+          "name": "AND Gate",
+          "name_de": "UND-Gatter",
+          "recommended": true
+        },
+        {
+          "id": 1,
+          "name": "OR Gate",
+          "name_de": "ODER-Gatter"
+        },
+        {
+          "id": 2,
+          "name": "NOT Gate",
+          "name_de": "NICHT-Gatter"
+        },
+        {
+          "id": 3,
+          "name": "Functional Completeness 1",
+          "name_de": "Funktionale Vollständigkeit 1"
+        },
+        {
+          "id": 4,
+          "name": "Functional Completeness 2",
+          "name_de": "Funktionale Vollständigkeit 2"
+        },
+        {
+          "id": 5,
+          "name": "Functional Completeness 3",
+          "name_de": "Funktionale Vollständigkeit 3"
+        }
+      ]
     },
     {
-      "id": 1,
-      "name": "OR Gate"
+      "name": "Further Gates",
+      "name_de": "Weitere Gatter",
+      "levels": [
+        {
+          "id": 6,
+          "name": "Multiplexer",
+          "name_de": "Multiplexer",
+          "recommended": true
+        },
+        {
+          "id": 7,
+          "name": "8-bit Collector and bigger MUX",
+          "name_de": "8-Bit-Kollektor und größerer MUX"
+        },
+        {
+          "id": 8,
+          "name": "Decoder",
+          "name_de": "Decoder"
+        }
+      ]
     },
     {
-      "id": 2,
-      "name": "NOT Gate"
+      "name": "Persistence",
+      "name_de": "Speicherung",
+      "levels": [
+        {
+          "id": 9,
+          "name": "RS-Flipflop",
+          "name_de": "RS-Flipflop"
+        },
+        {
+          "id": 10,
+          "name": "D-Latch",
+          "name_de": "D-Latch"
+        }
+      ]
     },
     {
-      "id": 3,
-      "name": "Functional Completeness 1"
+      "name": "Adders",
+      "name_de": "Addierer",
+      "levels": [
+        {
+          "id": 11,
+          "name": "Half Adder",
+          "name_de": "Halbaddierer"
+        },
+        {
+          "id": 12,
+          "name": "Full Adder",
+          "name_de": "Volladdierer"
+        },
+        {
+          "id": 13,
+          "name": "Subtraction with a Full Adder",
+          "name_de": "Subtraktion mit einem Volladdierer"
+        }
+      ]
     },
     {
-      "id": 4,
-      "name": "Functional Completeness 2"
+      "name": "Arithmetic-logical-unit",
+      "name_de": "Arithmetisch-logische Einheit",
+      "levels": [
+        {
+          "id": 14,
+          "name": "1-bit ALU",
+          "name_de": "1-Bit-ALU"
+        },
+        {
+          "id": 15,
+          "name": "Adding Subtraction",
+          "name_de": "Subtraktion hinzufügen"
+        },
+        {
+          "id": 16,
+          "name": "Adding NOR",
+          "name_de": "NOR hinzufügen",
+          "recommended": true
+        },
+        {
+          "id": 17,
+          "name": "Zero flag logic",
+          "name_de": "Zero-Flag-Logik"
+        },
+        {
+          "id": 18,
+          "name": "SLT (Set-on-Less-Than)",
+          "name_de": "SLT (Set-on-Less-Than)",
+          "recommended": true
+        }
+      ]
     },
     {
-      "id": 5,
-      "name": "Functional Completeness 3"
-    }
-  ],
-  "Further Gates": [
-    {
-      "id": 6,
-      "name": "Multiplexer"
+      "name": "Registers",
+      "name_de": "Register",
+      "levels": [
+        {
+          "id": 19,
+          "name": "Register Block",
+          "name_de": "Registerblock"
+        },
+        {
+          "id": 20,
+          "name": "Adding the write option to Register Block",
+          "name_de": "Schreiboption zum Registerblock hinzufügen",
+          "recommended": true
+        }
+      ]
     },
     {
-      "id": 7,
-      "name": "8-bit Collector and bigger MUX"
-    },
-    {
-      "id": 8,
-      "name": "Decoder"
-    }
-  ],
-  "Persistence": [
-    {
-      "id": 9,
-      "name": "RS-Flipflop"
-    },
-    {
-      "id": 10,
-      "name": "D-Latch"
-    }
-  ],
-  "Adders": [
-    {
-      "id": 11,
-      "name": "Half Adder"
-    },
-    {
-      "id": 12,
-      "name": "Full Adder"
-    },
-    {
-      "id": 13,
-      "name": "Subtraction with a Full Adder"
-    }
-  ],
-  "Arithmetic-logical-unit": [
-    {
-      "id": 14,
-      "name": "1-bit ALU"
-    },
-    {
-      "id": 15,
-      "name": "Adding Subtraction"
-    },
-    {
-      "id": 16,
-      "name": "Adding NOR"
-    },
-    {
-      "id": 17,
-      "name": "Zero flag logic"
-    },
-    {
-      "id": 18,
-      "name": "SLT (Set-on-Less-Than)"
-    }
-  ],
-  "Registers": [
-    {
-      "id": 19,
-      "name": "Register Block"
-    },
-    {
-      "id": 20,
-      "name": "Adding the write option to Register Block"
-    }
-  ],
-  "Full Processor": [
-    {
-      "id": 21,
-      "name": "Limited MIPS Processor"
+      "name": "Full Processor",
+      "name_de": "Vollständiger Prozessor",
+      "levels": [
+        {
+          "id": 21,
+          "name": "Limited MIPS Processor",
+          "name_de": "Eingeschränkter MIPS-Prozessor",
+          "recommended": true
+        }
+      ]
     }
   ]
 }
