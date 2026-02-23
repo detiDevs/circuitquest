@@ -352,6 +352,7 @@
   "@cancel": {
     "description": "Cancel button"
   },
+  "close": "Close",
   "delete": "Delete",
   "@delete": {
     "description": "Delete button"

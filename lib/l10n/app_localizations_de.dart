@@ -346,6 +346,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get cancel => 'Abbrechen';
 
   @override
+  String get close => 'Schließen';
+
+  @override
   String get delete => 'Löschen';
 
   @override

@@ -25,7 +25,7 @@ class ComponentDetailDialog {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               // Title: Component type
-              Text(placedComponent.type),
+              Text(placedComponent.type, style: TextTheme.of(context).displayLarge,),
               // Text field for label:
               TextField(
                 controller: textController,
@@ -46,38 +46,38 @@ class ComponentDetailDialog {
               // Maybe change the row/column to a grid layout to also have top and bottom inputs/outputs
               SizedBox(
                 width: double.infinity,
+                height: 400,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // column for the inputs
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: placedComponent.component.inputs.entries
                           .map((e) => Row(
                             children: [
-                              Text('${e.key} (${e.value.bitWidth}-Bit)'),
-                              CircleAvatar(backgroundColor: Colors.red, radius: 10,),
+                              Text('${e.key}\nBitwidth: ${e.value.bitWidth}\nValue: ${e.value.value}'),
+                              CircleAvatar(backgroundColor: e.value.value == 0 ? Colors.red : Colors.green, radius: 10,),
                             ],
                           ))
                           .toList(),
                     ),
                     // Component image with input/output explanations:
-                    SvgPicture.asset(
-                      'assets/gates/${placedComponent.type}.svg',
-                      //TODO: make size dynamic
-                      width: 200,
-                      height: 200,
-                      fit: BoxFit.contain,
-                      placeholderBuilder: (context) => Text(placedComponent.type),
+                    Expanded(
+                      child: SvgPicture.asset(
+                          'assets/gates/${placedComponent.type}.svg',
+                          fit: BoxFit.contain,
+                          placeholderBuilder: (context) => Text(placedComponent.type),
+                        ),
                     ),
                     // column for the outputs
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: placedComponent.component.outputs.entries
                           .map((e) => Row(
                             children: [
-                              CircleAvatar(backgroundColor: Colors.red, radius: 10),
-                              Text('${e.key} (${e.value.bitWidth}-Bit)'),
+                              CircleAvatar(backgroundColor: e.value.value == 0 ? Colors.red : Colors.green, radius: 10),
+                              Text('${e.key}\nBitwidth: ${e.value.bitWidth}\nValue: ${e.value.value}'),
                             ],
                           ))
                           .toList(),
@@ -98,13 +98,13 @@ class ComponentDetailDialog {
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text("Delete"),
+                child: Text(AppLocalizations.of(context)!.delete),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Text('Close'),
+                child: Text(AppLocalizations.of(context)!.close),
               ),
             ],
           ),

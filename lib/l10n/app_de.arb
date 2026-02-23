@@ -351,6 +351,7 @@
   "@cancel": {
     "description": "Schaltfläche Abbrechen"
   },
+  "close": "Schließen",
   "delete": "Löschen",
   "@delete": {
     "description": "Schaltfläche Löschen"
