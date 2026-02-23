@@ -114,6 +114,7 @@ class SandboxState extends ChangeNotifier {
   SandboxState(this._customComponentLibrary);
 
   final CustomComponentLibrary _customComponentLibrary;
+
   /// All components placed on the canvas
   final List<PlacedComponent> _placedComponents = [];
 
@@ -174,7 +175,7 @@ class SandboxState extends ChangeNotifier {
     }
   }
 
-  /// Redo the last undone command  
+  /// Redo the last undone command
   void redo() {
     if (CommandController.redo()) {
       notifyListeners();
@@ -216,11 +217,11 @@ class SandboxState extends ChangeNotifier {
   ///
   /// Also removes all connections involving this component.
   void removeComponent(String componentId) {
-    for (final conn in connections){
+    for (final conn in connections) {
       if (conn.sourceComponentId == componentId ||
-          conn.targetComponentId == componentId){
-            removeConnection(conn);
-          }
+          conn.targetComponentId == componentId) {
+        removeConnection(conn);
+      }
     }
     _placedComponents.removeWhere((c) => c.id == componentId);
     notifyListeners();
@@ -235,7 +236,7 @@ class SandboxState extends ChangeNotifier {
     if (componentIdNum != null && componentIdNum >= _nextComponentId) {
       _nextComponentId = componentIdNum + 1;
     }
-    
+
     _placedComponents.add(component);
     notifyListeners();
   }
@@ -257,6 +258,22 @@ class SandboxState extends ChangeNotifier {
     }
   }
 
+  /// Changes the label of a component to a new one
+  void renameComponent(String componentId, String newName) {
+    final index = _placedComponents.indexWhere((c) => c.id == componentId);
+    if (index != -1) {
+      final component = _placedComponents[index];
+      _placedComponents[index] = PlacedComponent(
+        type: component.type,
+        component: component.component,
+        position: component.position,
+        id: component.id,
+        label: newName,
+      );
+      notifyListeners();
+    }
+  }
+
   /// Starts drawing a wire from the specified component pin.
   void startWireDrawing(String componentId, String pinName) {
     _wireDrawingStart = (componentId: componentId, pinName: pinName);
@@ -267,7 +284,7 @@ class SandboxState extends ChangeNotifier {
   ///
   /// Returns true if the connection was created successfully.
   bool completeWireDrawing(
-    String targetComponentId, 
+    String targetComponentId,
     String targetPinName, {
     void Function(String message)? onError,
   }) {
@@ -275,7 +292,7 @@ class SandboxState extends ChangeNotifier {
 
     final sourceComponentId = _wireDrawingStart!.componentId;
     final sourcePinName = _wireDrawingStart!.pinName;
-    
+
     // Store connection count before command execution
     final connectionCountBefore = _connections.length;
 
@@ -288,13 +305,13 @@ class SandboxState extends ChangeNotifier {
       targetPinName,
       onError: onError,
     );
-    
+
     // Execute the command
     CommandController.executeCommand(command);
-    
+
     _wireDrawingStart = null;
     notifyListeners();
-    
+
     // Return whether a new connection was added
     return _connections.length > connectionCountBefore;
   }
@@ -318,20 +335,25 @@ class SandboxState extends ChangeNotifier {
     final targetPin = targetComponent.inputs[targetPinName];
 
     if (sourcePin != null && targetPin != null) {
-      if (sourcePin.bitWidth == 0){
-      onError?.call("The source Component does not have a specified Bitwidth yet. Please connect something to the source of your Source component");//TODO: Translate
-      return null;
-    }
+      if (sourcePin.bitWidth == 0) {
+        onError?.call(
+          "The source Component does not have a specified Bitwidth yet. Please connect something to the source of your Source component",
+        ); //TODO: Translate
+        return null;
+      }
 
-    if ((targetComponent is Multiplexer)&&targetPin.bitWidth == 0){
-      targetComponent.setBitwidth(sourcePin.bitWidth);
-    }
-      if ((targetComponent is! OutputProbe)&&sourcePin.bitWidth != targetPin.bitWidth){
-      onError?.call("Bitwidths are not the same"); //TODO translate
-      return null;
-    }
-      if (targetPin.hasSource){
-        onError?.call("This input pin already has a connection!"); //TODO Translate
+      if ((targetComponent is Multiplexer) && targetPin.bitWidth == 0) {
+        targetComponent.setBitwidth(sourcePin.bitWidth);
+      }
+      if ((targetComponent is! OutputProbe) &&
+          sourcePin.bitWidth != targetPin.bitWidth) {
+        onError?.call("Bitwidths are not the same"); //TODO translate
+        return null;
+      }
+      if (targetPin.hasSource) {
+        onError?.call(
+          "This input pin already has a connection!",
+        ); //TODO Translate
         return null;
       }
       // Wire constructor automatically connects the pins
@@ -346,18 +368,18 @@ class SandboxState extends ChangeNotifier {
       );
       _connections.add(connection);
       print("Connection was added.");
-      
+
       // Trigger event-driven evaluation starting from the target component
       _evaluateCircuitFromComponent(targetComponent);
-      
+
       notifyListeners();
       return connection;
     } else {
       print("Connection was not added.");
-      if(sourcePin == null) {
+      if (sourcePin == null) {
         print("Source pin was null");
       }
-      if(targetPin == null) {
+      if (targetPin == null) {
         print("Target pin was null");
       }
       notifyListeners();
@@ -410,16 +432,18 @@ class SandboxState extends ChangeNotifier {
         )
         .map((pc) => pc.component)
         .toSet();
-    
+
     // Also include ProgramCounter components as starting points (for processor simulation)
     final programCounters = _placedComponents
         .where((pc) => pc.component.runtimeType.toString() == 'ProgramCounter')
         .map((pc) => pc.component)
         .toSet();
-    
-    final startingSet = inputStarts.isEmpty 
-        ? (programCounters.isEmpty ? allComponents : programCounters)
-        : inputStarts..addAll(programCounters);
+
+    final startingSet =
+        inputStarts.isEmpty
+              ? (programCounters.isEmpty ? allComponents : programCounters)
+              : inputStarts
+          ..addAll(programCounters);
 
     _simulator = Simulator(
       components: allComponents,
@@ -445,7 +469,7 @@ class SandboxState extends ChangeNotifier {
 
     // Run event-driven evaluation starting from the target component
     _simulator!.evaluateEventDriven(startingComponents: {targetComponent});
-    
+
     // Note: We don't call notifyListeners() here since addConnection already does it
   }
 
@@ -464,7 +488,9 @@ class SandboxState extends ChangeNotifier {
     // Create or update simulator with current components
     _simulator = Simulator(
       components: allComponents,
-      inputComponents: {component}, // Use the changed component as starting point
+      inputComponents: {
+        component,
+      }, // Use the changed component as starting point
     );
 
     // Run event-driven evaluation starting from the changed component
@@ -490,16 +516,18 @@ class SandboxState extends ChangeNotifier {
         )
         .map((pc) => pc.component)
         .toSet();
-    
+
     // Also include ProgramCounter components as starting points (for processor simulation)
     final programCounters = _placedComponents
         .where((pc) => pc.component.runtimeType.toString() == 'ProgramCounter')
         .map((pc) => pc.component)
         .toSet();
-    
-    final startingSet = inputStarts.isEmpty 
-        ? (programCounters.isEmpty ? allComponents : programCounters)
-        : inputStarts..addAll(programCounters);
+
+    final startingSet =
+        inputStarts.isEmpty
+              ? (programCounters.isEmpty ? allComponents : programCounters)
+              : inputStarts
+          ..addAll(programCounters);
 
     _simulator = Simulator(
       components: allComponents,

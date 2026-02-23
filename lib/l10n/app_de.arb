@@ -357,5 +357,6 @@
   },
   "save": "Speichern",
   "description": "Beschreibung",
-  "cantChangeBitwidth": "Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt"
+  "cantChangeBitwidth": "Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt",
+  "enterComponentLabel": "Anzeigenamen eingeben"
 }

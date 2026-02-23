@@ -358,5 +358,6 @@
   },
   "save": "Save",
   "description": "Description",
-  "cantChangeBitwidth": "Cannot change bitwidth if input has active wires"
+  "cantChangeBitwidth": "Cannot change bitwidth if input has active wires",
+  "enterComponentLabel": "Enter a display name"
 }

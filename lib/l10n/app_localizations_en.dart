@@ -352,4 +352,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get cantChangeBitwidth =>
       'Cannot change bitwidth if input has active wires';
+
+  @override
+  String get enterComponentLabel => 'Enter a display name';
 }

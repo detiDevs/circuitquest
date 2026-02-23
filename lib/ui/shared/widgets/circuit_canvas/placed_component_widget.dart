@@ -10,6 +10,7 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/custom_component_library.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
+import 'package:circuitquest/ui/shared/widgets/circuit_canvas/component_detail_dialog.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/input_source_widget.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/output_probe_widget.dart';
@@ -111,16 +112,12 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
         onSecondaryTapDown: (details) {
           if (widget.placedComponent.immovable) return;
           // Show context menu on right-click
-          _showContextMenu(
-            context,
-            details.globalPosition,
-            ref.read(sandboxProvider),
-          );
+          ComponentDetailDialog.displayDialog(context, widget.placedComponent, state);
         },
         onLongPress: () {
           if (widget.placedComponent.immovable) return;
           // Show context menu on long press (for touch devices)
-          _showComponentMenu(context, ref.read(sandboxProvider));
+          ComponentDetailDialog.displayDialog(context, widget.placedComponent, state);
         },
         child: Container(
           width: widget.gridSize,
@@ -393,77 +390,6 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
     return Offset(
       isInput ? 0 : widget.gridSize - 20, // Left or right edge
       y,
-    );
-  }
-
-  /// Shows a context menu for component actions.
-  void _showComponentMenu(BuildContext context, SandboxState state) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          AppLocalizations.of(
-            context,
-          )!.componentMenuTitle(widget.placedComponent.type),
-        ),
-        content: Text(AppLocalizations.of(context)!.componentMenuPrompt),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          TextButton(
-            onPressed: () {
-              // Use command pattern for undo/redo support
-              final command = RemoveComponentCommand(state, widget.placedComponent.id);
-              CommandController.executeCommand(command);
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              AppLocalizations.of(context)!.delete,
-              style: const TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Shows a context menu at the cursor position (for right-click).
-  void _showContextMenu(
-    BuildContext context,
-    Offset position,
-    SandboxState state,
-  ) {
-    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    showMenu(
-      context: context,
-      position: RelativeRect.fromRect(
-        position & const Size(40, 40),
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem(
-          child: Row(
-            children: [
-              const Icon(Icons.delete, color: Colors.red, size: 18),
-              const SizedBox(width: 8),
-              Text(AppLocalizations.of(context)!.delete),
-            ],
-          ),
-          onTap: () {
-            // Use Future.delayed to avoid closing before tap completes
-            Future.delayed(Duration.zero, () {
-              // Use command pattern for undo/redo support
-              final command = RemoveComponentCommand(state, widget.placedComponent.id);
-              CommandController.executeCommand(command);
-            });
-          },
-        ),
-      ],
     );
   }
 }
