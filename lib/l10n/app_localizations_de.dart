@@ -346,6 +346,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get cancel => 'Abbrechen';
 
   @override
+  String get close => 'Schließen';
+
+  @override
   String get delete => 'Löschen';
 
   @override
@@ -357,4 +360,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get cantChangeBitwidth =>
       'Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt';
+
+  @override
+  String get enterComponentLabel => 'Anzeigenamen eingeben';
 }

@@ -341,6 +341,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
+  String get close => 'Close';
+
+  @override
   String get delete => 'Delete';
 
   @override
@@ -352,4 +355,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get cantChangeBitwidth =>
       'Cannot change bitwidth if input has active wires';
+
+  @override
+  String get enterComponentLabel => 'Enter a display name';
 }

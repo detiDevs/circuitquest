@@ -698,6 +698,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancel;
 
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
   /// Delete button
   ///
   /// In en, this message translates to:
@@ -721,6 +727,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cannot change bitwidth if input has active wires'**
   String get cantChangeBitwidth;
+
+  /// No description provided for @enterComponentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a display name'**
+  String get enterComponentLabel;
 }
 
 class _AppLocalizationsDelegate
