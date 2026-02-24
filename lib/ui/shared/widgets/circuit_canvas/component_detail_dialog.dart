@@ -1,4 +1,3 @@
-import 'package:circuitquest/core/commands/command.dart';
 import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:circuitquest/core/commands/remove_component_command.dart';
 import 'package:circuitquest/core/commands/rename_component_command.dart';
@@ -6,6 +5,9 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+const double imageContainerHeight = 400;
+const double maxDialogWidth = 600;
 
 class ComponentDetailDialog {
   static void displayDialog(
@@ -18,6 +20,7 @@ class ComponentDetailDialog {
     showDialog(
       context: context,
       builder: (BuildContext context) => Dialog(
+        constraints: BoxConstraints(maxWidth: maxDialogWidth),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -46,7 +49,7 @@ class ComponentDetailDialog {
               // Maybe change the row/column to a grid layout to also have top and bottom inputs/outputs
               SizedBox(
                 width: double.infinity,
-                height: 400,
+                height: imageContainerHeight,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -56,7 +59,15 @@ class ComponentDetailDialog {
                       children: placedComponent.component.inputs.entries
                           .map((e) => Row(
                             children: [
-                              Text('${e.key}\nBitwidth: ${e.value.bitWidth}\nValue: ${e.value.value}'),
+                              RichText(text: TextSpan(
+                                children: [
+                                  TextSpan(text: '${e.key}\n', style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(child: Icon(Icons.usb, size: 14)),
+                                  TextSpan(text: '${e.value.bitWidth}', style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(child: Icon(Icons.power_settings_new, size: 14)),
+                                  TextSpan(text: '${e.value.value}', style: TextStyle(color: Colors.black))
+                                ]
+                              )),
                               CircleAvatar(backgroundColor: e.value.value == 0 ? Colors.red : Colors.green, radius: 10,),
                             ],
                           ))
@@ -77,7 +88,15 @@ class ComponentDetailDialog {
                           .map((e) => Row(
                             children: [
                               CircleAvatar(backgroundColor: e.value.value == 0 ? Colors.red : Colors.green, radius: 10),
-                              Text('${e.key}\nBitwidth: ${e.value.bitWidth}\nValue: ${e.value.value}'),
+                              RichText(text: TextSpan(
+                                children: [
+                                  TextSpan(text: '${e.key}\n', style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(child: Icon(Icons.usb, size: 14)),
+                                  TextSpan(text: '${e.value.bitWidth}', style: TextStyle(color: Colors.black)),
+                                  WidgetSpan(child: Icon(Icons.power_settings_new, size: 14)),
+                                  TextSpan(text: '${e.value.value}', style: TextStyle(color: Colors.black))
+                                ]
+                              )),
                             ],
                           ))
                           .toList(),

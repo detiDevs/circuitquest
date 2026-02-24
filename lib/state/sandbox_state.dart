@@ -263,13 +263,24 @@ class SandboxState extends ChangeNotifier {
     final index = _placedComponents.indexWhere((c) => c.id == componentId);
     if (index != -1) {
       final component = _placedComponents[index];
-      _placedComponents[index] = PlacedComponent(
-        type: component.type,
-        component: component.component,
-        position: component.position,
-        id: component.id,
-        label: newName,
-      );
+      if (newName != "") {
+        _placedComponents[index] = PlacedComponent(
+          type: component.type,
+          component: component.component,
+          position: component.position,
+          id: component.id,
+          label: newName,
+        );
+      } else {
+        // If there is no new name, leave field empty
+        _placedComponents[index] = PlacedComponent(
+          type: component.type,
+          component: component.component,
+          position: component.position,
+          id: component.id,
+        );
+      }
+
       notifyListeners();
     }
   }
