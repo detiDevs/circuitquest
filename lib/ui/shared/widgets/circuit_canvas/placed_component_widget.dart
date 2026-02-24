@@ -6,6 +6,7 @@ import 'package:circuitquest/core/commands/remove_connection_command.dart';
 import 'package:circuitquest/core/components/custom_component.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/custom_component_library.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
@@ -33,12 +34,24 @@ class PlacedComponentWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<PlacedComponentWidget> createState() => _PlacedComponentWidgetState();
+  ConsumerState<PlacedComponentWidget> createState() =>
+      _PlacedComponentWidgetState();
 }
 
 class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
   bool paning = false;
   late Offset oldPosition;
+  late int numberTop;
+  late int numberRight;
+  late int numberBottom;
+  late int numberLeft;
+
+  _PlacedComponentWidgetState() {
+    numberTop = 0;
+    numberRight = 0;
+    numberBottom = 0;
+    numberLeft = 0;
+  }
 
   @override
   void initState() {
@@ -97,8 +110,10 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
           // Snap to grid when done dragging
           paning = false;
           final snapped = Offset(
-            (widget.placedComponent.position.dx / widget.gridSize).round() * widget.gridSize,
-            (widget.placedComponent.position.dy / widget.gridSize).round() * widget.gridSize,
+            (widget.placedComponent.position.dx / widget.gridSize).round() *
+                widget.gridSize,
+            (widget.placedComponent.position.dy / widget.gridSize).round() *
+                widget.gridSize,
           );
           final command = MoveComponentCommand(
             state,
@@ -112,12 +127,20 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
         onSecondaryTapDown: (details) {
           if (widget.placedComponent.immovable) return;
           // Show context menu on right-click
-          ComponentDetailDialog.displayDialog(context, widget.placedComponent, state);
+          ComponentDetailDialog.displayDialog(
+            context,
+            widget.placedComponent,
+            state,
+          );
         },
         onLongPress: () {
           if (widget.placedComponent.immovable) return;
           // Show context menu on long press (for touch devices)
-          ComponentDetailDialog.displayDialog(context, widget.placedComponent, state);
+          ComponentDetailDialog.displayDialog(
+            context,
+            widget.placedComponent,
+            state,
+          );
         },
         child: Container(
           width: widget.gridSize,
@@ -182,9 +205,8 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                       ),
                     ),
                     // Input pins (left side)
-                    ..._buildInputPins(context, state),
+                    ..._buildPins(context, state),
                     // Output pins (right side)
-                    ..._buildOutputPins(context, state),
                   ],
                 ),
         ),
@@ -260,17 +282,96 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
   }
 
   /// Builds interactive input pin widgets.
-  List<Widget> _buildInputPins(BuildContext context, SandboxState state) {
+  List<Widget> _buildPins(BuildContext context, SandboxState state) {
     final inputs = widget.placedComponent.component.inputs.entries.toList();
+    final outputs = widget.placedComponent.component.outputs.entries.toList();
+    print("Outputs: $outputs");
+    final pinPositions = widget.placedComponent.component.pinPositions;
     final pins = <Widget>[];
 
-    for (int i = 0; i < inputs.length; i++) {
-      final entry = inputs[i];
-      final pinPosition = _calculatePinPosition(
-        i,
-        inputs.length,
-        isInput: true,
-      );
+    for (int i = 0; i < inputs.length + outputs.length; i++) {
+      final entry = i < inputs.length ? inputs[i] : outputs[i - inputs.length];
+      var pinPosition = Offset(0, 0);
+      if (pinPositions != null && pinPositions.containsKey(entry.key)) {
+        switch (pinPositions[entry.key]) {
+          case PinPosition.TOP:
+            pinPosition = _calculatePinPosition(
+              numberTop,
+              pinPositions.entries
+                  .where((e) => e.value == PinPosition.TOP)
+                  .toList()
+                  .length,
+              orientation: PinPosition.TOP,
+            );
+            numberTop++;
+            break;
+          case PinPosition.RIGHT:
+            var rightPins = pinPositions.entries
+                .where((e) => e.value == PinPosition.RIGHT)
+                .toList();
+            pinPosition = _calculatePinPosition(
+              numberRight,
+              // number of total items on the right: entries in pinPositions and the outputs that do not have a different pos specified
+              rightPins.length +
+                  outputs
+                      .where(
+                        (e) => !rightPins.any((element) => element.key == e.key),
+                      )
+                      .length,
+              orientation: PinPosition.RIGHT,
+            );
+            numberRight++;
+            break;
+          case PinPosition.BOTTOM:
+            pinPosition = _calculatePinPosition(
+              numberBottom,
+              pinPositions.entries
+                  .where((e) => e.value == PinPosition.BOTTOM)
+                  .toList()
+                  .length,
+              orientation: PinPosition.BOTTOM,
+            );
+            numberBottom++;
+            break;
+          case PinPosition.LEFT:
+            var leftPins = pinPositions.entries
+                .where((e) => e.value == PinPosition.LEFT)
+                .toList();
+            pinPosition = _calculatePinPosition(
+              numberLeft,
+              leftPins.length +
+                  outputs
+                      .where(
+                        (e) => !leftPins.any((element) => element.key == e.key),
+                      )
+                      .length,
+              orientation: PinPosition.LEFT,
+            );
+            numberLeft++;
+            break;
+          case null:
+            print("Value error for pin position.");
+            break;
+        }
+      } else {
+        if (i < inputs.length) {
+          // Input pin - defaults to LEFT
+          pinPosition = _calculatePinPosition(
+            numberLeft,
+            inputs.length,
+            orientation: PinPosition.LEFT,
+          );
+          numberLeft++;
+        } else {
+          // Output pin - defaults to RIGHT
+          pinPosition = _calculatePinPosition(
+            numberRight,
+            outputs.length,
+            orientation: PinPosition.RIGHT,
+          );
+          numberRight++;
+        }
+      }
 
       pins.add(
         Positioned(
@@ -326,70 +427,32 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
         ),
       );
     }
-
-    return pins;
-  }
-
-  /// Builds interactive output pin widgets.
-  List<Widget> _buildOutputPins(BuildContext context, SandboxState state) {
-    final outputs = widget.placedComponent.component.outputs.entries.toList();
-    final pins = <Widget>[];
-
-    for (int i = 0; i < outputs.length; i++) {
-      final entry = outputs[i];
-      final pinPosition = _calculatePinPosition(
-        i,
-        outputs.length,
-        isInput: false,
-      );
-
-      pins.add(
-        Positioned(
-          left: pinPosition.dx,
-          top: pinPosition.dy,
-          child: GestureDetector(
-            onTap: () {
-              // Start wire drawing from this output
-              state.startWireDrawing(widget.placedComponent.id, entry.key);
-            },
-            child: Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: entry.value.value > 0 ? Colors.green : Colors.red,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 1),
-                boxShadow: widget.isActive
-                    ? [
-                        BoxShadow(
-                          color:
-                              (entry.value.value > 0
-                                      ? Colors.green
-                                      : Colors.red)
-                                  .withOpacity(0.8),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                        ),
-                      ]
-                    : null,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+    numberTop = 0;
+    numberRight = 0;
+    numberBottom = 0;
+    numberLeft = 0;
 
     return pins;
   }
 
   /// Calculates pin position based on index and total count.
-  Offset _calculatePinPosition(int index, int total, {required bool isInput}) {
+  Offset _calculatePinPosition(
+    int index,
+    int total, {
+    required PinPosition orientation,
+  }) {
     final spacing = widget.gridSize / (total + 1);
-    final y = spacing * (index + 1) - 10; // -6 to center the 12px pin
+    final crossAxis = spacing * (index + 1) - 10; // -10 to center the 20px pin
 
-    return Offset(
-      isInput ? 0 : widget.gridSize - 20, // Left or right edge
-      y,
-    );
+    switch (orientation) {
+      case PinPosition.TOP:
+        return Offset(crossAxis, 0);
+      case PinPosition.RIGHT:
+        return Offset(widget.gridSize - 20, crossAxis);
+      case PinPosition.BOTTOM:
+        return Offset(crossAxis, widget.gridSize - 20);
+      case PinPosition.LEFT:
+        return Offset(0, crossAxis);
+    }
   }
 }

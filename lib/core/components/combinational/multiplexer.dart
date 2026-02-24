@@ -38,6 +38,11 @@ class Multiplexer extends Component {
     // Create output
     outputs['outValue'] = OutputPin(this, bitWidth: dataBitWidth);
     outputs['outValue']!.value = 0;
+
+    // Pin positions
+    pinPositions = {
+      "selection": PinPosition.BOTTOM
+    };
   }
 
   /// Evaluates the multiplexer and routes the selected input to the output.
