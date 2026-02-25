@@ -1,0 +1,427 @@
+import 'dart:io';
+import 'package:circuitquest/core/commands/command_controller.dart';
+import 'package:circuitquest/core/commands/move_component_command.dart';
+import 'package:circuitquest/core/commands/remove_component_command.dart';
+import 'package:circuitquest/core/commands/remove_connection_command.dart';
+import 'package:circuitquest/core/components/custom_component.dart';
+import 'package:circuitquest/core/components/input_source.dart';
+import 'package:circuitquest/core/components/output_probe.dart';
+import 'package:circuitquest/core/logic/pin.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/state/custom_component_library.dart';
+import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
+import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
+import 'package:circuitquest/ui/shared/widgets/circuit_canvas/component_detail_dialog.dart';
+import 'package:circuitquest/ui/shared/widgets/component_palette.dart';
+import 'package:circuitquest/ui/shared/widgets/circuit_canvas/input_source_widget.dart';
+import 'package:circuitquest/ui/shared/widgets/circuit_canvas/output_probe_widget.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+/// Widget representing a placed component on the canvas.
+class PlacedComponentWidget extends ConsumerStatefulWidget {
+  final PlacedComponent placedComponent;
+  final double gridSize;
+  final bool isActive;
+
+  const PlacedComponentWidget({
+    super.key,
+    required this.placedComponent,
+    required this.gridSize,
+    this.isActive = false,
+  });
+
+  @override
+  ConsumerState<PlacedComponentWidget> createState() =>
+      _PlacedComponentWidgetState();
+}
+
+class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
+  bool paning = false;
+  double left = 0, top = 0;
+  late Offset oldPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    oldPosition = widget.placedComponent.position;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(sandboxProvider);
+    final customLibrary = ref.watch(customComponentProvider);
+    ComponentType? componentType;
+    try {
+      componentType = availableComponents.firstWhere(
+        (ct) => ct.name == widget.placedComponent.type,
+      );
+    } catch (_) {
+      CustomComponentEntry? entry;
+      try {
+        entry = customLibrary.components.firstWhere(
+          (c) => c.data.name == widget.placedComponent.type,
+        );
+      } catch (_) {
+        entry = null;
+      }
+      if (entry != null) {
+        final customData = entry.data;
+        final customSprite = entry.spritePath;
+        componentType = ComponentType(
+          name: customData.name,
+          displayName: customData.name,
+          iconPath: customSprite ?? '',
+          isAsset: false,
+          createComponent: () => CustomComponent(customData),
+        );
+      }
+    }
+    if (!paning) {
+      oldPosition = widget.placedComponent.position;
+    }
+    return Positioned(
+      left: widget.placedComponent.position.dx,
+      top: widget.placedComponent.position.dy,
+      child: GestureDetector(
+        onPanStart: (details) {
+          left = widget.placedComponent.position.dx;
+          top = widget.placedComponent.position.dy;
+        },
+        onPanUpdate: (details) {
+          if (widget.placedComponent.immovable) return;
+          paning = true;
+          // Move component
+          left += details.delta.dx;
+          top += details.delta.dy;
+          //final newPosition = widget.placedComponent.position + details.delta;
+          final newPosition = Offset(left, top);
+          print("details delta: ${details.delta}");
+          ref
+              .read(sandboxProvider)
+              .moveComponent(widget.placedComponent.id, newPosition);
+        },
+        onPanEnd: (details) {
+          if (widget.placedComponent.immovable) return;
+          // Snap to grid when done dragging
+          paning = false;
+          final snapped = Offset(
+            (widget.placedComponent.position.dx / widget.gridSize).round() *
+                widget.gridSize,
+            (widget.placedComponent.position.dy / widget.gridSize).round() *
+                widget.gridSize,
+          );
+          final command = MoveComponentCommand(
+            state,
+            widget.placedComponent.id,
+            snapped,
+            oldPosition,
+          );
+          CommandController.executeCommand(command);
+          //ref.read(sandboxProvider).moveComponent(widget.placedComponent.id, snapped);
+        },
+        onSecondaryTapDown: (details) {
+          if (widget.placedComponent.immovable) return;
+          // Show context menu on right-click
+          ComponentDetailDialog.displayDialog(
+            context,
+            widget.placedComponent,
+            state,
+          );
+        },
+        onLongPress: () {
+          if (widget.placedComponent.immovable) return;
+          // Show context menu on long press (for touch devices)
+          ComponentDetailDialog.displayDialog(
+            context,
+            widget.placedComponent,
+            state,
+          );
+        },
+        child: Container(
+          width: widget.gridSize,
+          height: widget.gridSize,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.blue[700]!, width: 2),
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 4,
+                offset: const Offset(2, 2),
+              ),
+            ],
+          ),
+          child: widget.placedComponent.component is InputSource
+              ? _buildInputControls(
+                  widget.placedComponent.component as InputSource,
+                  widget.placedComponent,
+                  ref,
+                  widget.gridSize,
+                )
+              : widget.placedComponent.component is OutputProbe
+              ? _buildOutputProbe(
+                  widget.placedComponent.component as OutputProbe,
+                  widget.placedComponent,
+                  ref,
+                  widget.gridSize,
+                )
+              : Stack(
+                  children: [
+                    if (widget.placedComponent.label != null)
+                      Positioned(
+                        top: 4,
+                        left: 6,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.blue[50],
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.blue[200]!),
+                          ),
+                          child: Text(
+                            widget.placedComponent.label!,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    // Component icon with fallback to name text
+                    Center(
+                      child: _buildComponentIcon(
+                        componentType,
+                        widget.placedComponent.type,
+                        widget.gridSize,
+                      ),
+                    ),
+                    // Input pins (left side)
+                    ..._buildPins(context, state),
+                    // Output pins (right side)
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildComponentIcon(
+    ComponentType? componentType,
+    String fallbackText,
+    double gridSize,
+  ) {
+    if (componentType == null || componentType.iconPath.isEmpty) {
+      return Text(fallbackText, textAlign: TextAlign.center);
+    }
+
+    if (componentType.isAsset) {
+      return SvgPicture.asset(
+        componentType.iconPath,
+        width: gridSize * 0.7,
+        height: gridSize * 0.7,
+        fit: BoxFit.contain,
+        placeholderBuilder: (context) => Text(fallbackText),
+      );
+    }
+
+    if (componentType.iconPath.toLowerCase().endsWith('.svg')) {
+      return SvgPicture.file(
+        File(componentType.iconPath),
+        width: gridSize * 0.7,
+        height: gridSize * 0.7,
+        fit: BoxFit.contain,
+        placeholderBuilder: (context) => Text(fallbackText),
+      );
+    }
+
+    return Image.file(
+      File(componentType.iconPath),
+      width: gridSize * 0.7,
+      height: gridSize * 0.7,
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) => Text(fallbackText),
+    );
+  }
+
+  /// Builds input controls for InputSource components.
+  Widget _buildInputControls(
+    InputSource inputComponent,
+    PlacedComponent placed,
+    WidgetRef ref,
+    double gridSize,
+  ) {
+    return InputSourceWidget(
+      inputComponent: inputComponent,
+      placedComponent: placed,
+      ref: ref,
+      gridSize: gridSize,
+    );
+  }
+
+  Widget _buildOutputProbe(
+    OutputProbe outputComponent,
+    PlacedComponent placed,
+    WidgetRef ref,
+    double gridSize,
+  ) {
+    return OutputProbeWidget(
+      outputComponent: outputComponent,
+      placedComponent: placed,
+      ref: ref,
+      gridSize: gridSize,
+    );
+  }
+
+  /// Builds interactive input pin widgets.
+  List<Widget> _buildPins(BuildContext context, SandboxState state) {
+    final inputs = widget.placedComponent.component.inputs.entries.toList();
+    final outputs = widget.placedComponent.component.outputs.entries.toList();
+    final pinPositions = widget.placedComponent.component.pinPositions;
+    final pins = <Widget>[];
+
+    // Pre-calculate total pins on each side
+    final inputKeys = inputs.map((e) => e.key).toList();
+    final outputKeys = outputs.map((e) => e.key).toList();
+    final pinsPerSide = PinPositioningUtils.calculatePinsPerSide(
+      inputKeys,
+      outputKeys,
+      pinPositions,
+    );
+
+    // Track current index for each side
+    int numberTop = 0, numberRight = 0, numberBottom = 0, numberLeft = 0;
+
+    for (int i = 0; i < inputs.length + outputs.length; i++) {
+      final entry = i < inputs.length ? inputs[i] : outputs[i - inputs.length];
+      final isInput = i < inputs.length;
+
+      // Determine pin position
+      final pinPosition = PinPositioningUtils.getPinPosition(
+        entry.key,
+        isInput,
+        pinPositions,
+      );
+
+      // Get total pins on this side and current index
+      final totalOnSide = pinsPerSide[pinPosition] ?? 0;
+      final currentIndex = _getAndIncrementCounter(
+        pinPosition,
+        numberTop: numberTop,
+        numberRight: numberRight,
+        numberBottom: numberBottom,
+        numberLeft: numberLeft,
+      );
+
+      // Update counter after getting index
+      switch (pinPosition) {
+        case PinPosition.TOP:
+          numberTop++;
+          break;
+        case PinPosition.RIGHT:
+          numberRight++;
+          break;
+        case PinPosition.BOTTOM:
+          numberBottom++;
+          break;
+        case PinPosition.LEFT:
+          numberLeft++;
+          break;
+      }
+
+      // Calculate pin position
+      final offset = PinPositioningUtils.calculatePinOffset(
+        currentIndex,
+        totalOnSide,
+        widget.gridSize,
+        pinPosition,
+      );
+
+      pins.add(
+        Positioned(
+          left: offset.dx,
+          top: offset.dy,
+          child: GestureDetector(
+            onTap: () {
+              if (state.wireDrawingStart != null) {
+                state.completeWireDrawing(
+                  widget.placedComponent.id,
+                  entry.key,
+                  onError: (message) =>
+                      SnackBarUtils.showError(context, message),
+                );
+                return;
+              }
+
+              // If already connected, delete the connection by tapping the input pin
+              final existing = state.connections.where(
+                (c) =>
+                    c.targetComponentId == widget.placedComponent.id &&
+                    c.targetPin == entry.key,
+              );
+              if (existing.isNotEmpty) {
+                // Use command pattern for undo/redo support
+                final command = RemoveConnectionCommand(state, existing.first);
+                CommandController.executeCommand(command);
+              } else {
+                // Otherwise, start a wire
+                state.startWireDrawing(widget.placedComponent.id, entry.key);
+              }
+            },
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                color: entry.value.value > 0 ? Colors.green : Colors.red,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.black, width: 1),
+                boxShadow: widget.isActive
+                    ? [
+                        BoxShadow(
+                          color:
+                              (entry.value.value > 0
+                                      ? Colors.green
+                                      : Colors.red)
+                                  .withOpacity(0.8),
+                          blurRadius: 8,
+                          spreadRadius: 2,
+                        ),
+                      ]
+                    : null,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return pins;
+  }
+
+  /// Helper to get the current counter value for a pin position.
+  int _getAndIncrementCounter(
+    PinPosition position, {
+    required int numberTop,
+    required int numberRight,
+    required int numberBottom,
+    required int numberLeft,
+  }) {
+    switch (position) {
+      case PinPosition.TOP:
+        return numberTop;
+      case PinPosition.RIGHT:
+        return numberRight;
+      case PinPosition.BOTTOM:
+        return numberBottom;
+      case PinPosition.LEFT:
+        return numberLeft;
+    }
+  }
+}

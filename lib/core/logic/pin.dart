@@ -1,12 +1,14 @@
 import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/logic/wire.dart';
 
+enum PinPosition { TOP, RIGHT, BOTTOM, LEFT }
+
 abstract class Pin {
   final Component component;
   int _bitWidth;
 
   int _value = 0;
-  
+
   Pin(this.component, {int bitWidth = 1}) : _bitWidth = bitWidth;
 
   /// Gets the bit width of this pin
@@ -34,7 +36,6 @@ abstract class Pin {
   int get mask => (1 << bitWidth) - 1;
 }
 
-
 class InputPin extends Pin {
   Wire? source;
 
@@ -45,12 +46,11 @@ class InputPin extends Pin {
   void updateFromSource() {
     if (source != null) {
       value = source!.value;
-    }else{
+    } else {
       value = 0;
     }
   }
 }
-
 
 class OutputPin extends Pin {
   final List<Wire> connections = [];
@@ -68,4 +68,3 @@ class OutputPin extends Pin {
     return newPin;
   }
 }
-

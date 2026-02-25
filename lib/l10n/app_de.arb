@@ -351,11 +351,13 @@
   "@cancel": {
     "description": "Schaltfläche Abbrechen"
   },
+  "close": "Schließen",
   "delete": "Löschen",
   "@delete": {
     "description": "Schaltfläche Löschen"
   },
   "save": "Speichern",
   "description": "Beschreibung",
-  "cantChangeBitwidth": "Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt"
+  "cantChangeBitwidth": "Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt",
+  "enterComponentLabel": "Anzeigenamen eingeben"
 }

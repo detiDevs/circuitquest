@@ -1,146 +1,21 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/levels/levels.dart';
+import 'package:circuitquest/state/level_state.dart';
+import 'package:circuitquest/ui/level_mode/level_screen.dart';
+import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:circuitquest/levels/levels.dart';
-import '../../state/level_state.dart';
-import 'level_screen.dart';
-import '../utils/snackbar_utils.dart';
-
-/// Screen for selecting a level to play.
-///
-/// Displays all available levels organized by their category blocks.
-/// Users can tap on a level to start playing it.
-class LevelSelectionScreen extends ConsumerStatefulWidget {
-  const LevelSelectionScreen({super.key});
-
-  @override
-  ConsumerState<LevelSelectionScreen> createState() =>
-      _LevelSelectionScreenState();
-}
-
-class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.selectALevel),
-        backgroundColor: Colors.blue[800],
-        foregroundColor: Colors.white,
-        actions: [
-          // Testing button to toggle all levels unlock
-          IconButton(
-            icon: const Icon(Icons.lock_open),
-            tooltip: 'Toggle unlock all levels (testing)',
-            onPressed: () => _toggleAllLevelsUnlocked(context),
-          ),
-        ],
-      ),
-      body: _buildBody(),
-    );
-  }
-
-  Future<void> _toggleAllLevelsUnlocked(BuildContext context) async {
-    await toggleAllLevelsUnlocked(ref);
-  }
-
-  Widget _buildBody() {
-    final levelBlocksAsync = ref.watch(levelBlocksProvider);
-
-    return levelBlocksAsync.when(
-      data: (levelBlocks) {
-        if (levelBlocks.isEmpty) {
-          return Center(
-            child: Text(AppLocalizations.of(context)!.noLevelsAvailable),
-          );
-        }
-
-        return ListView.builder(
-          itemCount: levelBlocks.length,
-          itemBuilder: (context, index) {
-            final category = levelBlocks.keys.elementAt(index);
-            final levels = levelBlocks[category]!;
-            return _LevelCategory(category: category, levels: levels);
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('${AppLocalizations.of(context)!.failedToLoadLevels}: $error'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(levelBlocksProvider);
-              },
-              child: Text(AppLocalizations.of(context)!.retry),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Widget displaying a category of levels.
-class _LevelCategory extends StatelessWidget {
-  final String category;
-  final List<LevelBlockItem> levels;
-
-  const _LevelCategory({required this.category, required this.levels});
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Text(
-        category,
-        style: Theme.of(
-          context,
-        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text('${levels.length} levels'),
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: _getCrossAxisCount(context),
-              childAspectRatio: 1.2,
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 12,
-            ),
-            itemCount: levels.length,
-            itemBuilder: (context, index) {
-              final levelItem = levels[index];
-              return _LevelCard(levelItem: levelItem);
-            },
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-
-  int _getCrossAxisCount(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    // Use 3 columns on wider screens (>= 600 dp), 2 columns on narrower screens
-    return width >= 600 ? 3 : 2;
-  }
-}
 
 /// Widget displaying a single level card.
-class _LevelCard extends ConsumerWidget {
+class LevelCard extends ConsumerWidget {
   final LevelBlockItem levelItem;
 
-  const _LevelCard({required this.levelItem});
+  const LevelCard({super.key, required this.levelItem});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+     final localeCode = Localizations.localeOf(context).languageCode;
+    final levelName = levelItem.getLocalizedName(localeCode);
     final isCompletedAsync = ref.watch(levelCompletedProvider(levelItem.id));
     final canAccessAsync = ref.watch(levelAccessProvider(levelItem.id));
 
@@ -223,7 +98,7 @@ class _LevelCard extends ConsumerWidget {
                     ),
                     // Level name
                     Text(
-                      levelItem.name,
+                      levelName,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

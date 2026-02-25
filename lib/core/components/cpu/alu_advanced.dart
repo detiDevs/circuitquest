@@ -29,6 +29,11 @@ class ALUAdvanced extends Component {
     outputs['zero'] = _zero;
     outputs['outValue']!.value = 0;
     outputs['zero']!.value = 0;
+    pinPositions = {
+      'Ainvert': PinPosition.TOP,
+      'Bnegate': PinPosition.TOP,
+      'OP': PinPosition.BOTTOM,
+    };
   }
 
   @override
