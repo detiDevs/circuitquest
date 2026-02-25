@@ -244,6 +244,7 @@ class SandboxState extends ChangeNotifier {
 
   /// Moves a component to a new position.
   void moveComponent(String componentId, Offset newPosition) {
+    print("moving component to: $newPosition");
     final index = _placedComponents.indexWhere((c) => c.id == componentId);
     if (index != -1) {
       final component = _placedComponents[index];

@@ -41,18 +41,8 @@ class PlacedComponentWidget extends ConsumerStatefulWidget {
 
 class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
   bool paning = false;
+  double left = 0, top = 0;
   late Offset oldPosition;
-  late int numberTop;
-  late int numberRight;
-  late int numberBottom;
-  late int numberLeft;
-
-  _PlacedComponentWidgetState() {
-    numberTop = 0;
-    numberRight = 0;
-    numberBottom = 0;
-    numberLeft = 0;
-  }
 
   @override
   void initState() {
@@ -97,11 +87,19 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
       left: widget.placedComponent.position.dx,
       top: widget.placedComponent.position.dy,
       child: GestureDetector(
+        onPanStart: (details) {
+          left = widget.placedComponent.position.dx;
+          top = widget.placedComponent.position.dy;
+        },
         onPanUpdate: (details) {
           if (widget.placedComponent.immovable) return;
           paning = true;
           // Move component
-          final newPosition = widget.placedComponent.position + details.delta;
+          left += details.delta.dx;
+          top += details.delta.dy;
+          //final newPosition = widget.placedComponent.position + details.delta;
+          final newPosition = Offset(left, top);
+          print("details delta: ${details.delta}");
           ref
               .read(sandboxProvider)
               .moveComponent(widget.placedComponent.id, newPosition);
