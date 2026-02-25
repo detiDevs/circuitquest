@@ -1,15 +1,11 @@
 import 'package:circuitquest/core/commands/command_controller.dart';
-import 'package:circuitquest/core/commands/move_component_command.dart';
-import 'package:circuitquest/core/commands/remove_component_command.dart';
+import 'package:circuitquest/core/commands/place_component_command.dart';import 'package:circuitquest/core/logic/pin.dart';import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/placed_component_widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3, Matrix4;
-import '../../../../l10n/app_localizations.dart';
 import '../../../../state/sandbox_state.dart';
 import '../../../../core/components/input_source.dart';
 import '../../../../core/components/output_probe.dart';
@@ -19,14 +15,7 @@ import '../../../../core/components/cpu/register_block.dart';
 import 'package:circuitquest/levels/level.dart';
 import '../../../../core/components/base/component.dart';
 import '../component_palette.dart';
-import 'input_source_widget.dart';
-import 'output_probe_widget.dart';
-import '../../../../state/custom_component_library.dart';
-import '../../../../core/components/custom_component.dart';
-import '../../utils/snackbar_utils.dart';
-import '../../../../core/commands/place_component_command.dart';
-import '../../../../core/commands/remove_connection_command.dart';
-import 'placed_component_widget.dart';
+
 
 /// The main canvas where components are placed and connected.
 ///
@@ -382,10 +371,21 @@ class _WirePainter extends CustomPainter {
         connection.sourcePin,
         isInput: false,
       );
+      final sourcePinPosition = PinPositioningUtils.getPinPosition(
+        connection.sourcePin,
+        false,
+        sourceComponent.component.pinPositions,
+      );
+
       final targetPos = _pinCenter(
         targetComponent,
         connection.targetPin,
         isInput: true,
+      );
+      final targetPinPosition = PinPositioningUtils.getPinPosition(
+        connection.targetPin,
+        true,
+        targetComponent.component.pinPositions,
       );
 
       // Use brighter color and wider stroke for active connections
@@ -397,7 +397,14 @@ class _WirePainter extends CustomPainter {
         paint.strokeWidth = 2.0;
       }
 
-      _drawWire(canvas, paint, sourcePos, targetPos);
+      _drawWire(
+        canvas,
+        paint,
+        sourcePos,
+        targetPos,
+        sourcePinPosition: sourcePinPosition,
+        targetPinPosition: targetPinPosition,
+      );
     }
 
     // Draw wire being drawn
@@ -410,32 +417,120 @@ class _WirePainter extends CustomPainter {
         wireDrawingStart!.pinName,
         isInput: false,
       );
+      final sourcePinPosition = PinPositioningUtils.getPinPosition(
+        wireDrawingStart!.pinName,
+        false,
+        sourceComponent.component.pinPositions,
+      );
 
       paint.color = Colors.blue[300]!;
       paint.strokeWidth = 2.0;
       paint.strokeCap = StrokeCap.round;
 
-      _drawWire(canvas, paint, sourcePos, currentPointerPosition!);
+      _drawWire(
+        canvas,
+        paint,
+        sourcePos,
+        currentPointerPosition!,
+        sourcePinPosition: sourcePinPosition,
+      );
     }
   }
 
-  /// Draws a wire connection with optional bezier curve.
-  void _drawWire(Canvas canvas, Paint paint, Offset start, Offset end) {
-    // Use a simple bezier curve for better visual appearance
+  /// Draws a wire connection with intelligent routing.
+  /// Routes around components when connecting to TOP or BOTTOM pins.
+  void _drawWire(
+    Canvas canvas,
+    Paint paint,
+    Offset start,
+    Offset end, {
+    PinPosition? sourcePinPosition,
+    PinPosition? targetPinPosition,
+  }) {
     final path = Path();
     path.moveTo(start.dx, start.dy);
 
-    final controlPoint1 = Offset(start.dx + 50, start.dy);
-    final controlPoint2 = Offset(end.dx - 50, end.dy);
+    final hasVerticalPin =
+        sourcePinPosition == PinPosition.TOP ||
+        sourcePinPosition == PinPosition.BOTTOM ||
+        targetPinPosition == PinPosition.TOP ||
+        targetPinPosition == PinPosition.BOTTOM;
 
-    path.cubicTo(
-      controlPoint1.dx,
-      controlPoint1.dy,
-      controlPoint2.dx,
-      controlPoint2.dy,
-      end.dx,
-      end.dy,
-    );
+    if (hasVerticalPin) {
+      // Route vertically first to avoid going through components
+      Offset midPoint1;
+      Offset midPoint2;
+
+      if (sourcePinPosition == PinPosition.TOP) {
+        midPoint1 = Offset(start.dx, start.dy - 60);
+      } else if (sourcePinPosition == PinPosition.BOTTOM) {
+        midPoint1 = Offset(start.dx, start.dy + 60);
+      } else {
+        midPoint1 = Offset(
+          start.dx + (sourcePinPosition == PinPosition.LEFT ? -40 : 40),
+          start.dy,
+        );
+      }
+
+      if (targetPinPosition == PinPosition.TOP) {
+        midPoint2 = Offset(end.dx, end.dy - 60);
+      } else if (targetPinPosition == PinPosition.BOTTOM) {
+        midPoint2 = Offset(end.dx, end.dy + 60);
+      } else {
+        midPoint2 = Offset(
+          end.dx + (targetPinPosition == PinPosition.LEFT ? -40 : 40),
+          end.dy,
+        );
+      }
+
+      final controlPoint1 = Offset(
+        midPoint1.dx,
+        (start.dy + midPoint1.dy) / 2,
+      );
+      final controlPoint2 = Offset(
+        midPoint1.dx,
+        (midPoint1.dy + midPoint2.dy) / 2,
+      );
+      final controlPoint3 = Offset(
+        midPoint2.dx,
+        (midPoint1.dy + midPoint2.dy) / 2,
+      );
+      final controlPoint4 = Offset(
+        midPoint2.dx,
+        (midPoint2.dy + end.dy) / 2,
+      );
+
+      path.cubicTo(
+        controlPoint1.dx,
+        controlPoint1.dy,
+        controlPoint2.dx,
+        controlPoint2.dy,
+        (midPoint1.dx + midPoint2.dx) / 2,
+        (midPoint1.dy + midPoint2.dy) / 2,
+      );
+
+      path.cubicTo(
+        controlPoint3.dx,
+        controlPoint3.dy,
+        controlPoint4.dx,
+        controlPoint4.dy,
+        end.dx,
+        end.dy,
+      );
+    } else {
+      // For LEFT-RIGHT connections, use simple bezier curve
+      final controlPoint1 = Offset(start.dx + 50, start.dy);
+      final controlPoint2 = Offset(end.dx - 50, end.dy);
+
+      path.cubicTo(
+        controlPoint1.dx,
+        controlPoint1.dy,
+        controlPoint2.dx,
+        controlPoint2.dy,
+        end.dx,
+        end.dy,
+      );
+    }
 
     canvas.drawPath(path, paint);
 
@@ -452,30 +547,70 @@ class _WirePainter extends CustomPainter {
         activeComponentIds != oldDelegate.activeComponentIds;
   }
 
-  /// Returns the canvas-space center for a given pin.
+  /// Returns the canvas-space center for a given pin using pin positioning utilities.
+  /// This respects custom pin positions defined in the component's pinPositions map.
   Offset _pinCenter(
     PlacedComponent component,
     String pinName, {
     required bool isInput,
   }) {
-    final pins = isInput
-        ? component.component.inputs.keys.toList()
-        : component.component.outputs.keys.toList();
+    final inputs = component.component.inputs.entries.toList();
+    final outputs = component.component.outputs.entries.toList();
+    final pinPositions = component.component.pinPositions;
 
-    if (pins.isEmpty) {
-      return component.position + Offset(isInput ? 0 : gridSize, gridSize / 2);
+    // Determine which side this pin is on
+    final pinPosition = PinPositioningUtils.getPinPosition(
+      pinName,
+      isInput,
+      pinPositions,
+    );
+
+    // Get all pin keys
+    final inputKeys = inputs.map((e) => e.key).toList();
+    final outputKeys = outputs.map((e) => e.key).toList();
+
+    // Calculate total pins on this side
+    final totalOnSide = PinPositioningUtils.getTotalPinsOnSide(
+      pinPosition,
+      inputKeys,
+      outputKeys,
+      pinPositions,
+    );
+
+    if (totalOnSide == 0) {
+      // Fallback if no pins on this side
+      return component.position + Offset(gridSize / 2, gridSize / 2);
     }
 
-    final index = pins.indexOf(pinName);
-    if (index == -1) {
-      // Fallback to first pin if name not found
-      return _pinCenter(component, pins.first, isInput: isInput);
+    // Find the index of this pin among all pins on the same side
+    int pinIndex = 0;
+    for (int i = 0; i < inputs.length + outputs.length; i++) {
+      final entry = i < inputs.length ? inputs[i] : outputs[i - inputs.length];
+      final isInputPin = i < inputs.length;
+
+      final entryPosition = PinPositioningUtils.getPinPosition(
+        entry.key,
+        isInputPin,
+        pinPositions,
+      );
+
+      if (entryPosition == pinPosition) {
+        if (entry.key == pinName) {
+          break;
+        }
+        pinIndex++;
+      }
     }
 
-    final spacing = gridSize / (pins.length + 1);
-    final yCenter = spacing * (index + 1);
-    final xCenter = isInput ? 0.0 : gridSize;
+    // Calculate the offset using the utility
+    final offsetWithinGrid = PinPositioningUtils.calculatePinOffset(
+      pinIndex,
+      totalOnSide,
+      gridSize,
+      pinPosition,
+    );
 
-    return component.position + Offset(xCenter, yCenter);
+    // Return the center of the 20px pin (offset is for top-left, add 10 to center it)
+    return component.position + offsetWithinGrid + Offset(10, 10);
   }
 }
