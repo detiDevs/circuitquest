@@ -72,7 +72,7 @@ class RippleCarryAdder extends Component {
   /// Bit width of the operands and sum output.
   final int bitWidth;
 
-  RippleCarryAdder({this.bitWidth = 8}) {
+  RippleCarryAdder({this.bitWidth = 32}) {
     if (bitWidth <= 0) {
       throw ArgumentError('bitWidth must be positive');
     }

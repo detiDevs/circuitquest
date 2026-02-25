@@ -17,6 +17,7 @@ class SignExtend extends Component {
 
   @override
   bool evaluate() {
+    _input.updateFromSource();
     final value = _input.value & 0xFFFF;
     // Check sign bit (bit 15)
     final signBit = (value >> 15) & 1;
