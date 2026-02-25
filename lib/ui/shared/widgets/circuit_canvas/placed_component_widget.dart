@@ -6,10 +6,12 @@ import 'package:circuitquest/core/commands/remove_connection_command.dart';
 import 'package:circuitquest/core/components/custom_component.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
+import 'package:circuitquest/core/logic/pin.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/custom_component_library.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
+import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/component_detail_dialog.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/input_source_widget.dart';
@@ -33,12 +35,24 @@ class PlacedComponentWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<PlacedComponentWidget> createState() => _PlacedComponentWidgetState();
+  ConsumerState<PlacedComponentWidget> createState() =>
+      _PlacedComponentWidgetState();
 }
 
 class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
   bool paning = false;
   late Offset oldPosition;
+  late int numberTop;
+  late int numberRight;
+  late int numberBottom;
+  late int numberLeft;
+
+  _PlacedComponentWidgetState() {
+    numberTop = 0;
+    numberRight = 0;
+    numberBottom = 0;
+    numberLeft = 0;
+  }
 
   @override
   void initState() {
@@ -97,8 +111,10 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
           // Snap to grid when done dragging
           paning = false;
           final snapped = Offset(
-            (widget.placedComponent.position.dx / widget.gridSize).round() * widget.gridSize,
-            (widget.placedComponent.position.dy / widget.gridSize).round() * widget.gridSize,
+            (widget.placedComponent.position.dx / widget.gridSize).round() *
+                widget.gridSize,
+            (widget.placedComponent.position.dy / widget.gridSize).round() *
+                widget.gridSize,
           );
           final command = MoveComponentCommand(
             state,
@@ -112,12 +128,20 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
         onSecondaryTapDown: (details) {
           if (widget.placedComponent.immovable) return;
           // Show context menu on right-click
-          ComponentDetailDialog.displayDialog(context, widget.placedComponent, state);
+          ComponentDetailDialog.displayDialog(
+            context,
+            widget.placedComponent,
+            state,
+          );
         },
         onLongPress: () {
           if (widget.placedComponent.immovable) return;
           // Show context menu on long press (for touch devices)
-          ComponentDetailDialog.displayDialog(context, widget.placedComponent, state);
+          ComponentDetailDialog.displayDialog(
+            context,
+            widget.placedComponent,
+            state,
+          );
         },
         child: Container(
           width: widget.gridSize,
@@ -182,9 +206,8 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                       ),
                     ),
                     // Input pins (left side)
-                    ..._buildInputPins(context, state),
+                    ..._buildPins(context, state),
                     // Output pins (right side)
-                    ..._buildOutputPins(context, state),
                   ],
                 ),
         ),
@@ -260,22 +283,73 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
   }
 
   /// Builds interactive input pin widgets.
-  List<Widget> _buildInputPins(BuildContext context, SandboxState state) {
+  List<Widget> _buildPins(BuildContext context, SandboxState state) {
     final inputs = widget.placedComponent.component.inputs.entries.toList();
+    final outputs = widget.placedComponent.component.outputs.entries.toList();
+    final pinPositions = widget.placedComponent.component.pinPositions;
     final pins = <Widget>[];
 
-    for (int i = 0; i < inputs.length; i++) {
-      final entry = inputs[i];
-      final pinPosition = _calculatePinPosition(
-        i,
-        inputs.length,
-        isInput: true,
+    // Pre-calculate total pins on each side
+    final inputKeys = inputs.map((e) => e.key).toList();
+    final outputKeys = outputs.map((e) => e.key).toList();
+    final pinsPerSide = PinPositioningUtils.calculatePinsPerSide(
+      inputKeys,
+      outputKeys,
+      pinPositions,
+    );
+
+    // Track current index for each side
+    int numberTop = 0, numberRight = 0, numberBottom = 0, numberLeft = 0;
+
+    for (int i = 0; i < inputs.length + outputs.length; i++) {
+      final entry = i < inputs.length ? inputs[i] : outputs[i - inputs.length];
+      final isInput = i < inputs.length;
+
+      // Determine pin position
+      final pinPosition = PinPositioningUtils.getPinPosition(
+        entry.key,
+        isInput,
+        pinPositions,
+      );
+
+      // Get total pins on this side and current index
+      final totalOnSide = pinsPerSide[pinPosition] ?? 0;
+      final currentIndex = _getAndIncrementCounter(
+        pinPosition,
+        numberTop: numberTop,
+        numberRight: numberRight,
+        numberBottom: numberBottom,
+        numberLeft: numberLeft,
+      );
+
+      // Update counter after getting index
+      switch (pinPosition) {
+        case PinPosition.TOP:
+          numberTop++;
+          break;
+        case PinPosition.RIGHT:
+          numberRight++;
+          break;
+        case PinPosition.BOTTOM:
+          numberBottom++;
+          break;
+        case PinPosition.LEFT:
+          numberLeft++;
+          break;
+      }
+
+      // Calculate pin position
+      final offset = PinPositioningUtils.calculatePinOffset(
+        currentIndex,
+        totalOnSide,
+        widget.gridSize,
+        pinPosition,
       );
 
       pins.add(
         Positioned(
-          left: pinPosition.dx,
-          top: pinPosition.dy,
+          left: offset.dx,
+          top: offset.dy,
           child: GestureDetector(
             onTap: () {
               if (state.wireDrawingStart != null) {
@@ -298,6 +372,9 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                 // Use command pattern for undo/redo support
                 final command = RemoveConnectionCommand(state, existing.first);
                 CommandController.executeCommand(command);
+              } else {
+                // Otherwise, start a wire
+                state.startWireDrawing(widget.placedComponent.id, entry.key);
               }
             },
             child: Container(
@@ -330,66 +407,23 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
     return pins;
   }
 
-  /// Builds interactive output pin widgets.
-  List<Widget> _buildOutputPins(BuildContext context, SandboxState state) {
-    final outputs = widget.placedComponent.component.outputs.entries.toList();
-    final pins = <Widget>[];
-
-    for (int i = 0; i < outputs.length; i++) {
-      final entry = outputs[i];
-      final pinPosition = _calculatePinPosition(
-        i,
-        outputs.length,
-        isInput: false,
-      );
-
-      pins.add(
-        Positioned(
-          left: pinPosition.dx,
-          top: pinPosition.dy,
-          child: GestureDetector(
-            onTap: () {
-              // Start wire drawing from this output
-              state.startWireDrawing(widget.placedComponent.id, entry.key);
-            },
-            child: Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                color: entry.value.value > 0 ? Colors.green : Colors.red,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 1),
-                boxShadow: widget.isActive
-                    ? [
-                        BoxShadow(
-                          color:
-                              (entry.value.value > 0
-                                      ? Colors.green
-                                      : Colors.red)
-                                  .withOpacity(0.8),
-                          blurRadius: 8,
-                          spreadRadius: 2,
-                        ),
-                      ]
-                    : null,
-              ),
-            ),
-          ),
-        ),
-      );
+  /// Helper to get the current counter value for a pin position.
+  int _getAndIncrementCounter(
+    PinPosition position, {
+    required int numberTop,
+    required int numberRight,
+    required int numberBottom,
+    required int numberLeft,
+  }) {
+    switch (position) {
+      case PinPosition.TOP:
+        return numberTop;
+      case PinPosition.RIGHT:
+        return numberRight;
+      case PinPosition.BOTTOM:
+        return numberBottom;
+      case PinPosition.LEFT:
+        return numberLeft;
     }
-
-    return pins;
-  }
-
-  /// Calculates pin position based on index and total count.
-  Offset _calculatePinPosition(int index, int total, {required bool isInput}) {
-    final spacing = widget.gridSize / (total + 1);
-    final y = spacing * (index + 1) - 10; // -6 to center the 12px pin
-
-    return Offset(
-      isInput ? 0 : widget.gridSize - 20, // Left or right edge
-      y,
-    );
   }
 }

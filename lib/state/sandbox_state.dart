@@ -1,3 +1,5 @@
+//TODO: Split up this file for modularity
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
@@ -208,7 +210,6 @@ class SandboxState extends ChangeNotifier {
       label: label,
     );
     _placedComponents.add(placed);
-    print("Placed component with id: ${placed.id} and type ${placed.type}");
     notifyListeners();
     return id;
   }
