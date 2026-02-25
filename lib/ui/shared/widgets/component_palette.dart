@@ -95,22 +95,16 @@ final List<ComponentType> availableComponents = [
   ),
   // Sequential components
   ComponentType(
-    name: 'Clock',
-    displayName: 'Clock',
-    iconPath: 'assets/gates/Register.svg', // Reuse register icon for now
-    createComponent: () => createComponentByName('Clock')!,
-  ),
-  ComponentType(
     name: 'DLatch',
     displayName: 'D-Latch',
     iconPath: 'assets/gates/DLatch.svg',
     createComponent: () => createComponentByName('DLatch')!,
   ),
   ComponentType(
-    name: 'DFlipFlop',
-    displayName: 'D-Flip-Flop',
+    name: 'Register',
+    displayName: 'Register',
     iconPath: 'assets/gates/Register.svg',
-    createComponent: () => createComponentByName('DFlipFlop')!,
+    createComponent: () => createComponentByName('Register')!,
   ),
   ComponentType(
     name: 'Decoder',

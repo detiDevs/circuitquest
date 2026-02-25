@@ -30,6 +30,8 @@ class ALUControl extends Component {
 
   @override
   bool evaluate() {
+    _aluOp.updateFromSource();
+    _funct.updateFromSource();
     final aluOp = _aluOp.value;
     final funct = _funct.value;
 

@@ -14,8 +14,9 @@ class Decoder extends Component {
       throw ArgumentError('selectBitWidth must be positive');
     }
     outputCount = 1 << selectBitWidth;
-
-    inputs['input'] = InputPin(this, bitWidth: selectBitWidth);
+    for (int i = 0; i < selectBitWidth; i++) {
+      inputs['input$i'] = InputPin(this, bitWidth: 1);
+    }
     for (int i = 0; i < outputCount; i++) {
       outputs['out$i'] = OutputPin(this, bitWidth: 1);
       outputs['out$i']!.value = 0;
@@ -26,8 +27,14 @@ class Decoder extends Component {
   /// Drives exactly one output high corresponding to the input value.
   @override
   bool evaluate() {
-    inputs['input']!.updateFromSource();
-    final int selector = inputs['input']!.value & ((1 << selectBitWidth) - 1);
+    for (int i = 0; i < selectBitWidth; i++) {
+      inputs['input$i']!.updateFromSource();
+    }
+    final int selector =
+        inputs['input0']!.value +
+            inputs['input1']!.value * 2 +
+            inputs['input2']!.value * 4 &
+        ((1 << selectBitWidth) - 1);
 
     bool changed = false;
     for (int i = 0; i < outputCount; i++) {

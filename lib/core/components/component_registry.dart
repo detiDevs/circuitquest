@@ -21,9 +21,8 @@ import 'package:circuitquest/core/components/gates/or_gate.dart';
 import 'package:circuitquest/core/components/gates/xor_gate.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
-import 'package:circuitquest/core/components/sequential/clock.dart';
-import 'package:circuitquest/core/components/sequential/d_flip_flop.dart';
 import 'package:circuitquest/core/components/sequential/d_latch.dart';
+import 'package:circuitquest/core/components/sequential/register.dart';
 
 final Map<String, Component Function()> componentFactoryByName = {
   'InputSource': () => InputSource(),
@@ -36,9 +35,7 @@ final Map<String, Component Function()> componentFactoryByName = {
   'Xor': () => XorGate(),
   'HalfAdder': () => HalfAdder(),
   'FullAdder': () => FullAdder(),
-  'Clock': () => Clock(),
   'DLatch': () => DLatch(),
-  'DFlipFlop': () => DFlipFlop(),
   'Decoder': ()=> Decoder(selectBitWidth: 3),
   'Splitter8to1': () => Splitter(sliceCount: 8, sliceBitWidth: 1),
   'Splitter32to8': () => Splitter(sliceCount: 4, sliceBitWidth: 8),
@@ -49,7 +46,7 @@ final Map<String, Component Function()> componentFactoryByName = {
   'Multiplexer2Inp': () => Multiplexer(inputCount: 2),
   'Multiplexer4Inp': () => Multiplexer(inputCount: 4),
   'Multiplexer8Inp': () => Multiplexer(inputCount: 8),
-  'Adder32bit': () => RippleCarryAdder(bitWidth: 32),
+  'Register': () => Register(),
   'ProgramCounter': () => ProgramCounter(),
   'InstructionMemory': () => InstructionMemory(),
   'RegisterBlock': () => RegisterBlock(),
@@ -59,6 +56,7 @@ final Map<String, Component Function()> componentFactoryByName = {
   'ALUControl': () => ALUControl(),
   'DataMemory': () => DataMemory(),
   'ShiftLeft2': () => ShiftLeft2(),
+  'Adder32bit': ()=> RippleCarryAdder(),
 };
 
 Component? createComponentByName(String type) {
