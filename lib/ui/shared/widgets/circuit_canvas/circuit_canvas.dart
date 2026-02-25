@@ -164,9 +164,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         // Convert global drop offset into local canvas coordinates, accounting for zoom/pan
         final renderBox = context.findRenderObject() as RenderBox;
         final localPosition = renderBox.globalToLocal(details.offset);
-        // Transform the position to account for zoom and pan
-        final transformedPosition = _transformPosition(localPosition);
-        final gridPosition = _snapToGrid(transformedPosition);
+        final gridPosition = _snapToGrid(localPosition);
 
         // Create and place the component using command pattern
         final component = details.data.createComponent();
@@ -203,9 +201,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
               // Track mouse position for wire drawing feedback
               if (state.wireDrawingStart != null) {
                 setState(() {
-                  _currentPointerPosition = _transformPosition(
-                    event.localPosition,
-                  );
+                  _currentPointerPosition = event.localPosition;
                 });
               }
             },
@@ -213,10 +209,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
               onTapDown: (details) {
                 // Cancel wire drawing only when tapping empty space
                 if (state.wireDrawingStart != null) {
-                  final transformedPos = _transformPosition(
-                    details.localPosition,
-                  );
-                  final hitComponent = _hitTestComponent(state, transformedPos);
+                  final hitComponent = _hitTestComponent(state, details.localPosition);
                   if (hitComponent == null) {
                     state.cancelWireDrawing();
                     setState(() {
@@ -288,16 +281,6 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
       }
     }
     return null;
-  }
-
-  /// Transforms screen coordinates to canvas coordinates accounting for zoom/pan
-  Offset _transformPosition(Offset screenPosition) {
-    final Matrix4 transform = _transformationController.value;
-    final Matrix4 inverseTransform = Matrix4.inverted(transform);
-    final Vector3 transformed = inverseTransform.transform3(
-      Vector3(screenPosition.dx, screenPosition.dy, 0),
-    );
-    return Offset(transformed.x, transformed.y);
   }
 }
 
