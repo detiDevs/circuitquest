@@ -210,7 +210,6 @@ class SandboxState extends ChangeNotifier {
       label: label,
     );
     _placedComponents.add(placed);
-    print("Placed component with id: ${placed.id} and type ${placed.type}");
     notifyListeners();
     return id;
   }

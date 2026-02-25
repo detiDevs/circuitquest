@@ -24,6 +24,8 @@ class DataMemory extends Component {
     inputs['memRead'] = _memRead;
     outputs['readData'] = _readData;
     outputs['readData']!.value = 0;
+
+    pinPositions = {'memWrite': PinPosition.TOP, 'memRead': PinPosition.TOP};
   }
 
   /// Load a list of data into the data memory.
