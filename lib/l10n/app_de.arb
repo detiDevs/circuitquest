@@ -370,7 +370,7 @@
       } 
     }
   },
-  "successfullyDeletedX": "{itemToDelete} deleted successfully",
+  "successfullyDeletedX": "{itemToDelete} erfolgreich gelöscht.",
   "@successfullyDeletedX": {
     "placeholders": {
       "itemToDelete": {
@@ -379,7 +379,7 @@
       }
     }
   },
-  "failedToDeleteX": "Failed to delete {itemToDelete}",
+  "failedToDeleteX": "Fehler beim Löschen von {itemToDelete}",
   "@failedToDeleteX":{
     "placeholders": {
       "itemToDelete": {

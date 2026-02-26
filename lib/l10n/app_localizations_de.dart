@@ -374,11 +374,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String successfullyDeletedX(String itemToDelete) {
-    return '$itemToDelete deleted successfully';
+    return '$itemToDelete erfolgreich gelöscht.';
   }
 
   @override
   String failedToDeleteX(String itemToDelete) {
-    return 'Failed to delete $itemToDelete';
+    return 'Fehler beim Löschen von $itemToDelete';
   }
 }
