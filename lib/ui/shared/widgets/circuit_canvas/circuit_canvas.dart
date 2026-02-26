@@ -14,7 +14,7 @@ import '../../../../core/components/cpu/data_memory.dart';
 import '../../../../core/components/cpu/register_block.dart';
 import 'package:circuitquest/levels/level.dart';
 import '../../../../core/components/base/component.dart';
-import '../component_palette.dart';
+import '../component_palette/component_palette.dart';
 
 
 /// The main canvas where components are placed and connected.

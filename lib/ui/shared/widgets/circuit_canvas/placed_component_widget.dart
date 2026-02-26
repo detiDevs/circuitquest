@@ -13,7 +13,7 @@ import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/component_detail_dialog.dart';
-import 'package:circuitquest/ui/shared/widgets/component_palette.dart';
+import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/input_source_widget.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/output_probe_widget.dart';
 import 'package:flutter/gestures.dart';
