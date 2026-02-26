@@ -1,15 +1,13 @@
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
+import 'package:circuitquest/ui/shared/widgets/component_palette/custom_component_palette_item.dart';
+import 'package:circuitquest/ui/shared/widgets/component_palette/palette_item.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
 
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/components/base/component.dart';
-import '../../../state/custom_component_library.dart';
-import '../../../state/sandbox_state.dart';
-import '../../../core/components/custom_component.dart';
+import '../../../../core/components/base/component.dart';
+import '../../../../state/custom_component_library.dart';
+import '../../../../core/components/custom_component.dart';
 
 /// A draggable component type in the palette.
 class ComponentType {
@@ -262,7 +260,7 @@ Widget buildResponsiveComponentList(
                   .map(
                     (componentType) => SizedBox(
                       width: 70,
-                      child: _PaletteItem(componentType: componentType),
+                      child: PaletteItem(componentType: componentType),
                     ),
                   )
                   .toList(),
@@ -292,7 +290,7 @@ Widget buildResponsiveComponentList(
             itemCount: components.length,
             itemBuilder: (context, index) {
               final componentType = components[index];
-              return _PaletteItem(componentType: componentType);
+              return PaletteItem(componentType: componentType);
             },
           ),
         ),
@@ -344,7 +342,7 @@ class ComponentPalette extends ConsumerWidget {
     return ListView(
       children: [
         ...availableComponents.map(
-          (componentType) => _PaletteItem(componentType: componentType),
+          (componentType) => PaletteItem(componentType: componentType),
         ),
         if (customEntries.isNotEmpty) ...[
           const Divider(height: 24),
@@ -359,7 +357,7 @@ class ComponentPalette extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           ...customEntries.map(
-            (entry) => _PaletteItem(
+            (entry) => CustomComponentPaletteItem(
               componentType: ComponentType(
                 name: entry.data.name,
                 displayName: entry.data.name,
@@ -385,7 +383,7 @@ class ComponentPalette extends ConsumerWidget {
           ...availableComponents.map(
             (componentType) => SizedBox(
               width: 70,
-              child: _PaletteItem(componentType: componentType),
+              child: PaletteItem(componentType: componentType),
             ),
           ),
           if (customEntries.isNotEmpty) ...[
@@ -393,7 +391,7 @@ class ComponentPalette extends ConsumerWidget {
             ...customEntries.map(
               (entry) => SizedBox(
                 width: 70,
-                child: _PaletteItem(
+                child: CustomComponentPaletteItem(
                   componentType: ComponentType(
                     name: entry.data.name,
                     displayName: entry.data.name,
@@ -407,168 +405,6 @@ class ComponentPalette extends ConsumerWidget {
           ],
         ],
       ),
-    );
-  }
-}
-
-/// Individual palette item that can be dragged.
-class _PaletteItem extends ConsumerWidget {
-  final ComponentType componentType;
-
-  const _PaletteItem({required this.componentType});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Draggable<ComponentType>(
-      data: componentType,
-      feedback: Material(
-        elevation: 4.0,
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.blue, width: 2),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: _ComponentIcon(
-            iconPath: componentType.iconPath,
-            isAsset: componentType.isAsset,
-            size: 60,
-          ),
-        ),
-      ),
-      childWhenDragging: Opacity(
-        opacity: 0.3,
-        child: _buildChild(context, ref, isMobile),
-      ),
-      child: _buildChild(context, ref, isMobile),
-    );
-  }
-
-  Widget _buildChild(BuildContext context, WidgetRef ref, bool isMobile) {
-    if (isMobile) {
-      return _buildMobileChild(context, ref);
-    } else {
-      return _buildDesktopChild(context, ref);
-    }
-  }
-
-  Widget _buildMobileChild(BuildContext context, WidgetRef ref) {
-    return Tooltip(
-      message: componentType.displayName,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: InkWell(
-          onTap: () {
-            ref.read(sandboxProvider).selectComponentType(componentType.name);
-            SnackBarUtils.showInfo(
-              context,
-              AppLocalizations.of(
-                context,
-              )!.componentSelected(componentType.displayName),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: _ComponentIcon(
-              iconPath: componentType.iconPath,
-              isAsset: componentType.isAsset,
-              size: 40,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDesktopChild(BuildContext context, WidgetRef ref) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(8),
-        leading: _ComponentIcon(
-          iconPath: componentType.iconPath,
-          isAsset: componentType.isAsset,
-          size: 40,
-        ),
-        title: Text(
-          componentType.displayName,
-          style: const TextStyle(fontSize: 12),
-        ),
-        onTap: () {
-          // Select this component type
-          ref.read(sandboxProvider).selectComponentType(componentType.name);
-          SnackBarUtils.showInfo(
-            context,
-            AppLocalizations.of(
-              context,
-            )!.componentSelected(componentType.displayName),
-          );
-        },
-      ),
-    );
-  }
-}
-
-/// Widget to display a component's SVG icon.
-class _ComponentIcon extends StatelessWidget {
-  final String iconPath;
-  final bool isAsset;
-  final double size;
-
-  const _ComponentIcon({
-    required this.iconPath,
-    required this.isAsset,
-    required this.size,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (iconPath.isEmpty) {
-      return Icon(Icons.memory, size: size * 0.6, color: Colors.grey);
-    }
-
-    return SizedBox(
-      width: size,
-      height: size,
-      child: isAsset
-          ? SvgPicture.asset(
-              iconPath,
-              fit: BoxFit.contain,
-              placeholderBuilder: (context) =>
-                  Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
-            )
-          : _buildFileIcon(),
-    );
-  }
-
-  Widget _buildFileIcon() {
-    if (iconPath.toLowerCase().endsWith('.svg')) {
-      return SvgPicture.file(
-        File(iconPath),
-        fit: BoxFit.contain,
-        placeholderBuilder: (context) =>
-            Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
-      );
-    }
-    return Image.file(
-      File(iconPath),
-      fit: BoxFit.contain,
-      errorBuilder: (context, error, stackTrace) =>
-          Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
     );
   }
 }

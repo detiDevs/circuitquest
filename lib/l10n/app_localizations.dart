@@ -572,6 +572,12 @@ abstract class AppLocalizations {
   /// **'Custom component saved.'**
   String get customComponentSaved;
 
+  /// No description provided for @deleteCustomComponent.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Custom Component'**
+  String get deleteCustomComponent;
+
   /// Default name for a new circuit
   ///
   /// In en, this message translates to:
@@ -733,6 +739,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter a display name'**
   String get enterComponentLabel;
+
+  /// No description provided for @areYouSureYouWantToDeleteX.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {itemToDelete}?'**
+  String areYouSureYouWantToDeleteX(String itemToDelete);
+
+  /// No description provided for @successfullyDeletedX.
+  ///
+  /// In en, this message translates to:
+  /// **'{itemToDelete} deleted successfully'**
+  String successfullyDeletedX(String itemToDelete);
+
+  /// No description provided for @failedToDeleteX.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete {itemToDelete}'**
+  String failedToDeleteX(String itemToDelete);
 }
 
 class _AppLocalizationsDelegate

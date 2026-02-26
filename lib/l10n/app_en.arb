@@ -265,6 +265,7 @@
   "customComponentBuildDataError": "Unable to build custom component data.",
   "customComponentSavingError": "Failed to save custom component.",
   "customComponentSaved": "Custom component saved.",
+  "deleteCustomComponent": "Delete Custom Component",
 
   "circuitDefaultName": "My Circuit",
   "@circuitDefaultName": {
@@ -360,5 +361,32 @@
   "save": "Save",
   "description": "Description",
   "cantChangeBitwidth": "Cannot change bitwidth if input has active wires",
-  "enterComponentLabel": "Enter a display name"
+  "enterComponentLabel": "Enter a display name",
+  "areYouSureYouWantToDeleteX": "Are you sure you want to delete {itemToDelete}?",
+  "@areYouSureYouWantToDeleteX": {
+    "placeholders": {
+      "itemToDelete": {
+        "type": "String",
+        "example": "MyCustomComponent"
+      } 
+    }
+  },
+  "successfullyDeletedX": "{itemToDelete} deleted successfully",
+  "@successfullyDeletedX": {
+    "placeholders": {
+      "itemToDelete": {
+        "type": "String",
+        "example": "MyCustomComponent"
+      }
+    }
+  },
+  "failedToDeleteX": "Failed to delete {itemToDelete}",
+  "@failedToDeleteX":{
+    "placeholders": {
+      "itemToDelete": {
+        "type": "String",
+        "example": "MyCustomComponent"
+      }
+    }
+  }
 }

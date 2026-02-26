@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/levels/levels.dart';
 import 'package:circuitquest/constants.dart';
-import '../shared/widgets/component_palette.dart';
+import '../shared/widgets/component_palette/component_palette.dart';
 import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
 import '../shared/widgets/control_panel.dart';
 import '../../state/sandbox_state.dart';

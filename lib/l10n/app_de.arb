@@ -264,6 +264,7 @@
   "customComponentBuildDataError": "Fehler beim Erstellen der Komponentendaten",
   "customComponentSavingError": "Fehler beim Speichern der Komponente",
   "customComponentSaved": "Komponente gespeichert",
+  "deleteCustomComponent": "Eigene Komponente löschen",
 
   "circuitDefaultName": "Mein Schaltkreis",
   "@circuitDefaultName": {
@@ -359,5 +360,32 @@
   "save": "Speichern",
   "description": "Beschreibung",
   "cantChangeBitwidth": "Bitbreite kann nicht umgestellt werden, solange es aktive Verbindungen gibt",
-  "enterComponentLabel": "Anzeigenamen eingeben"
+  "enterComponentLabel": "Anzeigenamen eingeben",
+  "areYouSureYouWantToDeleteX": "Bist du sicher, dass du {itemToDelete} löschen willst?",
+  "@areYouSureYouWantToDeleteX": {
+    "placeholders": {
+      "itemToDelete": {
+        "type": "String",
+        "example": "MyCustomComponent"
+      } 
+    }
+  },
+  "successfullyDeletedX": "{itemToDelete} erfolgreich gelöscht.",
+  "@successfullyDeletedX": {
+    "placeholders": {
+      "itemToDelete": {
+        "type": "String",
+        "example": "MyCustomComponent"
+      }
+    }
+  },
+  "failedToDeleteX": "Fehler beim Löschen von {itemToDelete}",
+  "@failedToDeleteX":{
+    "placeholders": {
+      "itemToDelete": {
+        "type": "String",
+        "example": "MyCustomComponent"
+      }
+    }
+  }
 }

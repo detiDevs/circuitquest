@@ -3,7 +3,7 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/shared/widgets/expandable_control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../shared/widgets/component_palette.dart';
+import '../shared/widgets/component_palette/component_palette.dart';
 import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
 import '../shared/widgets/control_panel.dart';
 import '../../state/sandbox_state.dart';

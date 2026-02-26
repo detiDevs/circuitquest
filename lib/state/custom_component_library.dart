@@ -82,6 +82,28 @@ class CustomComponentLibrary extends ChangeNotifier {
     }
   }
 
+  /// Deletes a custom component by the given name string
+  /// Returns true iff deletion was successful
+  Future<bool> deleteCustomComponentByName(String name) async {
+    try {
+      final storageName = _sanitizeFileName(name);
+      final baseDir = await _ensureBaseDirectory();
+      final componentDir = Directory(
+        [baseDir.path, storageName].join(Platform.pathSeparator),
+      );
+      
+      if (await componentDir.exists()) {
+        await componentDir.delete(recursive: true);
+        _components.removeWhere((entry) => entry.data.name == name);
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<Directory> _ensureBaseDirectory() async {
     final documentsDir = await getApplicationDocumentsDirectory();
     final dirPath = [documentsDir.path, Constants.kAppName, 'Custom Components']
