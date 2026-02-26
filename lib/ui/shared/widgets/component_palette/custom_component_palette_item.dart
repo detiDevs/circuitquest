@@ -14,6 +14,10 @@ class CustomComponentPaletteItem extends PaletteItem {
       onSecondaryTapDown: (details) {
         _showContextMenu(context, ref, details.globalPosition);
       },
+      // Long press option for mobile
+      onLongPressStart: (details) {
+        _showContextMenu(context, ref, details.globalPosition);
+      },
       child: super.build(context, ref),
     );
   }

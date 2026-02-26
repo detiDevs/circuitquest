@@ -52,25 +52,13 @@ class PaletteItem extends ConsumerWidget {
   }
 
   Widget _buildMobileChild(BuildContext context, WidgetRef ref) {
-    return Tooltip(
-      message: componentType.displayName,
-      child: Container(
+    return Container(
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.grey[300]!),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: InkWell(
-          onTap: () {
-            ref.read(sandboxProvider).selectComponentType(componentType.name);
-            SnackBarUtils.showInfo(
-              context,
-              AppLocalizations.of(
-                context,
-              )!.componentSelected(componentType.displayName),
-            );
-          },
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: ComponentIcon(
@@ -79,8 +67,6 @@ class PaletteItem extends ConsumerWidget {
               size: 40,
             ),
           ),
-        ),
-      ),
     );
   }
 
