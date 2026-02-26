@@ -1,6 +1,7 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/levels/levels.dart';
 import 'package:circuitquest/state/level_state.dart';
+import 'package:circuitquest/state/theme_provider.dart';
 import 'package:circuitquest/ui/level_mode/level_screen.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class LevelCard extends ConsumerWidget {
     final levelName = levelItem.getLocalizedName(localeCode);
     final isCompletedAsync = ref.watch(levelCompletedProvider(levelItem.id));
     final canAccessAsync = ref.watch(levelAccessProvider(levelItem.id));
+    final themeMode = ref.watch(themeProvider);
 
     final isCompleted = isCompletedAsync.value ?? false;
     final canAccess = canAccessAsync.value ?? false;
@@ -32,11 +34,11 @@ class LevelCard extends ConsumerWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: _getCardBorderColor(isCompleted, canAccess),
+                  color: _getCardBorderColor(isCompleted, canAccess, themeMode),
                   width: 2,
                 ),
                 borderRadius: BorderRadius.circular(8),
-                color: _getCardBackgroundColor(isCompleted, canAccess),
+                color: _getCardBackgroundColor(isCompleted, canAccess, themeMode),
               ),
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -146,15 +148,15 @@ class LevelCard extends ConsumerWidget {
     }
   }
 
-  Color _getCardBorderColor(bool isCompleted, bool canAccess) {
-    if (isCompleted) return Colors.green;
-    if (canAccess) return Colors.blue;
+  Color _getCardBorderColor(bool isCompleted, bool canAccess, ThemeMode themeMode) {
+    if (isCompleted) return themeMode == ThemeMode.light ? Colors.green : Colors.green[900]!;
+    if (canAccess) return themeMode == ThemeMode.light ? Colors.blue : Colors.blue[900]!;
     return Colors.grey;
   }
 
-  Color? _getCardBackgroundColor(bool isCompleted, bool canAccess) {
-    if (isCompleted) return Colors.green[50];
-    if (canAccess) return Colors.blue[50];
+  Color? _getCardBackgroundColor(bool isCompleted, bool canAccess, ThemeMode themeMode) {
+    if (isCompleted) return themeMode == ThemeMode.light ? Colors.green[50] : const Color.fromARGB(100, 76, 175, 79);
+    if (canAccess) return themeMode == ThemeMode.light ? Colors.blue[50] : const Color.fromARGB(100, 33, 149, 243);
     return Colors.grey[50];
   }
 }

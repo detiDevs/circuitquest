@@ -82,9 +82,8 @@ class _SandboxBody extends StatelessWidget {
                 width: 200,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
                     border: Border(
-                      right: BorderSide(color: Colors.grey[300]!),
+                      right: BorderSide(color: Theme.of(context).colorScheme.outline),
                     ),
                   ),
                   child: const ComponentPalette(),
@@ -99,9 +98,8 @@ class _SandboxBody extends StatelessWidget {
                 width: 250,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
                     border: Border(
-                      left: BorderSide(color: Colors.grey[300]!),
+                      left: BorderSide(color: Theme.of(context).colorScheme.outline),
                     ),
                   ),
                   child: const ControlPanel(isSandbox: true),
@@ -118,7 +116,7 @@ class _SandboxBody extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
                   border: Border(
-                    bottom: BorderSide(color: Colors.grey[300]!),
+                    bottom: BorderSide(color: Theme.of(context).colorScheme.outline),
                   ),
                 ),
                 child: ExpansionTile(
