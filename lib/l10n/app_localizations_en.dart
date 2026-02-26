@@ -271,6 +271,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customComponentSaved => 'Custom component saved.';
 
   @override
+  String get deleteCustomComponent => 'Delete Custom Component';
+
+  @override
   String get circuitDefaultName => 'My Circuit';
 
   @override
@@ -358,4 +361,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterComponentLabel => 'Enter a display name';
+
+  @override
+  String areYouSureYouWantToDeleteX(String itemToDelete) {
+    return 'Are you sure you want to delete $itemToDelete?';
+  }
+
+  @override
+  String successfullyDeletedX(String itemToDelete) {
+    return '$itemToDelete deleted successfully';
+  }
+
+  @override
+  String failedToDeleteX(String itemToDelete) {
+    return 'Failed to delete $itemToDelete';
+  }
 }

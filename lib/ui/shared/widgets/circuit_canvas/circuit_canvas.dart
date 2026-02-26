@@ -1,11 +1,9 @@
 import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:circuitquest/core/commands/place_component_command.dart';import 'package:circuitquest/core/logic/pin.dart';import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/placed_component_widget.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vector_math/vector_math_64.dart' show Vector3, Matrix4;
 import '../../../../state/sandbox_state.dart';
 import '../../../../core/components/input_source.dart';
 import '../../../../core/components/output_probe.dart';

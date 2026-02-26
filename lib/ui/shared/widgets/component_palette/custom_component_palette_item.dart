@@ -1,3 +1,4 @@
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/custom_component_library.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/palette_item.dart';
@@ -32,7 +33,7 @@ class CustomComponentPaletteItem extends PaletteItem {
       items: [
         PopupMenuItem<String>(
           value: 'delete',
-          child: const Text('Delete'),
+          child: Text(AppLocalizations.of(context)!.delete),
           onTap: () {
             _confirmDelete(context, ref);
           },
@@ -45,14 +46,14 @@ class CustomComponentPaletteItem extends PaletteItem {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Custom Component'),
+        title: Text(AppLocalizations.of(context)!.deleteCustomComponent),
         content: Text(
-          'Are you sure you want to delete "${componentType.name}"?',
+          AppLocalizations.of(context)!.areYouSureYouWantToDeleteX(componentType.name),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -64,17 +65,17 @@ class CustomComponentPaletteItem extends PaletteItem {
                 if (success) {
                   SnackBarUtils.showInfo(
                     context,
-                    '${componentType.name} deleted successfully',
+                    AppLocalizations.of(context)!.successfullyDeletedX(componentType.name),
                   );
                 } else {
                   SnackBarUtils.showError(
                     context,
-                    'Failed to delete ${componentType.name}',
+                    AppLocalizations.of(context)!.failedToDeleteX(componentType.name),
                   );
                 }
               }
             },
-            child: const Text('Delete'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),

@@ -275,6 +275,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get customComponentSaved => 'Komponente gespeichert';
 
   @override
+  String get deleteCustomComponent => 'Eigene Komponente löschen';
+
+  @override
   String get circuitDefaultName => 'Mein Schaltkreis';
 
   @override
@@ -363,4 +366,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get enterComponentLabel => 'Anzeigenamen eingeben';
+
+  @override
+  String areYouSureYouWantToDeleteX(String itemToDelete) {
+    return 'Bist du sicher, dass du $itemToDelete löschen willst?';
+  }
+
+  @override
+  String successfullyDeletedX(String itemToDelete) {
+    return '$itemToDelete deleted successfully';
+  }
+
+  @override
+  String failedToDeleteX(String itemToDelete) {
+    return 'Failed to delete $itemToDelete';
+  }
 }
