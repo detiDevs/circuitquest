@@ -48,6 +48,7 @@ class OutputProbeWidget extends ConsumerWidget {
                   style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
+                    color: Colors.black
                   ),
                 ),
               ),

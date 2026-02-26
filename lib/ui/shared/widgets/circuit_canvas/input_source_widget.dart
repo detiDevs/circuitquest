@@ -93,6 +93,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                   style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
+                    color: Colors.black
                   ),
                 ),
               ),

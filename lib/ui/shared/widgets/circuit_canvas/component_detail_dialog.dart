@@ -30,7 +30,10 @@ class ComponentDetailDialog {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               // Title: Component type
-              Text(placedComponent.type, style: TextTheme.of(context).displayLarge,),
+              Text(
+                placedComponent.type,
+                style: TextTheme.of(context).displayLarge,
+              ),
               // Text field for label:
               TextField(
                 controller: textController,
@@ -64,6 +67,7 @@ class ComponentDetailDialog {
                           placedComponent,
                           PinPosition.TOP,
                           imageContainerHeight,
+                          context
                         ),
                       ),
                     ),
@@ -81,13 +85,19 @@ class ComponentDetailDialog {
                                 placedComponent,
                                 PinPosition.LEFT,
                                 imageContainerHeight,
+                                context
                               ),
                             ),
                           ),
                           // Center image
                           Expanded(
+                            // ComponentIcon class does not make sense here so I use SvgPicture directly
                             child: SvgPicture.asset(
                               'assets/gates/${placedComponent.type}.svg',
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.onSurface,
+                                BlendMode.srcIn,
+                              ),
                               fit: BoxFit.contain,
                               placeholderBuilder: (context) =>
                                   Text(placedComponent.type),
@@ -102,6 +112,7 @@ class ComponentDetailDialog {
                                 placedComponent,
                                 PinPosition.RIGHT,
                                 imageContainerHeight,
+                                context
                               ),
                             ),
                           ),
@@ -117,6 +128,7 @@ class ComponentDetailDialog {
                           placedComponent,
                           PinPosition.BOTTOM,
                           imageContainerHeight,
+                          context
                         ),
                       ),
                     ),
@@ -159,6 +171,7 @@ class ComponentDetailDialog {
     PlacedComponent placedComponent,
     PinPosition side,
     double containerSize,
+    BuildContext context
   ) {
     final inputs = placedComponent.component.inputs.entries.toList();
     final outputs = placedComponent.component.outputs.entries.toList();
@@ -203,18 +216,18 @@ class ComponentDetailDialog {
           children: [
             TextSpan(
               text: '${entry.key}\n',
-              style: TextStyle(color: Colors.black, fontSize: 10),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
             ),
             WidgetSpan(child: Icon(Icons.usb, size: 12)),
             TextSpan(
               text: '${pin.bitWidth}',
-              style: TextStyle(color: Colors.black, fontSize: 9),
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
             ),
             WidgetSpan(child: Icon(Icons.power_settings_new, size: 12)),
             TextSpan(
               text: '${pin.value}',
-              style: TextStyle(color: Colors.black, fontSize: 9),
-            )
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
+            ),
           ],
         ),
       );
