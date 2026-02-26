@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'ui/home/home_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'state/locale_provider.dart';
+import 'state/theme_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,10 +14,16 @@ Future<void> main() async {
   final initialLocale =
       savedLanguageCode == null ? null : Locale(savedLanguageCode);
 
+  final savedThemeModeString = prefs.getString(kThemePrefsKey);
+  final initialThemeMode = savedThemeModeString == null
+      ? ThemeMode.system
+      : ThemeMode.values.byName(savedThemeModeString);
+
   runApp(
     ProviderScope(
       overrides: [
         localeProvider.overrideWith((_) => initialLocale),
+        themeProvider.overrideWith((_) => initialThemeMode),
       ],
       child: const CircuitQuestApp(),
     ),
@@ -30,6 +37,7 @@ class CircuitQuestApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedLocale = ref.watch(localeProvider);
+    final selectedThemeMode = ref.watch(themeProvider);
 
     return MaterialApp(
       title: Constants.kAppName,
@@ -41,6 +49,14 @@ class CircuitQuestApp extends ConsumerWidget {
         ),
         useMaterial3: true,
       ),
+      darkTheme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: Brightness.dark,
+        ),
+        useMaterial3: true,
+      ),
+      themeMode: selectedThemeMode,
       locale: selectedLocale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
