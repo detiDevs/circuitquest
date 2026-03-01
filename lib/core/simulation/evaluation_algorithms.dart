@@ -1,5 +1,6 @@
 import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/components/base/sequentialComponent.dart';
+import 'package:circuitquest/core/components/cpu/program_counter.dart';
 import 'package:circuitquest/core/simulation/clockManager.dart';
 
 /// Shared evaluation algorithms for circuit simulation.
@@ -63,6 +64,9 @@ class EvaluationAlgorithms {
         for (final comp in sequentialComponents) {
           if (comp is SequentialComponent) {
             comp.applyNewState();
+          }
+          if (comp is ProgramCounter) {
+            next.add(comp);
           }
         }
       }
