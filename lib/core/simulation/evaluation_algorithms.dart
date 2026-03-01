@@ -1,15 +1,18 @@
 import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/components/base/sequentialComponent.dart';
+import 'package:circuitquest/core/simulation/clockManager.dart';
 
 /// Shared evaluation algorithms for circuit simulation.
 class EvaluationAlgorithms {
   /// Event-driven evaluation algorithm.
-  /// 
+  ///
   /// Propagates changes through the circuit starting from the given components.
   /// Supports optional callbacks for visualization when called asynchronously.
   /// Returns true if evaluation completed successfully, false if it hit the max cycles limit.
   static Future<bool> evaluateEventDriven({
     required Set<Component> allComponents,
     required Set<Component> startingComponents,
+    Clockmanager? clockManager,
     void Function(Set<Component> components)? onUpdate,
     Future<void> Function()? onWait,
     int maxEvalCycles = 1000,
@@ -53,6 +56,17 @@ class EvaluationAlgorithms {
         await onWait();
       }
 
+      if (clockManager?.tickAndCheckClock() == true) {
+        final sequentialComponents = allComponents.where(
+          (c) => c is SequentialComponent,
+        );
+        for (final comp in sequentialComponents) {
+          if (comp is SequentialComponent) {
+            comp.applyNewState();
+          }
+        }
+      }
+
       current = next;
       tick++;
 
@@ -66,7 +80,7 @@ class EvaluationAlgorithms {
   }
 
   /// Topological (Kahn's algorithm) evaluation.
-  /// 
+  ///
   /// Evaluates components in dependency order, useful for acyclic circuits.
   /// Returns true if successful, false if a cycle is detected.
   static Future<bool> evaluateTopological({

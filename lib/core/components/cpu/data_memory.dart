@@ -1,13 +1,16 @@
-import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/components/base/sequentialComponent.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 
 /// Data Memory component
-class DataMemory extends Component {
+class DataMemory extends SequentialComponent {
   late InputPin _address;
   late InputPin _writeData;
   late InputPin _memWrite;
   late InputPin _memRead;
   late OutputPin _readData;
+
+  int _newData = 0;
+  int _newDataAddress = 0;
 
   final Map<int, int> _memory = {};
 
@@ -43,6 +46,9 @@ class DataMemory extends Component {
     _memWrite.updateFromSource();
     _address.updateFromSource();
 
+    _newData = _writeData.value;
+    _newDataAddress = _address.value;
+
     if (_memRead.value == 1) {
       final data = _memory[_address.value] ?? 0;
       if (_readData.value != data) {
@@ -54,9 +60,9 @@ class DataMemory extends Component {
   }
 
   @override
-  void tick() {
+  void applyNewState() {
     if (_memWrite.value == 1) {
-      _memory[_address.value] = _writeData.value;
+      _memory[_newDataAddress] = _newData;
     }
   }
 }

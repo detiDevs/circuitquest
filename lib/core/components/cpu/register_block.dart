@@ -1,8 +1,8 @@
-import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/components/base/sequentialComponent.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 
 /// Register Block component containing 32 registers of 32-bits each
-class RegisterBlock extends Component {
+class RegisterBlock extends SequentialComponent {
   late InputPin _readAddress1;
   late InputPin _readAddress2;
   late InputPin _writeAddress;
@@ -10,6 +10,8 @@ class RegisterBlock extends Component {
   late InputPin _writeEnable;
   late OutputPin _readData1;
   late OutputPin _readData2;
+  int _writeValue = 0;
+  int _writeReg = 0;
 
   List<int> _registers = List.filled(32, 0);
 
@@ -47,11 +49,19 @@ class RegisterBlock extends Component {
 
   @override
   bool evaluate() {
+    inputs['readReg1']!.updateFromSource();
+    inputs['readReg2']!.updateFromSource();
+    inputs['writeReg']!.updateFromSource();
+    inputs['writeData']!.updateFromSource();
+    inputs['writeEnable']!.updateFromSource();
     final addr1 = _readAddress1.value & 0x1F;
     final addr2 = _readAddress2.value & 0x1F;
 
     final data1 = _registers[addr1];
     final data2 = _registers[addr2];
+
+    _writeReg = inputs['writeReg']!.value;
+    _writeValue = inputs['writeData']!.value;
 
     bool changed = false;
     if (_readData1.value != data1) {
@@ -66,10 +76,10 @@ class RegisterBlock extends Component {
   }
 
   @override
-  void tick() {
+  void applyNewState() {
     if (_writeEnable.value == 1) {
-      final addr = _writeAddress.value & 0x1F;
-      _registers[addr] = _writeData.value;
+      final addr = _writeReg & 0x1F;
+      _registers[addr] = _writeValue;
     }
   }
 }
