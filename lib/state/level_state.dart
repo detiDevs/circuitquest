@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../levels/level_loader.dart';
 import '../levels/level.dart';
+import '../state/sandbox_state.dart';
 
 /// Provider for the LevelLoader instance
 final levelLoaderProvider = Provider<LevelLoader>((ref) {
@@ -46,6 +47,24 @@ Future<void> markLevelCompleted(WidgetRef ref, int levelId) async {
   ref.invalidate(levelMetaProvider);
   ref.invalidate(levelCompletedProvider);
   ref.invalidate(levelAccessProvider);
+}
+
+/// Provider for current level's clock configuration
+final currentLevelClockProvider = StateProvider<ClockConfig?>((ref) => null);
+
+/// Helper method to initialize clock for current level
+void initializeLevelClock(WidgetRef ref, Level level) {
+  final clockConfig = level.clockConfig;
+  ref.read(currentLevelClockProvider.notifier).state = clockConfig;
+  
+  // Initialize clock in sandbox state
+  final sandbox = ref.read(sandboxProvider);
+  sandbox.initializeClockFromLevel(clockConfig);
+}
+
+/// Helper method to reset level clock
+void resetLevelClock(WidgetRef ref) {
+  ref.read(currentLevelClockProvider.notifier).state = null;
 }
 
 /// Helper method to toggle all levels unlocked and refresh the state

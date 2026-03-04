@@ -6,8 +6,9 @@ class ProgramCounter extends SequentialComponent {
   late InputPin _nextPcInput;
   late OutputPin _pcOutput;
   int _currentPC = 0;
-  bool _firstEval = true;
   int _nextValue = 0;
+  bool _hasInitialized = false;
+  bool _clockUpdated = false; // Flag für Clock-Updates
 
   ProgramCounter() {
     _nextPcInput = InputPin(this, bitWidth: 32);
@@ -15,19 +16,33 @@ class ProgramCounter extends SequentialComponent {
 
     inputs['input'] = _nextPcInput;
     outputs['outValue'] = _pcOutput;
-    outputs['outValue']!.value = 0;
+    // WICHTIG: Output zeigt immer den aktuellen PC-Wert (_currentPC)
+    outputs['outValue']!.value = _currentPC; // Zeigt 0 beim Start
   }
 
   @override
   bool evaluate() {
+    _nextPcInput.updateFromSource();
     final nextValue = _nextPcInput.value;
     _nextValue = nextValue;
 
-    // On first evaluation, always propagate to trigger downstream components
-    if (_firstEval) {
-      _firstEval = false;
+    // WICHTIG: PC propagiert NUR bei Clock-Flanken, nicht bei jeder Evaluation!
+    // Der Output zeigt immer den aktuellen PC-Wert, aber propagiert nicht automatisch
+    // Das verhindert, dass der PC zu schnell läuft in Eintaktprozessoren
+    _pcOutput.value = _currentPC;
+
+    // Propagieren bei: 1) Erstem Mal, 2) Nach Clock-Update
+    if (!_hasInitialized) {
+      _hasInitialized = true;
       return true;
     }
+    
+    if (_clockUpdated) {
+      _clockUpdated = false; // Reset flag
+      return true; // Propagiere nach Clock-Update
+    }
+
+    // Sonst keine automatische Propagation
     return false;
   }
 
@@ -35,6 +50,10 @@ class ProgramCounter extends SequentialComponent {
   void applyNewState(){
     if (_currentPC != _nextValue) {
       _currentPC = _nextValue;
+      // KRITISCH: Output-Pin muss auch aktualisiert werden!
+      _pcOutput.value = _currentPC;
+      // WICHTIG: Flag setzen, damit nächste evaluate() propagiert
+      _clockUpdated = true;
     }
   }
 }

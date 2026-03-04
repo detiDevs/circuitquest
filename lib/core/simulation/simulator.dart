@@ -1,5 +1,6 @@
 import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/simulation/evaluation_algorithms.dart';
+import 'package:circuitquest/core/simulation/clockManager.dart';
 
 typedef UpdateCallback = void Function(Set<Component> components);
 typedef WaitCallback = Future<void> Function();
@@ -7,8 +8,13 @@ typedef WaitCallback = Future<void> Function();
 class Simulator {
   final Set<Component> components;
   final Set<Component> inputComponents;
+  final Clockmanager? clockManager;
 
-  Simulator({required this.components, required this.inputComponents});
+  Simulator({
+    required this.components, 
+    required this.inputComponents,
+    this.clockManager,
+  });
 
   // Event driven evaluation. Useful for oscillating components.
   Future<bool> evaluateEventDriven({
@@ -29,6 +35,7 @@ class Simulator {
     final result = await EvaluationAlgorithms.evaluateEventDriven(
       allComponents: components,
       startingComponents: starting,
+      clockManager: clockManager,
       onUpdate: onUpdate,
       onWait: onWait,
       maxEvalCycles: maxEvalCycles,

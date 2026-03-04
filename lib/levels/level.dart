@@ -9,6 +9,7 @@ class LevelComponent {
   final int? initialValue;
   final int? initialBitWidth;
   final List<int>? initialRegisterValues;
+  final int? clockCycle;
 
   LevelComponent({
     required this.type,
@@ -18,6 +19,7 @@ class LevelComponent {
     this.initialValue,
     this.initialBitWidth,
     this.initialRegisterValues,
+    this.clockCycle,
   });
 
   factory LevelComponent.fromJson(Map<String, dynamic> json) {
@@ -88,6 +90,35 @@ class LevelTest {
   }
 }
 
+/// Clock configuration for a level
+class ClockConfig {
+  final bool enabled;
+  final int ticksPerClockCycle;
+  final int startState;
+
+  ClockConfig({
+    required this.enabled,
+    required this.ticksPerClockCycle,
+    this.startState = 0,
+  });
+
+  factory ClockConfig.fromJson(Map<String, dynamic> json) {
+    return ClockConfig(
+      enabled: json['enabled'] as bool? ?? false,
+      ticksPerClockCycle: json['ticksPerClockCycle'] as int? ?? 8,
+      startState: json['startState'] as int? ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'enabled': enabled,
+      'ticksPerClockCycle': ticksPerClockCycle,
+      'startState': startState,
+    };
+  }
+}
+
 /// Memory contents for level initialization
 class MemoryContents {
   final List<int> instructionMemory;
@@ -131,6 +162,7 @@ class Level {
   final List<String>? hintsDe;
   final List<LevelTest> tests;
   final MemoryContents? memoryContents;
+  final ClockConfig? clockConfig;
 
   Level({
     required this.levelId,
@@ -149,6 +181,7 @@ class Level {
     this.hintsDe,
     required this.tests,
     this.memoryContents,
+    this.clockConfig,
   });
 
   factory Level.fromJson(Map<String, dynamic> json) {
@@ -179,6 +212,9 @@ class Level {
       memoryContents: json['memoryContents'] != null
           ? MemoryContents.fromJson(json['memoryContents'] as Map<String, dynamic>)
           : null,
+      clockConfig: json['clockConfig'] != null
+          ? ClockConfig.fromJson(json['clockConfig'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -201,6 +237,7 @@ class Level {
       if (hintsDe != null) 'hints_de': hintsDe,
       'tests': tests.map((t) => t.toJson()).toList(),
       if (memoryContents != null) 'memoryContents': memoryContents!.toJson(),
+      if (clockConfig != null) 'clockConfig': clockConfig!.toJson(),
     };
   }
 

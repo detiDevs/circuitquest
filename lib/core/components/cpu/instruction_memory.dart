@@ -25,6 +25,7 @@ class InstructionMemory extends Component {
 
   @override
   bool evaluate() {
+    inputs['readAddress']!.updateFromSource();
     final address =
         _addressInput.value ~/ 4; // Convert byte address to word address
     final instruction = address < _instructionList.length

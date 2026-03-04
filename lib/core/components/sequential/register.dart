@@ -25,15 +25,17 @@ class Register extends SequentialComponent {
 
   @override
   void applyNewState(){
-    final newValue = _newValue;
-    outputs['output']!.value = newValue;
+    _storedValue = _newValue;
+    // KRITISCH: Korrekter Output-Pin Name verwenden!
+    outputs['outValue']!.value = _storedValue;
   }
 
   /// Resets the register to zero
   void reset() {
     _storedValue = 0;
     _newValue = 0;
-    outputs['output']!.value = 0;
+    // KRITISCH: Korrekter Output-Pin Name verwenden!
+    outputs['outValue']!.value = 0;
   }
 
   /// Gets the current stored value

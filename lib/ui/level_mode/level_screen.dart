@@ -8,6 +8,7 @@ import '../shared/widgets/component_palette/component_palette.dart';
 import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
 import '../shared/widgets/control_panel.dart';
 import '../../state/sandbox_state.dart';
+import '../../state/level_state.dart';
 import '../../core/commands/command_controller.dart';
 import './level_info_dialog.dart';
 
@@ -39,6 +40,9 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         _showLevelInfoDialog();
         _dialogShown = true;
       }
+      
+      // Initialize clock for this level
+      initializeLevelClock(ref, widget.level);
     });
   }
 
@@ -46,6 +50,10 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   void dispose() {
     // Clear undo/redo stacks when leaving level
     CommandController.clear();
+    
+    // Reset level clock
+    resetLevelClock(ref);
+    
     super.dispose();
   }
 

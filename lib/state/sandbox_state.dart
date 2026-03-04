@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
+import 'package:circuitquest/core/simulation/clockManager.dart';
+import 'package:circuitquest/levels/level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -152,6 +154,19 @@ class SandboxState extends ChangeNotifier {
 
   /// Auto-increment counter for component IDs
   int _nextComponentId = 0;
+
+  Clockmanager? _clockmanager;
+
+  /// Initializes the clock manager from level configuration
+  void initializeClockFromLevel(ClockConfig? clockConfig) {
+    if (clockConfig?.enabled == true) {
+      _clockmanager = Clockmanager(
+        ticksPerClockCycle: clockConfig!.ticksPerClockCycle,
+      );
+    } else {
+      _clockmanager = null;
+    }
+  }
 
   // Getters
   List<PlacedComponent> get placedComponents =>
@@ -460,6 +475,7 @@ class SandboxState extends ChangeNotifier {
     _simulator = Simulator(
       components: allComponents,
       inputComponents: startingSet,
+      clockManager: null, // Keine Clock für manuelle "Evaluate Circuit" Aktion
     );
 
     _simulator!.evaluateEventDriven(startingComponents: startingSet);
@@ -474,9 +490,11 @@ class SandboxState extends ChangeNotifier {
     if (allComponents.isEmpty) return;
 
     // Create or update simulator with current components
+    // WICHTIG: Kein clockManager für manuelle Connection-Evaluations!
     _simulator = Simulator(
       components: allComponents,
       inputComponents: {targetComponent}, // Only the target component as input
+      clockManager: null, // Keine Clock für Connection-Evaluation
     );
 
     // Run event-driven evaluation starting from the target component
@@ -498,11 +516,13 @@ class SandboxState extends ChangeNotifier {
     if (allComponents.isEmpty) return;
 
     // Create or update simulator with current components
+    // WICHTIG: Kein clockManager für manuelle Input-Änderungs-Evaluations!
     _simulator = Simulator(
       components: allComponents,
       inputComponents: {
         component,
       }, // Use the changed component as starting point
+      clockManager: null, // Keine Clock für Input-Änderungs-Evaluation
     );
 
     // Run event-driven evaluation starting from the changed component
@@ -544,6 +564,7 @@ class SandboxState extends ChangeNotifier {
     _simulator = Simulator(
       components: allComponents,
       inputComponents: startingSet,
+      clockManager: _clockmanager,
     );
 
     if (_tickSpeed == 0) {

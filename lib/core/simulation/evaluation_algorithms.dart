@@ -1,6 +1,6 @@
 import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/components/base/sequentialComponent.dart';
-import 'package:circuitquest/core/components/cpu/program_counter.dart';
+
 import 'package:circuitquest/core/simulation/clockManager.dart';
 
 /// Shared evaluation algorithms for circuit simulation.
@@ -17,6 +17,7 @@ class EvaluationAlgorithms {
     void Function(Set<Component> components)? onUpdate,
     Future<void> Function()? onWait,
     int maxEvalCycles = 1000,
+    bool clock = true,
   }) async {
     Set<Component> current = startingComponents.toSet();
 
@@ -58,6 +59,7 @@ class EvaluationAlgorithms {
       }
 
       if (clockManager?.tickAndCheckClock() == true) {
+        // ALLE Sequential Components werden bei Clock-Ticks geupdated
         final sequentialComponents = allComponents.where(
           (c) => c is SequentialComponent,
         );
@@ -65,14 +67,54 @@ class EvaluationAlgorithms {
           if (comp is SequentialComponent) {
             comp.applyNewState();
           }
-          if (comp is ProgramCounter) {
-            next.add(comp);
-          }
         }
+        
+        // Aber NUR ProgramCounter wird zur nächsten Evaluation hinzugefügt
+        // (PC triggert die weitere Evaluation, andere sequential components nicht)
+        final programCounters = allComponents.where(
+          (c) => c.runtimeType.toString() == 'ProgramCounter'
+        );
+        next.addAll(programCounters);
       }
 
       current = next;
       tick++;
+      
+      // KRITISCHE LÖSUNG: Wenn current leer ist UND ClockManager aktiv ist,
+      // ticke bis zur nächsten Clock-Flanke
+      if (current.isEmpty && clockManager != null && clockManager.ticksPerClockCycle > 0) {
+        bool clockSwitched = false;
+        int emptyTicks = 0;
+        const maxEmptyTicks = 50; // Schutz vor Endlosschleife
+        
+        while (!clockSwitched && emptyTicks < maxEmptyTicks) {
+          clockSwitched = clockManager.tickAndCheckClock();
+          emptyTicks++;
+          tick++;
+          
+          if (onWait != null) {
+            await onWait();
+          }
+        }
+        
+        if (clockSwitched) {
+          // Clock hat geschaltet - alle Sequential Components updaten
+          final sequentialComponents = allComponents.where(
+            (c) => c is SequentialComponent,
+          );
+          for (final comp in sequentialComponents) {
+            if (comp is SequentialComponent) {
+              comp.applyNewState();
+            }
+          }
+          
+          // PC zur nächsten Evaluation hinzufügen
+          final programCounters = allComponents.where(
+            (c) => c.runtimeType.toString() == 'ProgramCounter'
+          );
+          current = programCounters.toSet();
+        }
+      }
 
       if (tick > actualMaxCycles * allComponents.length) {
         // Likely oscillation / unstable feedback
