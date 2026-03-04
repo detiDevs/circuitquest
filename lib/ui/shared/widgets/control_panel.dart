@@ -531,12 +531,12 @@ class _InstructionItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 16, color: Colors.grey[700]),
+          Icon(icon, size: 16),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(fontSize: 11, color: Colors.grey[800]),
+              style: TextStyle(fontSize: 11),
             ),
           ),
         ],

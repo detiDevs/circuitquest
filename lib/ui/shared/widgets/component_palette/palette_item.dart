@@ -24,7 +24,6 @@ class PaletteItem extends ConsumerWidget {
           width: 80,
           height: 80,
           decoration: BoxDecoration(
-            color: Colors.white,
             border: Border.all(color: Colors.blue, width: 2),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -55,8 +54,7 @@ class PaletteItem extends ConsumerWidget {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey[300]!),
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
           borderRadius: BorderRadius.circular(8),
         ),
           child: Padding(
@@ -74,8 +72,7 @@ class PaletteItem extends ConsumerWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey[300]!),
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(

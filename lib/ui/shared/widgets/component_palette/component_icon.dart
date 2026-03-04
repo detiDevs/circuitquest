@@ -27,18 +27,26 @@ class ComponentIcon extends StatelessWidget {
       child: isAsset
           ? SvgPicture.asset(
               iconPath,
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.onSurface,
+                BlendMode.srcIn,
+              ),
               fit: BoxFit.contain,
               placeholderBuilder: (context) =>
                   Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
             )
-          : _buildFileIcon(),
+          : _buildFileIcon(context),
     );
   }
 
-  Widget _buildFileIcon() {
+  Widget _buildFileIcon(BuildContext context) {
     if (iconPath.toLowerCase().endsWith('.svg')) {
       return SvgPicture.file(
         File(iconPath),
+        colorFilter: ColorFilter.mode(
+          Theme.of(context).colorScheme.onSurface,
+          BlendMode.srcIn,
+        ),
         fit: BoxFit.contain,
         placeholderBuilder: (context) =>
             Icon(Icons.memory, size: size * 0.6, color: Colors.grey),

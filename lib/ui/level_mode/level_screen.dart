@@ -112,9 +112,8 @@ class _LevelScreenBody extends StatelessWidget {
                 width: 200,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
                     border: Border(
-                      right: BorderSide(color: Colors.grey[300]!),
+                      right: BorderSide(color: Theme.of(context).colorScheme.outline),
                     ),
                   ),
                   child: _LimitedComponentPalette(level: level),
@@ -129,9 +128,8 @@ class _LevelScreenBody extends StatelessWidget {
                 width: 250,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
                     border: Border(
-                      left: BorderSide(color: Colors.grey[300]!),
+                      left: BorderSide(color: Theme.of(context).colorScheme.outline),
                     ),
                   ),
                   child: ControlPanel(level: level),
@@ -146,9 +144,8 @@ class _LevelScreenBody extends StatelessWidget {
               // Collapsible palette at top
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey[100],
                   border: Border(
-                    bottom: BorderSide(color: Colors.grey[300]!),
+                    bottom: BorderSide(color: Theme.of(context).colorScheme.outline),
                   ),
                 ),
                 child: ExpansionTile(

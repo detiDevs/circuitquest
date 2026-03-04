@@ -11,12 +11,12 @@ import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/component_detail_dialog.dart';
+import 'package:circuitquest/ui/shared/widgets/component_palette/component_icon.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/input_source_widget.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/output_probe_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 /// Widget representing a placed component on the canvas.
 class PlacedComponentWidget extends ConsumerStatefulWidget {
@@ -94,9 +94,7 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
           // Move component
           left += details.delta.dx;
           top += details.delta.dy;
-          //final newPosition = widget.placedComponent.position + details.delta;
           final newPosition = Offset(left, top);
-          print("details delta: ${details.delta}");
           ref
               .read(sandboxProvider)
               .moveComponent(widget.placedComponent.id, newPosition);
@@ -118,7 +116,6 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
             oldPosition,
           );
           CommandController.executeCommand(command);
-          //ref.read(sandboxProvider).moveComponent(widget.placedComponent.id, snapped);
         },
         onSecondaryTapDown: (details) {
           if (widget.placedComponent.immovable) return;
@@ -142,7 +139,6 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
           width: widget.gridSize,
           height: widget.gridSize,
           decoration: BoxDecoration(
-            color: Colors.white,
             border: Border.all(color: Colors.blue[700]!, width: 2),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
@@ -185,19 +181,22 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                           ),
                           child: Text(
                             widget.placedComponent.label!,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
+                              // Exceptional use of direct color for text
+                              // This is only because the label background is always light blue
+                              color: Colors.black
                             ),
                           ),
                         ),
                       ),
                     // Component icon with fallback to name text
                     Center(
-                      child: _buildComponentIcon(
-                        componentType,
-                        widget.placedComponent.type,
-                        widget.gridSize,
+                      child: ComponentIcon(
+                        iconPath: componentType!.iconPath,
+                        isAsset: componentType.isAsset,
+                        size: widget.gridSize,
                       ),
                     ),
                     // Input pins (left side)
@@ -207,44 +206,6 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                 ),
         ),
       ),
-    );
-  }
-
-  Widget _buildComponentIcon(
-    ComponentType? componentType,
-    String fallbackText,
-    double gridSize,
-  ) {
-    if (componentType == null || componentType.iconPath.isEmpty) {
-      return Text(fallbackText, textAlign: TextAlign.center);
-    }
-
-    if (componentType.isAsset) {
-      return SvgPicture.asset(
-        componentType.iconPath,
-        width: gridSize * 0.7,
-        height: gridSize * 0.7,
-        fit: BoxFit.contain,
-        placeholderBuilder: (context) => Text(fallbackText),
-      );
-    }
-
-    if (componentType.iconPath.toLowerCase().endsWith('.svg')) {
-      return SvgPicture.file(
-        File(componentType.iconPath),
-        width: gridSize * 0.7,
-        height: gridSize * 0.7,
-        fit: BoxFit.contain,
-        placeholderBuilder: (context) => Text(fallbackText),
-      );
-    }
-
-    return Image.file(
-      File(componentType.iconPath),
-      width: gridSize * 0.7,
-      height: gridSize * 0.7,
-      fit: BoxFit.contain,
-      errorBuilder: (context, error, stackTrace) => Text(fallbackText),
     );
   }
 
