@@ -128,6 +128,9 @@ class SandboxState extends ChangeNotifier {
   /// The simulator instance for evaluating the circuit
   Simulator? _simulator;
 
+  /// Clock manager for sequential component timing
+  Clockmanager? _clockmanager;
+
   /// Currently selected component type for placement
   String? _selectedComponentType;
 
@@ -155,13 +158,12 @@ class SandboxState extends ChangeNotifier {
   /// Auto-increment counter for component IDs
   int _nextComponentId = 0;
 
-  Clockmanager? _clockmanager;
-
   /// Initializes the clock manager from level configuration
   void initializeClockFromLevel(ClockConfig? clockConfig) {
-    if (clockConfig?.enabled == true) {
+    if (clockConfig != null && clockConfig.mode > 0) {
       _clockmanager = Clockmanager(
-        ticksPerClockCycle: clockConfig!.ticksPerClockCycle,
+        ticksPerClockCycle: clockConfig.ticksPerClockCycle,
+        clockMode: clockConfig.clockMode,
       );
     } else {
       _clockmanager = null;
@@ -180,6 +182,7 @@ class SandboxState extends ChangeNotifier {
   Set<String> get activeComponentIds => Set.unmodifiable(_activeComponentIds);
   ({String componentId, String pinName})? get wireDrawingStart =>
       _wireDrawingStart;
+  Clockmanager? get clockManager => _clockmanager;
 
   // Undo/Redo getters
   bool get canUndo => CommandController.canUndo;
@@ -475,7 +478,6 @@ class SandboxState extends ChangeNotifier {
     _simulator = Simulator(
       components: allComponents,
       inputComponents: startingSet,
-      clockManager: null, // Keine Clock für manuelle "Evaluate Circuit" Aktion
     );
 
     _simulator!.evaluateEventDriven(startingComponents: startingSet);
@@ -490,11 +492,9 @@ class SandboxState extends ChangeNotifier {
     if (allComponents.isEmpty) return;
 
     // Create or update simulator with current components
-    // WICHTIG: Kein clockManager für manuelle Connection-Evaluations!
     _simulator = Simulator(
       components: allComponents,
       inputComponents: {targetComponent}, // Only the target component as input
-      clockManager: null, // Keine Clock für Connection-Evaluation
     );
 
     // Run event-driven evaluation starting from the target component
@@ -516,13 +516,11 @@ class SandboxState extends ChangeNotifier {
     if (allComponents.isEmpty) return;
 
     // Create or update simulator with current components
-    // WICHTIG: Kein clockManager für manuelle Input-Änderungs-Evaluations!
     _simulator = Simulator(
       components: allComponents,
       inputComponents: {
         component,
       }, // Use the changed component as starting point
-      clockManager: null, // Keine Clock für Input-Änderungs-Evaluation
     );
 
     // Run event-driven evaluation starting from the changed component

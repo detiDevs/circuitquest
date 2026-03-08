@@ -23,6 +23,10 @@ class InstructionMemory extends Component {
     _instructionList = instructions;
   }
 
+  int getInstructionListLenght(){
+    return _instructionList.length;
+  }
+
   @override
   bool evaluate() {
     inputs['readAddress']!.updateFromSource();

@@ -1,4 +1,41 @@
 import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/core/simulation/clockManager.dart';
+
+/// Clock configuration for levels
+class ClockConfig {
+  final bool enabled;
+  final int ticksPerClockCycle;
+  final int startState;
+  final int mode; // 0 = disabled, 1 = enabled, 2 = component update
+
+  ClockConfig({
+    required this.enabled,
+    required this.ticksPerClockCycle,
+    this.startState = 0,
+    this.mode = 0,
+  });
+
+  /// Returns the ClockMode enum value based on the mode integer
+  ClockMode get clockMode => ClockMode.fromInt(mode);
+
+  factory ClockConfig.fromJson(Map<String, dynamic> json) {
+    return ClockConfig(
+      enabled: json['enabled'] as bool? ?? false,
+      ticksPerClockCycle: json['ticksPerClockCycle'] as int? ?? 8,
+      startState: json['startState'] as int? ?? 0,
+      mode: json['mode'] as int? ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'enabled': enabled,
+      'ticksPerClockCycle': ticksPerClockCycle,
+      'startState': startState,
+      'mode': mode,
+    };
+  }
+}
 
 /// Data model representing a circuit component in a level
 class LevelComponent {
@@ -87,35 +124,6 @@ class LevelTest {
 
   Map<String, dynamic> toJson() {
     return {'inputs': inputs, 'expected_output': expectedOutput};
-  }
-}
-
-/// Clock configuration for a level
-class ClockConfig {
-  final bool enabled;
-  final int ticksPerClockCycle;
-  final int startState;
-
-  ClockConfig({
-    required this.enabled,
-    required this.ticksPerClockCycle,
-    this.startState = 0,
-  });
-
-  factory ClockConfig.fromJson(Map<String, dynamic> json) {
-    return ClockConfig(
-      enabled: json['enabled'] as bool? ?? false,
-      ticksPerClockCycle: json['ticksPerClockCycle'] as int? ?? 8,
-      startState: json['startState'] as int? ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'enabled': enabled,
-      'ticksPerClockCycle': ticksPerClockCycle,
-      'startState': startState,
-    };
   }
 }
 
@@ -237,7 +245,6 @@ class Level {
       if (hintsDe != null) 'hints_de': hintsDe,
       'tests': tests.map((t) => t.toJson()).toList(),
       if (memoryContents != null) 'memoryContents': memoryContents!.toJson(),
-      if (clockConfig != null) 'clockConfig': clockConfig!.toJson(),
     };
   }
 

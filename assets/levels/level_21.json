@@ -803,6 +803,7 @@
     "clockConfig": {
         "enabled": true,
         "ticksPerClockCycle": 8,
-        "startState": 0
+        "startState": 0,
+        "mode": 1
     }
 }

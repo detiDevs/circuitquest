@@ -36,6 +36,17 @@ class EvaluationAlgorithms {
     }
 
     int tick = 0;
+    if (clockManager != null && clockManager.shouldUpdateManually()) {
+      // update sequential components (for Levels without PC but with sequential Compoenents)
+      final sequentialComponents = allComponents.where(
+        (c) => c is SequentialComponent,
+      );
+      for (final comp in sequentialComponents) {
+        if (comp is SequentialComponent) {
+          comp.applyNewState();
+        }
+      }
+    }
 
     while (current.isNotEmpty) {
       final Set<Component> next = {};
@@ -59,7 +70,7 @@ class EvaluationAlgorithms {
       }
 
       if (clockManager?.tickAndCheckClock() == true) {
-        // ALLE Sequential Components werden bei Clock-Ticks geupdated
+        // update sequential components
         final sequentialComponents = allComponents.where(
           (c) => c is SequentialComponent,
         );
@@ -68,35 +79,43 @@ class EvaluationAlgorithms {
             comp.applyNewState();
           }
         }
-        
-        // Aber NUR ProgramCounter wird zur nächsten Evaluation hinzugefügt
-        // (PC triggert die weitere Evaluation, andere sequential components nicht)
+
+        // add only pc to next eval cycle
         final programCounters = allComponents.where(
-          (c) => c.runtimeType.toString() == 'ProgramCounter'
+          (c) => c.runtimeType.toString() == 'ProgramCounter',
         );
         next.addAll(programCounters);
       }
 
       current = next;
       tick++;
+
+      // continue clock if current cycle is shorter than clock cycle
+      print("DEBUG: current.isEmpty = ${current.isEmpty}");
+      print("DEBUG: clockManager != null = ${clockManager != null}");
+      if (clockManager != null) {
+        print("DEBUG: ticksPerClockCycle = ${clockManager.ticksPerClockCycle}");
+      }
       
-      // KRITISCHE LÖSUNG: Wenn current leer ist UND ClockManager aktiv ist,
-      // ticke bis zur nächsten Clock-Flanke
-      if (current.isEmpty && clockManager != null && clockManager.ticksPerClockCycle > 0) {
+      if (current.isEmpty &&
+          clockManager != null &&
+          clockManager.ticksPerClockCycle > 0 &&
+          clockManager.shouldContinue(allComponents)) {
         bool clockSwitched = false;
         int emptyTicks = 0;
-        const maxEmptyTicks = 50; // Schutz vor Endlosschleife
-        
+        const maxEmptyTicks =
+            50; // technically not neccessary but second safety
+
         while (!clockSwitched && emptyTicks < maxEmptyTicks) {
           clockSwitched = clockManager.tickAndCheckClock();
           emptyTicks++;
           tick++;
-          
+
           if (onWait != null) {
             await onWait();
           }
         }
-        
+
         if (clockSwitched) {
           // Clock hat geschaltet - alle Sequential Components updaten
           final sequentialComponents = allComponents.where(
@@ -107,10 +126,10 @@ class EvaluationAlgorithms {
               comp.applyNewState();
             }
           }
-          
+
           // PC zur nächsten Evaluation hinzufügen
           final programCounters = allComponents.where(
-            (c) => c.runtimeType.toString() == 'ProgramCounter'
+            (c) => c.runtimeType.toString() == 'ProgramCounter',
           );
           current = programCounters.toSet();
         }

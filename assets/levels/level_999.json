@@ -2,67 +2,49 @@
     "level_id": 999,
     "name": "Clock Test Level - Instruction Fetch",
     "name_de": "Clock Test Level - Instruction Fetch",
-    "description": "Test the clock functionality with a complete instruction fetch cycle. The ProgramCounter needs an adder to increment by 4 each clock cycle. Connect: PC → Adder, Constant(4) → Adder, Adder → PC input, PC → InstructionMemory address, InstructionMemory → Output. Watch how the clock controls the timing of PC increments!",
-    "description_de": "Teste die Clock-Funktionalität mit einem vollständigen Instruction-Fetch-Zyklus. Der ProgramCounter braucht einen Adder um jedes Clock-Zyklus um 4 zu inkrementieren. Verbinde: PC → Adder, Konstante(4) → Adder, Adder → PC Eingang, PC → InstructionMemory Adresse, InstructionMemory → Ausgang. Beobachte, wie die Clock das Timing der PC-Inkremente kontrolliert!",
+    "description": "Test the clock functionality with a simple instruction fetch cycle. The ProgramCounter should increment every clock cycle and fetch the next instruction from memory. Connect the ProgramCounter output to InstructionMemory address input, then connect the instruction output to see the fetched instructions. Watch how the clock controls the timing!",
+    "description_de": "Teste die Clock-Funktionalität mit einem einfachen Instruction-Fetch-Zyklus. Der ProgramCounter soll jeden Clock-Zyklus inkrementieren und die nächste Instruktion aus dem Speicher holen. Verbinde den ProgramCounter-Ausgang mit dem InstructionMemory-Adress-Eingang, dann verbinde den Instruktions-Ausgang um die geholten Instruktionen zu sehen. Beobachte, wie die Clock das Timing kontrolliert!",
     "difficulty": "Test",
     "difficulty_de": "Test",
     "objectives": [
-        "Add an Adder32bit component to increment the PC",
-        "Add an Input with value 4 (PC increment constant)",
-        "Connect: ProgramCounter output → Adder input A",
-        "Connect: Input(4) → Adder input B", 
-        "Connect: Adder output → ProgramCounter input",
-        "Connect: ProgramCounter output → InstructionMemory address input",
-        "Connect: InstructionMemory output → Output probe (INSTRUCTION)",
-        "Connect: ProgramCounter output → Output probe (PC_VALUE) to monitor PC",
-        "Start simulation and watch the clock-controlled PC increment: 0→4→8→12→16→20→24→28→(continues...)"
+        "Connect ProgramCounter output to InstructionMemory address input",
+        "Connect InstructionMemory output to the Output probe",
+        "Start simulation and watch the clock-controlled instruction fetch",
+        "Observe: PC increments every 8 ticks, fetching new instructions"
     ],
     "objectives_de": [
-        "Füge eine Adder32bit-Komponente hinzu um den PC zu inkrementieren",
-        "Füge einen Input mit Wert 4 hinzu (PC-Inkrement-Konstante)",
-        "Verbinde: ProgramCounter Ausgang → Adder Eingang A",
-        "Verbinde: Input(4) → Adder Eingang B",
-        "Verbinde: Adder Ausgang → ProgramCounter Eingang",
-        "Verbinde: ProgramCounter Ausgang → InstructionMemory Adress-Eingang", 
-        "Verbinde: InstructionMemory Ausgang → Output-Probe (INSTRUCTION)",
-        "Verbinde: ProgramCounter Ausgang → Output-Probe (PC_VALUE) um PC zu überwachen",
-        "Starte Simulation und beobachte das Clock-kontrollierte PC-Inkrement: 0→4→8→12→16→20→24→28→(fortsetzung...)"
+        "Verbinde ProgramCounter-Ausgang mit InstructionMemory-Adress-Eingang",
+        "Verbinde InstructionMemory-Ausgang mit dem Output-Probe",
+        "Starte Simulation und beobachte den Clock-kontrollierten Instruction-Fetch",
+        "Beobachte: PC inkrementiert alle 8 Ticks und holt neue Instruktionen"
     ],
     "components": [
-        {"type": "ProgramCounter", "position": [1,1], "immovable": false},
-        {"type": "Adder32bit", "position": [1,3], "immovable": false},
-        {"type": "Input", "position": [1,5], "immovable": false, "label": "PC+4", "initialValue": 4},
-        {"type": "InstructionMemory", "position": [5,2], "immovable": false},
-        {"type": "Output", "position": [8,2], "immovable": true, "label": "INSTRUCTION"},
-        {"type": "Output", "position": [8,1], "immovable": true, "label": "PC_VALUE"}
+        {"type": "ProgramCounter", "position": [1,2], "immovable": false},
+        {"type": "InstructionMemory", "position": [4,2], "immovable": false},
+        {"type": "Output", "position": [7,2], "immovable": true, "label": "INSTRUCTION"}
     ],
     
     "available_components": [
         {"type": "And"},
         {"type": "Or"},
-        {"type": "Input"},
-        {"type": "Adder32bit"}
+        {"type": "Input"}
     ],
 
     "connections": [],
 
     "hints": [
-        "This demonstrates a complete CPU PC increment cycle",
-        "The ProgramCounter needs external logic to increment",
-        "Connect PC output back to Adder input A (feedback loop)",
-        "The constant 4 represents the instruction size in bytes",
-        "Clock controls when PC actually updates: every 8 evaluation ticks",
-        "Expected sequence: PC=0→4→8→12→16→20→24→28→32→36→40→44→48→52→56→60→0... (wraps after 16 instructions)",
-        "Try adjusting simulation speed to clearly see the 8-tick clock timing"
+        "This demonstrates the most basic CPU operation: fetching instructions",
+        "The clock will tick every 8 evaluation cycles",
+        "Watch how the ProgramCounter increments: 0 → 1 → 2 → 3...",
+        "Each PC value fetches a different instruction from memory",
+        "Try adjusting the simulation speed to see the clock timing clearly"
     ],
     "hints_de": [
-        "Dies demonstriert einen vollständigen CPU-PC-Inkrement-Zyklus",
-        "Der ProgramCounter braucht externe Logik zum Inkrementieren", 
-        "Verbinde PC-Ausgang zurück zu Adder-Eingang A (Rückkopplungsschleife)",
-        "Die Konstante 4 repräsentiert die Instruktionsgröße in Bytes",
-        "Clock kontrolliert wann PC tatsächlich aktualisiert: alle 8 Evaluations-Ticks",
-        "Erwartete Sequenz: PC=0→4→8→12→16→20→24→28→32→36→40→44→48→52→56→60→0... (wrap nach 16 Instruktionen)",
-        "Versuche die Simulationsgeschwindigkeit anzupassen um das 8-Tick Clock-Timing klar zu sehen"
+        "Dies demonstriert die grundlegendste CPU-Operation: Instruktionen holen",
+        "Die Clock tickt alle 8 Evaluations-Zyklen", 
+        "Beobachte wie der ProgramCounter inkrementiert: 0 → 1 → 2 → 3...",
+        "Jeder PC-Wert holt eine andere Instruktion aus dem Speicher",
+        "Versuche die Simulationsgeschwindigkeit anzupassen um das Clock-Timing klar zu sehen"
     ],
 
     "tests": [],
@@ -76,15 +58,7 @@
             2149842945,
             2149908481,
             2149974017,
-            2150039553,
-            2150105089,
-            2150170625,
-            2150236161,
-            2150301697,
-            2150367233,
-            2150432769,
-            2150498305,
-            2150563841
+            2150039553
         ],
         "dataMemory": []
     },
