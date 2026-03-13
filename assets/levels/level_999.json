@@ -27,7 +27,8 @@
     "available_components": [
         {"type": "And"},
         {"type": "Or"},
-        {"type": "Input"}
+        {"type": "InputSource"},
+        {"type": "Adder32bit"}
     ],
 
     "connections": [],
@@ -66,6 +67,7 @@
     "clockConfig": {
         "enabled": true,
         "ticksPerClockCycle": 8,
-        "startState": 0
+        "startState": 0,
+        "mode": 1
     }
 }

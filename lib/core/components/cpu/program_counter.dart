@@ -6,7 +6,7 @@ class ProgramCounter extends SequentialComponent {
   late InputPin _nextPcInput;
   late OutputPin _pcOutput;
   int _currentPC = 0;
-  bool _firstEval = true;
+  bool _shoudEvaluateNormally = true;
   int _nextValue = 0;
 
   ProgramCounter() {
@@ -24,9 +24,9 @@ class ProgramCounter extends SequentialComponent {
     final nextValue = _nextPcInput.value;
     _nextValue = nextValue;
 
-    // On first evaluation, always propagate to trigger downstream components
-    if (_firstEval) {
-      _firstEval = false;
+    // On first evaluation in cycle return true, wait for clock afterwards
+    if (_shoudEvaluateNormally) {
+      _shoudEvaluateNormally = false;
       return true;
     }
     return false;
@@ -36,6 +36,8 @@ class ProgramCounter extends SequentialComponent {
   void applyNewState() {
     if (_currentPC != _nextValue) {
       _currentPC = _nextValue;
+      _pcOutput.value =_currentPC;
+      _shoudEvaluateNormally = true;
     }
   }
 

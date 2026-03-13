@@ -1,5 +1,6 @@
 import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/components/base/sequentialComponent.dart';
+import 'package:circuitquest/core/components/cpu/program_counter.dart';
 
 import 'package:circuitquest/core/simulation/clockManager.dart';
 
@@ -91,12 +92,6 @@ class EvaluationAlgorithms {
       tick++;
 
       // continue clock if current cycle is shorter than clock cycle
-      print("DEBUG: current.isEmpty = ${current.isEmpty}");
-      print("DEBUG: clockManager != null = ${clockManager != null}");
-      if (clockManager != null) {
-        print("DEBUG: ticksPerClockCycle = ${clockManager.ticksPerClockCycle}");
-      }
-      
       if (current.isEmpty &&
           clockManager != null &&
           clockManager.ticksPerClockCycle > 0 &&
@@ -117,7 +112,7 @@ class EvaluationAlgorithms {
         }
 
         if (clockSwitched) {
-          // Clock hat geschaltet - alle Sequential Components updaten
+          // when clock switched: update sequential components
           final sequentialComponents = allComponents.where(
             (c) => c is SequentialComponent,
           );
@@ -127,11 +122,13 @@ class EvaluationAlgorithms {
             }
           }
 
-          // PC zur nächsten Evaluation hinzufügen
+          // start next cycle from PC
           final programCounters = allComponents.where(
-            (c) => c.runtimeType.toString() == 'ProgramCounter',
+            (e) => e is ProgramCounter
           );
-          current = programCounters.toSet();
+          current.addAll(programCounters.toSet());
+          current = current.toSet();
+          
         }
       }
 
