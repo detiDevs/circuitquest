@@ -2,7 +2,7 @@ import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/components/base/sequentialComponent.dart';
 import 'package:circuitquest/core/components/cpu/program_counter.dart';
 
-import 'package:circuitquest/core/simulation/clockManager.dart';
+import 'package:circuitquest/core/simulation/clock_manager.dart';
 
 /// Shared evaluation algorithms for circuit simulation.
 class EvaluationAlgorithms {
@@ -14,7 +14,7 @@ class EvaluationAlgorithms {
   static Future<bool> evaluateEventDriven({
     required Set<Component> allComponents,
     required Set<Component> startingComponents,
-    Clockmanager? clockManager,
+    ClockManager? clockManager,
     void Function(Set<Component> components)? onUpdate,
     Future<void> Function()? onWait,
     int maxEvalCycles = 1000,

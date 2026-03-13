@@ -20,12 +20,12 @@ enum ClockMode {
   }
 }
 
-class Clockmanager {
+class ClockManager {
   int _currentTick = 0;
   late final int ticksPerClockCycle;
   final ClockMode clockMode;
 
-  Clockmanager({
+  ClockManager({
     this.ticksPerClockCycle = 0,
     this.clockMode = ClockMode.disabled,
   });

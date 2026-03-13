@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
-import 'package:circuitquest/core/simulation/clockManager.dart';
+import 'package:circuitquest/core/simulation/clock_manager.dart';
 import 'package:circuitquest/levels/level.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -129,7 +129,7 @@ class SandboxState extends ChangeNotifier {
   Simulator? _simulator;
 
   /// Clock manager for sequential component timing
-  Clockmanager? _clockmanager;
+  ClockManager? _clockmanager;
 
   /// Currently selected component type for placement
   String? _selectedComponentType;
@@ -161,7 +161,7 @@ class SandboxState extends ChangeNotifier {
   /// Initializes the clock manager from level configuration
   void initializeClockFromLevel(ClockConfig? clockConfig) {
     if (clockConfig != null && clockConfig.mode > 0) {
-      _clockmanager = Clockmanager(
+      _clockmanager = ClockManager(
         ticksPerClockCycle: clockConfig.ticksPerClockCycle,
         clockMode: clockConfig.clockMode,
       );
@@ -182,7 +182,7 @@ class SandboxState extends ChangeNotifier {
   Set<String> get activeComponentIds => Set.unmodifiable(_activeComponentIds);
   ({String componentId, String pinName})? get wireDrawingStart =>
       _wireDrawingStart;
-  Clockmanager? get clockManager => _clockmanager;
+  ClockManager? get clockManager => _clockmanager;
 
   // Undo/Redo getters
   bool get canUndo => CommandController.canUndo;

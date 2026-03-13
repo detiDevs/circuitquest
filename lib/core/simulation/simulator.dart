@@ -1,6 +1,6 @@
 import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/simulation/evaluation_algorithms.dart';
-import 'package:circuitquest/core/simulation/clockManager.dart';
+import 'package:circuitquest/core/simulation/clock_manager.dart';
 
 typedef UpdateCallback = void Function(Set<Component> components);
 typedef WaitCallback = Future<void> Function();
@@ -8,7 +8,7 @@ typedef WaitCallback = Future<void> Function();
 class Simulator {
   final Set<Component> components;
   final Set<Component> inputComponents;
-  final Clockmanager? clockManager;
+  final ClockManager? clockManager;
 
   Simulator({
     required this.components, 
