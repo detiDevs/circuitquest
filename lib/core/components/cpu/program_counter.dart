@@ -1,12 +1,13 @@
-import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/components/base/sequentialComponent.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 
 /// Program Counter component for MIPS processor
-class ProgramCounter extends Component {
+class ProgramCounter extends SequentialComponent {
   late InputPin _nextPcInput;
   late OutputPin _pcOutput;
   int _currentPC = 0;
-  bool _firstEval = true;
+  bool _shoudEvaluateNormally = true;
+  int _nextValue = 0;
 
   ProgramCounter() {
     _nextPcInput = InputPin(this, bitWidth: 32);
@@ -19,19 +20,27 @@ class ProgramCounter extends Component {
 
   @override
   bool evaluate() {
+    _nextPcInput.updateFromSource();
     final nextValue = _nextPcInput.value;
-    _pcOutput.value = nextValue;
+    _nextValue = nextValue;
 
-    // On first evaluation, always propagate to trigger downstream components
-    if (_firstEval) {
-      _firstEval = false;
-      return true;
-    }
-
-    if (_currentPC != nextValue) {
-      _currentPC = nextValue;
+    // On first evaluation in cycle return true, wait for clock afterwards
+    if (_shoudEvaluateNormally) {
+      _shoudEvaluateNormally = false;
       return true;
     }
     return false;
   }
+
+  @override
+  void applyNewState() {
+    if (_currentPC != _nextValue) {
+      _currentPC = _nextValue;
+      _pcOutput.value =_currentPC;
+      _shoudEvaluateNormally = true;
+    }
+  }
+
+  /// Returns the current PC value
+  int get currentPC => _currentPC;
 }

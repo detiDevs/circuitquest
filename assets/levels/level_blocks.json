@@ -157,6 +157,18 @@
           "recommended": true
         }
       ]
+    },
+    {
+      "name": "Testing & Development",
+      "name_de": "Test & Entwicklung",
+      "levels": [
+        {
+          "id": 999,
+          "name": "Clock Test Level",
+          "name_de": "Clock Test Level",
+          "recommended": false
+        }
+      ]
     }
   ]
 }

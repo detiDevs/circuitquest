@@ -1,0 +1,73 @@
+{
+    "level_id": 999,
+    "name": "Clock Test Level - Instruction Fetch",
+    "name_de": "Clock Test Level - Instruction Fetch",
+    "description": "Test the clock functionality with a simple instruction fetch cycle. The ProgramCounter should increment every clock cycle and fetch the next instruction from memory. Connect the ProgramCounter output to InstructionMemory address input, then connect the instruction output to see the fetched instructions. Watch how the clock controls the timing!",
+    "description_de": "Teste die Clock-Funktionalität mit einem einfachen Instruction-Fetch-Zyklus. Der ProgramCounter soll jeden Clock-Zyklus inkrementieren und die nächste Instruktion aus dem Speicher holen. Verbinde den ProgramCounter-Ausgang mit dem InstructionMemory-Adress-Eingang, dann verbinde den Instruktions-Ausgang um die geholten Instruktionen zu sehen. Beobachte, wie die Clock das Timing kontrolliert!",
+    "difficulty": "Test",
+    "difficulty_de": "Test",
+    "objectives": [
+        "Connect ProgramCounter output to InstructionMemory address input",
+        "Connect InstructionMemory output to the Output probe",
+        "Start simulation and watch the clock-controlled instruction fetch",
+        "Observe: PC increments every 8 ticks, fetching new instructions"
+    ],
+    "objectives_de": [
+        "Verbinde ProgramCounter-Ausgang mit InstructionMemory-Adress-Eingang",
+        "Verbinde InstructionMemory-Ausgang mit dem Output-Probe",
+        "Starte Simulation und beobachte den Clock-kontrollierten Instruction-Fetch",
+        "Beobachte: PC inkrementiert alle 8 Ticks und holt neue Instruktionen"
+    ],
+    "components": [
+        {"type": "ProgramCounter", "position": [1,2], "immovable": false},
+        {"type": "InstructionMemory", "position": [4,2], "immovable": false},
+        {"type": "Output", "position": [7,2], "immovable": true, "label": "INSTRUCTION"}
+    ],
+    
+    "available_components": [
+        {"type": "And"},
+        {"type": "Or"},
+        {"type": "InputSource"},
+        {"type": "Adder32bit"}
+    ],
+
+    "connections": [],
+
+    "hints": [
+        "This demonstrates the most basic CPU operation: fetching instructions",
+        "The clock will tick every 8 evaluation cycles",
+        "Watch how the ProgramCounter increments: 0 → 1 → 2 → 3...",
+        "Each PC value fetches a different instruction from memory",
+        "Try adjusting the simulation speed to see the clock timing clearly"
+    ],
+    "hints_de": [
+        "Dies demonstriert die grundlegendste CPU-Operation: Instruktionen holen",
+        "Die Clock tickt alle 8 Evaluations-Zyklen", 
+        "Beobachte wie der ProgramCounter inkrementiert: 0 → 1 → 2 → 3...",
+        "Jeder PC-Wert holt eine andere Instruktion aus dem Speicher",
+        "Versuche die Simulationsgeschwindigkeit anzupassen um das Clock-Timing klar zu sehen"
+    ],
+
+    "tests": [],
+
+    "memoryContents": {
+        "instructionMemory": [
+            2149580801,
+            2149646337,
+            2149711873,
+            2149777409,
+            2149842945,
+            2149908481,
+            2149974017,
+            2150039553
+        ],
+        "dataMemory": []
+    },
+
+    "clockConfig": {
+        "enabled": true,
+        "ticksPerClockCycle": 8,
+        "startState": 0,
+        "mode": 1
+    }
+}

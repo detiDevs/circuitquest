@@ -799,5 +799,11 @@
     "objectives_de": [
         "Verstehe, wie dieser Prozessor als Ganzes funktioniert."
     ],
-    "hints_de": []
+    "hints_de": [],
+    "clockConfig": {
+        "enabled": true,
+        "ticksPerClockCycle": 8,
+        "startState": 0,
+        "mode": 1
+    }
 }

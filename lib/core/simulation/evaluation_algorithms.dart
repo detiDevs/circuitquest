@@ -1,18 +1,24 @@
 import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/components/base/sequentialComponent.dart';
+import 'package:circuitquest/core/components/cpu/program_counter.dart';
+
+import 'package:circuitquest/core/simulation/clock_manager.dart';
 
 /// Shared evaluation algorithms for circuit simulation.
 class EvaluationAlgorithms {
   /// Event-driven evaluation algorithm.
-  /// 
+  ///
   /// Propagates changes through the circuit starting from the given components.
   /// Supports optional callbacks for visualization when called asynchronously.
   /// Returns true if evaluation completed successfully, false if it hit the max cycles limit.
   static Future<bool> evaluateEventDriven({
     required Set<Component> allComponents,
     required Set<Component> startingComponents,
+    ClockManager? clockManager,
     void Function(Set<Component> components)? onUpdate,
     Future<void> Function()? onWait,
     int maxEvalCycles = 1000,
+    bool clock = true,
   }) async {
     Set<Component> current = startingComponents.toSet();
 
@@ -31,6 +37,17 @@ class EvaluationAlgorithms {
     }
 
     int tick = 0;
+    if (clockManager != null && clockManager.shouldUpdateManually()) {
+      // update sequential components (for Levels without PC but with sequential Compoenents)
+      final sequentialComponents = allComponents.where(
+        (c) => c is SequentialComponent,
+      );
+      for (final comp in sequentialComponents) {
+        if (comp is SequentialComponent) {
+          comp.applyNewState();
+        }
+      }
+    }
 
     while (current.isNotEmpty) {
       final Set<Component> next = {};
@@ -53,8 +70,67 @@ class EvaluationAlgorithms {
         await onWait();
       }
 
+      if (clockManager?.tickAndCheckClock() == true) {
+        // update sequential components
+        final sequentialComponents = allComponents.where(
+          (c) => c is SequentialComponent,
+        );
+        for (final comp in sequentialComponents) {
+          if (comp is SequentialComponent) {
+            comp.applyNewState();
+          }
+        }
+
+        // add only pc to next eval cycle
+        final programCounters = allComponents.where(
+          (c) => c.runtimeType.toString() == 'ProgramCounter',
+        );
+        next.addAll(programCounters);
+      }
+
       current = next;
       tick++;
+
+      // continue clock if current cycle is shorter than clock cycle
+      if (current.isEmpty &&
+          clockManager != null &&
+          clockManager.ticksPerClockCycle > 0 &&
+          clockManager.shouldContinue(allComponents)) {
+        bool clockSwitched = false;
+        int emptyTicks = 0;
+        const maxEmptyTicks =
+            50; // technically not neccessary but second safety
+
+        while (!clockSwitched && emptyTicks < maxEmptyTicks) {
+          clockSwitched = clockManager.tickAndCheckClock();
+          emptyTicks++;
+          tick++;
+
+          if (onWait != null) {
+            await onWait();
+          }
+        }
+
+        if (clockSwitched) {
+          // when clock switched: update sequential components
+          final sequentialComponents = allComponents.where(
+            (c) => c is SequentialComponent,
+          );
+          for (final comp in sequentialComponents) {
+            if (comp is SequentialComponent) {
+              comp.applyNewState();
+            }
+          }
+
+          // start next cycle from PC
+          final programCounters = allComponents.where(
+            (e) => e is ProgramCounter
+          );
+          current.addAll(programCounters.toSet());
+          current = current.toSet();
+          
+        }
+      }
 
       if (tick > actualMaxCycles * allComponents.length) {
         // Likely oscillation / unstable feedback
@@ -66,7 +142,7 @@ class EvaluationAlgorithms {
   }
 
   /// Topological (Kahn's algorithm) evaluation.
-  /// 
+  ///
   /// Evaluates components in dependency order, useful for acyclic circuits.
   /// Returns true if successful, false if a cycle is detected.
   static Future<bool> evaluateTopological({

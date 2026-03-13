@@ -1,4 +1,41 @@
 import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/core/simulation/clock_manager.dart';
+
+/// Clock configuration for levels
+class ClockConfig {
+  final bool enabled;
+  final int ticksPerClockCycle;
+  final int startState;
+  final int mode; // 0 = disabled, 1 = enabled, 2 = component update
+
+  ClockConfig({
+    required this.enabled,
+    required this.ticksPerClockCycle,
+    this.startState = 0,
+    this.mode = 0,
+  });
+
+  /// Returns the ClockMode enum value based on the mode integer
+  ClockMode get clockMode => ClockMode.fromInt(mode);
+
+  factory ClockConfig.fromJson(Map<String, dynamic> json) {
+    return ClockConfig(
+      enabled: json['enabled'] as bool? ?? false,
+      ticksPerClockCycle: json['ticksPerClockCycle'] as int? ?? 8,
+      startState: json['startState'] as int? ?? 0,
+      mode: json['mode'] as int? ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'enabled': enabled,
+      'ticksPerClockCycle': ticksPerClockCycle,
+      'startState': startState,
+      'mode': mode,
+    };
+  }
+}
 
 /// Data model representing a circuit component in a level
 class LevelComponent {
@@ -9,6 +46,7 @@ class LevelComponent {
   final int? initialValue;
   final int? initialBitWidth;
   final List<int>? initialRegisterValues;
+  final int? clockCycle;
 
   LevelComponent({
     required this.type,
@@ -18,6 +56,7 @@ class LevelComponent {
     this.initialValue,
     this.initialBitWidth,
     this.initialRegisterValues,
+    this.clockCycle,
   });
 
   factory LevelComponent.fromJson(Map<String, dynamic> json) {
@@ -131,6 +170,7 @@ class Level {
   final List<String>? hintsDe;
   final List<LevelTest> tests;
   final MemoryContents? memoryContents;
+  final ClockConfig? clockConfig;
 
   Level({
     required this.levelId,
@@ -149,6 +189,7 @@ class Level {
     this.hintsDe,
     required this.tests,
     this.memoryContents,
+    this.clockConfig,
   });
 
   factory Level.fromJson(Map<String, dynamic> json) {
@@ -178,6 +219,9 @@ class Level {
           .toList(),
       memoryContents: json['memoryContents'] != null
           ? MemoryContents.fromJson(json['memoryContents'] as Map<String, dynamic>)
+          : null,
+      clockConfig: json['clockConfig'] != null
+          ? ClockConfig.fromJson(json['clockConfig'] as Map<String, dynamic>)
           : null,
     );
   }

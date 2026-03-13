@@ -80,6 +80,8 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
 
     final state = ref.read(sandboxProvider);
     state.reset();
+    
+    state.initializeClockFromLevel(level.clockConfig);
 
     for (var c in level.components) {
       print(c.type);
