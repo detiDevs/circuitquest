@@ -26,7 +26,6 @@ class Register extends SequentialComponent {
   @override
   void applyNewState(){
     _storedValue = _newValue;
-    // KRITISCH: Korrekter Output-Pin Name verwenden!
     outputs['outValue']!.value = _storedValue;
   }
 
@@ -34,7 +33,6 @@ class Register extends SequentialComponent {
   void reset() {
     _storedValue = 0;
     _newValue = 0;
-    // KRITISCH: Korrekter Output-Pin Name verwenden!
     outputs['outValue']!.value = 0;
   }
 
