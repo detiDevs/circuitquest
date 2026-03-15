@@ -1,4 +1,5 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/level_mode/level_bottom_app_bar.dart';
 import 'package:circuitquest/ui/shared/widgets/expandable_control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -87,7 +88,8 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         tooltip: AppLocalizations.of(context)!.levelInformationTooltip,
         child: const Icon(Icons.info),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: LevelBottomAppBar(showLevelInfo: _showLevelInfoDialog),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/sandbox_mode/sandbox_bottom_app_bar.dart';
 import 'package:circuitquest/ui/shared/widgets/expandable_control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,6 +59,7 @@ class _SandboxScreenState extends ConsumerState<SandboxScreen> {
         ],
       ),
       body: const _SandboxBody(),
+      bottomNavigationBar: SandboxBottomAppBar(),
     );
   }
 }
