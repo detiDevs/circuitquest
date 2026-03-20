@@ -1,38 +1,46 @@
 {
     "level_id": 5,
-    "name": "Functional Completeness 3",
-    "name_de": "Funktionale Vollständigkeit 3",
-    "description": "Try creating a XNOR gate using only NAND and NOR gates.",
-    "description_de": "Versuche, ein XNOR-Gatter nur mit NAND- und NOR-Gattern zu erstellen.",
-    "difficulty": "Medium",
-    "difficulty_de": "Mittel",
+    "name": "NOR Gate",
+    "name_de": "NOR-Gatter",
+    "description": "The NOR gate returns true only if both inputs are false.",
+    "description_de": "Das NOR-Gatter gibt nur dann wahr zurück, wenn beide Eingänge falsch sind.",
+    "difficulty": "Easy",
+    "difficulty_de": "Einfach",
+    "truth_table": [
+        ["x", 0,1],
+        [0,1,0],
+        [1,0,0]
+    ],
     "objectives": [
-        "Create a XNOR gate."
+        "Given the truth table, can you figure out how to create a NOR gate using NOT and OR gates?"
     ],
     "objectives_de": [
-        "Erstelle ein XNOR-Gatter."
+        "Anhand der Wahrheitstabelle, kannst du herausfinden, wie man ein NOR-Gatter mit NOT- und OR-Gattern erstellt?"
     ],
     "components": [
         {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,5], "immovable": true, "label": "B"}, 
-        {"type": "Output", "position": [8,3], "immovable": true}    
+        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"},
+        {"type": "Output", "position": [6,2], "immovable": true}    
     ],
     "available_components": [
-        {"type": "Nand"},
-        {"type": "Nor"}
+        {"type": "Not"},
+        {"type": "Or"}
     ],
     "hints": [
-        "Think back to level 5.",
-        "Two Not gates will cancel each other out."
+        "You can create a NOR gate by first creating an OR gate and then inverting its output with a NOT gate."
     ],
     "hints_de": [
-        "Denke an Level 5 zurück.",
-        "Zwei NICHT-Gatter heben sich gegenseitig auf."
+        "Das NOR-Gatter kann erstellt werden, indem zuerst ein OR-Gatter erstellt und dann dessen Ausgang mit einem NICHT-Gatter invertiert wird."
     ],
     "tests": [
         {"inputs": [[0,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1]], "expected_output": [[0,1]]},
         {"inputs": [[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1]], "expected_output": [[1,1]]}
-    ]
-}
+        {"inputs": [[1,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1]], "expected_output": [[0,1]]}
+    ],
+
+    "success_message": "Was easy right?",
+    "success_message_de": "War doch einfach, oder?",
+
+    "bonus_level": true
+}   

@@ -1,103 +1,49 @@
 {
-	"level_id": 7,
-	"name": "8bit Collector, and bigger MUX",
-	"name_de": "8-Bit-Kollektor und größerer MUX",
-	"description":"What if we want to select from more than 2 input values with a MUX? This cannot be done with a 0 or 1 control signal. Collectors allow you to combine several inputs to a signal with a larger bit width. For example, combining 2 inputs gives a 2-bit selector which can choose among 2^2 = 4 values in a 4-input MUX.",
-	"description_de":"Was ist, wenn wir mit einem MUX aus mehr als 2 Eingabewerten wählen möchten? Dies kann nicht mit einem 0- oder 1-Steuersignal erreicht werden. Kollektoren ermöglichen es dir, mehrere Eingänge zu einem Signal mit einer größeren Bitbreite zu kombinieren. Zum Beispiel gibt das Kombinieren von 2 Eingängen einen 2-Bit-Selektor, der unter 2^2 = 4 Werten in einem 4-Eingang-MUX wählen kann.",
-	"difficulty": "Medium",
-	"difficulty_de": "Mittel",
-	"objectives": [
-		"Combine single-bit Inputs to make a 2-bit selector compatible with a 4-input Multiplexer (Multiplexer4Inp)."
-	],
-	"objectives_de": [
-		"Kombiniere Single-Bit-Eingänge, um einen 2-Bit-Selektor zu erstellen, der mit einem 4-Eingang-Multiplexer (Multiplexer4Inp) kompatibel ist."
-	],
-	"components": [
-		{"type": "Input", "position": [0,1], "immovable": true, "label": "S0"},
-		{"type": "Input", "position": [0,3], "immovable": true, "label": "S1"},
-        {"type": "Input", "position": [0,5], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,7], "immovable": true, "label": "B"},
-        {"type": "Input", "position": [0,9], "immovable": true, "label": "C"},
-        {"type": "Input", "position": [0,11], "immovable": true, "label": "D"},
-        {"type": "Output", "position": [10,6], "immovable": true}
+    "level_id": 7,
+    "name": "Functional Completeness 1",
+    "name_de": "Funktionale Vollständigkeit 1",
+    "description": "Let's talk about functional completeness! \n\nBut first some information about notation. \nThere are multiple ways to write AND, OR, and NOT. \n\nAnd can be written as $A\\cdot B$ or $A \\land B$ \n\nOR can be written as $A + B$ or $A \\lor B$ \n\nNOT can be written as $\\neg A$ or $A'$ or $\\overline{A}$ \n\nWe will use $+,\\cdot$ and $\\overline{\\phantom{A}}$ in this App. \n\nA set of gates is functionally complete if you can create any possible logic gate using only those gates. \n\nFor example, the NAND gate is functionally complete because you can create NOT, AND, OR, XOR, NOR, and XNOR gates using only NAND gates. \n\nYou already know how to build all the gates using only AND, OR, and NOT gates. An important theorem in boolean algebra is De Morgan's theorem, which states that \n\n$\\overline{A \\land B} = \\overline{A} \\lor \\overline{B}$ \n\nand \n\n$\\overline{A \\lor B} = \\overline{A} \\land \\overline{B}$ \n\nThis means that you can create an AND gate using only OR and NOT gates, and you can create an OR gate using only AND and NOT gates.",
+    "description_de": "Lass uns über funktionale Vollständigkeit sprechen! \n\nAber zuerst einige Informationen über die Notation. \nEs gibt mehrere Möglichkeiten, UND, ODER und NICHT zu schreiben. \n\nUND kann als $A\\cdot B$ oder $A \\land B$ geschrieben werden \n\nODER kann als $A + B$ oder $A \\lor B$ geschrieben werden \n\nNICHT kann als $\\neg A$ oder $A'$ oder $\\overline{A}$ geschrieben werden. \n\nWir werden $+,\\cdot$ und $\\overline{\\phantom{A}}$ verwenden. \n\nEin Satz von Gattern ist funktional vollständig, wenn du jedes mögliche Logikgatter nur mit diesen Gattern erstellen kannst. \n\nZum Beispiel ist das NAND-Gatter funktional vollständig, weil du NOT-, AND-, OR-, XOR-, NOR- und XNOR-Gatter nur mit NAND-Gattern erstellen kannst. \n\nDu weißt bereits wie mann all die Gatter aus nur AND-, OR- und NOT-Gattern erstellen kann. Ein wichtiger Satz in der booleschen Algebra ist De Morgans Theorem, welches besagt, dass \n\n$\\overline{A \\land B} = \\overline{A} \\lor \\overline{B}$ \n\nund \n\n$\\overline{A \\lor B} = \\overline{A} \\land \\overline{B}$ \n\ngilt. \n\nDas bedeutet, dass du ein UND-Gatter nur mit ODER- und NICHT-Gattern erstellen kannst, und du kannst ein ODER-Gatter nur mit UND- und NICHT-Gattern erstellen kannst.",
+    "difficulty": "Easy",
+    "difficulty_de": "Einfach",
+    "truth_table": [
+        ["x", 0,1],
+        [0,1,0],
+        [1,0,1]
+    ],
+    "objectives": [
+        "Given the information that you can create all gates using only NAND, can you figure out how to create AND, OR, and NOT gates using only NAND gates?"
+    ],
+    "objectives_de": [
+        "Anhand der Information, dass du alle Gatter nur mit NAND-Gattern erstellen kannst, kannst du herausfinden, wie man AND-, OR- und NOT-Gatter nur mit NAND-Gattern erstellt?"
+    ],
+    "components": [
+        {"type": "Input", "position": [0,3], "immovable": true, "label": "A"},
+        {"type": "Input", "position": [0,5], "immovable": true, "label": "B"},
+        {"type": "Output", "position": [6,2], "immovable": true, "label": "AND"},
+        {"type": "Output", "position": [6,4], "immovable": true, "label": "OR"},
+        {"type": "Output", "position": [6,6], "immovable": true, "label": "NOT A"}
+    ],
+    "available_components": [
+        {"type": "Nand"}
+    ],
+    "hints": [
+        "You can create a NOT gate using a NAND gate by connecting both inputs to the same signal.",
+        "You can create an AND gate using NAND gates by inverting the output of a NAND gate.",
+        "You can create an OR gate using NAND gates by using De Morgan's theorem: $\\overline{A \\land B} = \\overline{A} \\lor \\overline{B}$"
+    ],
+    "hints_de": [
+        "Du kannst ein NOT-Gatter mit einem NAND-Gatter erstellen, indem du beide Eingänge mit dem gleichen Signal verbindest.",
+        "Du kannst ein AND-Gatter mit NAND-Gattern erstellen, indem du den Ausgang eines NAND-Gatters invertierst.",
+        "Du kannst ein OR-Gatter mit NAND-Gattern erstellen, indem du De Morgans Theorem verwendest: $\\overline{A \\land B} = \\overline{A} \\lor \\overline{B}$"
+    ],
+    "tests": [
+        {"inputs": [[0,1],[0,1]], "expected_output": [[0,1],[0,1],[1,1]]},
+        {"inputs": [[0,1],[1,1]], "expected_output": [[0,1],[1,1],[1,1]]},
+        {"inputs": [[1,1],[0,1]], "expected_output": [[0,1],[1,1],[0,1]]},
+        {"inputs": [[1,1],[1,1]], "expected_output": [[1,1],[1,1],[0,1]]}
     ],
 
-	"available_components": [
-		{"type": "Collector1to2"},
-		{"type": "Multiplexer4Inp"}
-	],
-	"hints": [
-		"Use 4 of the inputs as the data inputs (A,B,C,D) for the 4-input MUX and combine the remaining 2 inputs with the Collector to form a 2-bit selector.",
-		"A typical mapping: Inputs 0-3 = data inputs A..D, Inputs 4-5 = selector bits S0 (LSB), S1 (MSB).",
-		"The collector will pack the two selector bits into a 2-bit control signal for the 4-input MUX."
-	],
-	"hints_de": [
-		"Verwende 4 der Eingänge als Daten (A,B,C,D) für den 4-Eingang-MUX und kombiniere die verbleibenden 2 Eingänge mit dem Kollektor, um einen 2-Bit-Selektor zu bilden.",
-		"Eine typische Zuordnung: Eingänge 0-3 = Daten A..D, Eingänge 4-5 = Selektor-Bits S0 (LSB), S1 (MSB).",
-		"Der Kollektor packt die zwei Selektor-Bits in ein 2-Bit-Steuersignal für den 4-Eingang-MUX."
-	],
-	"solution": "",
-	"tests": [
-		{"inputs": [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[0,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[0,1],[0,1],[1,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[0,1],[1,1],[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-
-        {"inputs": [[0,1],[1,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[0,1],[1,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[0,1],[1,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-
-        {"inputs": [[1,1],[0,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[1,1],[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[1,1],[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-
-        {"inputs": [[1,1],[1,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1],[0,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1],[0,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1],[0,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]}
-    
-
-	]
-}
+    "success_message": "Congratulations! That was not that easy. If you liked this level, try the bonus levels in this block",
+    "success_message_de": "Glückwunsch! Das war nicht so einfach. Wenn dir dieses Level gefallen hat, probiere die Bonuslevels in diesem Block aus"
+}   

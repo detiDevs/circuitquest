@@ -6,9 +6,15 @@ import 'ui/home/home_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'state/locale_provider.dart';
 import 'state/theme_provider.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_tex/flutter_tex.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb) {
+    await TeXRenderingServer.start();
+  }
   final prefs = await SharedPreferences.getInstance();
   final savedLanguageCode = prefs.getString(kLocalePrefsKey);
   final initialLocale =
