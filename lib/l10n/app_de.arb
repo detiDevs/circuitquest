@@ -387,5 +387,6 @@
         "example": "MyCustomComponent"
       }
     }
-  }
+  },
+  "resetLevel": "Level zurücksetzen"
 }

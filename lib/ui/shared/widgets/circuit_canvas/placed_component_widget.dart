@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:circuitquest/core/commands/move_component_command.dart';
 import 'package:circuitquest/core/commands/remove_connection_command.dart';
 import 'package:circuitquest/core/components/custom_component.dart';
+import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/core/logic/pin.dart';
@@ -12,7 +12,6 @@ import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/component_detail_dialog.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/component_icon.dart';
-import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/input_source_widget.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/output_probe_widget.dart';
 import 'package:flutter/material.dart';

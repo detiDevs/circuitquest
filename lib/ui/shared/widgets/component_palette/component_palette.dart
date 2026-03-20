@@ -1,230 +1,13 @@
+import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/shared/widgets/component_palette/custom_component_palette_item.dart';
+import 'package:circuitquest/ui/sandbox_mode/custom_component_palette_item.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/palette_item.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/components/base/component.dart';
 import '../../../../state/custom_component_library.dart';
 import '../../../../core/components/custom_component.dart';
-
-/// A draggable component type in the palette.
-class ComponentType {
-  final String name;
-  final String displayName;
-  final String iconPath;
-  final bool isAsset;
-  final Component Function() createComponent;
-
-  const ComponentType({
-    required this.name,
-    required this.displayName,
-    required this.iconPath,
-    required this.createComponent,
-    this.isAsset = true,
-  });
-}
-
-/// Available component types in the palette.
-//TODO: Create dynamically by mapping component registry
-final List<ComponentType> availableComponents = [
-  ComponentType(
-    name: "InputSource",
-    displayName: "Input",
-    iconPath: 'assets/gates/Input.svg',
-    createComponent: () => createComponentByName('InputSource')!,
-  ),
-  ComponentType(
-    name: "OutputProbe",
-    displayName: "Output",
-    iconPath: 'assets/gates/Output.svg',
-    createComponent: () => createComponentByName('OutputProbe')!,
-  ),
-  // Basic gates
-  ComponentType(
-    name: 'And',
-    displayName: 'AND Gate',
-    iconPath: 'assets/gates/And.svg',
-    createComponent: () => createComponentByName('And')!,
-  ),
-  ComponentType(
-    name: 'Or',
-    displayName: 'OR Gate',
-    iconPath: 'assets/gates/Or.svg',
-    createComponent: () => createComponentByName('Or')!,
-  ),
-  ComponentType(
-    name: 'Not',
-    displayName: 'NOT Gate',
-    iconPath: 'assets/gates/Not.svg',
-    createComponent: () => createComponentByName('Not')!,
-  ),
-  ComponentType(
-    name: 'Nand',
-    displayName: 'NAND Gate',
-    iconPath: 'assets/gates/Nand.svg',
-    createComponent: () => createComponentByName('Nand')!,
-  ),
-  ComponentType(
-    name: 'Nor',
-    displayName: 'NOR Gate',
-    iconPath: 'assets/gates/Nor.svg',
-    createComponent: () => createComponentByName('Nor')!,
-  ),
-  ComponentType(
-    name: 'Xor',
-    displayName: 'XOR Gate',
-    iconPath: 'assets/gates/Xor.svg',
-    createComponent: () => createComponentByName('Xor')!,
-  ),
-  // Adders
-  ComponentType(
-    name: 'HalfAdder',
-    displayName: 'Half Adder',
-    iconPath: 'assets/gates/HalfAdder.svg',
-    createComponent: () => createComponentByName('HalfAdder')!,
-  ),
-  ComponentType(
-    name: 'FullAdder',
-    displayName: 'Full Adder',
-    iconPath: 'assets/gates/FullAdder.svg',
-    createComponent: () => createComponentByName('FullAdder')!,
-  ),
-  // Sequential components
-  ComponentType(
-    name: 'DLatch',
-    displayName: 'D-Latch',
-    iconPath: 'assets/gates/DLatch.svg',
-    createComponent: () => createComponentByName('DLatch')!,
-  ),
-  ComponentType(
-    name: 'Register',
-    displayName: 'Register',
-    iconPath: 'assets/gates/Register.svg',
-    createComponent: () => createComponentByName('Register')!,
-  ),
-  ComponentType(
-    name: 'Decoder',
-    displayName: 'Decoder',
-    iconPath: "assets/gates/DecoderThreeBit.svg",
-    createComponent: () => createComponentByName('Decoder')!,
-  ),
-  ComponentType(
-    name: "Splitter8to1",
-    displayName: "Splitter 8 to 1",
-    iconPath: "assets/gates/Splitter8to1.svg",
-    createComponent: () => createComponentByName('Splitter8to1')!,
-  ),
-  ComponentType(
-    name: "Splitter32to8",
-    displayName: "Splitter 32 to 8",
-    iconPath: "assets/gates/Splitter32to8.svg",
-    createComponent: () => createComponentByName('Splitter32to8')!,
-  ),
-  ComponentType(
-    name: "Collector1to2",
-    displayName: "Collector 1 to 2",
-    iconPath: "assets/gates/Collector1to2.svg",
-    createComponent: () => createComponentByName('Collector1to2')!,
-  ),
-  ComponentType(
-    name: "Collector1to5",
-    displayName: "Collector 1 to 5",
-    iconPath: "assets/gates/Collector1to5.svg",
-    createComponent: () => createComponentByName('Collector1to5')!,
-  ),
-  ComponentType(
-    name: "Collector1to6",
-    displayName: "Collector 1 to 6",
-    iconPath: "assets/gates/Collector1to6.svg",
-    createComponent: () => createComponentByName('Collector1to6')!,
-  ),
-  ComponentType(
-    name: "Collector8to16",
-    displayName: "Collector8to16",
-    iconPath: "assets/gates/Collector8to16.svg",
-    createComponent: () => createComponentByName('Collector8to16')!,
-  ),
-  ComponentType(
-    name: "Multiplexer2Inp",
-    displayName: "Multiplexer2Inp",
-    iconPath: "assets/gates/Multiplexer2Inp.svg",
-    createComponent: () => createComponentByName('Multiplexer2Inp')!,
-  ),
-  ComponentType(
-    name: "Multiplexer4Inp",
-    displayName: "Multiplexer4Inp",
-    iconPath: "assets/gates/Multiplexer4Inp.svg",
-    createComponent: () => createComponentByName('Multiplexer4Inp')!,
-  ),
-  ComponentType(
-    name: "Multiplexer8Inp",
-    displayName: "Multiplexer8Inp",
-    iconPath: "assets/gates/Multiplexer8Inp.svg",
-    createComponent: () => createComponentByName('Multiplexer8Inp')!,
-  ),
-  ComponentType(
-    name: "Adder32bit",
-    displayName: "Adder32bit",
-    iconPath: "assets/gates/Adder32bit.svg",
-    createComponent: () => createComponentByName('Adder32bit')!,
-  ),
-  ComponentType(
-    name: "ProgramCounter",
-    displayName: "ProgramCounter",
-    iconPath: "assets/gates/ProgramCounter.svg",
-    createComponent: () => createComponentByName('ProgramCounter')!,
-  ),
-  ComponentType(
-    name: "InstructionMemory",
-    displayName: "InstructionMemory",
-    iconPath: "assets/gates/InstructionMemory.svg",
-    createComponent: () => createComponentByName('InstructionMemory')!,
-  ),
-  ComponentType(
-    name: "RegisterBlock",
-    displayName: "RegisterBlock",
-    iconPath: "assets/gates/RegisterBlock.svg",
-    createComponent: () => createComponentByName('RegisterBlock')!,
-  ),
-  ComponentType(
-    name: "ALUAdvanced",
-    displayName: "ALUAdvanced",
-    iconPath: "assets/gates/ALUAdvanced.svg",
-    createComponent: () => createComponentByName('ALUAdvanced')!,
-  ),
-  ComponentType(
-    name: "SignExtend",
-    displayName: "SignExtend",
-    iconPath: "assets/gates/SignExtend.svg",
-    createComponent: () => createComponentByName('SignExtend')!,
-  ),
-  ComponentType(
-    name: "ControlUnit",
-    displayName: "ControlUnit",
-    iconPath: "assets/gates/ControlUnit.svg",
-    createComponent: () => createComponentByName('ControlUnit')!,
-  ),
-  ComponentType(
-    name: "ALUControl",
-    displayName: "ALUControl",
-    iconPath: "assets/gates/ALUControl.svg",
-    createComponent: () => createComponentByName('ALUControl')!,
-  ),
-  ComponentType(
-    name: "DataMemory",
-    displayName: "DataMemory",
-    iconPath: "assets/gates/DataMemory.svg",
-    createComponent: () => createComponentByName('DataMemory')!,
-  ),
-  ComponentType(
-    name: "ShiftLeft2",
-    displayName: "ShiftLeft2",
-    iconPath: "assets/gates/ShiftLeft2.svg",
-    createComponent: () => createComponentByName('ShiftLeft2')!,
-  ),
-];
 
 /// Helper function to build a responsive component list widget
 /// Used by both ComponentPalette and limited palettes to show consistent behavior
@@ -234,40 +17,14 @@ Widget buildResponsiveComponentList(
   bool showHeader = true,
   String? headerText,
 }) {
-  final isMobile = MediaQuery.of(context).size.width < 600;
+  final isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;
 
   if (isMobile) {
-    // Horizontal scrollable list on mobile
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (showHeader)
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              headerText ?? 'Components',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-        if (showHeader) const Divider(height: 1),
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: components
-                  .map(
-                    (componentType) => SizedBox(
-                      width: 70,
-                      child: PaletteItem(componentType: componentType),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ),
-      ],
+    // Horizontal PageView with 2 rows of 5 components per page on mobile
+    return _MobilePagedComponentList(
+      components: components,
+      showHeader: showHeader,
+      headerText: headerText,
     );
   } else {
     // Vertical list on desktop
@@ -294,6 +51,131 @@ Widget buildResponsiveComponentList(
             },
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _MobilePagedComponentList extends StatefulWidget {
+  const _MobilePagedComponentList({
+    required this.components,
+    required this.showHeader,
+    this.headerText,
+  });
+
+  final List<ComponentType> components;
+  final bool showHeader;
+  final String? headerText;
+
+  @override
+  State<_MobilePagedComponentList> createState() =>
+      _MobilePagedComponentListState();
+}
+
+class _MobilePagedComponentListState extends State<_MobilePagedComponentList> {
+  late final PageController _pageController;
+  int _currentPage = 0;
+
+  int get _pageCount => (widget.components.length / 10).ceil();
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.showHeader)
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              widget.headerText ?? 'Components',
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ),
+        if (widget.showHeader) const Divider(height: 1),
+        Expanded(
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: _pageCount,
+            onPageChanged: (pageIndex) {
+              setState(() {
+                _currentPage = pageIndex;
+              });
+            },
+            itemBuilder: (context, pageIndex) {
+              final startIndex = pageIndex * 10;
+              final endIndex = (startIndex + 10).clamp(0, widget.components.length);
+              final pageComponents = widget.components.sublist(startIndex, endIndex);
+
+              return Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: pageComponents.length,
+                  itemBuilder: (context, index) {
+                    final componentType = pageComponents[index];
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Expanded(
+                          child: PaletteItem(componentType: componentType),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          componentType.displayName,
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
+        if (_pageCount > 1)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8, top: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(_pageCount, (index) {
+                final isActive = index == _currentPage;
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: isActive ? 14 : 6,
+                  height: 6,
+                  margin: const EdgeInsets.symmetric(horizontal: 3),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(999),
+                    color: isActive
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.outlineVariant,
+                  ),
+                );
+              }),
+            ),
+          ),
       ],
     );
   }

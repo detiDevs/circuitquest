@@ -757,6 +757,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete {itemToDelete}'**
   String failedToDeleteX(String itemToDelete);
+
+  /// No description provided for @resetLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset level'**
+  String get resetLevel;
 }
 
 class _AppLocalizationsDelegate

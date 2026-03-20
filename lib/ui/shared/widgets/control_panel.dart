@@ -184,7 +184,6 @@ class ControlPanel extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
 
-            // Clear button
             OutlinedButton.icon(
               onPressed: state.placedComponents.isEmpty
                   ? null
@@ -192,7 +191,7 @@ class ControlPanel extends ConsumerWidget {
                       _showClearConfirmation(context, state);
                     },
               icon: const Icon(Icons.delete_outline),
-              label: Text(AppLocalizations.of(context)!.clearCircuit),
+              label: Text(level == null ? AppLocalizations.of(context)!.clearCircuit : AppLocalizations.of(context)!.resetLevel),
               style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
             ),
           ],
@@ -342,6 +341,9 @@ class ControlPanel extends ConsumerWidget {
           TextButton(
             onPressed: () {
               state.clearCircuit();
+              if(level != null) {
+                state.initializeFromLevelIfNeeded(level);
+              }
               Navigator.of(context).pop();
               SnackBarUtils.showInfo(context, AppLocalizations.of(context)!.circuitCleared);
             },

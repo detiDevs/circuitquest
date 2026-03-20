@@ -1,7 +1,9 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/level_mode/level_info_dialog.dart';
+import 'package:circuitquest/ui/level_mode/level_component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/control_panel.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +23,14 @@ class LevelBottomAppBar extends ConsumerStatefulWidget {
 class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
   PersistentBottomSheetController? _sheetController;
   _BottomSheetType? _activeSheet;
+  late final SandboxState sandboxState;
+  bool _isCheckingSolution = false;
+
+  @override
+  void initState() {
+    super.initState();
+    sandboxState = ref.read(sandboxProvider);
+  }
 
   @override
   void dispose() {
@@ -38,6 +48,7 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
           IconButton(
             tooltip: AppLocalizations.of(context)!.componentsLabel,
             onPressed: _showComponentMenu,
+            color: _activeSheet == _BottomSheetType.components ? Colors.blue : null,
             icon: Icon(Icons.extension),
           ),
           Spacer(),
@@ -45,11 +56,23 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
             tooltip: sandboxState.isSimulating
                 ? AppLocalizations.of(context)!.stopSimulation
                 : AppLocalizations.of(context)!.startSimulation,
-            onPressed: () => _toggleSimulation(sandboxState),
+            onPressed: _toggleSimulation,
             color: sandboxState.isSimulating ? Colors.orange : Colors.green,
             icon: Icon(
               sandboxState.isSimulating ? Icons.pause : Icons.play_arrow,
             ),
+          ),
+          Spacer(),
+          ElevatedButton(
+            onPressed: _checkSolution,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: sandboxState.isSimulating
+                  ? Colors.grey
+                  : Colors.purple,
+              iconColor: Colors.white,
+              shape: CircleBorder(),
+            ),
+            child: Icon(Icons.check),
           ),
           Spacer(),
           IconButton(
@@ -61,6 +84,7 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
           IconButton(
             tooltip: AppLocalizations.of(context)!.controlsTitle,
             onPressed: _showControlMenu,
+            color: _activeSheet == _BottomSheetType.controls ? Colors.blue : null,
             icon: Icon(Icons.tune),
           ),
         ],
@@ -73,21 +97,23 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
       type: _BottomSheetType.components,
       builder: (sheetContext) => SizedBox(
         width: MediaQuery.of(context).size.width,
-        child: buildResponsiveComponentList(
-          context,
-          components: availableComponents,
-          headerText: AppLocalizations.of(context)!.availableComponents,
-        ),
+        child: LevelComponentPalette(level: widget.level),
       ),
     );
   }
 
-  void _toggleSimulation(SandboxState sandboxState) {
+  void _toggleSimulation() {
     if (sandboxState.isSimulating) {
       sandboxState.pauseSimulation();
     } else {
       sandboxState.startSimulation();
     }
+  }
+
+  void _checkSolution() async {
+    _isCheckingSolution = true;
+    sandboxState.checkLevelSolution(context, ref, widget.level);
+    _isCheckingSolution = false;
   }
 
   void _showLevelInfoDialog() {
@@ -125,7 +151,7 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
           color: Theme.of(context).colorScheme.surface,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.4,
+              maxHeight: MediaQuery.of(context).size.height * 0.35,
               minWidth: MediaQuery.of(context).size.width,
             ),
             child: builder(sheetContext),
@@ -136,7 +162,9 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
       showDragHandle: true,
     );
 
-    _activeSheet = type;
+    setState(() {
+      _activeSheet = type;
+    });
     _sheetController!.closed.whenComplete(() {
       if (mounted) {
         setState(() {

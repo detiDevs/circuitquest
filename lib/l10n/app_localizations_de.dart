@@ -381,4 +381,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String failedToDeleteX(String itemToDelete) {
     return 'Fehler beim Löschen von $itemToDelete';
   }
+
+  @override
+  String get resetLevel => 'Level zurücksetzen';
 }
