@@ -15,6 +15,7 @@ Widget buildResponsiveComponentList(
   BuildContext context, {
   required List<ComponentType> components,
   bool showHeader = true,
+  bool custom = false,
   String? headerText,
 }) {
   final isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;

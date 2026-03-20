@@ -217,7 +217,7 @@
       }
     }
   },
-
+  "customComponents": "Custom components",
   "customComponentName": "Component name",
   "customComponentDefaultName": "My Custom Component",
   "@customComponentDefaultName": {

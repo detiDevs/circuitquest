@@ -1,15 +1,15 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/levels/level.dart';
-import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/level_mode/level_info_dialog.dart';
 import 'package:circuitquest/ui/level_mode/level_component_palette.dart';
-import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
+import 'package:circuitquest/ui/shared/widgets/bottom_app_bar.dart'
+    as shared_bottom_app_bar;
 import 'package:circuitquest/ui/shared/widgets/control_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum _BottomSheetType { components, controls }
+enum _LevelBottomSheetType { components, controls }
 
 class LevelBottomAppBar extends ConsumerStatefulWidget {
   final Level level;
@@ -20,9 +20,12 @@ class LevelBottomAppBar extends ConsumerStatefulWidget {
   ConsumerState<LevelBottomAppBar> createState() => _LevelBottomAppBarState();
 }
 
-class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
-  PersistentBottomSheetController? _sheetController;
-  _BottomSheetType? _activeSheet;
+class _LevelBottomAppBarState
+    extends
+        shared_bottom_app_bar.BottomAppBar<
+          _LevelBottomSheetType,
+          LevelBottomAppBar
+        > {
   late final SandboxState sandboxState;
   bool _isCheckingSolution = false;
 
@@ -30,12 +33,6 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
   void initState() {
     super.initState();
     sandboxState = ref.read(sandboxProvider);
-  }
-
-  @override
-  void dispose() {
-    _sheetController?.close();
-    super.dispose();
   }
 
   @override
@@ -48,7 +45,9 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
           IconButton(
             tooltip: AppLocalizations.of(context)!.componentsLabel,
             onPressed: _showComponentMenu,
-            color: _activeSheet == _BottomSheetType.components ? Colors.blue : null,
+            color: activeSheet == _LevelBottomSheetType.components
+                ? Colors.blue
+                : null,
             icon: Icon(Icons.extension),
           ),
           Spacer(),
@@ -66,7 +65,7 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
           ElevatedButton(
             onPressed: _checkSolution,
             style: ElevatedButton.styleFrom(
-              backgroundColor: sandboxState.isSimulating
+              backgroundColor: _isCheckingSolution
                   ? Colors.grey
                   : Colors.purple,
               iconColor: Colors.white,
@@ -84,7 +83,9 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
           IconButton(
             tooltip: AppLocalizations.of(context)!.controlsTitle,
             onPressed: _showControlMenu,
-            color: _activeSheet == _BottomSheetType.controls ? Colors.blue : null,
+            color: activeSheet == _LevelBottomSheetType.controls
+                ? Colors.blue
+                : null,
             icon: Icon(Icons.tune),
           ),
         ],
@@ -93,8 +94,8 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
   }
 
   void _showComponentMenu() {
-    _toggleBottomSheet(
-      type: _BottomSheetType.components,
+    toggleBottomSheet(
+      type: _LevelBottomSheetType.components,
       builder: (sheetContext) => SizedBox(
         width: MediaQuery.of(context).size.width,
         child: LevelComponentPalette(level: widget.level),
@@ -124,54 +125,12 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
   }
 
   void _showControlMenu() {
-    _toggleBottomSheet(
-      type: _BottomSheetType.controls,
+    toggleBottomSheet(
+      type: _LevelBottomSheetType.controls,
       builder: (sheetContext) => SizedBox(
         width: MediaQuery.of(context).size.width,
         child: ControlPanel(level: widget.level),
       ),
     );
-  }
-
-  void _toggleBottomSheet({
-    required _BottomSheetType type,
-    required WidgetBuilder builder,
-  }) {
-    if (_activeSheet == type && _sheetController != null) {
-      _sheetController!.close();
-      return;
-    }
-
-    _sheetController?.close();
-
-    _sheetController = Scaffold.of(context).showBottomSheet(
-      (sheetContext) => SafeArea(
-        top: false,
-        child: Material(
-          color: Theme.of(context).colorScheme.surface,
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.4,
-              minWidth: MediaQuery.of(context).size.width,
-            ),
-            child: builder(sheetContext),
-          ),
-        ),
-      ),
-      enableDrag: true,
-      showDragHandle: true,
-    );
-
-    setState(() {
-      _activeSheet = type;
-    });
-    _sheetController!.closed.whenComplete(() {
-      if (mounted) {
-        setState(() {
-          _sheetController = null;
-          _activeSheet = null;
-        });
-      }
-    });
   }
 }

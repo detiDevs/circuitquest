@@ -231,6 +231,9 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get customComponents => 'Eigene Komponenten';
+
+  @override
   String get customComponentName => 'Komponentenname';
 
   @override

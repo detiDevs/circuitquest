@@ -228,6 +228,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get customComponents => 'Custom components';
+
+  @override
   String get customComponentName => 'Component name';
 
   @override

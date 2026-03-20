@@ -500,6 +500,12 @@ abstract class AppLocalizations {
   /// **'{min} .. {max}'**
   String rangeLabel(String min, String max);
 
+  /// No description provided for @customComponents.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom components'**
+  String get customComponents;
+
   /// No description provided for @customComponentName.
   ///
   /// In en, this message translates to:

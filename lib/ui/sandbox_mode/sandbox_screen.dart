@@ -35,6 +35,7 @@ class _SandboxScreenState extends ConsumerState<SandboxScreen> {
   @override
   Widget build(BuildContext context) {
     final sandboxState = ref.watch(sandboxProvider);
+    final bool isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;
     
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +59,7 @@ class _SandboxScreenState extends ConsumerState<SandboxScreen> {
         ],
       ),
       body: const _SandboxBody(),
-      bottomNavigationBar: SandboxBottomAppBar(),
+      bottomNavigationBar: isMobile ? SandboxBottomAppBar(): null,
     );
   }
 }
@@ -69,12 +70,13 @@ class _SandboxBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;
+
     // Use LayoutBuilder to determine responsive layout
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWideScreen = constraints.maxWidth > 800;
 
-        if (isWideScreen) {
+        if (!isMobile) {
           // Desktop layout: Palette on left, Canvas in center, Controls on right
           return Row(
             children: [
@@ -109,34 +111,12 @@ class _SandboxBody extends StatelessWidget {
             ],
           );
         } else {
-          // Mobile layout: Vertical stack with tabs for palette
+          // Mobile layout: only canvas, rest is done by bottom app bar
           return Column(
             children: [
-              // Collapsible palette at top
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border(
-                    bottom: BorderSide(color: Theme.of(context).colorScheme.outline),
-                  ),
-                ),
-                child: ExpansionTile(
-                  title: const Text('Components'),
-                  initiallyExpanded: false,
-                  children: const [
-                    SizedBox(
-                      height: 200,
-                      child: ComponentPalette(),
-                    ),
-                  ],
-                ),
-              ),
-              // Canvas takes remaining space
               const Expanded(
                 child: CircuitCanvas(),
               ),
-              // Control panel at bottom
-              const ControlPanel(isSandbox: true,),
             ],
           );
         }
