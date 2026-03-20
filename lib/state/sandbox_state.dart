@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
 import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/levels/level_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -19,6 +20,7 @@ import '../core/components/custom_component_data.dart';
 import '../state/custom_component_library.dart';
 import '../core/commands/command_controller.dart';
 import '../core/commands/add_connection_command.dart';
+import 'level_state.dart';
 
 /// Riverpod provider for sandbox state.
 final sandboxProvider = ChangeNotifierProvider<SandboxState>(
@@ -860,6 +862,82 @@ class SandboxState extends ChangeNotifier {
       return _placedComponents.firstWhere((c) => c.id == id);
     } catch (_) {
       return null;
+    }
+  }
+
+  Future<void> checkLevelSolution(
+    BuildContext context,
+    WidgetRef ref,
+    Level level,
+  ) async {
+    try {
+      final inputCount = _placedComponents
+          .where((c) => c.component is InputSource)
+          .length;
+      final outputCount = _placedComponents
+          .where((c) => c.component is OutputProbe)
+          .length;
+
+      if (inputCount == 0 || outputCount == 0) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Circuit must have inputs and outputs')),
+          );
+        }
+        return;
+      }
+
+      final validationResult = await LevelValidator.validateCircuitWithSimulation(
+        components: _placedComponents.map((pc) => pc.component).toList(),
+        tests: level.tests,
+        resetBeforeTest: resetSimulation,
+        runSimulation: startSimulation,
+      );
+
+      if (!context.mounted) return;
+
+      if (validationResult.isCorrect) {
+        await markLevelCompleted(ref, level.levelId);
+
+        if (!context.mounted) return;
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success!'),
+            content: const Text('All tests passed! Level completed.'),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: const Text('Continue'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Test Failed'),
+            content: Text(
+              validationResult.errorMessage ?? 'One or more tests failed',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Try Again'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error checking solution: $e')),
+        );
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
+import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/levels/level.dart';
-import 'package:circuitquest/state/sandbox_state.dart';
 
 /// Service for validating circuit solutions against level test cases
 class LevelValidator {
@@ -10,7 +10,7 @@ class LevelValidator {
   /// Returns a validation result containing whether the solution is correct
   /// and any error details if incorrect.
   static LevelValidationResult validateCircuit(
-    List<PlacedComponent> components,
+    List<Component> components,
     List<LevelTest> tests,
   ) {
     try {
@@ -35,17 +35,104 @@ class LevelValidator {
     }
   }
 
+  /// Validates a circuit solution by running simulation for each test case.
+  ///
+  /// For every test:
+  /// - inputs are configured
+  /// - optional reset callback is invoked
+  /// - simulation callback is awaited
+  /// - outputs are verified
+  static Future<LevelValidationResult> validateCircuitWithSimulation({
+    required List<Component> components,
+    required List<LevelTest> tests,
+    required Future<void> Function() runSimulation,
+    void Function()? resetBeforeTest,
+  }) async {
+    try {
+      final inputSources = <InputSource>[];
+      final outputProbes = <OutputProbe>[];
+
+      for (final component in components) {
+        if (component is InputSource) {
+          inputSources.add(component);
+        } else if (component is OutputProbe) {
+          outputProbes.add(component);
+        }
+      }
+
+      if (inputSources.isEmpty || outputProbes.isEmpty) {
+        return LevelValidationResult(
+          isCorrect: false,
+          errorMessage: 'Circuit must have inputs and outputs',
+        );
+      }
+
+      for (int testIndex = 0; testIndex < tests.length; testIndex++) {
+        final test = tests[testIndex];
+
+        if (test.inputs.length != inputSources.length) {
+          return LevelValidationResult(
+            isCorrect: false,
+            errorMessage:
+                'Test ${testIndex + 1} failed: expected ${inputSources.length} inputs but got ${test.inputs.length}',
+          );
+        }
+
+        if (test.expectedOutput.length != outputProbes.length) {
+          return LevelValidationResult(
+            isCorrect: false,
+            errorMessage:
+                'Test ${testIndex + 1} failed: expected ${outputProbes.length} outputs but got ${test.expectedOutput.length}',
+          );
+        }
+
+        resetBeforeTest?.call();
+
+        for (int i = 0; i < test.inputs.length; i++) {
+          final inputValues = test.inputs[i];
+          if (inputValues.isNotEmpty) {
+            inputSources[i].setValue(inputValues[0]);
+          }
+        }
+
+        await runSimulation();
+
+        for (int i = 0; i < test.expectedOutput.length; i++) {
+          final expectedValues = test.expectedOutput[i];
+          final actualValue = outputProbes[i].value;
+
+          if (expectedValues.isEmpty || expectedValues[0] != actualValue) {
+            final expectedText =
+                expectedValues.isNotEmpty ? expectedValues[0].toString() : 'N/A';
+            return LevelValidationResult(
+              isCorrect: false,
+              errorMessage:
+                  'Test ${testIndex + 1} failed: expected $expectedText but got $actualValue',
+            );
+          }
+        }
+      }
+
+      return LevelValidationResult(isCorrect: true);
+    } catch (e) {
+      return LevelValidationResult(
+        isCorrect: false,
+        errorMessage: 'Error during validation: $e',
+      );
+    }
+  }
+
   /// Runs a single test case and returns whether it passed
-  static bool _runTestCase(List<PlacedComponent> components, LevelTest test) {
+  static bool _runTestCase(List<Component> components, LevelTest test) {
     // Find all input sources and output probes
     final inputSources = <InputSource>[];
     final outputProbes = <OutputProbe>[];
     
     for (final component in components) {
-      if (component.component is InputSource) {
-        inputSources.add(component.component as InputSource);
-      } else if (component.component is OutputProbe) {
-        outputProbes.add(component.component as OutputProbe);
+      if (component is InputSource) {
+        inputSources.add(component);
+      } else if (component is OutputProbe) {
+        outputProbes.add(component);
       }
     }
 
@@ -65,7 +152,7 @@ class LevelValidator {
 
     // Evaluate circuit
     for (final component in components) {
-      component.component.evaluate();
+      component.evaluate();
     }
 
     // Check output values

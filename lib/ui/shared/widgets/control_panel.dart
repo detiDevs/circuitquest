@@ -3,10 +3,7 @@ import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../state/sandbox_state.dart';
-import '../../../state/level_state.dart';
 import '../../../levels/levels.dart';
-import '../../../core/components/input_source.dart';
-import '../../../core/components/output_probe.dart';
 import 'circuit_file_manager.dart';
 
 /// Control panel for circuit simulation and evaluation.
@@ -158,7 +155,7 @@ class ControlPanel extends ConsumerWidget {
               ElevatedButton.icon(
                 onPressed: state.placedComponents.isEmpty
                     ? null
-                    : () => _checkSolution(context, ref, state, level!),
+                    : () => state.checkLevelSolution(context, ref, level!),
                 icon: const Icon(Icons.check_circle),
                 label: Text(AppLocalizations.of(context)!.checkSolution),
                 style: ElevatedButton.styleFrom(
@@ -311,134 +308,6 @@ class ControlPanel extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  /// Shows a dialog and checks if the player's solution is correct
-  void _checkSolution(
-    BuildContext context,
-    WidgetRef ref,
-    SandboxState state,
-    Level level,
-  ) async {
-    // Import LevelValidator at top
-    // For now, implement inline validation
-    try {
-      // Get all input components and set their values from the test
-      // Run all tests and collect results
-
-      final inputSources = state.placedComponents
-          .where((c) => c.component is InputSource)
-          .toList();
-
-      final outputProbes = state.placedComponents
-          .where((c) => c.component is OutputProbe)
-          .toList();
-
-      if (inputSources.isEmpty || outputProbes.isEmpty) {
-        if (context.mounted) {
-          SnackBarUtils.showError(
-            context,
-            'Circuit must have inputs and outputs',
-          ); //TODO: translation!
-        }
-        return;
-      }
-
-      bool allTestsPassed = true;
-      String? failureReason;
-
-      // Run each test with animation
-      for (int testIndex = 0; testIndex < level.tests.length; testIndex++) {
-        final test = level.tests[testIndex];
-
-        // Set input values
-        for (
-          int i = 0;
-          i < test.inputs.length && i < inputSources.length;
-          i++
-        ) {
-          final inputValues = test.inputs[i];
-          final inputComponent = inputSources[i].component as InputSource;
-          if (inputValues.isNotEmpty) {
-            inputComponent.setValue(inputValues[0]);
-          }
-        }
-
-        // Reset circuit state before simulation
-        state.resetSimulation();
-
-        // Run simulation with animation (respects tick speed setting)
-        await state.startSimulation();
-
-        // Check output values after simulation completes
-        bool testPassed = true;
-        for (
-          int i = 0;
-          i < test.expectedOutput.length && i < outputProbes.length;
-          i++
-        ) {
-          final expectedValues = test.expectedOutput[i];
-          final outputComponent = outputProbes[i].component as OutputProbe;
-          final actualValue = outputComponent.value;
-
-          if (expectedValues.isEmpty || expectedValues[0] != actualValue) {
-            testPassed = false;
-            failureReason =
-                'Test ${testIndex + 1} failed: Input ${test.inputs} expected ${expectedValues[0]} but got $actualValue';
-            break;
-          }
-        }
-
-        if (!testPassed) {
-          allTestsPassed = false;
-          break;
-        }
-      }
-
-      if (context.mounted) {
-        if (allTestsPassed) {
-          // Mark level as completed and refresh providers
-          await markLevelCompleted(ref, level.levelId);
-
-          if (context.mounted) {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Success!'),
-                content: const Text('All tests passed! Level completed.'),
-                actions: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text('Continue'),
-                  ),
-                ],
-              ),
-            );
-          }
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Test Failed'),
-              content: Text(failureReason ?? 'One or more tests failed'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Try Again'),
-                ),
-              ],
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      if (context.mounted) {
-        SnackBarUtils.showError(context, 'Error checking solution: $e');
-      }
-    }
   }
 
   /// Converts tick speed to slider value (1-11, where 11 is instant)

@@ -31,6 +31,7 @@ class LevelScreen extends ConsumerStatefulWidget {
 
 class _LevelScreenState extends ConsumerState<LevelScreen> {
   bool _dialogShown = false;
+  bool _isCheckingSolution = false;
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         _showLevelInfoDialog();
         _dialogShown = true;
       }
-      
+
       // Initialize clock for this level
       initializeLevelClock(ref, widget.level);
     });
@@ -51,17 +52,17 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   void dispose() {
     // Clear undo/redo stacks when leaving level
     CommandController.clear();
-    
+
     // Reset level clock
     resetLevelClock(ref);
-    
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final sandboxState = ref.watch(sandboxProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${Constants.kAppName} - ${widget.level.name}'),
@@ -84,13 +85,22 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
       ),
       body: _LevelScreenBody(level: widget.level),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showLevelInfoDialog,
-        tooltip: AppLocalizations.of(context)!.levelInformationTooltip,
-        child: const Icon(Icons.info),
+        onPressed: () => _checkSolution(sandboxState),
+        tooltip: AppLocalizations.of(context)!.checkSolution,
+        backgroundColor: _isCheckingSolution ? Colors.grey : Colors.purple,
+        foregroundColor: Colors.white,
+        shape: CircleBorder(),
+        child: Icon(Icons.check),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: LevelBottomAppBar(showLevelInfo: _showLevelInfoDialog),
+      bottomNavigationBar: LevelBottomAppBar(level: widget.level),
     );
+  }
+
+  void _checkSolution(SandboxState sandboxState) async {
+    _isCheckingSolution = true;
+    await sandboxState.checkLevelSolution(context, ref, widget.level);
+    _isCheckingSolution = false;
   }
 
   void _showLevelInfoDialog() {
@@ -123,23 +133,25 @@ class _LevelScreenBody extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      right: BorderSide(color: Theme.of(context).colorScheme.outline),
+                      right: BorderSide(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                     ),
                   ),
                   child: _LimitedComponentPalette(level: level),
                 ),
               ),
               // Center: Circuit Canvas
-              Expanded(
-                child: CircuitCanvas(level: level),
-              ),
+              Expanded(child: CircuitCanvas(level: level)),
               // Right panel: Control Panel
               SizedBox(
                 width: 250,
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border(
-                      left: BorderSide(color: Theme.of(context).colorScheme.outline),
+                      left: BorderSide(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                     ),
                   ),
                   child: ControlPanel(level: level),
@@ -155,11 +167,15 @@ class _LevelScreenBody extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: Theme.of(context).colorScheme.outline),
+                    bottom: BorderSide(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
                   ),
                 ),
                 child: ExpansionTile(
-                  title: Text(AppLocalizations.of(context)!.availableComponents),
+                  title: Text(
+                    AppLocalizations.of(context)!.availableComponents,
+                  ),
                   controlAffinity: ListTileControlAffinity.leading,
                   initiallyExpanded: false,
                   children: [
@@ -171,9 +187,7 @@ class _LevelScreenBody extends StatelessWidget {
                 ),
               ),
               // Canvas takes remaining space
-              Expanded(
-                child: CircuitCanvas(level: level),
-              ),
+              Expanded(child: CircuitCanvas(level: level)),
               // Control panel at bottom
               ExpandableControlPanel(level: level),
             ],
