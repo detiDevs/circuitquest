@@ -1,3 +1,4 @@
+import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class ControlPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sandboxProvider);
+    final isMobile =
+        MediaQuery.of(context).size.width < Constants.kMobileThreshold;
 
     // Build content as a list
     final content = [
@@ -47,30 +50,33 @@ class ControlPanel extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Play/Pause simulation button
-            ElevatedButton.icon(
-              onPressed: state.placedComponents.isEmpty
-                  ? null
-                  : () {
-                      if (state.isSimulating) {
-                        state.pauseSimulation();
-                      } else {
-                        state.startSimulation();
-                      }
-                    },
-              icon: Icon(state.isSimulating ? Icons.pause : Icons.play_arrow),
-              label: Text(
-                state.isSimulating
-                    ? AppLocalizations.of(context)!.stopSimulation
-                    : AppLocalizations.of(context)!.startSimulation,
+            // only on desktop because on mobile there is the bottom bar
+            if (!isMobile) ...[
+              ElevatedButton.icon(
+                onPressed: state.placedComponents.isEmpty
+                    ? null
+                    : () {
+                        if (state.isSimulating) {
+                          state.pauseSimulation();
+                        } else {
+                          state.startSimulation();
+                        }
+                      },
+                icon: Icon(state.isSimulating ? Icons.pause : Icons.play_arrow),
+                label: Text(
+                  state.isSimulating
+                      ? AppLocalizations.of(context)!.stopSimulation
+                      : AppLocalizations.of(context)!.startSimulation,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: state.isSimulating
+                      ? Colors.orange
+                      : Colors.green,
+                  foregroundColor: Colors.white,
+                ),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: state.isSimulating
-                    ? Colors.orange
-                    : Colors.green,
-                foregroundColor: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
+            ],
 
             // Speed slider
             Column(
@@ -150,7 +156,8 @@ class ControlPanel extends ConsumerWidget {
             ],
 
             // Check Solution button (level mode only)
-            if (!isSandbox && level != null) ...[
+            // and only on desktop
+            if (!isMobile && !isSandbox && level != null) ...[
               const SizedBox(height: 8),
               ElevatedButton.icon(
                 onPressed: state.placedComponents.isEmpty
@@ -166,7 +173,7 @@ class ControlPanel extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
 
-            if (isSandbox) ...[
+            if (!isMobile && isSandbox) ...[
               const Divider(),
               const SizedBox(height: 8),
 
@@ -191,7 +198,11 @@ class ControlPanel extends ConsumerWidget {
                       _showClearConfirmation(context, state);
                     },
               icon: const Icon(Icons.delete_outline),
-              label: Text(level == null ? AppLocalizations.of(context)!.clearCircuit : AppLocalizations.of(context)!.resetLevel),
+              label: Text(
+                level == null
+                    ? AppLocalizations.of(context)!.clearCircuit
+                    : AppLocalizations.of(context)!.resetLevel,
+              ),
               style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
             ),
           ],
@@ -227,70 +238,6 @@ class ControlPanel extends ConsumerWidget {
                   ? AppLocalizations.of(context)!.statusRunning
                   : AppLocalizations.of(context)!.statusStopped,
               valueColor: state.isSimulating ? Colors.green : Colors.grey,
-            ),
-          ],
-        ),
-      ),
-
-      const Divider(),
-
-      // Instructions
-      Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.instructionsTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            _InstructionItem(
-              icon: Icons.touch_app,
-              text: AppLocalizations.of(context)!.instructionDragComponents,
-            ),
-            _InstructionItem(
-              icon: Icons.pan_tool,
-              text: AppLocalizations.of(context)!.instructionMoveComponents,
-            ),
-            _InstructionItem(
-              icon: Icons.cable,
-              text: AppLocalizations.of(context)!.instructionStartWires,
-            ),
-            _InstructionItem(
-              icon: Icons.touch_app,
-              text: AppLocalizations.of(context)!.instructionCompleteWires,
-            ),
-            _InstructionItem(
-              icon: Icons.delete,
-              text: AppLocalizations.of(context)!.instructionDeleteComponents,
-            ),
-            _InstructionItem(
-              icon: Icons.play_arrow,
-              text: AppLocalizations.of(context)!.instructionEvaluate,
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.blue[50],
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.blue[200]!),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, size: 16, color: Colors.blue[700]),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      AppLocalizations.of(context)!.pinColorsInfo,
-                      style: TextStyle(fontSize: 11, color: Colors.blue[900]),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ],
         ),
@@ -341,11 +288,14 @@ class ControlPanel extends ConsumerWidget {
           TextButton(
             onPressed: () {
               state.clearCircuit();
-              if(level != null) {
+              if (level != null) {
                 state.initializeFromLevelIfNeeded(level);
               }
               Navigator.of(context).pop();
-              SnackBarUtils.showInfo(context, AppLocalizations.of(context)!.circuitCleared);
+              SnackBarUtils.showInfo(
+                context,
+                AppLocalizations.of(context)!.circuitCleared,
+              );
             },
             child: Text(
               AppLocalizations.of(context)!.clear,
@@ -380,34 +330,6 @@ class _InfoRow extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.bold,
               color: valueColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Widget to display an instruction item.
-class _InstructionItem extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const _InstructionItem({required this.icon, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 16),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(fontSize: 11),
             ),
           ),
         ],

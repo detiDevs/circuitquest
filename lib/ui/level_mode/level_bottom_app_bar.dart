@@ -151,7 +151,7 @@ class _LevelBottomAppBarState extends ConsumerState<LevelBottomAppBar> {
           color: Theme.of(context).colorScheme.surface,
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.35,
+              maxHeight: MediaQuery.of(context).size.height * 0.4,
               minWidth: MediaQuery.of(context).size.width,
             ),
             child: builder(sheetContext),

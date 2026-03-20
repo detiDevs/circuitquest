@@ -21,7 +21,7 @@ class LevelComponentPalette extends ConsumerWidget {
     // Reuse the responsive component list builder from component_palette.dart
     return buildResponsiveComponentList(
       context,
-      components: availableComponents,
+      components: limitedComponents,
       headerText: AppLocalizations.of(context)!.availableComponents,
     );
   }
