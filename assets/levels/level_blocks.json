@@ -58,6 +58,12 @@
           "name": "Functional Completeness 2",
           "name_de": "Funktionale Vollständigkeit 2",
           "bonus_level": true
+        },
+        {
+          "id": 9,
+          "name": "Functional Completeness Challenge 1",
+          "name_de": "Funktionale Vollständigkeit Herausforderung 1",
+          "bonus_level": true
         }
       ]
     }
