@@ -1,8 +1,8 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
+import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/component_icon.dart';
-import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

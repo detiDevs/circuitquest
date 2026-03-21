@@ -500,6 +500,12 @@ abstract class AppLocalizations {
   /// **'{min} .. {max}'**
   String rangeLabel(String min, String max);
 
+  /// No description provided for @customComponents.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom components'**
+  String get customComponents;
+
   /// No description provided for @customComponentName.
   ///
   /// In en, this message translates to:
@@ -757,6 +763,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete {itemToDelete}'**
   String failedToDeleteX(String itemToDelete);
+
+  /// No description provided for @resetLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset level'**
+  String get resetLevel;
 }
 
 class _AppLocalizationsDelegate

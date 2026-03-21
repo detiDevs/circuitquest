@@ -228,6 +228,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get customComponents => 'Custom components';
+
+  @override
   String get customComponentName => 'Component name';
 
   @override
@@ -376,4 +379,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String failedToDeleteX(String itemToDelete) {
     return 'Failed to delete $itemToDelete';
   }
+
+  @override
+  String get resetLevel => 'Reset level';
 }

@@ -1,9 +1,9 @@
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/shared/widgets/expandable_control_panel.dart';
+import 'package:circuitquest/ui/sandbox_mode/sandbox_bottom_app_bar.dart';
+import 'package:circuitquest/ui/sandbox_mode/desktop_sandbox_component_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../shared/widgets/component_palette/component_palette.dart';
 import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
 import '../shared/widgets/control_panel.dart';
 import '../../state/sandbox_state.dart';
@@ -35,10 +35,11 @@ class _SandboxScreenState extends ConsumerState<SandboxScreen> {
   @override
   Widget build(BuildContext context) {
     final sandboxState = ref.watch(sandboxProvider);
+    final bool isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('${Constants.kAppName} - ${AppLocalizations.of(context)!.sandboxModeTitle}'),
+        title: Text(AppLocalizations.of(context)!.sandboxModeTitle),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
         actions: [
@@ -58,6 +59,7 @@ class _SandboxScreenState extends ConsumerState<SandboxScreen> {
         ],
       ),
       body: const _SandboxBody(),
+      bottomNavigationBar: isMobile ? SandboxBottomAppBar(): null,
     );
   }
 }
@@ -68,74 +70,54 @@ class _SandboxBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;
+
     // Use LayoutBuilder to determine responsive layout
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWideScreen = constraints.maxWidth > 800;
 
-        if (isWideScreen) {
-          // Desktop layout: Palette on left, Canvas in center, Controls on right
-          return Row(
+        if (!isMobile) {
+          // Desktop layout: Canvas with overlaid palette and controls
+          return Stack(
             children: [
-              // Left panel: Component Palette
-              SizedBox(
-                width: 200,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: BorderSide(color: Theme.of(context).colorScheme.outline),
-                    ),
-                  ),
-                  child: const ComponentPalette(),
-                ),
-              ),
-              // Center: Circuit Canvas
-              const Expanded(
+              const Positioned.fill(
                 child: CircuitCanvas(),
               ),
-              // Right panel: Control Panel
-              SizedBox(
-                width: 250,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(color: Theme.of(context).colorScheme.outline),
+              Positioned(
+                top: 16,
+                left: 16,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: constraints.maxHeight - 32),
+                  child: const SizedBox(
+                    width: 220,
+                    child: DesktopSandboxComponentPalette(),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 16,
+                right: 16,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: constraints.maxHeight - 32),
+                  child: SizedBox(
+                    width: 300,
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      clipBehavior: Clip.antiAlias,
+                      child: const ControlPanel(isSandbox: true),
                     ),
                   ),
-                  child: const ControlPanel(isSandbox: true),
                 ),
               ),
             ],
           );
         } else {
-          // Mobile layout: Vertical stack with tabs for palette
+          // Mobile layout: only canvas, rest is done by bottom app bar
           return Column(
             children: [
-              // Collapsible palette at top
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  border: Border(
-                    bottom: BorderSide(color: Theme.of(context).colorScheme.outline),
-                  ),
-                ),
-                child: ExpansionTile(
-                  title: const Text('Components'),
-                  initiallyExpanded: false,
-                  children: const [
-                    SizedBox(
-                      height: 200,
-                      child: ComponentPalette(),
-                    ),
-                  ],
-                ),
-              ),
-              // Canvas takes remaining space
               const Expanded(
                 child: CircuitCanvas(),
               ),
-              // Control panel at bottom
-              const ExpandableControlPanel(isSandbox: true,),
             ],
           );
         }

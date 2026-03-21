@@ -5,14 +5,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../state/sandbox_state.dart';
-import '../../../../core/components/input_source.dart';
-import '../../../../core/components/output_probe.dart';
-import '../../../../core/components/cpu/instruction_memory.dart';
-import '../../../../core/components/cpu/data_memory.dart';
-import '../../../../core/components/cpu/register_block.dart';
+import '../../../../core/components/component_registry.dart';
 import 'package:circuitquest/levels/level.dart';
-import '../../../../core/components/base/component.dart';
-import '../component_palette/component_palette.dart';
 
 
 /// The main canvas where components are placed and connected.
@@ -40,9 +34,6 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   /// Current mouse/touch position for wire drawing
   Offset? _currentPointerPosition;
 
-  /// Whether initial components were placed from the level
-  bool _initializedFromLevel = false;
-
   /// Controller for handling pan and zoom transformations
   final TransformationController _transformationController =
       TransformationController();
@@ -69,90 +60,8 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
     _sandboxState = ref.read(sandboxProvider);
     // Try to initialize from level after first frame to ensure provider readiness
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initializeFromLevelIfNeeded();
+      _sandboxState.initializeFromLevelIfNeeded(widget.level, gridSize: gridSize);
     });
-  }
-
-  void _initializeFromLevelIfNeeded() {
-    if (_initializedFromLevel) return;
-    final level = widget.level;
-    if (level == null) return;
-
-    final state = ref.read(sandboxProvider);
-    state.reset();
-    
-    state.initializeClockFromLevel(level.clockConfig);
-
-    for (var c in level.components) {
-      print(c.type);
-    }
-    for (final lc in level.components) {
-      final resolved = _resolveComponentForLevelType(lc.type);
-      if (resolved == null) continue;
-
-      final position = Offset(
-        (lc.position[0]) * gridSize,
-        (lc.position[1]) * gridSize,
-      );
-
-      // Load memory contents if applicable
-      if (resolved.component is InstructionMemory &&
-          level.memoryContents != null) {
-        (resolved.component as InstructionMemory).loadInstructions(
-          level.memoryContents!.instructionMemory,
-        );
-      } else if (resolved.component is DataMemory &&
-          level.memoryContents != null) {
-        (resolved.component as DataMemory).loadData(
-          level.memoryContents!.dataMemory,
-        );
-      } else if (resolved.component is RegisterBlock &&
-          lc.initialRegisterValues != null) {
-        (resolved.component as RegisterBlock).loadRegisters(
-          lc.initialRegisterValues!,
-        );
-      }
-
-      state.placeComponent(
-        resolved.typeName,
-        position,
-        resolved.component,
-        immovable: lc.immovable,
-        label: lc.label,
-      );
-    }
-
-    for (final connection in level.connections) {
-      print("Adding connection: ${connection.toJson()}");
-      state.addConnection(
-        connection.sourceComponentId,
-        connection.sourcePin,
-        connection.targetComponentId,
-        connection.targetPin,
-      );
-    }
-
-    _initializedFromLevel = true;
-  }
-
-  /// Maps a level component type to a concrete component and canonical type name.
-  ({String typeName, Component component})? _resolveComponentForLevelType(
-    String type,
-  ) {
-    switch (type) {
-      case 'Input':
-        return (typeName: 'InputSource', component: InputSource());
-      case 'Output':
-        return (typeName: 'OutputProbe', component: OutputProbe());
-      default:
-        // Try to resolve via availableComponents mapping
-        try {
-          final ct = availableComponents.firstWhere((c) => c.name == type);
-          return (typeName: ct.name, component: ct.createComponent());
-        } catch (_) {
-          return null;
-        }
-    }
   }
 
   @override

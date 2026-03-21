@@ -1,10 +1,10 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/shared/widgets/expandable_control_panel.dart';
+import 'package:circuitquest/ui/level_mode/level_bottom_app_bar.dart';
+import 'package:circuitquest/ui/level_mode/level_component_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/levels/levels.dart';
 import 'package:circuitquest/constants.dart';
-import '../shared/widgets/component_palette/component_palette.dart';
 import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
 import '../shared/widgets/control_panel.dart';
 import '../../state/sandbox_state.dart';
@@ -40,7 +40,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         _showLevelInfoDialog();
         _dialogShown = true;
       }
-      
+
       // Initialize clock for this level
       initializeLevelClock(ref, widget.level);
     });
@@ -50,20 +50,22 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   void dispose() {
     // Clear undo/redo stacks when leaving level
     CommandController.clear();
-    
+
     // Reset level clock
     resetLevelClock(ref);
-    
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final sandboxState = ref.watch(sandboxProvider);
-    
+    final isMobile =
+        MediaQuery.of(context).size.width < Constants.kMobileThreshold;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('${Constants.kAppName} - ${widget.level.name}'),
+        title: Text(widget.level.name),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
         actions: [
@@ -82,12 +84,15 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         ],
       ),
       body: _LevelScreenBody(level: widget.level),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: isMobile ? null : FloatingActionButton.extended(
         onPressed: _showLevelInfoDialog,
-        tooltip: AppLocalizations.of(context)!.levelInformationTooltip,
-        child: const Icon(Icons.info),
+        label: Text(AppLocalizations.of(context)!.levelInformationTooltip),
+        icon: Icon(Icons.info)
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: isMobile
+          ? LevelBottomAppBar(level: widget.level)
+          : null,
     );
   }
 
@@ -107,40 +112,47 @@ class _LevelScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile =
+        MediaQuery.of(context).size.width < Constants.kMobileThreshold;
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWideScreen = constraints.maxWidth > 800;
-
-        if (isWideScreen) {
-          // Desktop layout: Palette on left, Canvas in center, Controls on right
-          return Row(
+        if (!isMobile) {
+          // Desktop layout: Canvas with overlaid component and control panels
+          return Stack(
             children: [
-              // Left panel: Component Palette
-              SizedBox(
-                width: 200,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: BorderSide(color: Theme.of(context).colorScheme.outline),
+              Positioned.fill(child: CircuitCanvas(level: level)),
+              Positioned(
+                top: 16,
+                left: 16,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: constraints.maxHeight - 32,
+                  ),
+                  child: SizedBox(
+                    width: 220,
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      clipBehavior: Clip.antiAlias,
+                      child: LevelComponentPalette(level: level),
                     ),
                   ),
-                  child: _LimitedComponentPalette(level: level),
                 ),
               ),
-              // Center: Circuit Canvas
-              Expanded(
-                child: CircuitCanvas(level: level),
-              ),
-              // Right panel: Control Panel
-              SizedBox(
-                width: 250,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(color: Theme.of(context).colorScheme.outline),
+              Positioned(
+                top: 16,
+                right: 16,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: constraints.maxHeight - 32,
+                  ),
+                  child: SizedBox(
+                    width: 300,
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      clipBehavior: Clip.antiAlias,
+                      child: ControlPanel(level: level),
                     ),
                   ),
-                  child: ControlPanel(level: level),
                 ),
               ),
             ],
@@ -149,57 +161,12 @@ class _LevelScreenBody extends StatelessWidget {
           // Mobile layout: Vertical stack with collapsible sections
           return Column(
             children: [
-              // Collapsible palette at top
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Theme.of(context).colorScheme.outline),
-                  ),
-                ),
-                child: ExpansionTile(
-                  title: Text(AppLocalizations.of(context)!.availableComponents),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  initiallyExpanded: false,
-                  children: [
-                    SizedBox(
-                      height: 200,
-                      child: _LimitedComponentPalette(level: level),
-                    ),
-                  ],
-                ),
-              ),
-              // Canvas takes remaining space
-              Expanded(
-                child: CircuitCanvas(level: level),
-              ),
-              // Control panel at bottom
-              ExpandableControlPanel(level: level),
+              // Canvas takes all body space, everything else is handled by bottom app bar
+              Expanded(child: CircuitCanvas(level: level)),
             ],
           );
         }
       },
-    );
-  }
-}
-
-/// Component palette limited to components available for this level.
-class _LimitedComponentPalette extends ConsumerWidget {
-  final Level level;
-
-  const _LimitedComponentPalette({required this.level});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Filter available components based on level requirements
-    final limitedComponents = availableComponents.where((comp) {
-      return level.availableComponents.any((ac) => ac.type == comp.name);
-    }).toList();
-
-    // Reuse the responsive component list builder from component_palette.dart
-    return buildResponsiveComponentList(
-      context,
-      components: limitedComponents,
-      headerText: AppLocalizations.of(context)!.availableComponents,
     );
   }
 }
