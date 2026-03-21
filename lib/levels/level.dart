@@ -168,6 +168,7 @@ class Level {
   final List<WireConnection> connections;
   final List<String> hints;
   final List<String>? hintsDe;
+  final int? maxComponentCount;
   final List<LevelTest> tests;
   final MemoryContents? memoryContents;
   final ClockConfig? clockConfig;
@@ -187,6 +188,7 @@ class Level {
     required this.connections,
     required this.hints,
     this.hintsDe,
+    this.maxComponentCount,
     required this.tests,
     this.memoryContents,
     this.clockConfig,
@@ -214,6 +216,7 @@ class Level {
           .toList(),
       hints: (json['hints'] as List<dynamic>).cast<String>(),
       hintsDe: (json['hints_de'] as List<dynamic>?)?.cast<String>(),
+      maxComponentCount: json['maxComponentCount'] as int?,
       tests: ((json['tests'] ?? []) as List<dynamic>)
           .map((e) => LevelTest.fromJson(e as Map<String, dynamic>))
           .toList(),
