@@ -150,6 +150,12 @@ final List<ComponentType> availableComponents = [
     createComponent: () => Collector(sliceCount: 6, sliceBitWidth: 1),
   ),
   ComponentType(
+    name: 'Collector1to8',
+    displayName: 'Collector 1 to 8',
+    iconPath: 'assets/gates/Collector1to8.svg',
+    createComponent: () => Collector(sliceCount: 8, sliceBitWidth: 1),
+  ),
+  ComponentType(
     name: 'Collector8to16',
     displayName: 'Collector8to16',
     iconPath: 'assets/gates/Collector8to16.svg',

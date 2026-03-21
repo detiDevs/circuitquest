@@ -1,0 +1,38 @@
+{
+    "level_id": 10,
+    "name": "Collectors and Splitters",
+    "name_de": "Sammler und Verteiler",
+    "description": "We will now start to work with signals wider than 1 bit. \n\nIn order to do that, we need to use Collectors and Splitters. \n\nA Collector takes multiple 1-bit inputs and combines them into a single multi-bit signal. \n\nA Splitter does the opposite: it takes a multi-bit signal and splits it into multiple 1-bit outputs. \n\n\nA 8-bit signal can be represented as a single line (that would be a 8bit bus), but it can also be represented as 8 lines. Collectors and Splitters allow us to switch between these two representations. \n\nIn order to make it easier to set a value for a 8-bit input you can set a number between 0 and 255. The 8 single wires that you get from a Splitter are the binary representation of that number.",
+    "description_de": "Wir werden jetzt anfangen, mit Signalen zu arbeiten, die breiter als 1 Bit sind. \n\nUm dies zu tun, müssen wir Sammler und Verteiler verwenden. \n\nEin Sammler nimmt mehrere 1-Bit-Eingänge und kombiniert sie zu einem einzigen Mehrbit-Signal. \n\nEin Verteiler macht das Gegenteil: Er nimmt ein Mehrbit-Signal und teilt es in mehrere 1-Bit-Ausgänge auf. \n\nEin 8-Bit-Signal kann als einzelne Leitung dargestellt werden (das wäre dann ein 8 Bit Bus), aber es kann auch als 8 Leitungen dargestellt werden. Sammler und Verteiler ermöglichen es uns, zwischen diesen beiden Darstellungen zu wechseln. \n\nUm es einfacher zu machen, einen Wert für einen 8-Bit-Eingang festzulegen, kannst du eine Zahl zwischen 0 und 255 eingeben. Die 8 einzelnen Drähte, die du von einem Verteiler erhältst, sind die binäre Darstellung dieser Zahl.",
+    "difficulty": "Easy",
+    "difficulty_de": "Einfach",
+    "objectives": [
+        "Now you know how Collectors and Splitters work. with that knowledge, extract the bit with the value of $2^4$ and $2^6$"
+    ],
+    "objectives_de": [
+        "Jetzt weißt du, wie Sammler und Verteiler funktionieren. Mit diesem Wissen extrahiere die Bits mit dem Wert von $2^4$ und $2^6$"
+    ],
+    "components": [
+        {"type": "Input", "position": [0,3], "immovable": true, "initialBitWidth": 8}, 
+        {"type": "Output", "position": [4,2], "immovable": true, "label": "2^4"},
+        {"type": "Output", "position": [4,4], "immovable": true, "label": "2^6"}    
+    ],
+    "available_components": [
+        {"type": "Splitter8to1"}
+    ],
+    "hints": [
+        "The outputs of the Splitter are ordered from top to bottom. From $2^0$ to $2^7$",
+        "Connect the 5th output of the Splitter to the Output labeled outValue16 to the output labeled \"2^4\" and connect the 7th output of the Splitter to the Output labeled outValue64 to the output labeled \"2^6\""
+    ],
+    "hints_de": [
+        "Die Ausgänge des Verteilers sind von oben nach unten angeordnet. Von $2^0$ bis $2^7$",
+        "Verbinde den 5. Ausgang des Verteilers mit dem Ausgang labeled outValue16 mit dem Ausgang labeled \"2^4\" und verbinde den 7. Ausgang des Verteilers mit dem Ausgang labeled outValue64 mit dem Ausgang labeled \"2^6\""
+    ],
+    "tests": [
+        {"inputs": [[0,8]], "expected_output": [[0,1],[0,1]]},
+        {"inputs": [[16,8]], "expected_output": [[1,1],[0,0]]},
+        {"inputs": [[32,8]], "expected_output": [[0,1],[0,1]]},
+        {"inputs": [[64,8]], "expected_output": [[0,1],[1,1]]},
+        {"inputs": [[255,8]], "expected_output": [[1,1],[1,1]]}
+    ]
+}

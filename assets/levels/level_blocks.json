@@ -41,7 +41,6 @@
           "name_de": "XNOR-Gatter",
           "bonus_level": true
         }
-        
       ]
     },
     {
@@ -66,6 +65,27 @@
           "bonus_level": true
         }
       ]
+    },
+    {
+      "name": "Bigger Gates",
+      "name_de": "Größere Gatter",
+      "levels": [
+        {
+          "id": 10,
+          "name": "Collectors and Splitters",
+          "name_de": "Sammler und Verteiler"
+        },
+        {
+          "id": 11,
+          "name": "Multiply by Two",
+          "name_de": "Mit zwei multiplizieren"
+        },
+        {
+          "id": 12,
+          "name": "Multiply by 64",
+          "name_de": "Mit 64 multiplizieren"
+        }
+      ]
     }
-  ]  
+  ]
 }

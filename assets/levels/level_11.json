@@ -1,0 +1,51 @@
+{
+    "level_id": 11,
+    "name": "Multiply by Two",
+    "name_de": "Mit zwei multiplizieren",
+    "description": "Now you will face an important principle. We will see how to multiply a number by two. (or powers of two in general) \n\nTo do that, we will use Collectors and Splitters.",
+    "description_de": "Jetzt wirst du mit einem wichtigen Prinzip konfrontiert. Wir werden sehen, wie man eine Zahl mit zwei multipliziert. (oder im Allgemeinen mit Potenzen von zwei) \n\nUm dies zu tun, werden wir Sammler und Verteiler verwenden.",
+    "difficulty": "Easy",
+    "difficulty_de": "Einfach",
+    "objectives": [
+        "Use Collectors and Splitters to multiply a number by two.",
+        "In this level the tests will only use numbers up to 127 to ensure that the highest output of the splitter is 0 at any time. This will make the solution much easier."
+    ],
+    "objectives_de": [
+        "Nutze Sammler und Verteiler, um eine Zahl mit zwei zu multiplizieren.",
+        "In diesem Level werden die Tests nur Zahlen bis 127 verwenden, um sicherzustellen, dass der höchste Ausgang des Verteilers zu keinem Zeitpunkt 1 ist. Das wird die Lösung deutlich einfacher machen."
+    ],
+    "components": [
+        {"type": "Input", "position": [0,3], "immovable": true, "initialBitWidth": 8, "label": "A"}, 
+        {"type": "Output", "position": [6,3], "immovable": true, "label": "2*A"}  
+    ],
+    "available_components": [
+        {"type": "Splitter8to1"},
+        {"type": "Collector1to8"}
+    ],
+    "hints": [
+        "Think about how the bits of a number change when you multiply it by two. For example, the number 13 is represented in binary as 00001101. Think about how 26 would be represented in binary.",
+        "The outputs of the Splitter are ordered from top to bottom. From $2^0$ to $2^7$",
+        "To multiply a number by two, you can connect the output of the Splitter that corresponds to $2^0$ to the input of the Collector that corresponds to $2^1$, the output of the Splitter that corresponds to $2^1$ to the input of the Collector that corresponds to $2^2$, and so on. \n\nThe output of the Splitter that corresponds to $2^7$ can be ignored since it will always be 0 in this level. \n\nYou can also ignore the input of the Collector that corresponds to $2^0$ since a number multiplied by two will never have the $2^0$ bit set to 1."
+      ],
+    "hints_de": [
+         "Denke darüber nach, wie sich die Bits einer Zahl ändern, wenn du sie mit zwei multiplizierst. Zum Beispiel wird die Zahl 13 in binär als 00001101 dargestellt. Überlege, wie 26 in binär dargestellt werden würde.",
+         "Die Ausgänge des Verteilers sind von oben nach unten angeordnet. Von $2^0$ bis $2^7$",
+         "Um eine Zahl mit zwei zu multiplizieren, kannst du den Ausgang des Verteilers, der $2^0$ entspricht, mit dem Eingang des Sammlers verbinden, der $2^1$ entspricht, den Ausgang des Verteilers, der $2^1$ entspricht, mit dem Eingang des Sammlers verbinden, der $2^2$ entspricht, und so weiter. \n\nDer Ausgang des Verteilers, der $2^7$ entspricht, kann ignoriert werden, da er in diesem Level immer 0 sein wird. \n\nDu kannst auch den Eingang des Sammlers ignorieren, der $2^0$ entspricht, da eine mit zwei multiplizierte Zahl niemals das $2^0$-Bit auf 1 gesetzt hat."
+      ],
+    "tests": [
+        {"inputs": [[0,8]], "expected_output": [[0,8]]},
+        {"inputs": [[1,8]], "expected_output": [[2,8]]},
+        {"inputs": [[13,8]], "expected_output": [[26,8]]},
+        {"inputs": [[64,8]], "expected_output": [[128,8]]},
+        {"inputs": [[127,8]], "expected_output": [[254,8]]},
+        {"inputs": [[45,8]], "expected_output": [[90,8]]},
+        {"inputs": [[85,8]], "expected_output": [[170,8]]},
+        {"inputs": [[100,8]], "expected_output": [[200,8]]},
+        {"inputs": [[2,8]], "expected_output": [[4,8]]},
+        {"inputs": [[25,8]], "expected_output": [[50,8]]},
+        {"inputs": [[63,8]], "expected_output": [[126,8]]},
+        {"inputs": [[120,8]], "expected_output": [[240,8]]}
+    ],
+    "success_message": "Congratulations! You have successfully multiplied a number by two using Collectors and Splitters. \n\n You connected the output of the Splitter representing $2^0$ which would be 1 to the input of the Collector representing $2^1$ which would be 2. Aka. you multiplied 1 by 2. And you did the same for the other bits. \n\nThis principle is fundamental in digital logic design and is widely used in various applications, including arithmetic operations and data manipulation. Keep practicing to deepen your understanding of how these components work together to perform complex tasks!",
+    "success_message_de": "Glückwunsch! Du hast erfolgreich eine Zahl mit zwei multipliziert, indem du Sammler und Verteiler verwendet hast. \n\nDu hast den Ausgang des Verteilers, der $2^0$ entspricht, also 1, mit dem Eingang des Sammlers verbunden, der $2^1$ entspricht, also 2. Aka. du hast 1 mit 2 multipliziert. Und du hast das gleiche für die anderen Bits gemacht. \n\nDieses Prinzip ist grundlegend im Design digitaler Logik und wird in verschiedenen Anwendungen weit verbreitet, einschließlich arithmetischer Operationen und Datenmanipulation. Übe weiter, um dein Verständnis dafür zu vertiefen, wie diese Komponenten zusammenarbeiten, um komplexe Aufgaben zu erfüllen!"
+}
