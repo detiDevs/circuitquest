@@ -1,12 +1,10 @@
+import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../state/sandbox_state.dart';
-import '../../../state/level_state.dart';
 import '../../../levels/levels.dart';
-import '../../../core/components/input_source.dart';
-import '../../../core/components/output_probe.dart';
 import 'circuit_file_manager.dart';
 
 /// Control panel for circuit simulation and evaluation.
@@ -28,6 +26,8 @@ class ControlPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(sandboxProvider);
+    final isMobile =
+        MediaQuery.of(context).size.width < Constants.kMobileThreshold;
 
     // Build content as a list
     final content = [
@@ -50,30 +50,33 @@ class ControlPanel extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Play/Pause simulation button
-            ElevatedButton.icon(
-              onPressed: state.placedComponents.isEmpty
-                  ? null
-                  : () {
-                      if (state.isSimulating) {
-                        state.pauseSimulation();
-                      } else {
-                        state.startSimulation();
-                      }
-                    },
-              icon: Icon(state.isSimulating ? Icons.pause : Icons.play_arrow),
-              label: Text(
-                state.isSimulating
-                    ? AppLocalizations.of(context)!.stopSimulation
-                    : AppLocalizations.of(context)!.startSimulation,
+            // only on desktop because on mobile there is the bottom bar
+            if (!isMobile) ...[
+              ElevatedButton.icon(
+                onPressed: state.placedComponents.isEmpty
+                    ? null
+                    : () {
+                        if (state.isSimulating) {
+                          state.pauseSimulation();
+                        } else {
+                          state.startSimulation();
+                        }
+                      },
+                icon: Icon(state.isSimulating ? Icons.pause : Icons.play_arrow),
+                label: Text(
+                  state.isSimulating
+                      ? AppLocalizations.of(context)!.stopSimulation
+                      : AppLocalizations.of(context)!.startSimulation,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: state.isSimulating
+                      ? Colors.orange
+                      : Colors.green,
+                  foregroundColor: Colors.white,
+                ),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: state.isSimulating
-                    ? Colors.orange
-                    : Colors.green,
-                foregroundColor: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
+            ],
 
             // Speed slider
             Column(
@@ -153,12 +156,13 @@ class ControlPanel extends ConsumerWidget {
             ],
 
             // Check Solution button (level mode only)
-            if (!isSandbox && level != null) ...[
+            // and only on desktop
+            if (!isMobile && !isSandbox && level != null) ...[
               const SizedBox(height: 8),
               ElevatedButton.icon(
                 onPressed: state.placedComponents.isEmpty
                     ? null
-                    : () => _checkSolution(context, ref, state, level!),
+                    : () => state.checkLevelSolution(context, ref, level!),
                 icon: const Icon(Icons.check_circle),
                 label: Text(AppLocalizations.of(context)!.checkSolution),
                 style: ElevatedButton.styleFrom(
@@ -169,7 +173,7 @@ class ControlPanel extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
 
-            if (isSandbox) ...[
+            if (!isMobile && isSandbox) ...[
               const Divider(),
               const SizedBox(height: 8),
 
@@ -187,7 +191,6 @@ class ControlPanel extends ConsumerWidget {
               const SizedBox(height: 8),
             ],
 
-            // Clear button
             OutlinedButton.icon(
               onPressed: state.placedComponents.isEmpty
                   ? null
@@ -195,7 +198,11 @@ class ControlPanel extends ConsumerWidget {
                       _showClearConfirmation(context, state);
                     },
               icon: const Icon(Icons.delete_outline),
-              label: Text(AppLocalizations.of(context)!.clearCircuit),
+              label: Text(
+                level == null
+                    ? AppLocalizations.of(context)!.clearCircuit
+                    : AppLocalizations.of(context)!.resetLevel,
+              ),
               style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
             ),
           ],
@@ -235,70 +242,6 @@ class ControlPanel extends ConsumerWidget {
           ],
         ),
       ),
-
-      const Divider(),
-
-      // Instructions
-      Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.instructionsTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            _InstructionItem(
-              icon: Icons.touch_app,
-              text: AppLocalizations.of(context)!.instructionDragComponents,
-            ),
-            _InstructionItem(
-              icon: Icons.pan_tool,
-              text: AppLocalizations.of(context)!.instructionMoveComponents,
-            ),
-            _InstructionItem(
-              icon: Icons.cable,
-              text: AppLocalizations.of(context)!.instructionStartWires,
-            ),
-            _InstructionItem(
-              icon: Icons.touch_app,
-              text: AppLocalizations.of(context)!.instructionCompleteWires,
-            ),
-            _InstructionItem(
-              icon: Icons.delete,
-              text: AppLocalizations.of(context)!.instructionDeleteComponents,
-            ),
-            _InstructionItem(
-              icon: Icons.play_arrow,
-              text: AppLocalizations.of(context)!.instructionEvaluate,
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.blue[50],
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.blue[200]!),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, size: 16, color: Colors.blue[700]),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      AppLocalizations.of(context)!.pinColorsInfo,
-                      style: TextStyle(fontSize: 11, color: Colors.blue[900]),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     ];
 
     return SingleChildScrollView(
@@ -311,134 +254,6 @@ class ControlPanel extends ConsumerWidget {
         ),
       ),
     );
-  }
-
-  /// Shows a dialog and checks if the player's solution is correct
-  void _checkSolution(
-    BuildContext context,
-    WidgetRef ref,
-    SandboxState state,
-    Level level,
-  ) async {
-    // Import LevelValidator at top
-    // For now, implement inline validation
-    try {
-      // Get all input components and set their values from the test
-      // Run all tests and collect results
-
-      final inputSources = state.placedComponents
-          .where((c) => c.component is InputSource)
-          .toList();
-
-      final outputProbes = state.placedComponents
-          .where((c) => c.component is OutputProbe)
-          .toList();
-
-      if (inputSources.isEmpty || outputProbes.isEmpty) {
-        if (context.mounted) {
-          SnackBarUtils.showError(
-            context,
-            'Circuit must have inputs and outputs',
-          ); //TODO: translation!
-        }
-        return;
-      }
-
-      bool allTestsPassed = true;
-      String? failureReason;
-
-      // Run each test with animation
-      for (int testIndex = 0; testIndex < level.tests.length; testIndex++) {
-        final test = level.tests[testIndex];
-
-        // Set input values
-        for (
-          int i = 0;
-          i < test.inputs.length && i < inputSources.length;
-          i++
-        ) {
-          final inputValues = test.inputs[i];
-          final inputComponent = inputSources[i].component as InputSource;
-          if (inputValues.isNotEmpty) {
-            inputComponent.setValue(inputValues[0]);
-          }
-        }
-
-        // Reset circuit state before simulation
-        state.resetSimulation();
-
-        // Run simulation with animation (respects tick speed setting)
-        await state.startSimulation();
-
-        // Check output values after simulation completes
-        bool testPassed = true;
-        for (
-          int i = 0;
-          i < test.expectedOutput.length && i < outputProbes.length;
-          i++
-        ) {
-          final expectedValues = test.expectedOutput[i];
-          final outputComponent = outputProbes[i].component as OutputProbe;
-          final actualValue = outputComponent.value;
-
-          if (expectedValues.isEmpty || expectedValues[0] != actualValue) {
-            testPassed = false;
-            failureReason =
-                'Test ${testIndex + 1} failed: Input ${test.inputs} expected ${expectedValues[0]} but got $actualValue';
-            break;
-          }
-        }
-
-        if (!testPassed) {
-          allTestsPassed = false;
-          break;
-        }
-      }
-
-      if (context.mounted) {
-        if (allTestsPassed) {
-          // Mark level as completed and refresh providers
-          await markLevelCompleted(ref, level.levelId);
-
-          if (context.mounted) {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Success!'),
-                content: const Text('All tests passed! Level completed.'),
-                actions: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text('Continue'),
-                  ),
-                ],
-              ),
-            );
-          }
-        } else {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Test Failed'),
-              content: Text(failureReason ?? 'One or more tests failed'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Try Again'),
-                ),
-              ],
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      if (context.mounted) {
-        SnackBarUtils.showError(context, 'Error checking solution: $e');
-      }
-    }
   }
 
   /// Converts tick speed to slider value (1-11, where 11 is instant)
@@ -473,8 +288,14 @@ class ControlPanel extends ConsumerWidget {
           TextButton(
             onPressed: () {
               state.clearCircuit();
+              if (level != null) {
+                state.initializeFromLevelIfNeeded(level);
+              }
               Navigator.of(context).pop();
-              SnackBarUtils.showInfo(context, AppLocalizations.of(context)!.circuitCleared);
+              SnackBarUtils.showInfo(
+                context,
+                AppLocalizations.of(context)!.circuitCleared,
+              );
             },
             child: Text(
               AppLocalizations.of(context)!.clear,
@@ -509,34 +330,6 @@ class _InfoRow extends StatelessWidget {
               fontSize: 12,
               fontWeight: FontWeight.bold,
               color: valueColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Widget to display an instruction item.
-class _InstructionItem extends StatelessWidget {
-  final IconData icon;
-  final String text;
-
-  const _InstructionItem({required this.icon, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 16),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(fontSize: 11),
             ),
           ),
         ],

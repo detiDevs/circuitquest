@@ -216,7 +216,7 @@
       }
     }  
   },
-
+  "customComponents": "Eigene Komponenten",
   "customComponentName": "Komponentenname",
   "customComponentDefaultName": "Meine eigene Komponente",
   "@customComponentDefaultName": {
@@ -387,5 +387,6 @@
         "example": "MyCustomComponent"
       }
     }
-  }
+  },
+  "resetLevel": "Level zurücksetzen"
 }

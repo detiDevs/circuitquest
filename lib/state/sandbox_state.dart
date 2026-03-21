@@ -4,8 +4,12 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
+import 'package:circuitquest/core/components/cpu/data_memory.dart';
+import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
+import 'package:circuitquest/core/components/cpu/register_block.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
 import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/levels/level_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -19,6 +23,7 @@ import '../core/components/custom_component_data.dart';
 import '../state/custom_component_library.dart';
 import '../core/commands/command_controller.dart';
 import '../core/commands/add_connection_command.dart';
+import 'level_state.dart';
 
 /// Riverpod provider for sandbox state.
 final sandboxProvider = ChangeNotifierProvider<SandboxState>(
@@ -158,6 +163,12 @@ class SandboxState extends ChangeNotifier {
   /// Auto-increment counter for component IDs
   int _nextComponentId = 0;
 
+  /// Whether components have already been initialized from a level
+  bool _initializedFromLevel = false;
+
+  /// Tracks which level was used for one-time initialization
+  int? _initializedLevelId;
+
   /// Initializes the clock manager from level configuration
   void initializeClockFromLevel(ClockConfig? clockConfig) {
     if (clockConfig != null && clockConfig.mode > 0) {
@@ -167,6 +178,79 @@ class SandboxState extends ChangeNotifier {
       );
     } else {
       _clockmanager = null;
+    }
+  }
+
+  /// Initializes sandbox contents from a level definition once per level.
+  void initializeFromLevelIfNeeded(Level? level, {double gridSize = 80.0}) {
+    if (level == null) return;
+    if (_initializedFromLevel && _initializedLevelId == level.levelId) return;
+
+    reset();
+    initializeClockFromLevel(level.clockConfig);
+
+    for (final lc in level.components) {
+      final resolved = _resolveComponentForLevelType(lc.type);
+      if (resolved == null) continue;
+
+      final position = Offset(
+        lc.position[0] * gridSize,
+        lc.position[1] * gridSize,
+      );
+
+      if (resolved.component is InstructionMemory && level.memoryContents != null) {
+        (resolved.component as InstructionMemory).loadInstructions(
+          level.memoryContents!.instructionMemory,
+        );
+      } else if (resolved.component is DataMemory && level.memoryContents != null) {
+        (resolved.component as DataMemory).loadData(
+          level.memoryContents!.dataMemory,
+        );
+      } else if (resolved.component is RegisterBlock &&
+          lc.initialRegisterValues != null) {
+        (resolved.component as RegisterBlock).loadRegisters(
+          lc.initialRegisterValues!,
+        );
+      }
+
+      placeComponent(
+        resolved.typeName,
+        position,
+        resolved.component,
+        immovable: lc.immovable,
+        label: lc.label,
+      );
+    }
+
+    for (final connection in level.connections) {
+      addConnection(
+        connection.sourceComponentId,
+        connection.sourcePin,
+        connection.targetComponentId,
+        connection.targetPin,
+      );
+    }
+
+    _initializedFromLevel = true;
+    _initializedLevelId = level.levelId;
+    notifyListeners();
+  }
+
+  ({String typeName, Component component})? _resolveComponentForLevelType(
+    String type,
+  ) {
+    switch (type) {
+      case 'Input':
+        return (typeName: 'InputSource', component: InputSource());
+      case 'Output':
+        return (typeName: 'OutputProbe', component: OutputProbe());
+      default:
+        try {
+          final ct = availableComponents.firstWhere((c) => c.name == type);
+          return (typeName: ct.name, component: ct.createComponent());
+        } catch (_) {
+          return null;
+        }
     }
   }
 
@@ -651,6 +735,8 @@ class SandboxState extends ChangeNotifier {
     _wireDrawingStart = null;
     _isSimulating = false;
     _savedComponentStates = null;
+    _initializedFromLevel = false;
+    _initializedLevelId = null;
     notifyListeners();
   }
 
@@ -667,6 +753,8 @@ class SandboxState extends ChangeNotifier {
     _nextComponentId = 0;
     _tickSpeed = 0.0;
     _savedComponentStates = null;
+    _initializedFromLevel = false;
+    _initializedLevelId = null;
   }
 
   @override
@@ -701,6 +789,8 @@ class SandboxState extends ChangeNotifier {
       _connections.clear();
       _wireDrawingStart = null;
       _savedComponentStates = null;
+      _initializedFromLevel = false;
+      _initializedLevelId = null;
 
       // Load components
       final components = data['components'] as List<dynamic>;
@@ -722,7 +812,7 @@ class SandboxState extends ChangeNotifier {
         } else if (type == 'OutputProbe') {
           component = OutputProbe();
         } else {
-          component = createComponentByName(type);
+          component = getComponentTypeByName(type)?.createComponent();
           component ??= _createCustomComponent(type);
         }
 
@@ -860,6 +950,83 @@ class SandboxState extends ChangeNotifier {
       return _placedComponents.firstWhere((c) => c.id == id);
     } catch (_) {
       return null;
+    }
+  }
+
+  Future<void> checkLevelSolution(
+    BuildContext context,
+    WidgetRef ref,
+    Level level,
+  ) async {
+    try {
+      final inputCount = _placedComponents
+          .where((c) => c.component is InputSource)
+          .length;
+      final outputCount = _placedComponents
+          .where((c) => c.component is OutputProbe)
+          .length;
+
+      if (inputCount == 0 || outputCount == 0) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Circuit must have inputs and outputs')),
+          );
+        }
+        return;
+      }
+
+      final validationResult = await LevelValidator.validateCircuitWithSimulation(
+        components: _placedComponents.map((pc) => pc.component).toList(),
+        tests: level.tests,
+        maxComponentCount: level.maxComponentCount,
+        resetBeforeTest: resetSimulation,
+        runSimulation: startSimulation,
+      );
+
+      if (!context.mounted) return;
+
+      if (validationResult.isCorrect) {
+        await markLevelCompleted(ref, level.levelId);
+
+        if (!context.mounted) return;
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Success!'),
+            content: const Text('All tests passed! Level completed.'),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                child: const Text('Continue'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Test Failed'),
+            content: Text(
+              validationResult.errorMessage ?? 'One or more tests failed',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Try Again'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error checking solution: $e')),
+        );
+      }
     }
   }
 }

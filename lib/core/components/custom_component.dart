@@ -37,7 +37,7 @@ class CustomComponent extends Component {
       } else if (type == 'OutputProbe') {
         component = OutputProbe();
       } else {
-        component = createComponentByName(type);
+        component = getComponentTypeByName(type)?.createComponent();
       }
 
       if (component == null) {
