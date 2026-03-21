@@ -1,3 +1,4 @@
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/level_mode/level_bottom_app_bar.dart';
 import 'package:circuitquest/ui/level_mode/level_component_palette.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +60,8 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
   @override
   Widget build(BuildContext context) {
     final sandboxState = ref.watch(sandboxProvider);
-    final isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;
+    final isMobile =
+        MediaQuery.of(context).size.width < Constants.kMobileThreshold;
 
     return Scaffold(
       appBar: AppBar(
@@ -82,24 +84,17 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         ],
       ),
       body: _LevelScreenBody(level: widget.level),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => _checkSolution(sandboxState),
-      //   tooltip: AppLocalizations.of(context)!.checkSolution,
-      //   backgroundColor: _isCheckingSolution ? Colors.grey : Colors.purple,
-      //   foregroundColor: Colors.white,
-      //   shape: CircleBorder(),
-      //   child: Icon(Icons.check),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: isMobile ? LevelBottomAppBar(level: widget.level) : null,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _showLevelInfoDialog,
+        label: Text(AppLocalizations.of(context)!.levelInformationTooltip),
+        icon: Icon(Icons.info)
+      ),
+      floatingActionButtonLocation: isMobile ? null : FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: isMobile
+          ? LevelBottomAppBar(level: widget.level)
+          : null,
     );
   }
-
-  // void _checkSolution(SandboxState sandboxState) async {
-  //   _isCheckingSolution = true;
-  //   await sandboxState.checkLevelSolution(context, ref, widget.level);
-  //   _isCheckingSolution = false;
-  // }
 
   void _showLevelInfoDialog() {
     showDialog(
@@ -117,22 +112,22 @@ class _LevelScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;
+    final isMobile =
+        MediaQuery.of(context).size.width < Constants.kMobileThreshold;
     return LayoutBuilder(
       builder: (context, constraints) {
-
         if (!isMobile) {
           // Desktop layout: Canvas with overlaid component and control panels
           return Stack(
             children: [
-              Positioned.fill(
-                child: CircuitCanvas(level: level),
-              ),
+              Positioned.fill(child: CircuitCanvas(level: level)),
               Positioned(
                 top: 16,
                 left: 16,
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: constraints.maxHeight - 32),
+                  constraints: BoxConstraints(
+                    maxHeight: constraints.maxHeight - 32,
+                  ),
                   child: SizedBox(
                     width: 220,
                     child: Card(
@@ -147,7 +142,9 @@ class _LevelScreenBody extends StatelessWidget {
                 top: 16,
                 right: 16,
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: constraints.maxHeight - 32),
+                  constraints: BoxConstraints(
+                    maxHeight: constraints.maxHeight - 32,
+                  ),
                   child: SizedBox(
                     width: 300,
                     child: Card(
@@ -173,4 +170,3 @@ class _LevelScreenBody extends StatelessWidget {
     );
   }
 }
-
