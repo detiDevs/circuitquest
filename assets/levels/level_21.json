@@ -10,8 +10,8 @@
         {
             "type": "ProgramCounter",
             "position": [
-                1,
-                12
+                -14,
+                2
             ],
             "immovable": false,
             "label": "PC"
@@ -19,8 +19,8 @@
         {
             "type": "InstructionMemory",
             "position": [
-                3,
-                12
+                -12,
+                2
             ],
             "immovable": false,
             "label": "IM"
@@ -28,8 +28,8 @@
         {
             "type": "Adder32bit",
             "position": [
-                3,
-                2
+                -12,
+                -8
             ],
             "immovable": false,
             "label": "Add4"
@@ -37,8 +37,8 @@
         {
             "type": "Input",
             "position": [
-                1,
-                3
+                -14,
+                -7
             ],
             "immovable": false,
             "label": "4",
@@ -48,8 +48,8 @@
         {
             "type": "Splitter32to8",
             "position": [
-                4,
-                12
+                -11,
+                2
             ],
             "immovable": false,
             "label": "Splitter -> 8bit"
@@ -57,8 +57,8 @@
         {
             "type": "Splitter8to1",
             "position": [
-                6,
-                14
+                -9,
+                4
             ],
             "immovable": false,
             "label": "SPLa"
@@ -66,8 +66,8 @@
         {
             "type": "Splitter8to1",
             "position": [
-                6,
-                12
+                -9,
+                2
             ],
             "immovable": false,
             "label": "SPLb"
@@ -75,8 +75,8 @@
         {
             "type": "Splitter8to1",
             "position": [
-                6,
-                9
+                -9,
+                -1
             ],
             "immovable": false,
             "label": "SPLc"
@@ -84,8 +84,8 @@
         {
             "type": "RegisterBlock",
             "position": [
-                16,
-                11
+                1,
+                1
             ],
             "immovable": false,
             "label": "Registers",
@@ -126,8 +126,8 @@
         {
             "type": "Collector1to5",
             "position": [
-                9,
-                10
+                -6,
+                0
             ],
             "immovable": false,
             "label": "COLa"
@@ -135,8 +135,8 @@
         {
             "type": "Collector1to5",
             "position": [
-                9,
-                11
+                -6,
+                1
             ],
             "immovable": false,
             "label": "COLb"
@@ -144,8 +144,8 @@
         {
             "type": "Collector1to5",
             "position": [
-                9,
-                13
+                -6,
+                3
             ],
             "immovable": false,
             "label": "COLc"
@@ -153,8 +153,8 @@
         {
             "type": "Multiplexer2Inp",
             "position": [
-                12,
-                12
+                -3,
+                2
             ],
             "immovable": false,
             "label": "MUXa"
@@ -162,8 +162,8 @@
         {
             "type": "ALUAdvanced",
             "position": [
-                22,
-                10
+                7,
+                0
             ],
             "immovable": false,
             "label": "ALU"
@@ -171,8 +171,8 @@
         {
             "type": "Multiplexer2Inp",
             "position": [
-                21,
-                12
+                6,
+                2
             ],
             "immovable": false,
             "label": "MUXb"
@@ -180,8 +180,8 @@
         {
             "type": "Collector8to16",
             "position": [
-                12,
-                19
+                -3,
+                9
             ],
             "immovable": false,
             "label": "COL -> 16bit"
@@ -189,8 +189,8 @@
         {
             "type": "SignExtend",
             "position": [
-                14,
-                14
+                -1,
+                4
             ],
             "immovable": false,
             "label": "SignExtend"
@@ -198,8 +198,8 @@
         {
             "type": "DataMemory",
             "position": [
-                26,
-                11
+                11,
+                1
             ],
             "immovable": false,
             "label": "DataMemory"
@@ -207,8 +207,8 @@
         {
             "type": "Multiplexer2Inp",
             "position": [
-                29,
-                10
+                14,
+                0
             ],
             "immovable": false,
             "label": "MUXc"
@@ -216,8 +216,8 @@
         {
             "type": "Adder32bit",
             "position": [
-                17,
-                2
+                2,
+                -8
             ],
             "immovable": false,
             "label": "AdderBEQ"
@@ -225,8 +225,8 @@
         {
             "type": "Collector1to6",
             "position": [
-                10,
-                16
+                -5,
+                6
             ],
             "immovable": false,
             "label": "COL6a"
@@ -234,8 +234,8 @@
         {
             "type": "ControlUnit",
             "position": [
-                12,
-                6
+                -3,
+                -4
             ],
             "immovable": false,
             "label": "ControlUnit"
@@ -243,8 +243,8 @@
         {
             "type": "Multiplexer2Inp",
             "position": [
-                21,
-                1
+                6,
+                -9
             ],
             "immovable": false,
             "label": "MUXd"
@@ -252,8 +252,8 @@
         {
             "type": "And",
             "position": [
-                20,
-                4
+                5,
+                -6
             ],
             "immovable": false,
             "label": "And"
@@ -261,8 +261,8 @@
         {
             "type": "ALUControl",
             "position": [
-                19,
-                13
+                4,
+                3
             ],
             "immovable": false,
             "label": "ALUControl"
@@ -270,8 +270,8 @@
         {
             "type": "Splitter8to1",
             "position": [
-                6,
-                7
+                -9,
+                -3
             ],
             "immovable": false,
             "label": "SPLd"
@@ -279,8 +279,8 @@
         {
             "type": "Collector1to6",
             "position": [
-                17,
-                8
+                2,
+                -2
             ],
             "immovable": false,
             "label": "COL6b"
@@ -288,8 +288,8 @@
         {
             "type": "ShiftLeft2",
             "position": [
-                16,
-                3
+                1,
+                -7
             ],
             "immovable": false,
             "label": "<<2"
@@ -794,7 +794,7 @@
     "available_components": [],
     "hints": [],
     "name_de": "MIPS-Prozessor-Beispiel",
-    "description_de": "In der letzten Stufe des Spiels musst du nichts tun, dies ist mehr, um dir ein Beispiel zu zeigen, wie ein kompletter Prozessor aussehen könnte. Beachte, dass die Control Unit hier nur einige Anweisungen (lw, sw, beq und r-type) behandelt, du könntest sie als zusätzliche Herausforderung erweitern, um mehr Anweisungen zu behandeln. Um zu demonstrieren, wie dieser Prozessor funktioniert, ist bereits ein kleines Programm in den Anweisungs-Speicher geladen worden: 000000(op-code) 00010(rs) 00011(rt) 00001(rd) 00000(shamt) 100000(funct) = 4392992. Dieses Spiel konzentriert sich nicht auf die Assembly-Sprache, daher werden wir nicht diskutieren, warum dieses spezifische Bitmuster die Anweisung darstellt. Die Anweisung führt jedoch die folgende Operation aus: Sie nimmt den Inhalt von Register 1, addiert sie zum Inhalt von Register 2 und speichert das Ergebnis in Register 3. Durch Drücken von Start kannst du beobachten, wie der Prozessor diese Anweisung ausführt.",
+    "description_de": "In der letzten Stufe des Spiels musst du nichts tun, dies ist mehr, um dir ein Beispiel zu zeigen, wie ein kompletter Prozessor aussehen k\u00f6nnte. Beachte, dass die Control Unit hier nur einige Anweisungen (lw, sw, beq und r-type) behandelt, du k\u00f6nntest sie als zus\u00e4tzliche Herausforderung erweitern, um mehr Anweisungen zu behandeln. Um zu demonstrieren, wie dieser Prozessor funktioniert, ist bereits ein kleines Programm in den Anweisungs-Speicher geladen worden: 000000(op-code) 00010(rs) 00011(rt) 00001(rd) 00000(shamt) 100000(funct) = 4392992. Dieses Spiel konzentriert sich nicht auf die Assembly-Sprache, daher werden wir nicht diskutieren, warum dieses spezifische Bitmuster die Anweisung darstellt. Die Anweisung f\u00fchrt jedoch die folgende Operation aus: Sie nimmt den Inhalt von Register 1, addiert sie zum Inhalt von Register 2 und speichert das Ergebnis in Register 3. Durch Dr\u00fccken von Start kannst du beobachten, wie der Prozessor diese Anweisung ausf\u00fchrt.",
     "difficulty_de": "Einfach",
     "objectives_de": [
         "Verstehe, wie dieser Prozessor als Ganzes funktioniert."

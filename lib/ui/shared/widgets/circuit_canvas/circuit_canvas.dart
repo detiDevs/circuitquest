@@ -31,6 +31,8 @@ class CircuitCanvas extends ConsumerStatefulWidget {
 class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   /// Grid size in pixels
   static const double gridSize = Constants.kGridCellSize;
+  static const double _minScale = 0.1;
+  static const double _maxScale = 4.0;
 
   /// Current mouse/touch position for wire drawing
   Offset? _currentPointerPosition;
@@ -41,6 +43,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
 
   /// Cached reference to sandbox state for cleanup
   late final SandboxState _sandboxState;
+
+  /// Last handled recenter request id from SandboxState.
+  int _lastViewportCenterRequestId = -1;
 
   @override
   void dispose() {
@@ -62,29 +67,70 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
     // Try to initialize from level after first frame to ensure provider readiness
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _sandboxState.initializeFromLevelIfNeeded(widget.level, gridSize: gridSize);
-      // Center the canvas view after the first frame
-      _centerCanvasOnScreen();
+      _lastViewportCenterRequestId = _sandboxState.viewportCenterRequestId;
+      _centerViewportOnCircuit(_sandboxState.placedComponents);
     });
   }
 
-  /// Centers the canvas so the grid origin (center at 2000, 2000) appears in the middle of the screen.
-  void _centerCanvasOnScreen() {
+  /// Centers the viewport on the loaded circuit bounds.
+  /// If there are no components, centers on the canvas origin.
+  void _centerViewportOnCircuit(List<PlacedComponent> components) {
     // Schedule after interactive viewer is laid out
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      
+
       try {
         final renderBox = context.findRenderObject() as RenderBox?;
         if (renderBox == null) return;
-        
+
         final size = renderBox.size;
-        // Calculate offset to center the canvas
-        // Canvas is 4000x4000, so center is at (2000, 2000)
-        // We want this to appear at the viewport center
-        final offsetX = size.width / 2 - (Constants.kGridSizeInPixels / 2);
-        final offsetY = size.height / 2 - (Constants.kGridSizeInPixels / 2);
-        
+
+        final canvasCenter = Offset(
+          Constants.kGridSizeInPixels / 2,
+          Constants.kGridSizeInPixels / 2,
+        );
+
+        Offset targetCenter = canvasCenter;
+        double scale = 1.0;
+
+        if (components.isNotEmpty) {
+          double minX = components.first.position.dx;
+          double minY = components.first.position.dy;
+          double maxX = components.first.position.dx + gridSize;
+          double maxY = components.first.position.dy + gridSize;
+
+          for (final component in components.skip(1)) {
+            minX = component.position.dx < minX ? component.position.dx : minX;
+            minY = component.position.dy < minY ? component.position.dy : minY;
+            final componentMaxX = component.position.dx + gridSize;
+            final componentMaxY = component.position.dy + gridSize;
+            maxX = componentMaxX > maxX ? componentMaxX : maxX;
+            maxY = componentMaxY > maxY ? componentMaxY : maxY;
+          }
+
+          // Add padding so components are not exactly touching viewport edges.
+          final padding = gridSize * 2;
+          minX -= padding;
+          minY -= padding;
+          maxX += padding;
+          maxY += padding;
+
+          targetCenter = Offset((minX + maxX) / 2, (minY + maxY) / 2);
+
+          final boundsWidth = (maxX - minX).clamp(1.0, double.infinity);
+          final boundsHeight = (maxY - minY).clamp(1.0, double.infinity);
+          final scaleX = size.width / boundsWidth;
+          final scaleY = size.height / boundsHeight;
+          scale = scaleX < scaleY ? scaleX : scaleY;
+        }
+
+        final clampedScale = scale.clamp(_minScale, _maxScale);
+        final offsetX = size.width / 2 - (targetCenter.dx * clampedScale);
+        final offsetY = size.height / 2 - (targetCenter.dy * clampedScale);
+
         _transformationController.value = Matrix4.identity()
+          ..setEntry(0, 0, clampedScale)
+          ..setEntry(1, 1, clampedScale)
           ..setTranslationRaw(offsetX, offsetY, 0);
       } catch (e) {
         // Silently ignore if called before render object is ready
@@ -95,6 +141,15 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(sandboxProvider);
+
+    ref.listen<SandboxState>(sandboxProvider, (_, next) {
+      if (next.viewportCenterRequestId == _lastViewportCenterRequestId) {
+        return;
+      }
+
+      _lastViewportCenterRequestId = next.viewportCenterRequestId;
+      _centerViewportOnCircuit(next.placedComponents);
+    });
 
     return DragTarget<ComponentType>(
       onAcceptWithDetails: (details) {
@@ -125,8 +180,8 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         return InteractiveViewer(
           transformationController: _transformationController,
           boundaryMargin: const EdgeInsets.all(1000),
-          minScale: 0.1,
-          maxScale: 4.0,
+          minScale: _minScale,
+          maxScale: _maxScale,
           constrained: false,
           onInteractionEnd: (details) {
             // Cancel wire drawing when zoom/pan interaction ends

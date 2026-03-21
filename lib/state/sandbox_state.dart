@@ -170,6 +170,9 @@ class SandboxState extends ChangeNotifier {
   /// Tracks which level was used for one-time initialization
   int? _initializedLevelId;
 
+  /// Monotonic token used by UI to recenter viewport after a circuit load.
+  int _viewportCenterRequestId = 0;
+
   /// Initializes the clock manager from level configuration
   void initializeClockFromLevel(ClockConfig? clockConfig) {
     if (clockConfig != null && clockConfig.mode > 0) {
@@ -237,6 +240,7 @@ class SandboxState extends ChangeNotifier {
 
     _initializedFromLevel = true;
     _initializedLevelId = level.levelId;
+    _viewportCenterRequestId++;
     notifyListeners();
   }
 
@@ -271,6 +275,7 @@ class SandboxState extends ChangeNotifier {
   ({String componentId, String pinName})? get wireDrawingStart =>
       _wireDrawingStart;
   ClockManager? get clockManager => _clockmanager;
+  int get viewportCenterRequestId => _viewportCenterRequestId;
 
   // Undo/Redo getters
   bool get canUndo => CommandController.canUndo;
@@ -852,6 +857,9 @@ class SandboxState extends ChangeNotifier {
 
       // Rebuild wire connections
       _rebuildWireConnections();
+
+      // Ask canvas to recenter on the newly loaded circuit.
+      _viewportCenterRequestId++;
 
       notifyListeners();
       return true;
