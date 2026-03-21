@@ -45,6 +45,7 @@ class LevelValidator {
   static Future<LevelValidationResult> validateCircuitWithSimulation({
     required List<Component> components,
     required List<LevelTest> tests,
+    int? maxComponentCount,
     required Future<void> Function() runSimulation,
     void Function()? resetBeforeTest,
   }) async {
@@ -58,6 +59,13 @@ class LevelValidator {
         } else if (component is OutputProbe) {
           outputProbes.add(component);
         }
+      }
+
+      if (maxComponentCount != null && components.length > maxComponentCount) {
+        return LevelValidationResult(
+          isCorrect: false,
+          errorMessage: 'Circuit has ${components.length} components, but maximum allowed is $maxComponentCount',
+        );
       }
 
       if (inputSources.isEmpty || outputProbes.isEmpty) {

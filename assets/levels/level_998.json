@@ -1,0 +1,43 @@
+{
+    "level_id": 998,
+    "name": "AND Gate with maxComponentCount",
+    "name_de": "UND-Gatter",
+    "description": "max components you cant finish this level with more then one extra gate",    "description_de": "Willkommen bei CircuitQuest, einer Puzzle-gesteuerten Reise in die inneren Mechanismen eines MIPS-basierten Prozessors. In diesem Spiel erkundest du, wie digitale Schaltungen zusammenkommen, um die Logik zu bilden, die echte Computerarchitekturen antreibt. Jede Stufe konzentriert sich auf ein Kernkonzept – von einfachen Logikgattern bis zu fortgeschrittenen Komponenten wie ALUs, Multiplexern und Steuereinheiten. Durch das Lösen interaktiver Schaltungsaufgaben gewinnst du ein intuitives Verständnis dafür, wie Prozessoren Entscheidungen treffen, Berechnungen durchführen und Befehle ausführen. Ob du neu in digitaler Logik bist oder die Grundlagen auffrischst, CircuitQuest zielt darauf ab, durch praktisches, kreatives Problemlösen zu unterrichten. In dieser ersten Stufe lernst du, was ein UND-Gatter ist und wie man es verwendet. Das UND-Gatter prüft, ob A und B wahr sind. Wenn dies der Fall ist, gibt es 1 zurück, sonst 0.",
+    "description_de": "Willkommen bei CircuitQuest, einer Puzzle-gesteuerten Reise in die inneren Mechanismen eines MIPS-basierten Prozessors. In diesem Spiel erkundest du, wie digitale Schaltungen zusammenkommen, um die Logik zu bilden, die echte Computerarchitekturen antreibt. Jede Stufe konzentriert sich auf ein Kernkonzept – von einfachen Logikgattern bis zu fortgeschrittenen Komponenten wie ALUs, Multiplexern und Steuereinheiten. Durch das Lösen interaktiver Schaltungsaufgaben gewinnst du ein intuitives Verständnis dafür, wie Prozessoren Entscheidungen treffen, Berechnungen durchführen und Befehle ausführen. Ob du neu in digitaler Logik bist oder die Grundlagen auffrischst, CircuitQuest zielt darauf ab, durch praktisches, kreatives Problemlösen zu unterrichten. In dieser ersten Stufe lernst du, was ein UND-Gatter ist und wie man es verwendet. Das UND-Gatter prüft, ob A und B wahr sind. Wenn dies der Fall ist, gibt es 1 zurück, sonst 0.",
+    "difficulty": "Easy",
+    "difficulty_de": "Einfach",
+    "objectives": [
+        "Connect the inputs with an AND gate. Then connect the AND gate to the Output",
+        "when you are done, press the Check solution button, to see if your circuit works correctly.",
+        "if you want to see the calculation of the circuit, tune down the slider in the top right corner to addjust the speed of the simulation."
+    ],
+    "objectives_de": [
+        "Verbinde die Eingänge mit einem UND-Gatter. Verbinde dann das UND-Gatter mit dem Ausgang",
+        "Wenn du fertig bist, drücke die Schaltfläche \"Lösung überprüfen\", um zu sehen, ob deine Schaltung richtig funktioniert.",
+        "Wenn du die Berechnung der Schaltung sehen möchtest, stelle den Schieberegler in der oberen rechten Ecke herunter, um die Geschwindigkeit der Simulation anzupassen."
+    ],
+    "components": [
+        {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
+        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"}, 
+        {"type": "Output", "position": [4,2], "immovable": true}    
+    ],
+    
+    "available_components": [
+        {"type": "And"}
+    ],
+
+    "hints": [
+        "Gates on the left can be dragged into the grid"
+    ],
+    "hints_de": [
+        "Gatter auf der linken Seite können in das Raster gezogen werden"
+    ],
+    "maxComponentCount": 4,
+
+    "tests": [
+        {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1]], "expected_output": [[1,1]]}
+    ]
+}
