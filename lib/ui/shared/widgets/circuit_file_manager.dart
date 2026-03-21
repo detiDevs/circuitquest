@@ -330,11 +330,9 @@ class CircuitFileManager extends ConsumerWidget {
         name: nameController.text,
         description: descriptionController.text,
       );
-      print("Json string: $jsonString");
 
       // Convert to bytes for mobile compatibility
       final bytes = utf8.encode(jsonString);
-      print("Len of bytes: ${bytes.length}");
 
       // Build default file name
       final defaultFileName = '${_sanitizeFileName(nameController.text)}.json';
