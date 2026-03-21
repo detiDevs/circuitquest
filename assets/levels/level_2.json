@@ -6,6 +6,10 @@
     "description_de": "Das NICHT-Gatter invertiert die Eingabe einfach. Wenn es 1 erhält, gibt es 0 zurück, und umgekehrt.",
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
+    "truth_table": [
+        [0,1],
+        [1,0]
+    ],
     "objectives": [
         "Connect the input to the NOT gate. Then connect the NOT gate to the Output"
     ],

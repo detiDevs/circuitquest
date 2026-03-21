@@ -6,6 +6,11 @@
     "description_de": "Das ODER-Gatter prüft, ob entweder A oder B wahr ist. Wenn eines der beiden wahr ist, gibt es 1 zurück, sonst 0.",
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
+    "truth_table": [
+        ["x", 0,1],
+        [0,0,1],
+        [1,1,1]
+    ],
     "objectives": [
         "Connect the inputs with an OR gate. Then connect the OR gate to the Output"
     ],
