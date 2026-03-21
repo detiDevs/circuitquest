@@ -163,6 +163,12 @@
       "name_de": "Test & Entwicklung",
       "levels": [
         {
+          "id": 998,
+          "name": "AND Gate with maxComponentCount",
+          "name_de": "UND-Gatter mit maxComponentCount",
+          "recommended": false
+        },
+        {
           "id": 999,
           "name": "Clock Test Level",
           "name_de": "Clock Test Level",

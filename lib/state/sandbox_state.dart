@@ -1023,6 +1023,7 @@ class SandboxState extends ChangeNotifier {
       final validationResult = await LevelValidator.validateCircuitWithSimulation(
         components: _placedComponents.map((pc) => pc.component).toList(),
         tests: level.tests,
+        maxComponentCount: level.maxComponentCount,
         resetBeforeTest: resetSimulation,
         runSimulation: startSimulation,
       );
