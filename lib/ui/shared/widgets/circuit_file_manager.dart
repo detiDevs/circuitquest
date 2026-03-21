@@ -330,9 +330,11 @@ class CircuitFileManager extends ConsumerWidget {
         name: nameController.text,
         description: descriptionController.text,
       );
+      print("Json string: $jsonString");
 
       // Convert to bytes for mobile compatibility
       final bytes = utf8.encode(jsonString);
+      print("Len of bytes: ${bytes.length}");
 
       // Build default file name
       final defaultFileName = '${_sanitizeFileName(nameController.text)}.json';
@@ -349,10 +351,16 @@ class CircuitFileManager extends ConsumerWidget {
 
       if (result == null) return;
 
+      // On desktop platforms, saveFile may only return a path and not write
+      // the content automatically. Ensure bytes are persisted to disk.
+      final outFile = File(result);
+      await outFile.parent.create(recursive: true);
+      await outFile.writeAsBytes(bytes, flush: true);
+
       if (context.mounted) {
         SnackBarUtils.showSuccess(
           context,
-          Text(AppLocalizations.of(context)!.circuitSavedTo(result)) as String,
+          AppLocalizations.of(context)!.circuitSavedTo(result),
         );
       }
     } catch (e) {

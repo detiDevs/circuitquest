@@ -363,14 +363,17 @@ class _WirePainter extends CustomPainter {
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
+    final componentsById = {
+      for (final component in placedComponents) component.id: component,
+    };
+
     // Draw existing connections
     for (final connection in connections) {
-      final sourceComponent = placedComponents.firstWhere(
-        (c) => c.id == connection.sourceComponentId,
-      );
-      final targetComponent = placedComponents.firstWhere(
-        (c) => c.id == connection.targetComponentId,
-      );
+      final sourceComponent = componentsById[connection.sourceComponentId];
+      final targetComponent = componentsById[connection.targetComponentId];
+      if (sourceComponent == null || targetComponent == null) {
+        continue;
+      }
 
       // Check if this connection is active (either endpoint is being evaluated)
       final isActive =
@@ -421,9 +424,10 @@ class _WirePainter extends CustomPainter {
 
     // Draw wire being drawn
     if (wireDrawingStart != null && currentPointerPosition != null) {
-      final sourceComponent = placedComponents.firstWhere(
-        (c) => c.id == wireDrawingStart!.componentId,
-      );
+      final sourceComponent = componentsById[wireDrawingStart!.componentId];
+      if (sourceComponent == null) {
+        return;
+      }
       final sourcePos = _pinCenter(
         sourceComponent,
         wireDrawingStart!.pinName,

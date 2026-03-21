@@ -62,9 +62,15 @@ class PlacedComponent {
 
   /// Converts this PlacedComponent to JSON format
   Map<String, dynamic> toJson() {
+    final canvasCenter = Constants.kGridSizeInPixels / 2;
+    final logicalX = ((position.dx - canvasCenter) / Constants.kGridCellSize)
+        .round();
+    final logicalY = ((position.dy - canvasCenter) / Constants.kGridCellSize)
+        .round();
+
     return {
       'type': type,
-      'position': [position.dx.toInt(), position.dy.toInt()],
+      'position': [logicalX, logicalY],
       'id': id,
       if (immovable) 'immovable': immovable,
       if (label != null) 'label': label,
@@ -806,11 +812,18 @@ class SandboxState extends ChangeNotifier {
       for (final compData in components) {
         final type = compData['type'] as String;
         final positionList = compData['position'] as List<dynamic>;
+        final id = compData['id']?.toString();
+        if (id == null) {
+          continue;
+        }
+
+        final logicalX = (positionList[0] as num).toDouble();
+        final logicalY = (positionList[1] as num).toDouble();
+        final canvasCenter = Constants.kGridSizeInPixels / 2;
         final position = Offset(
-          (positionList[0] as num).toDouble(),
-          (positionList[1] as num).toDouble(),
+          logicalX * Constants.kGridCellSize + canvasCenter,
+          logicalY * Constants.kGridCellSize + canvasCenter,
         );
-        final id = compData['id'] as String;
         final immovable = compData['immovable'] as bool? ?? false;
         final label = compData['label'] as String?;
 
@@ -830,7 +843,7 @@ class SandboxState extends ChangeNotifier {
           continue;
         }
 
-        _placedComponents.add(
+        restoreComponentWithId(
           PlacedComponent(
             type: type,
             component: component,
@@ -845,12 +858,32 @@ class SandboxState extends ChangeNotifier {
       // Load connections
       final connections = data['connections'] as List<dynamic>;
       for (final connData in connections) {
+        final sourceId =
+            connData['sourceComponentId']?.toString() ??
+            connData['origin']?.toString();
+        final targetId =
+            connData['targetComponentId']?.toString() ??
+            connData['destination']?.toString();
+        final sourcePin =
+            connData['sourcePin']?.toString() ??
+            connData['originKey']?.toString();
+        final targetPin =
+            connData['targetPin']?.toString() ??
+            connData['destinationKey']?.toString();
+
+        if (sourceId == null ||
+            targetId == null ||
+            sourcePin == null ||
+            targetPin == null) {
+          continue;
+        }
+
         _connections.add(
           WireConnection(
-            sourceComponentId: connData['sourceComponentId'] as String,
-            sourcePin: connData['sourcePin'] as String,
-            targetComponentId: connData['targetComponentId'] as String,
-            targetPin: connData['targetPin'] as String,
+            sourceComponentId: sourceId,
+            sourcePin: sourcePin,
+            targetComponentId: targetId,
+            targetPin: targetPin,
           ),
         );
       }
