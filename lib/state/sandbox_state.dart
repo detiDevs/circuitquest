@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
 import 'package:circuitquest/core/components/cpu/data_memory.dart';
 import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
@@ -193,9 +194,12 @@ class SandboxState extends ChangeNotifier {
       final resolved = _resolveComponentForLevelType(lc.type);
       if (resolved == null) continue;
 
+      // Convert logical coordinates (centered at 0,0) to canvas coordinates
+      // Canvas center is at (2000, 2000) in the 4000x4000 pixel grid
+      final canvasCenter = Constants.kGridSizeInPixels / 2;
       final position = Offset(
-        lc.position[0] * gridSize,
-        lc.position[1] * gridSize,
+        (lc.position[0] * gridSize) + canvasCenter,
+        (lc.position[1] * gridSize) + canvasCenter,
       );
 
       if (resolved.component is InstructionMemory && level.memoryContents != null) {
