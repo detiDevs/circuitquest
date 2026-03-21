@@ -313,25 +313,6 @@ class _GridPainter extends CustomPainter {
         canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
       }
     }
-    
-    // Draw center axes to mark the origin
-    final centerPaint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 1.5;
-    
-    // Vertical center line
-    canvas.drawLine(
-      const Offset((Constants.kGridSizeInPixels / 2), 0),
-      Offset((Constants.kGridSizeInPixels / 2), size.height),
-      centerPaint,
-    );
-    
-    // Horizontal center line
-    canvas.drawLine(
-      Offset(0, (Constants.kGridSizeInPixels / 2)),
-      Offset(size.width, (Constants.kGridSizeInPixels / 2)),
-      centerPaint,
-    );
   }
 
   @override
