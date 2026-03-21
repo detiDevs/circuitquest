@@ -1,0 +1,106 @@
+{
+    "level_id": 15,
+    "name": "Build a 4 input Multiplexer",
+    "name_de": "4-Eingangs-Multiplexer",
+    "description": "You now know how to wire a 4 input Multiplexer but how to build one from basic gates? ",
+    "description_de": "Du weißt jetzt, wie man einen 4-Eingangs-Multiplexer verkabelt, aber wie baut man einen aus grundlegenden Gattern?",
+    "difficulty": "Medium",
+    "difficulty_de": "Mittel",
+    "objectives": [
+        "Given inputs A, B, C, D and control S0, S1, build a circuit so that:\n- if S0=0 and S1=0 the Output equals A\n- if S0=1 and S1=0 the Output equals B\n- if S0=0 and S1=1 the Output equals C\n- if S0=1 and S1=1 the Output equals D"
+    ],
+    "objectives_de": [
+        "Erstelle bei Eingängen A, B, C, D und Steuerung S0, S1 eine Schaltung, so dass:\n- wenn S0=0 und S1=0, ist der Ausgang gleich A\n- wenn S0=1 und S1=0, ist der Ausgang gleich B\n- wenn S0=0 und S1=1, ist der Ausgang gleich C\n- wenn S0=1 und S1=1, ist der Ausgang gleich D"
+    ],
+    "components": [
+        {"type": "Input", "position": [0,1], "immovable": true, "label": "S0"},
+        {"type": "Input", "position": [0,3], "immovable": true, "label": "S1"},
+        {"type": "Input", "position": [0,5], "immovable": true, "label": "A"},
+        {"type": "Input", "position": [0,7], "immovable": true, "label": "B"},
+        {"type": "Input", "position": [0,9], "immovable": true, "label": "C"},
+        {"type": "Input", "position": [0,11], "immovable": true, "label": "D"},
+        {"type": "Output", "position": [11,7], "immovable": true}
+    ],
+    "available_components": [
+        {"type": "Not"},
+        {"type": "And"},
+        {"type": "Or"}
+    ],
+    "hints": [
+        "Use 4 of the inputs as the data inputs (A,B,C,D) for the 4-input MUX and combine the remaining 2 inputs with the Collector to form a 2-bit selector.",
+        "A typical mapping: Inputs 0-3 = data inputs A..D, Inputs 4-5 = selector bits S0 (LSB), S1 (MSB).",
+        "The collector will pack the two selector bits into a 2-bit control signal for the 4-input MUX.",
+        "The expression for a 4-to-1 multiplexer is: $(A \\cdot \\overline{S1} \\cdot \\overline{S0}) + (B \\cdot \\overline{S1} \\cdot S0) + (C \\cdot S1 \\cdot \\overline{S0}) + (D \\cdot S1 \\cdot S0)$."
+    ],
+    "hints_de": [
+        "Verwende 4 der Eingänge als Daten (A,B,C,D) für den 4-Eingang-MUX und kombiniere die verbleibenden 2 Eingänge mit dem Kollektor, um einen 2-Bit-Selektor zu bilden.",
+        "Eine typische Zuordnung: Eingänge 0-3 = Daten A..D, Eingänge 4-5 = Selektor-Bits S0 (LSB), S1 (MSB).",
+        "Der Kollektor packt die zwei Selektor-Bits in ein 2-Bit-Steuersignal für den 4-Eingang-MUX.",
+        "Der Ausdruck für einen 4-zu-1-Multiplexer lautet: $(A \\cdot \\overline{S1} \\cdot \\overline{S0}) + (B \\cdot \\overline{S1} \\cdot S0) +$\n$(C \\cdot S1 \\cdot \\overline{S0}) + (D \\cdot S1 \\cdot S0)$."
+    ],
+    "tests": [
+        {"inputs": [[0,1],[0,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[0,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[0,1],[0,1],[1,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[0,1],[1,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+
+        {"inputs": [[0,1],[1,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[0,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[0,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[0,1],[1,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[1,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+
+        {"inputs": [[1,1],[0,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[0,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[0,1],[0,1],[1,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[0,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[0,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[0,1],[1,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+
+        {"inputs": [[1,1],[1,1],[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1],[0,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[0,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1],[0,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1],[0,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[0,1],[1,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]}
+    ],
+
+    "success_message": "Congratulations! You built a 4-input multiplexer from basic gates. Now you know the concept and you could also build even bigger multiplexers. You dont have to do that. You can the provided componets from now on.",
+    "success_message_de": "Glückwunsch! Du hast einen 4-Eingangs-Multiplexer aus grundlegenden Gattern gebaut. Jetzt kennst du das Konzept und könntest auch noch größere Multiplexer bauen. Das musst du aber nicht. Du kannst die bereitgestellten Komponenten von jetzt an verwenden.",
+    "bonus_level": true
+}

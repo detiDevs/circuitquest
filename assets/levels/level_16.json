@@ -1,0 +1,53 @@
+{
+    "level_id": 16,
+    "name": "Multiplexer for two 8-bit values",
+    "name_de": "Multiplexer für zwei 8-Bit-Werte",
+    "description": "You already know how to select between two single-bit values with a multiplexer. But what if you want to select between two 8-bit values? ",
+    "description_de": "Du weißt bereits, wie man mit einem Multiplexer zwischen zwei einzelnen Bitwerten auswählt. Aber was ist, wenn du zwischen zwei 8-Bit-Werten auswählen möchtest?",
+    "difficulty": "Medium",
+    "difficulty_de": "Mittel",
+    "objectives": [
+        "Given inputs A and B and control S, build a circuit so that:\n- if S=0 the Output equals A\n- if S=1 the Output equals B"
+    ],
+    "objectives_de": [
+        "Erstelle bei Eingängen A und B und Steuerung S eine Schaltung, so dass:\n- wenn S=0, ist der Ausgang gleich A\n- wenn S=1, ist der Ausgang gleich B"
+    ],
+    "components": [
+        {"type": "Input", "position": [0,1], "immovable": true, "label": "S"},
+        {"type": "Input", "position": [0,3], "immovable": true, "initialBitWidth": 8, "label": "A"},
+        {"type": "Input", "position": [0,5], "immovable": true, "initialBitWidth": 8, "label": "B"}, 
+        {"type": "Output", "position": [8,3], "immovable": true}    
+    ],
+    "available_components": [
+        {"type": "Multiplexer2Inp"},
+        {"type": "Splitter8to1"},
+        {"type": "Collector1to8"}
+    ],
+    "hints": [
+        "You can split the 8-bit inputs into single bits, select each bit with a 2-input MUX, and then collect the selected bits back into an 8-bit output.",
+        "Use the Splitter to break A and B into their individual bits, feed those bits into 2-input MUXes along with the control S, and then use the Collector to combine the outputs of the MUXes back into an 8-bit output.",
+        "The expression for a 2-to-1 multiplexer is: $(A \\cdot \\overline{S}) + (B \\cdot S)$, apply this to each bit of A and B."
+    ],
+    "hints_de": [
+        "Du kannst die 8-Bit-Eingänge in einzelne Bits aufteilen, jedes Bit mit einem 2-Eingang-MUX auswählen und dann die ausgewählten Bits wieder in einen 8-Bit-Ausgang sammeln.",
+        "Verwende den Splitter, um A und B in ihre einzelnen Bits aufzuteilen, füttere diese Bits in 2-Eingang-MUXes zusammen mit der Steuerung S und verwende dann den Collector, um die Ausgänge der MUXes wieder in einen 8-Bit-Ausgang zu kombinieren.",
+        "Der Ausdruck für einen 2-zu-1-Multiplexer lautet: $(A \\cdot \\overline{S}) + (B \\cdot S)$, wende dies auf jedes Bit von A und B an."
+    ],
+    "tests": [
+        {"inputs": [[0,1],[0,8],[0,255]], "expected_output": [[0,8]]},
+        {"inputs": [[0,1],[0,8],[1,8]], "expected_output": [[0,8]]},
+        {"inputs": [[0,1],[45,8],[0,8]], "expected_output": [[45,8]]},
+        {"inputs": [[0,1],[94,8],[1,8]], "expected_output": [[94,8]]},
+        {"inputs": [[0,1],[146,8],[0,8]], "expected_output": [[146,8]]},
+        {"inputs": [[0,1],[67,8],[1,8]], "expected_output": [[67,8]]},
+        {"inputs": [[1,1],[0,8],[0,8]], "expected_output": [[0,8]]},
+        {"inputs": [[1,1],[0,8],[1,8]], "expected_output": [[1,8]]},
+        {"inputs": [[1,1],[45,8],[34,8]], "expected_output": [[34,8]]},
+        {"inputs": [[1,1],[45,8],[245,8]], "expected_output": [[245,8]]},
+        {"inputs": [[1,1],[255,8],[55,8]], "expected_output": [[55,8]]},
+        {"inputs": [[1,1],[0,8],[255,8]], "expected_output": [[255,8]]}
+
+    ],
+    "success_message": "Congratulations! You built a multiplexer for two 8-bit values. Now you know how to handle larger data widths with multiplexers. You can connect any bitwidth to all the multiplexers from now on.",
+    "success_message_de": "Glückwunsch! Du hast einen Multiplexer für zwei 8-Bit-Werte gebaut. Jetzt weißt du, wie man mit Multiplexern größere Datenbreiten verarbeitet. Du kannst von nun an jede Bitbreite mit allen Multiplexern verbinden."
+}

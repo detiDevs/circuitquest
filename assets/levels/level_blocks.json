@@ -84,6 +84,31 @@
           "id": 12,
           "name": "Multiply by 64",
           "name_de": "Mit 64 multiplizieren"
+        },
+        {
+          "id": 13,
+          "name": "Multiplexer",
+          "name_de": "Multiplexer"
+        },
+        {
+          "id": 14,
+          "name": "Bigger MUX",
+          "name_de": "Größerer MUX"
+        },
+        {
+          "id": 15,
+          "name": "Build a 4 input Multiplexer",
+          "name_de": "Baue einen 4-Eingangs-Multiplexer"
+        },
+        {
+          "id": 16,
+          "name": "Multiplexer for two 8-bit values",
+          "name_de": "Multiplexer für zwei 8-Bit-Werte"
+        },
+        {
+          "id": 17,
+          "name": "Decoder",
+          "name_de": "Decoder"
         }
       ]
     }
