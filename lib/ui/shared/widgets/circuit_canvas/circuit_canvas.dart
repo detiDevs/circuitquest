@@ -1,3 +1,4 @@
+import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:circuitquest/core/commands/place_component_command.dart';import 'package:circuitquest/core/logic/pin.dart';import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/placed_component_widget.dart';
@@ -29,7 +30,9 @@ class CircuitCanvas extends ConsumerStatefulWidget {
 
 class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   /// Grid size in pixels
-  static const double gridSize = 80.0;
+  static const double gridSize = Constants.kGridCellSize;
+  static const double _minScale = 0.1;
+  static const double _maxScale = 4.0;
 
   /// Current mouse/touch position for wire drawing
   Offset? _currentPointerPosition;
@@ -40,6 +43,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
 
   /// Cached reference to sandbox state for cleanup
   late final SandboxState _sandboxState;
+
+  /// Last handled recenter request id from SandboxState.
+  int _lastViewportCenterRequestId = -1;
 
   @override
   void dispose() {
@@ -61,6 +67,74 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
     // Try to initialize from level after first frame to ensure provider readiness
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _sandboxState.initializeFromLevelIfNeeded(widget.level, gridSize: gridSize);
+      _lastViewportCenterRequestId = _sandboxState.viewportCenterRequestId;
+      _centerViewportOnCircuit(_sandboxState.placedComponents);
+    });
+  }
+
+  /// Centers the viewport on the loaded circuit bounds.
+  /// If there are no components, centers on the canvas origin.
+  void _centerViewportOnCircuit(List<PlacedComponent> components) {
+    // Schedule after interactive viewer is laid out
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+
+      try {
+        final renderBox = context.findRenderObject() as RenderBox?;
+        if (renderBox == null) return;
+
+        final size = renderBox.size;
+
+        final canvasCenter = Offset(
+          Constants.kGridSizeInPixels / 2,
+          Constants.kGridSizeInPixels / 2,
+        );
+
+        Offset targetCenter = canvasCenter;
+        double scale = 1.0;
+
+        if (components.isNotEmpty) {
+          double minX = components.first.position.dx;
+          double minY = components.first.position.dy;
+          double maxX = components.first.position.dx + gridSize;
+          double maxY = components.first.position.dy + gridSize;
+
+          for (final component in components.skip(1)) {
+            minX = component.position.dx < minX ? component.position.dx : minX;
+            minY = component.position.dy < minY ? component.position.dy : minY;
+            final componentMaxX = component.position.dx + gridSize;
+            final componentMaxY = component.position.dy + gridSize;
+            maxX = componentMaxX > maxX ? componentMaxX : maxX;
+            maxY = componentMaxY > maxY ? componentMaxY : maxY;
+          }
+
+          // Add padding so components are not exactly touching viewport edges.
+          final padding = gridSize * 2;
+          minX -= padding;
+          minY -= padding;
+          maxX += padding;
+          maxY += padding;
+
+          targetCenter = Offset((minX + maxX) / 2, (minY + maxY) / 2);
+
+          final boundsWidth = (maxX - minX).clamp(1.0, double.infinity);
+          final boundsHeight = (maxY - minY).clamp(1.0, double.infinity);
+          final scaleX = size.width / boundsWidth;
+          final scaleY = size.height / boundsHeight;
+          scale = scaleX < scaleY ? scaleX : scaleY;
+        }
+
+        final clampedScale = scale.clamp(_minScale, _maxScale);
+        final offsetX = size.width / 2 - (targetCenter.dx * clampedScale);
+        final offsetY = size.height / 2 - (targetCenter.dy * clampedScale);
+
+        _transformationController.value = Matrix4.identity()
+          ..setEntry(0, 0, clampedScale)
+          ..setEntry(1, 1, clampedScale)
+          ..setTranslationRaw(offsetX, offsetY, 0);
+      } catch (e) {
+        // Silently ignore if called before render object is ready
+      }
     });
   }
 
@@ -68,12 +142,25 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   Widget build(BuildContext context) {
     final state = ref.watch(sandboxProvider);
 
+    ref.listen<SandboxState>(sandboxProvider, (_, next) {
+      if (next.viewportCenterRequestId == _lastViewportCenterRequestId) {
+        return;
+      }
+
+      _lastViewportCenterRequestId = next.viewportCenterRequestId;
+      _centerViewportOnCircuit(next.placedComponents);
+    });
+
     return DragTarget<ComponentType>(
       onAcceptWithDetails: (details) {
-        // Convert global drop offset into local canvas coordinates, accounting for zoom/pan
+        // Convert global drop offset into viewport coordinates.
         final renderBox = context.findRenderObject() as RenderBox;
-        final localPosition = renderBox.globalToLocal(details.offset);
-        final gridPosition = _snapToGrid(localPosition);
+        final viewportPosition = renderBox.globalToLocal(details.offset);
+
+        // Convert viewport coordinates to scene (canvas) coordinates,
+        // accounting for current pan/zoom/initial centering transform.
+        final scenePosition = _transformationController.toScene(viewportPosition);
+        final gridPosition = _snapToGrid(scenePosition);
 
         // Create and place the component using command pattern
         final component = details.data.createComponent();
@@ -93,8 +180,8 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         return InteractiveViewer(
           transformationController: _transformationController,
           boundaryMargin: const EdgeInsets.all(1000),
-          minScale: 0.1,
-          maxScale: 4.0,
+          minScale: _minScale,
+          maxScale: _maxScale,
           constrained: false,
           onInteractionEnd: (details) {
             // Cancel wire drawing when zoom/pan interaction ends
@@ -128,8 +215,8 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
                 }
               },
               child: SizedBox(
-                width: 4000,
-                height: 4000,
+                width: Constants.kGridSizeInPixels,
+                height: Constants.kGridSizeInPixels,
                 child: CustomPaint(
                   painter: _GridPainter(),
                   child: Stack(
@@ -141,7 +228,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
                           placedComponents: state.placedComponents,
                           wireDrawingStart: state.wireDrawingStart,
                           currentPointerPosition: _currentPointerPosition,
-                          gridSize: gridSize,
+                          cellSize: gridSize,
                           activeComponentIds: state.activeComponentIds,
                         ),
                         child: Container(),
@@ -201,16 +288,30 @@ class _GridPainter extends CustomPainter {
       ..color = Colors.grey[500]!
       ..strokeWidth = 0.5;
 
-    const gridSize = 80.0;
+    const cellSize = Constants.kGridCellSize;
+    const canvasCenter = (Constants.kGridSizeInPixels / 2); // Center of the 4000x4000 canvas
+    
+    // Calculate grid line positions centered at canvasCenter
+    final gridStartX = (canvasCenter % cellSize).toInt();
+    final gridStartY = (canvasCenter % cellSize).toInt();
+    
+    final int offsetGridX = ((canvasCenter - gridStartX) / cellSize).floor().toInt();
+    final int offsetGridY = ((canvasCenter - gridStartY) / cellSize).floor().toInt();
 
     // Draw vertical lines
-    for (double x = 0; x < size.width; x += gridSize) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    for (int i = -offsetGridX - 1; i < (size.width / cellSize).ceil() + 1; i++) {
+      final x = (Constants.kGridSizeInPixels / 2) + i * cellSize;
+      if (x >= 0 && x <= size.width) {
+        canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+      }
     }
 
     // Draw horizontal lines
-    for (double y = 0; y < size.height; y += gridSize) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    for (int i = -offsetGridY - 1; i < (size.height / cellSize).ceil() + 1; i++) {
+      final y = (Constants.kGridSizeInPixels / 2) + i * cellSize;
+      if (y >= 0 && y <= size.height) {
+        canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+      }
     }
   }
 
@@ -224,7 +325,7 @@ class _WirePainter extends CustomPainter {
   final List<PlacedComponent> placedComponents;
   final ({String componentId, String pinName})? wireDrawingStart;
   final Offset? currentPointerPosition;
-  final double gridSize;
+  final double cellSize;
   final Set<String> activeComponentIds;
 
   _WirePainter({
@@ -232,7 +333,7 @@ class _WirePainter extends CustomPainter {
     required this.placedComponents,
     this.wireDrawingStart,
     this.currentPointerPosition,
-    required this.gridSize,
+    required this.cellSize,
     this.activeComponentIds = const {},
   });
 
@@ -243,14 +344,17 @@ class _WirePainter extends CustomPainter {
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
+    final componentsById = {
+      for (final component in placedComponents) component.id: component,
+    };
+
     // Draw existing connections
     for (final connection in connections) {
-      final sourceComponent = placedComponents.firstWhere(
-        (c) => c.id == connection.sourceComponentId,
-      );
-      final targetComponent = placedComponents.firstWhere(
-        (c) => c.id == connection.targetComponentId,
-      );
+      final sourceComponent = componentsById[connection.sourceComponentId];
+      final targetComponent = componentsById[connection.targetComponentId];
+      if (sourceComponent == null || targetComponent == null) {
+        continue;
+      }
 
       // Check if this connection is active (either endpoint is being evaluated)
       final isActive =
@@ -301,9 +405,10 @@ class _WirePainter extends CustomPainter {
 
     // Draw wire being drawn
     if (wireDrawingStart != null && currentPointerPosition != null) {
-      final sourceComponent = placedComponents.firstWhere(
-        (c) => c.id == wireDrawingStart!.componentId,
-      );
+      final sourceComponent = componentsById[wireDrawingStart!.componentId];
+      if (sourceComponent == null) {
+        return;
+      }
       final sourcePos = _pinCenter(
         sourceComponent,
         wireDrawingStart!.pinName,
@@ -471,7 +576,7 @@ class _WirePainter extends CustomPainter {
 
     if (totalOnSide == 0) {
       // Fallback if no pins on this side
-      return component.position + Offset(gridSize / 2, gridSize / 2);
+      return component.position + Offset(cellSize / 2, cellSize / 2);
     }
 
     // Find the index of this pin among all pins on the same side
@@ -498,7 +603,7 @@ class _WirePainter extends CustomPainter {
     final offsetWithinGrid = PinPositioningUtils.calculatePinOffset(
       pinIndex,
       totalOnSide,
-      gridSize,
+      cellSize,
       pinPosition,
     );
 
