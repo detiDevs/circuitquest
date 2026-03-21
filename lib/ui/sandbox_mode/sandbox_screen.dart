@@ -39,7 +39,7 @@ class _SandboxScreenState extends ConsumerState<SandboxScreen> {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text('${Constants.kAppName} - ${AppLocalizations.of(context)!.sandboxModeTitle}'),
+        title: Text(AppLocalizations.of(context)!.sandboxModeTitle),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
         actions: [

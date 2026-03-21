@@ -43,7 +43,7 @@ class _SandboxBottomAppBarState
       child: Row(
         children: [
           IconButton(
-            tooltip: "Components",
+            tooltip: AppLocalizations.of(context)!.componentsLabel,
             onPressed: _showComponents,
             color: activeSheet == _SandboxBottomSheetType.components
                 ? Colors.blue
@@ -52,7 +52,7 @@ class _SandboxBottomAppBarState
           ),
           Spacer(),
           IconButton(
-            tooltip: "Custom Components",
+            tooltip: AppLocalizations.of(context)!.customComponents,
             onPressed: _showCustomComponents,
             color: activeSheet == _SandboxBottomSheetType.customComponents
                 ? Colors.blue
@@ -75,7 +75,7 @@ class _SandboxBottomAppBarState
           ),
           Spacer(),
           IconButton(
-            tooltip: "File Operations",
+            tooltip: AppLocalizations.of(context)!.fileOperationsTitle,
             onPressed: _showFileOperations,
             color: activeSheet == _SandboxBottomSheetType.file
                 ? Colors.blue
@@ -84,7 +84,7 @@ class _SandboxBottomAppBarState
           ),
           Spacer(),
           IconButton(
-            tooltip: "Controls",
+            tooltip: AppLocalizations.of(context)!.controlsTitle,
             onPressed: _showControls,
             color: activeSheet == _SandboxBottomSheetType.controls
                 ? Colors.blue

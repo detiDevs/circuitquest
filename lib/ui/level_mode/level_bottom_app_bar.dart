@@ -113,7 +113,7 @@ class _LevelBottomAppBarState
 
   void _checkSolution() async {
     _isCheckingSolution = true;
-    sandboxState.checkLevelSolution(context, ref, widget.level);
+    await sandboxState.checkLevelSolution(context, ref, widget.level);
     _isCheckingSolution = false;
   }
 

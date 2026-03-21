@@ -65,7 +65,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('${Constants.kAppName} - ${widget.level.name}'),
+        title: Text(widget.level.name),
         backgroundColor: Colors.blue[800],
         foregroundColor: Colors.white,
         actions: [
@@ -84,12 +84,12 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         ],
       ),
       body: _LevelScreenBody(level: widget.level),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: isMobile ? null : FloatingActionButton.extended(
         onPressed: _showLevelInfoDialog,
         label: Text(AppLocalizations.of(context)!.levelInformationTooltip),
         icon: Icon(Icons.info)
       ),
-      floatingActionButtonLocation: isMobile ? null : FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: isMobile
           ? LevelBottomAppBar(level: widget.level)
           : null,
