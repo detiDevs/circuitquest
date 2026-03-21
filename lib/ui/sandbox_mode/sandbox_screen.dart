@@ -77,35 +77,36 @@ class _SandboxBody extends StatelessWidget {
       builder: (context, constraints) {
 
         if (!isMobile) {
-          // Desktop layout: Palette on left, Canvas in center, Controls on right
-          return Row(
+          // Desktop layout: Canvas with overlaid palette and controls
+          return Stack(
             children: [
-              // Left panel: Component Palette
-              SizedBox(
-                width: 200,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: BorderSide(color: Theme.of(context).colorScheme.outline),
-                    ),
-                  ),
-                  child: const DesktopSandboxComponentPalette(),
-                ),
-              ),
-              // Center: Circuit Canvas
-              const Expanded(
+              const Positioned.fill(
                 child: CircuitCanvas(),
               ),
-              // Right panel: Control Panel
-              SizedBox(
-                width: 250,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      left: BorderSide(color: Theme.of(context).colorScheme.outline),
+              Positioned(
+                top: 16,
+                left: 16,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: constraints.maxHeight - 32),
+                  child: const SizedBox(
+                    width: 220,
+                    child: DesktopSandboxComponentPalette(),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 16,
+                right: 16,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: constraints.maxHeight - 32),
+                  child: SizedBox(
+                    width: 300,
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      clipBehavior: Clip.antiAlias,
+                      child: const ControlPanel(isSandbox: true),
                     ),
                   ),
-                  child: const ControlPanel(isSandbox: true),
                 ),
               ),
             ],

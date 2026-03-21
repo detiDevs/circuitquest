@@ -75,11 +75,8 @@ class _PaletteSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.outline),
-        borderRadius: BorderRadius.circular(8),
-      ),
+    return Card(
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: child,
     );

@@ -12,6 +12,7 @@ Widget buildResponsiveComponentList(
   bool showHeader = true,
   bool custom = false,
   String? headerText,
+  bool desktopFitContent = false,
 }) {
   final isMobile =
       MediaQuery.of(context).size.width < Constants.kMobileThreshold;
@@ -26,6 +27,37 @@ Widget buildResponsiveComponentList(
     );
   } else {
     // Vertical list on desktop
+    if (desktopFitContent) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (showHeader)
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                headerText ?? 'Components',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+          if (showHeader) const Divider(height: 1),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: components.length,
+            itemBuilder: (context, index) {
+              final componentType = components[index];
+              return custom
+                  ? CustomComponentPaletteItem(componentType: componentType)
+                  : PaletteItem(componentType: componentType);
+            },
+          ),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -18,11 +18,11 @@ class LevelComponentPalette extends ConsumerWidget {
       return level.availableComponents.any((ac) => ac.type == comp.name);
     }).toList();
 
-    // Reuse the responsive component list builder from component_palette.dart
     return buildResponsiveComponentList(
       context,
       components: limitedComponents,
       headerText: AppLocalizations.of(context)!.availableComponents,
+      desktopFitContent: true,
     );
   }
 }
