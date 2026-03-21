@@ -126,6 +126,7 @@ class _SandboxBottomAppBarState
           context,
           components: components,
           headerText: AppLocalizations.of(context)!.customComponents,
+          custom: true,
         );
       },
     );

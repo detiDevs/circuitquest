@@ -1,16 +1,11 @@
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/components/component_registry.dart';
-import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/sandbox_mode/custom_component_palette_item.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/palette_item.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../state/custom_component_library.dart';
-import '../../../../core/components/custom_component.dart';
-
 /// Helper function to build a responsive component list widget
-/// Used by both ComponentPalette and limited palettes to show consistent behavior
+/// Used by sandbox and level palettes to show consistent behavior
 Widget buildResponsiveComponentList(
   BuildContext context, {
   required List<ComponentType> components,
@@ -18,7 +13,8 @@ Widget buildResponsiveComponentList(
   bool custom = false,
   String? headerText,
 }) {
-  final isMobile = MediaQuery.of(context).size.width < Constants.kMobileThreshold;
+  final isMobile =
+      MediaQuery.of(context).size.width < Constants.kMobileThreshold;
 
   if (isMobile) {
     // Horizontal PageView with 2 rows of 5 components per page on mobile
@@ -26,6 +22,7 @@ Widget buildResponsiveComponentList(
       components: components,
       showHeader: showHeader,
       headerText: headerText,
+      isCustom: custom,
     );
   } else {
     // Vertical list on desktop
@@ -48,7 +45,9 @@ Widget buildResponsiveComponentList(
             itemCount: components.length,
             itemBuilder: (context, index) {
               final componentType = components[index];
-              return PaletteItem(componentType: componentType);
+              return custom
+                  ? CustomComponentPaletteItem(componentType: componentType)
+                  : PaletteItem(componentType: componentType);
             },
           ),
         ),
@@ -62,11 +61,13 @@ class _MobilePagedComponentList extends StatefulWidget {
     required this.components,
     required this.showHeader,
     this.headerText,
+    this.isCustom,
   });
 
   final List<ComponentType> components;
   final bool showHeader;
   final String? headerText;
+  final bool? isCustom;
 
   @override
   State<_MobilePagedComponentList> createState() =>
@@ -118,8 +119,14 @@ class _MobilePagedComponentListState extends State<_MobilePagedComponentList> {
             },
             itemBuilder: (context, pageIndex) {
               final startIndex = pageIndex * 10;
-              final endIndex = (startIndex + 10).clamp(0, widget.components.length);
-              final pageComponents = widget.components.sublist(startIndex, endIndex);
+              final endIndex = (startIndex + 10).clamp(
+                0,
+                widget.components.length,
+              );
+              final pageComponents = widget.components.sublist(
+                startIndex,
+                endIndex,
+              );
 
               return Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -137,7 +144,11 @@ class _MobilePagedComponentListState extends State<_MobilePagedComponentList> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Expanded(
-                          child: PaletteItem(componentType: componentType),
+                          child: (widget.isCustom ?? false)
+                              ? CustomComponentPaletteItem(
+                                  componentType: componentType,
+                                )
+                              : PaletteItem(componentType: componentType),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -178,116 +189,6 @@ class _MobilePagedComponentListState extends State<_MobilePagedComponentList> {
             ),
           ),
       ],
-    );
-  }
-}
-
-/// Component palette widget showing available components.
-///
-/// Users can drag components from the palette onto the canvas.
-class ComponentPalette extends ConsumerWidget {
-  const ComponentPalette({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final customLibrary = ref.watch(customComponentProvider);
-    final customEntries = customLibrary.components;
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Header
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            AppLocalizations.of(context)!.componentPaletteTitle,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ),
-        const Divider(height: 1),
-        // Component list
-        Expanded(
-          child: isMobile
-              ? _buildHorizontalList(context, customEntries)
-              : _buildVerticalList(context, customEntries),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildVerticalList(
-    BuildContext context,
-    List<CustomComponentEntry> customEntries,
-  ) {
-    return ListView(
-      children: [
-        ...availableComponents.map(
-          (componentType) => PaletteItem(componentType: componentType),
-        ),
-        if (customEntries.isNotEmpty) ...[
-          const Divider(height: 24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              'Custom components',
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ),
-          const SizedBox(height: 8),
-          ...customEntries.map(
-            (entry) => CustomComponentPaletteItem(
-              componentType: ComponentType(
-                name: entry.data.name,
-                displayName: entry.data.name,
-                iconPath: entry.spritePath ?? '',
-                isAsset: false,
-                createComponent: () => CustomComponent(entry.data),
-              ),
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildHorizontalList(
-    BuildContext context,
-    List<CustomComponentEntry> customEntries,
-  ) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          ...availableComponents.map(
-            (componentType) => SizedBox(
-              width: 70,
-              child: PaletteItem(componentType: componentType),
-            ),
-          ),
-          if (customEntries.isNotEmpty) ...[
-            const VerticalDivider(width: 1),
-            ...customEntries.map(
-              (entry) => SizedBox(
-                width: 70,
-                child: CustomComponentPaletteItem(
-                  componentType: ComponentType(
-                    name: entry.data.name,
-                    displayName: entry.data.name,
-                    iconPath: entry.spritePath ?? '',
-                    isAsset: false,
-                    createComponent: () => CustomComponent(entry.data),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
     );
   }
 }
