@@ -83,7 +83,8 @@
         {
           "id": 12,
           "name": "Multiply by 64",
-          "name_de": "Mit 64 multiplizieren"
+          "name_de": "Mit 64 multiplizieren",
+          "bonus_level": true
         },
         {
           "id": 13,
@@ -98,7 +99,8 @@
         {
           "id": 15,
           "name": "Build a 4 input Multiplexer",
-          "name_de": "Baue einen 4-Eingangs-Multiplexer"
+          "name_de": "Baue einen 4-Eingangs-Multiplexer",
+          "bonus_level": true
         },
         {
           "id": 16,
@@ -109,6 +111,39 @@
           "id": 17,
           "name": "Decoder",
           "name_de": "Decoder"
+        }
+      ]
+    },
+    {
+      "name": "Adders",
+      "name_de": "Addierer",
+      "levels": [
+        {
+          "id": 18,
+          "name": "Half Adder",
+          "name_de": "Halbaddierer"
+        },
+        {
+          "id": 19,
+          "name": "Full Adder",
+          "name_de": "Volladdierer"
+        },
+        {
+          "id": 20,
+          "name": "8-bit Adder",
+          "name_de": "8-Bit-Addierer"
+        },
+        {
+          "id": 21,
+          "name": "Full Adder again?",
+          "name_de": "Volladdierer nochmal?",
+          "bonus_level": true
+        },
+        {
+          "id": 22,
+          "name": "Adders Challenge",
+          "name_de": "Addierer Herausforderung",
+          "bonus_level": true
         }
       ]
     }

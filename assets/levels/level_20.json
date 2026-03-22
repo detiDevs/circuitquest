@@ -1,0 +1,54 @@
+{
+    "level_id": 20,
+    "name": "Add two 8-bit values",
+    "name_de": "Addiere zwei 8-Bit-Werte",
+    "description": "You already added two single-bit values with a half adder and a full adder. But what if you want to add two 8-bit values?",
+    "description_de": "Du hast bereits gelernt, wie man zwei einzelne Bitwerte mit einem Halbaddierer und einem Volladdierer addiert. Aber was ist, wenn du zwei 8-Bit-Werte addieren möchtest?",
+    "difficulty": "Medium",
+    "difficulty_de": "Mittel",
+    "objectives": [
+        "Given inputs A and B and control S, build a circuit so that:\n- if S=0 the Output equals A\n- if S=1 the Output equals B"
+    ],
+    "objectives_de": [
+        "Erstelle bei Eingängen A und B und Steuerung S eine Schaltung, so dass:\n- wenn S=0, ist der Ausgang gleich A\n- wenn S=1, ist der Ausgang gleich B"
+    ],
+    "components": [
+        {"type": "Input", "position": [0,1], "immovable": true, "label": "Cin"},
+        {"type": "Input", "position": [0,3], "immovable": true, "initialBitWidth": 8, "label": "A"},
+        {"type": "Input", "position": [0,5], "immovable": true, "initialBitWidth": 8, "label": "B"}, 
+        {"type": "Output", "position": [8,3], "immovable": true, "label": "Sum"},
+        {"type": "Output", "position": [8,5], "immovable": true, "label": "Cout"} 
+    ],
+    "available_components": [
+        {"type": "FullAdder"},
+        {"type": "Splitter8to1"},
+        {"type": "Collector1to8"}
+    ],
+    "hints": [
+        "You can split the 8-bit inputs into single bits, add each bit with a Full Adder, and then collect the sum bits back into an 8-bit output.",
+        "Use the Splitter to break A and B into their individual bits, feed those bits into Full Adders along with the carry from the previous bit, and then use the Collector to combine the sum outputs of the Full Adders back into an 8-bit output.",
+        "Remember to connect the carry-out of each Full Adder to the carry-in of the next Full Adder for proper addition across all bits.",
+        "Connect the last carry-out to the Cout output to indicate if there was an overflow from the most significant bit."
+    ],
+    "hints_de": [
+        "Du kannst die 8-Bit-Eingänge in einzelne Bits aufteilen, jedes Bit mit einem Volladdierer addieren und dann die Summenbits wieder in einen 8-Bit-Ausgang sammeln.",
+        "Verwende den Splitter, um A und B in ihre einzelnen Bits zu zerlegen, füttere diese Bits zusammen mit dem Carry des vorherigen Bits in die Volladdierer und verwende dann den Collector, um die Summeausgänge der Volladdierer wieder in einen 8-Bit-Ausgang zu kombinieren.",
+        "Denke daran, den Carry-Out jedes Volladdierers mit dem Carry-In des nächsten Volladdierers zu verbinden, damit die Addition über alle Bits korrekt funktioniert.",
+        "Verbinde den letzten Carry-Out mit dem Cout-Ausgang, um anzuzeigen, ob es einen Überlauf aus dem höchstwertigen Bit gab."
+    ],
+    "tests": [
+        {"inputs": [[0,1],[0,8],[0,8]], "expected_output": [[0,8],[0,1]]},
+        {"inputs": [[0,1],[255,8],[1,8]], "expected_output": [[0,8],[1,1]]},
+        {"inputs": [[0,1],[255,8],[255,8]], "expected_output": [[254,8],[1,1]]},
+        {"inputs": [[0,1],[128,8],[128,8]], "expected_output": [[0,8],[1,1]]},
+        {"inputs": [[0,1],[127,8],[127,8]], "expected_output": [[254,8],[0,1]]},
+        {"inputs": [[1,1],[0,8],[255,8]], "expected_output": [[0,8],[1,1]]},
+        {"inputs": [[1,1],[255,8],[0,8]], "expected_output": [[0,8],[1,1]]},
+        {"inputs": [[1,1],[255,8],[255,8]], "expected_output": [[255,8],[1,1]]},
+        {"inputs": [[1,1],[128,8],[128,8]], "expected_output": [[1,8],[1,1]]},
+        {"inputs": [[1,1],[127,8],[127,8]], "expected_output": [[255,8],[0,1]]}
+
+    ],
+    "success_message": "Very nice! You successfully built a circuit that can add two 8-bit values together, producing an 8-bit sum and a carry-out to indicate overflow. This is a fundamental operation in digital logic and is used in countless applications, from simple calculators to complex CPUs. From now on you can use an Adder with 32bit wide inputs!",
+    "success_message_de": "Sehr gut! Du hast erfolgreich eine Schaltung gebaut, die zwei 8-Bit-Werte addieren kann und dabei eine 8-Bit-Summe und einen Carry-Out produziert, um einen Überlauf anzuzeigen. Dies ist eine grundlegende Operation in der digitalen Logik und wird in unzähligen Anwendungen verwendet, von einfachen Taschenrechnern bis hin zu komplexen CPUs. Ab jetzt kannst du einen Adder mit 32-Bit breiten Eingängen verwenden!"
+}

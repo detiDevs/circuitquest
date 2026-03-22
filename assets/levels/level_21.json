@@ -1,0 +1,289 @@
+{
+    "level_id": 21,
+    "name": "Full Adder again?",
+    "description": "Full Adder again!",
+    "difficulty": "Annoying",
+    "objectives": [
+        "Build a full-adder using only nand gates"
+    ],
+    "components": [
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                5
+            ],
+            "immovable": true,
+            "label": "CarryIn"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                2
+            ],
+            "immovable": true,
+            "label": "Sum"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                4
+            ],
+            "immovable": true,
+            "label": "CarryOut"
+        }
+    ],
+    "available_components": [
+        {
+            "type": "Nand"
+        }
+    ],
+    "hints": [
+        "Don't forget that NAND gates are functionally complete, meaning you can build any logic gate using just NANDs.",
+        "Don't give up!"
+    ],
+    "solution": "",
+    "tests": [
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        }
+    ],
+    "name_de": "Volladdierer nochmal?",
+    "description_de": "Volladdierer nochmal!",
+    "difficulty_de": "Nervig",
+    "objectives_de": [
+        "Baue einen Volladdierer nur mit NAND-Gattern"
+    ],
+    "hints_de": [
+        "Vergiss nicht, dass NAND-Gatter funktional vollständig sind, was bedeutet, dass du mit nur NANDs jedes Logikgatter bauen kannst.",
+        "Gib nicht auf!"
+    ], 
+    "success_message": "Wow never would i have thought that someone would actually be so crazy to finish this level. Congrats! \n\nPS: There are even worse levels coming, have fun!",
+    "success_message_de": "Wow, ich hätte nie gedacht, dass jemand so verrückt sein könnte, um dieses Level tatsächlich zu schaffen. Glückwunsch! \n\nPS: Es kommen noch schlimmere Level, viel Spaß!",
+    "bonus_level": true
+}

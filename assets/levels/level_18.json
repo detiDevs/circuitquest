@@ -1,10 +1,10 @@
 {
-    "level_id": 11,
+    "level_id": 18,
     "name": "Half Adder",
     "description": "A Half-Adder adds two 1-bit numbers (A and B).\nIt produces a Sum and a Carry. This is the smallest building block of binary addition.",
     "difficulty": "Medium",
     "objectives": [
-        "Create a circuit that adds to 1bit together and returns sum and carry"
+        "Create a circuit that adds two 1-bit numbers together and returns sum and carry"
     ],
     "components": [
         {
@@ -56,7 +56,8 @@
         "Think about binary addition: 0+0=0, 0+1=1, 1+0=1, 1+1=10 (that's 0 with a carry of 1)",
         "The Sum output should be 1 only when A and B are different",
         "The CarryOut should be 1 only when both A and B are 1",
-        "XOR gives 1 when inputs differ, AND gives 1 when both inputs are 1"
+        "XOR gives 1 when inputs differ, AND gives 1 when both inputs are 1",
+        "The expression for the Sum is: $A \\oplus B$ and for the CarryOut is: $A \\cdot B$. \n$\\oplus$ is the XOR operator."
     ],
     "solution": "",
     "tests": [
@@ -159,6 +160,7 @@
         "Denke an Binäraddition: 0+0=0, 0+1=1, 1+0=1, 1+1=10 (das ist 0 mit einem Carry von 1)",
         "Die Summe sollte nur 1 sein, wenn A und B unterschiedlich sind",
         "Das Carry-Out sollte nur 1 sein, wenn beide A und B 1 sind",
-        "XOR gibt 1 zurück, wenn Eingänge unterschiedlich sind, UND gibt 1 zurück, wenn beide Eingänge 1 sind"
+        "XOR gibt 1 zurück, wenn Eingänge unterschiedlich sind, UND gibt 1 zurück, wenn beide Eingänge 1 sind",
+        "Der Ausdruck für die Summe ist: $A \\oplus B$ und für das CarryOut ist: $A \\cdot B$. \n$\\oplus$ ist der XOR-Operator."
     ]
 }

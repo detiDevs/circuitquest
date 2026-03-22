@@ -59,7 +59,7 @@ class Multiplexer extends Component {
     final int selectedIndex = inputCount == 0 ? 0 : rawSel % inputCount;
 
     // Forward selected data
-    final int newValue = inputs['input${rawSel + 1}']!.value;
+    final int newValue = inputs['input${selectedIndex + 1}']!.value;
     final OutputPin outPin = outputs['outValue']!;
     final bool changed = outPin.value != newValue;
     outPin.value = newValue;
