@@ -1,0 +1,98 @@
+{
+  "level_id": 23,
+    "name": "Minimization Challenge 2",
+    "name_de": "Minimierungsherausforderung 2",
+    "description": "Too many gates again...",
+    "description_de": "Schon wieder zu viele Gatter...",
+    "difficulty": "Medium",
+    "difficulty_de": "Mittel",
+    "objectives": [
+        "Build a circuit with the same functionality, but with at most 3 gates besides the inputs and the output."
+    ],
+    "objectives_de": [
+        "Baue einen Schaltkreis gleicher Funktionalität, allerdings mit maximal 3 Gattern neben den Inputs und dem Output."
+    ],
+    "components": [
+        {"type": "Input", "position": [0,2], "immovable": true, "label": "A"},
+        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"},
+        {"type": "Input", "position": [0,4], "immovable": true, "label": "C"},
+        {"type": "Input", "position": [0,5], "immovable": true, "label": "D"},
+        {"type": "Not", "position": [2,2], "label": "NOT A"},
+        {"type": "Not", "position": [2,3], "label": "NOT B"},
+        {"type": "Not", "position": [2,4], "label": "NOT C"},
+        {"type": "Not", "position": [2,5], "label": "NOT D"},
+        {"type": "Or", "position": [4,3]},
+        {"type": "And", "position": [4,5]},
+        {"type": "And", "position": [6,4]},
+        {"type": "Not", "position": [8,4]},
+        {"type": "Output", "position": [10,4], "immovable": true}
+    ],
+    "connections": [
+      {"origin": 0, "originKey": "outValue", "destination": 4, "destinationKey": "input"},
+      {"origin": 1, "originKey": "outValue", "destination": 5, "destinationKey": "input"},
+      {"origin": 2, "originKey": "outValue", "destination": 6, "destinationKey": "input"},
+      {"origin": 3, "originKey": "outValue", "destination": 7, "destinationKey": "input"},
+
+      {"origin": 4, "originKey": "outValue", "destination": 8, "destinationKey": "input1"},
+      {"origin": 5, "originKey": "outValue", "destination": 8, "destinationKey": "input2"},
+      {"origin": 6, "originKey": "outValue", "destination": 9, "destinationKey": "input1"},
+      {"origin": 7, "originKey": "outValue", "destination": 9, "destinationKey": "input2"},
+
+      {"origin": 8, "originKey": "outValue", "destination": 10, "destinationKey": "input1"},
+      {"origin": 9, "originKey": "outValue", "destination": 10, "destinationKey": "input2"},
+
+      {"origin": 10, "originKey": "outValue", "destination": 11, "destinationKey": "input"},
+
+      {"origin": 11, "originKey": "outValue", "destination": 12, "destinationKey": "input"}
+      
+    ],
+    "available_components": [
+        {"type": "And"},
+        {"type": "Or"},
+        {"type": "Not"},
+        {"type": "Nand"},
+        {"type": "Nor"},
+        {"type": "Xor"},
+        {"type": "Xnor"}
+    ],
+    "hints": [
+        "Try to simplify the circuit using Boolean algebra rules. For example, look for common sub-expressions that can be factored out, or apply De Morgan's laws to reduce the number of gates needed.",
+        "I cannot explain it here but have you heard about KV diagrams? They are a great tool to simplify boolean expressions and thus circuits.",
+        "An And gate followed by a Not gate is a Nand gate. An Or gate followed by a Not gate is a Nor gate. Maybe you can use this to your advantage to save some gates?",
+        "Use De Morgan's laws. Really. Here they are again:\n$\\overline{(A \\cdot B)} = \\overline{A} + \\overline{B}$\n$\\overline{(A + B)} = \\overline{A} \\cdot \\overline{B}$",
+        "The expression first shown is $\\overline{(\\overline{A} + \\overline{B})+(\\overline{C} \\cdot \\overline{D})}$. Can you apply De Morgan's laws to this expression to simplify it?",
+        "Half way simplified is $\\overline{(\\overline{A} + \\overline{B})} + \\overline{(\\overline{C} \\cdot \\overline{D})}$. Can you simplify this further?",
+        "The final simplified expression is $A \\cdot B + C + D$. Can you build this with at most 3 gates?"
+    ],
+    "hints_de": [
+        "Versuche, die Schaltung mit den Regeln der booleschen Algebra zu vereinfachen. Suche zum Beispiel nach gemeinsamen Teilausdrücken, die herausgefiltert werden können, oder wende De Morgans Gesetze an, um die Anzahl der benötigten Gatter zu reduzieren.",
+        "Ich kann es hier nicht erklären, aber hast du schon von KV-Diagrammen gehört? Sie sind ein großartiges Werkzeug, um boolesche Ausdrücke und damit Schaltungen zu vereinfachen.",
+        "Ein And-Gatter gefolgt von einem Not-Gatter ist ein Nand-Gatter. Ein Or-Gatter gefolgt von einem Not-Gatter ist ein Nor-Gatter. Vielleicht kannst du das zu deinem Vorteil nutzen, um einige Gatter zu sparen?",
+        "Verwende De Morgans Gesetze. Wirklich. Hier sind sie nochmal: $\\overline{(A \\cdot B)} = \\overline{A} + \\overline{B}$\n$\\overline{(A + B)} = \\overline{A} \\cdot \\overline{B}$",
+        "Der zuerst gezeigte Ausdruck ist $\\overline{(\\overline{A} + \\overline{B})+(\\overline{C} \\cdot \\overline{D})}$. Kannst du De Morgans Gesetze auf diesen Ausdruck anwenden, um ihn zu vereinfachen?",
+        "Halbwegs vereinfacht ist $\\overline{(\\overline{A} + \\overline{B})} + \\overline{(\\overline{C} \\cdot \\overline{D})}$. Kannst du das weiter vereinfachen?",
+        "Der endgültig vereinfachte Ausdruck ist $A \\cdot B + C + D$. Kannst du das mit höchstens 3 Gattern bauen?"
+    ],
+    "maxComponentCount": 8,
+    "tests": [
+        {"inputs": [[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]}
+    ],
+    "success_message": "That was a relatively simple simplification, but it really shows the power of Boolean algebra and how you can use it to optimize circuits.",
+    "success_message_de": "Das war eine relativ einfache Vereinfachung, aber es zeigt wirklich die Macht der booleschen Algebra und wie du sie nutzen kannst, um Schaltungen zu optimieren.",
+    "bonus_level": true
+}

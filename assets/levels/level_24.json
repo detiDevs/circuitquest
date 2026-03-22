@@ -1,0 +1,128 @@
+{
+    "level_id": 9,
+    "name": "Minimization Challenge 3",
+    "name_de": "Minimierungsherausforderung 3",
+    "description": "Spoiler alert: The circuit implements the expression $ABC + \\overline{A}\\overline{B}C + \\overline{A}B\\overline{C} + A\\overline{B}\\overline{C}$.",
+    "description_de": "Spoiler-Alarm: Die Schaltung implementiert den Ausdruck $ABC + \\overline{A}\\overline{B}C + \\overline{A}B\\overline{C} + A\\overline{B}\\overline{C}$.",
+    "difficulty": "Hard",
+    "difficulty_de": "Schwer",
+    "objectives": [
+        "Build a circuit with the same functionality, but with at most 4 gates besides the inputs and the output.",
+        "If you try it the same way as last time you won't be successful. The expression shown above is the minimal expression.",
+        "But there is another way to simplify it. Not minimizing the number of base gates but minimizing the number of components."
+    ],
+    "objectives_de": [
+        "Baue einen Schaltkreis gleicher Funktionalität, allerdings mit maximal 4 Gattern neben den Inputs und dem Output.",
+        "Wenn du es auf die gleiche Weise wie beim letzten Mal versuchst, wirst du nicht erfolgreich sein. Der oben gezeigte Ausdruck ist der minimale Ausdruck.",
+        "Aber es gibt einen anderen Weg, ihn zu vereinfachen. Nicht die Anzahl der Basisgatter zu minimieren, sondern die Anzahl der Komponenten."
+    ],
+    "components": [
+        {"type": "Input", "position": [0,2], "immovable": true, "label": "A"},
+        {"type": "Input", "position": [0,4], "immovable": true, "label": "B"},
+        {"type": "Input", "position": [0,6], "immovable": true, "label": "C"},
+        {"type": "Not", "position": [2,2], "label": "NOT A"},
+        {"type": "Not", "position": [2,4], "label": "NOT B"},
+        {"type": "Not", "position": [2,6], "label": "NOT C"},
+        {"type": "And", "position": [5,0]},
+        {"type": "And", "position": [5,2]},
+        {"type": "And", "position": [5,4]},
+        {"type": "And", "position": [5,6]},
+        {"type": "And", "position": [6,1]},
+        {"type": "And", "position": [6,3]},
+        {"type": "And", "position": [6,5]},
+        {"type": "And", "position": [6,7]},
+        {"type": "Or", "position": [8,2]},
+        {"type": "Or", "position": [8,6]},
+        {"type": "Or", "position": [10,4]},
+        {"type": "Output", "position": [12,4], "immovable": true}    
+    ],
+    "connections": [
+      {"origin": 0, "originKey": "outValue", "destination": 3, "destinationKey": "input"},
+      {"origin": 1, "originKey": "outValue", "destination": 4, "destinationKey": "input"},
+      {"origin": 2, "originKey": "outValue", "destination": 5, "destinationKey": "input"},
+
+      {"origin": 0, "originKey": "outValue", "destination": 6, "destinationKey": "input1"},
+      {"origin": 1, "originKey": "outValue", "destination": 6, "destinationKey": "input2"},
+      {"origin": 6, "originKey": "outValue", "destination": 10, "destinationKey": "input1"},
+
+      {"origin": 2, "originKey": "outValue", "destination": 10, "destinationKey": "input2"},
+
+      {"origin": 3, "originKey": "outValue", "destination": 7, "destinationKey": "input1"},
+      {"origin": 4, "originKey": "outValue", "destination": 7, "destinationKey": "input2"},
+      {"origin": 7, "originKey": "outValue", "destination": 11, "destinationKey": "input1"},
+
+      {"origin": 2, "originKey": "outValue", "destination": 11, "destinationKey": "input2"},
+
+      {"origin": 3, "originKey": "outValue", "destination": 8, "destinationKey": "input1"},
+      {"origin": 1, "originKey": "outValue", "destination": 8, "destinationKey": "input2"},
+      {"origin": 8, "originKey": "outValue", "destination": 12, "destinationKey": "input1"},
+
+      {"origin": 5, "originKey": "outValue", "destination": 12, "destinationKey": "input2"},
+
+      {"origin": 0, "originKey": "outValue", "destination": 9, "destinationKey": "input1"},
+      {"origin": 4, "originKey": "outValue", "destination": 9, "destinationKey": "input2"},
+      {"origin": 9, "originKey": "outValue", "destination": 13, "destinationKey": "input1"},
+
+      {"origin": 5, "originKey": "outValue", "destination": 13, "destinationKey": "input2"},
+
+      {"origin": 10, "originKey": "outValue", "destination": 14, "destinationKey": "input1"},
+      {"origin": 11, "originKey": "outValue", "destination": 14, "destinationKey": "input2"},
+
+      {"origin": 14, "originKey": "outValue", "destination": 16, "destinationKey": "input1"},
+
+      {"origin": 12, "originKey": "outValue", "destination": 15, "destinationKey": "input1"},
+      {"origin": 13, "originKey": "outValue", "destination": 15, "destinationKey": "input2"},
+
+      {"origin": 15, "originKey": "outValue", "destination": 16, "destinationKey": "input2"},
+
+      {"origin": 16, "originKey": "outValue", "destination": 17, "destinationKey": "input"}
+      
+    ],
+    "available_components": [
+        {"type": "InputSource"},
+        {"type": "And"},
+        {"type": "Or"},
+        {"type": "Not"},
+        {"type": "Nand"},
+        {"type": "Nor"},
+        {"type": "Xor"},
+        {"type": "Xnor"},
+        {"type": "Multiplexer2Inp"},
+        {"type": "Multiplexer4Inp"},
+        {"type": "Multiplexer8Inp"},
+        {"type": "Collector1to2"},
+        {"type": "Collector1to3"},
+        {"type": "Collector1to8"}
+
+    ],
+    "hints": [
+        "De Morgan won't help you here...",
+        "You need two additional Inputs. one should be 1 and the other one should be 0.",
+        "You just learned about multiplexers. Can you use them to solve this problem?",
+        "What if you collect A, B and C to one signal and feed it into the selection input of a multiplexer? What would be the inputs of the multiplexer then?",
+        "All the combinations of $A,\\overline{A},B,\\overline{B},C,\\overline{C}$ in the collected wire are unique numbers. So each of those combinations will correspond to one of the multiplexers inputs.",
+        "After you connected A,B,C to the collector have a look into the collector to see the numbers and set the corresponding multiplexer inputs to 1 or 0 based on the original expression."
+    ],
+    "hints_de": [
+        "De Morgan wird dir hier nicht helfen...",
+        "Du brauchst zwei zusätzliche Inputs. Einer sollte 1 sein und der andere 0.",
+        "Du hast gerade etwas über Multiplexer gelernt. Kannst du sie nutzen, um dieses Problem zu lösen?",
+        "Was wäre, wenn du A, B und C zu einem Signal sammelst und es in den Auswahl-Eingang eines Multiplexers einspeist? Was wären dann die Eingänge des Multiplexers?",
+        "Alle Kombinationen von $A,\\overline{A},B,\\overline{B},C,\\overline{C}$ in der gesammelten Leitung sind einzigartige Zahlen. Also wird jede dieser Kombinationen einem der Multiplexereingänge entsprechen.",
+        "Nachdem du A, B, C mit dem Collector verbunden hast, schau dir den Collector an, um die Zahlen zu sehen, und setze die entsprechenden Multiplexereingänge basierend auf dem ursprünglichen Ausdruck auf 1 oder 0."
+    ],
+    "maxComponentCount": 8,
+    "tests": [
+        {"inputs": [[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[0,1],[1,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
+        {"inputs": [[1,1],[0,1],[1,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1],[0,1]], "expected_output": [[0,1]]},
+        {"inputs": [[1,1],[1,1],[1,1]], "expected_output": [[1,1]]}
+    ],
+    "success_message": "This was kinda hard. And it is not so common used in practice because it doesn't minimize the number of gates. But a fun way to reach a deeper understanding of how to use multiplexers. And it shows that there are often multiple ways to solve a problem in digital logic.",
+    "success_message_de": "Das war ziemlich schwer. Und es wird in der Praxis nicht so häufig verwendet, weil es nicht die Anzahl der Gatter minimiert. Aber eine lustige Möglichkeit, ein tieferes Verständnis dafür zu bekommen, wie",
+    "bonus_level": true
+}

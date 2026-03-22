@@ -1,7 +1,7 @@
 {
     "level_id": 9,
-    "name": "Functional Completeness Challenge 1",
-    "name_de": "Funktionale Vollständigkeit Herausforderung 1",
+    "name": "Minimization Challenge 1",
+    "name_de": "Minimierungsherausforderung 1",
     "description": "Heieiei, looks like an intern was at work here. That's way too many gates!",
     "description_de": "Heieiei, da war wohl ein Praktikant am Werk. Das sind viel zu viele Gatter!",
     "difficulty": "Hard",
@@ -85,11 +85,15 @@
     ],
     "hints": [
         "Try to simplify the circuit using Boolean algebra rules. For example, look for common sub-expressions that can be factored out, or apply De Morgan's laws to reduce the number of gates needed.",
-        "I cannot explain it here but have you heard about KV diagrams? They are a great tool to simplify boolean expressions and thus circuits."
+        "I cannot explain it here but have you heard about KV diagrams? They are a great tool to simplify boolean expressions and thus circuits.",
+        "The expression is $A\\overline{B}C+ \\overline{A}\\overline{B}C + \\overline{A}B\\overline{C} + \\overline{A}BC",
+        "That can be simplified to $\\overline{A}B + \\overline{B}C$"
     ],
     "hints_de": [
         "Versuche, die Schaltung mit den Regeln der booleschen Algebra zu vereinfachen. Suche zum Beispiel nach gemeinsamen Teilausdrücken, die herausgefiltert werden können, oder wende De Morgans Gesetze an, um die Anzahl der benötigten Gatter zu reduzieren.",
-        "Ich kann es hier nicht erklären, aber hast du schon von KV-Diagrammen gehört? Sie sind ein großartiges Werkzeug, um boolesche Ausdrücke und damit Schaltungen zu vereinfachen."
+        "Ich kann es hier nicht erklären, aber hast du schon von KV-Diagrammen gehört? Sie sind ein großartiges Werkzeug, um boolesche Ausdrücke und damit Schaltungen zu vereinfachen.",
+        "Der Ausdruck ist $A\\overline{B}C+ \\overline{A}\\overline{B}C + \\overline{A}B\\overline{C} + \\overline{A}BC$",
+        "Das kann zu $\\overline{A}B + \\overline{B}C$ vereinfacht werden"
     ],
     "maxComponentCount": 9,
     "tests": [

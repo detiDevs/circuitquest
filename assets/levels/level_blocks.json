@@ -60,8 +60,14 @@
         },
         {
           "id": 9,
-          "name": "Functional Completeness Challenge 1",
-          "name_de": "Funktionale Vollständigkeit Herausforderung 1",
+          "name": "Minimization Challenge 1",
+          "name_de": "Minimierungsherausforderung 1",
+          "bonus_level": true
+        },
+        {
+          "id": 23,
+          "name": "Minimization Challenge 2",
+          "name_de": "Minimierungsherausforderung 2",
           "bonus_level": true
         }
       ]
@@ -111,6 +117,12 @@
           "id": 17,
           "name": "Decoder",
           "name_de": "Decoder"
+        },
+        {
+          "id": 24,
+          "name": "Minimization Challenge 3",
+          "name_de": "Minimierungsherausforderung 3",
+          "bonus_level": true
         }
       ]
     },
