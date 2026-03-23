@@ -1,84 +1,70 @@
 {
     "level_id": 10,
-    "name": "D-Latch",
-    "description": "Building on the RS-Flipflop, a D latch is a digital memory element that stores one bit of information. It has two main inputs: the data input (D) and the enable input (sometimes called gate, clock, or latch enable). When the enable input is active (1), the output Q follows the data input D immediately, making the latch \"transparent.\" When the enable input is deactivated (0), the latch holds or \"stores\" the last value present at the data input, regardless of any further changes to D. A D-Latch removes the invalid RS combination by creating S and R from a data input D. The clock imput C is the upper input and the data input D is the lower input.",
-    "difficulty": "Middle",
+    "name": "Collectors and Splitters",
+    "name_de": "Sammler und Verteiler",
+    "description": "We will now start to work with signals wider than 1 bit. \n\nIn order to do that, we need to use Collectors and Splitters. \n\nA Collector takes multiple 1-bit inputs and combines them into a single multi-bit signal. \n\nA Splitter does the opposite: it takes a multi-bit signal and splits it into multiple 1-bit outputs. \n\n\nA 8-bit signal can be represented as a single line (that would be a 8bit bus), but it can also be represented as 8 lines. Collectors and Splitters allow us to switch between these two representations. \n\nIn order to make it easier to set a value for a 8-bit input you can set a number between 0 and 255. The 8 single wires that you get from a Splitter are the binary representation of that number.",
+    "description_de": "Wir werden jetzt anfangen, mit Signalen zu arbeiten, die breiter als 1 Bit sind. \n\nUm dies zu tun, müssen wir Sammler und Verteiler verwenden. \n\nEin Sammler nimmt mehrere 1-Bit-Eingänge und kombiniert sie zu einem einzigen Mehrbit-Signal. \n\nEin Verteiler macht das Gegenteil: Er nimmt ein Mehrbit-Signal und teilt es in mehrere 1-Bit-Ausgänge auf. \n\nEin 8-Bit-Signal kann als einzelne Leitung dargestellt werden (das wäre dann ein 8 Bit Bus), aber es kann auch als 8 Leitungen dargestellt werden. Sammler und Verteiler ermöglichen es uns, zwischen diesen beiden Darstellungen zu wechseln. \n\nUm es einfacher zu machen, einen Wert für einen 8-Bit-Eingang festzulegen, kannst du eine Zahl zwischen 0 und 255 eingeben. Die 8 einzelnen Drähte, die du von einem Verteiler erhältst, sind die binäre Darstellung dieser Zahl.",
+    "difficulty": "Easy",
+    "difficulty_de": "Einfach",
     "objectives": [
-        "Build a D-Latch using two NOR gates, two AND gates and one NOT gate.",
-        " "
+        "Now you know how Collectors and Splitters work. with that knowledge, extract the bit with the value of $2^4$ and $2^6$"
+    ],
+    "objectives_de": [
+        "Jetzt weißt du, wie Sammler und Verteiler funktionieren. Mit diesem Wissen extrahiere die Bits mit dem Wert von $2^4$ und $2^6$"
     ],
     "components": [
         {
             "type": "Input",
             "position": [
                 0,
-                1
+                3
             ],
-            "immovable": true
-        },
-        {
-            "type": "Input",
-            "position": [
-                0,
-                5
-            ],
-            "immovable": true
+            "immovable": true,
+            "initialBitWidth": 8
         },
         {
             "type": "Output",
             "position": [
-                8,
-                1
+                4,
+                2
             ],
-            "immovable": true
+            "immovable": true,
+            "label": "2^4"
         },
         {
             "type": "Output",
             "position": [
-                8,
-                5
+                4,
+                4
             ],
-            "immovable": true
+            "immovable": true,
+            "label": "2^6"
         }
     ],
     "available_components": [
         {
-            "type": "Nor"
-        },
-        {
-            "type": "And"
-        },
-        {
-            "type": "Not"
+            "type": "Splitter8to1"
         }
     ],
     "hints": [
-        "Try To rebuild a RS-Flipflop using two NOR gates first.",
-        "As seen in the RS Flipflop the Q output changes by switching which of the two inputs is 1 and which is 0. In the D-Latch we want to control when the output changes, by only changing the Q output when the clock input is 1. ",
-        "Use AND Gates to check if the clock input is 1. Connect the output of the AND gates to the inputs of the RS Flipfop.",
-        "Connect D to the upper AND Gate and the inverted D, using a Not Gate, to the lower AND Gate."
+        "The outputs of the Splitter are ordered from top to bottom. From $2^0$ to $2^7$",
+        "Connect the 5th output of the Splitter to the Output labeled outValue16 to the output labeled \"2^4\" and connect the 7th output of the Splitter to the Output labeled outValue64 to the output labeled \"2^6\""
     ],
     "hints_de": [
-        "Versuche zuerst, ein RS-Flipflop mit zwei NOR-Gattern zu rekonstruieren.",
-        "Wie beim RS-Flipflop geändert wird der Q-Ausgang durch Umschalten, welcher der beiden Eingänge 1 und welcher 0 ist. Im D-Latch wollen wir steuern, wann sich die Ausgänge ändern, indem wir den Q-Ausgang nur ändern, wenn der Clock-Eingang 1 ist.",
-        "Verwende UND-Gatter, um zu prüfen, ob der Clock-Eingang 1 ist. Verbinde den Ausgang der UND-Gatter mit den Eingängen des RS-Flipflops.",
-        "Verbinde D mit dem oberen UND-Gatter und das invertierte D mit einem NICHT-Gatter mit dem unteren UND-Gatter."
+        "Die Ausgänge des Verteilers sind von oben nach unten angeordnet. Von $2^0$ bis $2^7$",
+        "Verbinde den 5. Ausgang des Verteilers mit dem Ausgang labeled outValue16 mit dem Ausgang labeled \"2^4\" und verbinde den 7. Ausgang des Verteilers mit dem Ausgang labeled outValue64 mit dem Ausgang labeled \"2^6\""
     ],
     "tests": [
         {
             "inputs": [
                 [
-                    1,
-                    1
-                ],
-                [
-                    1,
-                    1
+                    0,
+                    8
                 ]
             ],
             "expected_output": [
                 [
-                    1,
+                    0,
                     1
                 ],
                 [
@@ -90,17 +76,31 @@
         {
             "inputs": [
                 [
-                    0,
-                    1
-                ],
-                [
-                    0,
-                    1
+                    16,
+                    8
                 ]
             ],
             "expected_output": [
                 [
                     1,
+                    1
+                ],
+                [
+                    0,
+                    0
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    32,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
                     1
                 ],
                 [
@@ -112,34 +112,8 @@
         {
             "inputs": [
                 [
-                    0,
-                    1
-                ],
-                [
-                    1,
-                    1
-                ]
-            ],
-            "expected_output": [
-                [
-                    1,
-                    1
-                ],
-                [
-                    0,
-                    1
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    1,
-                    1
-                ],
-                [
-                    0,
-                    1
+                    64,
+                    8
                 ]
             ],
             "expected_output": [
@@ -156,56 +130,8 @@
         {
             "inputs": [
                 [
-                    0,
-                    1
-                ],
-                [
-                    0,
-                    1
-                ]
-            ],
-            "expected_output": [
-                [
-                    0,
-                    1
-                ],
-                [
-                    1,
-                    1
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    0,
-                    1
-                ],
-                [
-                    1,
-                    1
-                ]
-            ],
-            "expected_output": [
-                [
-                    0,
-                    1
-                ],
-                [
-                    1,
-                    1
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    1,
-                    1
-                ],
-                [
-                    1,
-                    1
+                    255,
+                    8
                 ]
             ],
             "expected_output": [
@@ -214,17 +140,10 @@
                     1
                 ],
                 [
-                    0,
+                    1,
                     1
                 ]
             ]
         }
-    ],
-    "name_de": "D-Latch",
-    "description_de": "Aufbauend auf dem RS-Flipflop ist ein D-Latch ein digitales Speicherelement, das ein Bit an Informationen speichert. Es hat zwei Haupteingänge: den Dateneinggang (D) und den Enable-Eingang (manchmal auch Gate, Clock oder Latch Enable genannt). Wenn der Enable-Eingang aktiv ist (1), folgt der Ausgang Q dem Dateneinggang D unmittelbar, was den Latch transparent macht. Wenn der Enable-Eingang deaktiviert ist (0), behält der Latch den letzten Wert, der am Dateneinggang vorhanden war, unabhängig von weiteren Änderungen an D. Ein D-Latch behebt die ungültige RS-Kombination, indem S und R aus einem Dateneinggang D erstellt werden. Der Clock-Eingang C ist der obere Eingang und der Dateneinggang D ist der untere Eingang.",
-    "difficulty_de": "Mittel",
-    "objectives_de": [
-        "Erstelle ein D-Latch mit zwei NOR-Gattern, zwei UND-Gattern und einem NICHT-Gatter.",
-        " "
     ]
 }

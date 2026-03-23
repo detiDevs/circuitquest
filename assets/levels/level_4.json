@@ -1,35 +1,160 @@
 {
     "level_id": 4,
-    "name": "Functional Completeness 2",
-    "name_de": "Funktionale Vollständigkeit 2",
-    "description": "NAND gates can also create any function, similar to NOR gates.",
-    "description_de": "Ähnlich wie NOR-Gatter können NAND-Gatter auch jede Funktion erstellen.",
-    "difficulty": "Medium",
-    "difficulty_de": "Mittel",
+    "name": "NAND Gate",
+    "name_de": "NAND-Gatter",
+    "description": "The NAND gate returns false only if both inputs are true.",
+    "description_de": "Das NAND-Gatter gibt nur dann falsch zurück, wenn beide Eingänge wahr sind.",
+    "difficulty": "Easy",
+    "difficulty_de": "Einfach",
+    "truth_table": [
+        [
+            "A",
+            "B",
+            "A NAND B"
+        ],
+        [
+            0,
+            0,
+            1
+        ],
+        [
+            0,
+            1,
+            1
+        ],
+        [
+            1,
+            0,
+            1
+        ],
+        [
+            1,
+            1,
+            0
+        ]
+    ],
     "objectives": [
-        "Create a combination of NAND gates which is functionally identical to an AND gate."
+        "Given the truth table, can you figure out how to create a NAND gate using NOT and AND gates?"
     ],
     "objectives_de": [
-        "Erstelle eine Kombination von NAND-Gattern, die funktional identisch mit einem UND-Gatter ist."
+        "Anhand der Wahrheitstabelle, kannst du herausfinden, wie man ein NAND-Gatter mit NOT- und AND-Gattern erstellt?"
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"}, 
-        {"type": "Output", "position": [6,2], "immovable": true}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                2
+            ],
+            "immovable": true
+        }
     ],
     "available_components": [
-        {"type": "Nand"}
+        {
+            "type": "Not"
+        },
+        {
+            "type": "And"
+        }
     ],
     "hints": [
-        "Try placing only 3 NAND gates."
+        "You can create a NAND gate by first creating an AND gate and then inverting its output with a NOT gate."
     ],
     "hints_de": [
-        "Versuche, nur 3 NAND-Gatter zu platzieren."
+        "Das NAND-Gatter kann erstellt werden, indem zuerst ein UND-Gatter erstellt und dann dessen Ausgang mit einem NICHT-Gatter invertiert wird."
     ],
     "tests": [
-        {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1]], "expected_output": [[1,1]]}
-    ]
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
+    ],
+    "success_message": "Now you have successfully created a NAND gate! \nYou understood that the NAND gate is a combination of an AND gate followed by a NOT gate. \n\nWe don't want to bore you with more similar levels so the level for the NOR and XNOR gate are bonus levels.",
+    "success_message_de": "Jetzt hast du erfolgreich ein NAND-Gatter erstellt! \nDu hast verstanden, dass das NAND-Gatter eine Kombination aus einem UND-Gatter gefolgt von einem NICHT-Gatter ist. \n\nWir wollen dich nicht mit weiteren ähnlichen Levels langweilen, also sind die Level für das NOR- und XNOR-Gatter Bonuslevels."
 }

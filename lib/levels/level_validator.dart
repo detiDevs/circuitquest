@@ -78,7 +78,7 @@ class LevelValidator {
       for (int testIndex = 0; testIndex < tests.length; testIndex++) {
         final test = tests[testIndex];
 
-        if (test.inputs.length != inputSources.length) {
+        if (test.inputs.length > inputSources.length) {
           return LevelValidationResult(
             isCorrect: false,
             errorMessage:

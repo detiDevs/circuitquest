@@ -1,38 +1,35 @@
 {
     "level_id": 14,
-    "name": "1bit ALU",
-    "description": "We’re now in the process of putting together a processor. The actual computation happens in the Arithmetic-Logical-Unit (ALU). In this level we'll build a simple 1-bit ALU that can compute A AND B, A OR B, or A + B (sum bit). A 2-bit control signal `op` selects the operation. Later we want to expand the ALU to more bits, so our adder needs to have a carry in and a carry out. For now use a seperate \"dummy\" input as a carry in tied to 0, and connect the carry out to the labeled output.",
+    "name": "Bigger MUX",
+    "name_de": "Größerer MUX",
+    "description": "What if we want to select from more than 2 input values with a MUX? This cannot be done with a 0 or 1 control signal. Combining 2 inputs gives a 2-bit selector which can choose among 2^2 = 4 values in a 4-input MUX.",
+    "description_de": "Was ist, wenn wir mit einem MUX aus mehr als 2 Eingabewerten wählen möchten? Dies kann nicht mit einem 0- oder 1-Steuersignal erreicht werden. Kombinieren von 2 Eingängen einen 2-Bit-Selektor, der unter 2^2 = 4 Werten in einem 4-Eingang-MUX wählen kann.",
     "difficulty": "Medium",
+    "difficulty_de": "Mittel",
     "objectives": [
-        "Build a 1-bit ALU with inputs A and B and a 2-bit operation code `op` (op1,op0).",
-        "Output should be:\n- AND when op = 00\n- OR when op = 01\n- Sum (A + B, sum bit) when op = 10"
+        "Combine single-bit Inputs to make a 2-bit selector compatible with a 4-input Multiplexer (Multiplexer4Inp)."
+    ],
+    "objectives_de": [
+        "Kombiniere Single-Bit-Eingänge, um einen 2-Bit-Selektor zu erstellen, der mit einem 4-Eingang-Multiplexer (Multiplexer4Inp) kompatibel ist."
     ],
     "components": [
         {
             "type": "Input",
             "position": [
-                12,
-                11
+                0,
+                1
             ],
             "immovable": true,
-            "label": "op0"
+            "label": "S0"
         },
         {
             "type": "Input",
             "position": [
-                12,
-                10
+                0,
+                3
             ],
             "immovable": true,
-            "label": "op1"
-        },
-        {
-            "type": "Collector1to2",
-            "position": [
-                13,
-                10
-            ],
-            "immovable": true
+            "label": "S1"
         },
         {
             "type": "Input",
@@ -55,62 +52,47 @@
         {
             "type": "Input",
             "position": [
-                6,
+                0,
+                9
+            ],
+            "immovable": true,
+            "label": "C"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
                 11
             ],
             "immovable": true,
-            "label": "carry_in"
+            "label": "D"
         },
         {
             "type": "Output",
             "position": [
-                16,
-                5
+                10,
+                6
             ],
-            "immovable": true,
-            "label": "OUT"
-        },
-        {
-            "type": "Output",
-            "position": [
-                16,
-                3
-            ],
-            "immovable": true,
-            "label": "Carry_out"
+            "immovable": true
         }
     ],
     "available_components": [
         {
-            "type": "And"
-        },
-        {
-            "type": "Or"
-        },
-        {
-            "type": "FullAdder"
+            "type": "Collector1to2"
         },
         {
             "type": "Multiplexer4Inp"
         }
     ],
-    "connections": [
-        {
-            "origin": 0,
-            "originKey": "outValue",
-            "destination": 2,
-            "destinationKey": "input2"
-        },
-        {
-            "origin": 1,
-            "originKey": "outValue",
-            "destination": 2,
-            "destinationKey": "input1"
-        }
-    ],
     "hints": [
-        "Create three candidate signals: A AND B, A OR B, and the sum bit from a FullAdder (ignore carry). Feed these as three data inputs to the MUX.",
-        "Map the MUX data inputs so that selector 00 -> AND, 01 -> OR, 10 -> SUM. The unused selector (11) can be tied to 0 or any value (tests do not use it)."
+        "Use 4 of the inputs as the data inputs (A,B,C,D) for the 4-input MUX and combine the remaining 2 inputs with the Collector to form a 2-bit selector.",
+        "A typical mapping: Inputs 0-3 = data inputs A..D, Inputs 4-5 = selector bits S0 (LSB), S1 (MSB).",
+        "The collector will pack the two selector bits into a 2-bit control signal for the 4-input MUX."
+    ],
+    "hints_de": [
+        "Verwende 4 der Eingänge als Daten (A,B,C,D) für den 4-Eingang-MUX und kombiniere die verbleibenden 2 Eingänge mit dem Kollektor, um einen 2-Bit-Selektor zu bilden.",
+        "Eine typische Zuordnung: Eingänge 0-3 = Daten A..D, Eingänge 4-5 = Selektor-Bits S0 (LSB), S1 (MSB).",
+        "Der Kollektor packt die zwei Selektor-Bits in ein 2-Bit-Steuersignal für den 4-Eingang-MUX."
     ],
     "solution": "",
     "tests": [
@@ -135,13 +117,115 @@
                 [
                     0,
                     1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     0,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
                 ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     0,
                     1
@@ -169,13 +253,81 @@
                 [
                     0,
                     1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     0,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
                 ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     0,
                     1
@@ -203,15 +355,117 @@
                 [
                     0,
                     1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
                 [
                     0,
                     1
                 ],
                 [
                     0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
                     1
                 ]
             ]
@@ -237,13 +491,81 @@
                 [
                     0,
                     1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     1,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
                 ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     1,
                     1
@@ -271,13 +593,149 @@
                 [
                     0,
                     1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     0,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
                 ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     0,
                     1
@@ -305,13 +763,81 @@
                 [
                     0,
                     1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     1,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
                 ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     0,
                     1
@@ -339,13 +865,115 @@
                 [
                     0,
                     1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     1,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
                 ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     0,
                     1
@@ -373,13 +1001,47 @@
                 [
                     0,
                     1
+                ],
+                [
+                    1,
+                    1
                 ]
             ],
             "expected_output": [
                 [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
                     1,
                     1
                 ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     1,
                     1
@@ -407,13 +1069,115 @@
                 [
                     0,
                     1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     0,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
                 ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     0,
                     1
@@ -441,13 +1205,115 @@
                 [
                     0,
                     1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     1,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
                 ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     0,
                     1
@@ -475,13 +1341,81 @@
                 [
                     0,
                     1
+                ],
+                [
+                    1,
+                    1
                 ]
             ],
             "expected_output": [
                 [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
                     1,
                     1
                 ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     0,
                     1
@@ -509,13 +1443,47 @@
                 [
                     0,
                     1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
                     0,
                     1
                 ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     1,
                     1
@@ -543,29 +1511,494 @@
                 [
                     1,
                     1
+                ],
+                [
+                    1,
+                    1
                 ]
             ],
             "expected_output": [
                 [
                     1,
                     1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
                 ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
                 [
                     1,
                     1
                 ]
             ]
         }
-    ],
-    "name_de": "1-Bit-ALU",
-    "description_de": "Wir sind jetzt im Prozess, einen Prozessor zusammenzustellen. Die tatsächliche Berechnung erfolgt in der Arithmetic-Logical-Unit (ALU). In dieser Stufe bauen wir eine einfache 1-Bit-ALU, die A UND B, A ODER B oder A + B (Summenbit) berechnen kann. Ein 2-Bit-Steuersignal `op` wählt die Operation. Später wollen wir die ALU auf mehr Bits erweitern, also muss unser Addierer einen Carry-In und einen Carry-Out haben. Verwende für jetzt einen separaten \"Dummy\"-Eingang als Carry-In mit 0 verbunden und verbinde den Carry-Out mit dem gekennzeichneten Ausgang.",
-    "difficulty_de": "Mittel",
-    "objectives_de": [
-        "Baue eine 1-Bit-ALU mit Eingängen A und B und einem 2-Bit-Operationscode `op` (op1,op0).",
-        "Der Ausgang sollte sein:\n- UND wenn op = 00\n- ODER wenn op = 01\n- Summe (A + B, Summenbit) wenn op = 10"
-    ],
-    "hints_de": [
-        "Erstelle drei Kandidaten-Signale: A UND B, A ODER B und das Summenbit aus einem FullAdder (ignoriere Carry). Füttere diese als drei Daten-Eingänge in den MUX.",
-        "Ordne die MUX-Daten-Eingänge so zu, dass Selektor 00 -> UND, 01 -> ODER, 10 -> SUMME. Der ungenutzte Selektor (11) kann auf 0 oder einen beliebigen Wert gesetzt werden (Tests verwenden ihn nicht)."
     ]
 }
