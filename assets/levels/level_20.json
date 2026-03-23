@@ -13,16 +13,64 @@
         "Erstelle bei Eingängen A und B und Steuerung S eine Schaltung, so dass:\n- wenn S=0, ist der Ausgang gleich A\n- wenn S=1, ist der Ausgang gleich B"
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "Cin"},
-        {"type": "Input", "position": [0,3], "immovable": true, "initialBitWidth": 8, "label": "A"},
-        {"type": "Input", "position": [0,5], "immovable": true, "initialBitWidth": 8, "label": "B"}, 
-        {"type": "Output", "position": [8,3], "immovable": true, "label": "Sum"},
-        {"type": "Output", "position": [8,5], "immovable": true, "label": "Cout"} 
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "Cin"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "initialBitWidth": 8,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                5
+            ],
+            "immovable": true,
+            "initialBitWidth": 8,
+            "label": "B"
+        },
+        {
+            "type": "Output",
+            "position": [
+                8,
+                3
+            ],
+            "immovable": true,
+            "label": "Sum"
+        },
+        {
+            "type": "Output",
+            "position": [
+                8,
+                5
+            ],
+            "immovable": true,
+            "label": "Cout"
+        }
     ],
     "available_components": [
-        {"type": "FullAdder"},
-        {"type": "Splitter8to1"},
-        {"type": "Collector1to8"}
+        {
+            "type": "FullAdder"
+        },
+        {
+            "type": "Splitter8to1"
+        },
+        {
+            "type": "Collector1to8"
+        }
     ],
     "hints": [
         "You can split the 8-bit inputs into single bits, add each bit with a Full Adder, and then collect the sum bits back into an 8-bit output.",
@@ -37,17 +85,266 @@
         "Verbinde den letzten Carry-Out mit dem Cout-Ausgang, um anzuzeigen, ob es einen Überlauf aus dem höchstwertigen Bit gab."
     ],
     "tests": [
-        {"inputs": [[0,1],[0,8],[0,8]], "expected_output": [[0,8],[0,1]]},
-        {"inputs": [[0,1],[255,8],[1,8]], "expected_output": [[0,8],[1,1]]},
-        {"inputs": [[0,1],[255,8],[255,8]], "expected_output": [[254,8],[1,1]]},
-        {"inputs": [[0,1],[128,8],[128,8]], "expected_output": [[0,8],[1,1]]},
-        {"inputs": [[0,1],[127,8],[127,8]], "expected_output": [[254,8],[0,1]]},
-        {"inputs": [[1,1],[0,8],[255,8]], "expected_output": [[0,8],[1,1]]},
-        {"inputs": [[1,1],[255,8],[0,8]], "expected_output": [[0,8],[1,1]]},
-        {"inputs": [[1,1],[255,8],[255,8]], "expected_output": [[255,8],[1,1]]},
-        {"inputs": [[1,1],[128,8],[128,8]], "expected_output": [[1,8],[1,1]]},
-        {"inputs": [[1,1],[127,8],[127,8]], "expected_output": [[255,8],[0,1]]}
-
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    8
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    255,
+                    8
+                ],
+                [
+                    1,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    255,
+                    8
+                ],
+                [
+                    255,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    254,
+                    8
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    128,
+                    8
+                ],
+                [
+                    128,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    127,
+                    8
+                ],
+                [
+                    127,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    254,
+                    8
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    8
+                ],
+                [
+                    255,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    255,
+                    8
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    8
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    255,
+                    8
+                ],
+                [
+                    255,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    255,
+                    8
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    128,
+                    8
+                ],
+                [
+                    128,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    8
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    127,
+                    8
+                ],
+                [
+                    127,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    255,
+                    8
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
     ],
     "success_message": "Very nice! You successfully built a circuit that can add two 8-bit values together, producing an 8-bit sum and a carry-out to indicate overflow. This is a fundamental operation in digital logic and is used in countless applications, from simple calculators to complex CPUs. From now on you can use an Adder with 32bit wide inputs!",
     "success_message_de": "Sehr gut! Du hast erfolgreich eine Schaltung gebaut, die zwei 8-Bit-Werte addieren kann und dabei eine 8-Bit-Summe und einen Carry-Out produziert, um einen Überlauf anzuzeigen. Dies ist eine grundlegende Operation in der digitalen Logik und wird in unzähligen Anwendungen verwendet, von einfachen Taschenrechnern bis hin zu komplexen CPUs. Ab jetzt kannst du einen Adder mit 32-Bit breiten Eingängen verwenden!"

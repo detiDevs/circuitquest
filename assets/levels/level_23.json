@@ -1,5 +1,5 @@
 {
-  "level_id": 23,
+    "level_id": 23,
     "name": "Minimization Challenge 2",
     "name_de": "Minimierungsherausforderung 2",
     "description": "Too many gates again...",
@@ -13,47 +13,207 @@
         "Baue einen Schaltkreis gleicher Funktionalität, allerdings mit maximal 3 Gattern neben den Inputs und dem Output."
     ],
     "components": [
-        {"type": "Input", "position": [0,2], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"},
-        {"type": "Input", "position": [0,4], "immovable": true, "label": "C"},
-        {"type": "Input", "position": [0,5], "immovable": true, "label": "D"},
-        {"type": "Not", "position": [2,2], "label": "NOT A"},
-        {"type": "Not", "position": [2,3], "label": "NOT B"},
-        {"type": "Not", "position": [2,4], "label": "NOT C"},
-        {"type": "Not", "position": [2,5], "label": "NOT D"},
-        {"type": "Or", "position": [4,3]},
-        {"type": "And", "position": [4,5]},
-        {"type": "And", "position": [6,4]},
-        {"type": "Not", "position": [8,4]},
-        {"type": "Output", "position": [10,4], "immovable": true}
+        {
+            "type": "Input",
+            "position": [
+                0,
+                2
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                4
+            ],
+            "immovable": true,
+            "label": "C"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                5
+            ],
+            "immovable": true,
+            "label": "D"
+        },
+        {
+            "type": "Not",
+            "position": [
+                2,
+                2
+            ],
+            "label": "NOT A"
+        },
+        {
+            "type": "Not",
+            "position": [
+                2,
+                3
+            ],
+            "label": "NOT B"
+        },
+        {
+            "type": "Not",
+            "position": [
+                2,
+                4
+            ],
+            "label": "NOT C"
+        },
+        {
+            "type": "Not",
+            "position": [
+                2,
+                5
+            ],
+            "label": "NOT D"
+        },
+        {
+            "type": "Or",
+            "position": [
+                4,
+                3
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                4,
+                5
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                6,
+                4
+            ]
+        },
+        {
+            "type": "Not",
+            "position": [
+                8,
+                4
+            ]
+        },
+        {
+            "type": "Output",
+            "position": [
+                10,
+                4
+            ],
+            "immovable": true
+        }
     ],
     "connections": [
-      {"origin": 0, "originKey": "outValue", "destination": 4, "destinationKey": "input"},
-      {"origin": 1, "originKey": "outValue", "destination": 5, "destinationKey": "input"},
-      {"origin": 2, "originKey": "outValue", "destination": 6, "destinationKey": "input"},
-      {"origin": 3, "originKey": "outValue", "destination": 7, "destinationKey": "input"},
-
-      {"origin": 4, "originKey": "outValue", "destination": 8, "destinationKey": "input1"},
-      {"origin": 5, "originKey": "outValue", "destination": 8, "destinationKey": "input2"},
-      {"origin": 6, "originKey": "outValue", "destination": 9, "destinationKey": "input1"},
-      {"origin": 7, "originKey": "outValue", "destination": 9, "destinationKey": "input2"},
-
-      {"origin": 8, "originKey": "outValue", "destination": 10, "destinationKey": "input1"},
-      {"origin": 9, "originKey": "outValue", "destination": 10, "destinationKey": "input2"},
-
-      {"origin": 10, "originKey": "outValue", "destination": 11, "destinationKey": "input"},
-
-      {"origin": 11, "originKey": "outValue", "destination": 12, "destinationKey": "input"}
-      
+        {
+            "origin": 0,
+            "originKey": "outValue",
+            "destination": 4,
+            "destinationKey": "input"
+        },
+        {
+            "origin": 1,
+            "originKey": "outValue",
+            "destination": 5,
+            "destinationKey": "input"
+        },
+        {
+            "origin": 2,
+            "originKey": "outValue",
+            "destination": 6,
+            "destinationKey": "input"
+        },
+        {
+            "origin": 3,
+            "originKey": "outValue",
+            "destination": 7,
+            "destinationKey": "input"
+        },
+        {
+            "origin": 4,
+            "originKey": "outValue",
+            "destination": 8,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 5,
+            "originKey": "outValue",
+            "destination": 8,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 6,
+            "originKey": "outValue",
+            "destination": 9,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 7,
+            "originKey": "outValue",
+            "destination": 9,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 8,
+            "originKey": "outValue",
+            "destination": 10,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 9,
+            "originKey": "outValue",
+            "destination": 10,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 10,
+            "originKey": "outValue",
+            "destination": 11,
+            "destinationKey": "input"
+        },
+        {
+            "origin": 11,
+            "originKey": "outValue",
+            "destination": 12,
+            "destinationKey": "input"
+        }
     ],
     "available_components": [
-        {"type": "And"},
-        {"type": "Or"},
-        {"type": "Not"},
-        {"type": "Nand"},
-        {"type": "Nor"},
-        {"type": "Xor"},
-        {"type": "Xnor"}
+        {
+            "type": "And"
+        },
+        {
+            "type": "Or"
+        },
+        {
+            "type": "Not"
+        },
+        {
+            "type": "Nand"
+        },
+        {
+            "type": "Nor"
+        },
+        {
+            "type": "Xor"
+        },
+        {
+            "type": "Xnor"
+        }
     ],
     "hints": [
         "Try to simplify the circuit using Boolean algebra rules. For example, look for common sub-expressions that can be factored out, or apply De Morgan's laws to reduce the number of gates needed.",
@@ -75,22 +235,422 @@
     ],
     "maxComponentCount": 8,
     "tests": [
-        {"inputs": [[0,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[0,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[1,1],[1,1]], "expected_output": [[1,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        }
     ],
     "success_message": "That was a relatively simple simplification, but it really shows the power of Boolean algebra and how you can use it to optimize circuits.",
     "success_message_de": "Das war eine relativ einfache Vereinfachung, aber es zeigt wirklich die Macht der booleschen Algebra und wie du sie nutzen kannst, um Schaltungen zu optimieren.",

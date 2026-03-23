@@ -7,9 +7,31 @@
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
     "truth_table": [
-        ["x", 0,1],
-        [0,0,0],
-        [1,0,1]
+        [
+            "A",
+            "B",
+            "A AND B"
+        ],
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            1,
+            0
+        ],
+        [
+            1,
+            0,
+            0
+        ],
+        [
+            1,
+            1,
+            1
+        ]
     ],
     "objectives": [
         "Connect the inputs with an AND gate. Then connect the AND gate to the Output",
@@ -22,26 +44,116 @@
         "Wenn du die Berechnung der Schaltung sehen möchtest, stelle den Schieberegler in der oberen rechten Ecke herunter, um die Geschwindigkeit der Simulation anzupassen."
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"}, 
-        {"type": "Output", "position": [4,2], "immovable": true}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Output",
+            "position": [
+                4,
+                2
+            ],
+            "immovable": true
+        }
     ],
-    
     "available_components": [
-        {"type": "And"}
+        {
+            "type": "And"
+        }
     ],
-
     "hints": [
         "Gates on the left can be dragged into the grid"
     ],
     "hints_de": [
         "Gatter auf der linken Seite können in das Raster gezogen werden"
     ],
-
     "tests": [
-        {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1]], "expected_output": [[1,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        }
     ]
 }

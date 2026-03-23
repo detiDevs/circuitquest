@@ -7,9 +7,31 @@
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
     "truth_table": [
-        ["x", 0,1],
-        [0,1,0],
-        [1,0,1]
+        [
+            "A",
+            "B",
+            "?"
+        ],
+        [
+            0,
+            0,
+            1
+        ],
+        [
+            0,
+            1,
+            0
+        ],
+        [
+            1,
+            0,
+            0
+        ],
+        [
+            1,
+            1,
+            1
+        ]
     ],
     "objectives": [
         "Given the information that you can create all gates using only NAND, can you figure out how to create AND, OR, and NOT gates using only NAND gates?"
@@ -18,14 +40,56 @@
         "Anhand der Information, dass du alle Gatter nur mit NAND-Gattern erstellen kannst, kannst du herausfinden, wie man AND-, OR- und NOT-Gatter nur mit NAND-Gattern erstellt?"
     ],
     "components": [
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,5], "immovable": true, "label": "B"},
-        {"type": "Output", "position": [6,2], "immovable": true, "label": "AND"},
-        {"type": "Output", "position": [6,4], "immovable": true, "label": "OR"},
-        {"type": "Output", "position": [6,6], "immovable": true, "label": "NOT A"}
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                5
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                2
+            ],
+            "immovable": true,
+            "label": "AND"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                4
+            ],
+            "immovable": true,
+            "label": "OR"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                6
+            ],
+            "immovable": true,
+            "label": "NOT A"
+        }
     ],
     "available_components": [
-        {"type": "Nand"}
+        {
+            "type": "Nand"
+        }
     ],
     "hints": [
         "You can create a NOT gate using a NAND gate by connecting both inputs to the same signal.",
@@ -38,12 +102,111 @@
         "Du kannst ein OR-Gatter mit NAND-Gattern erstellen, indem du De Morgans Theorem verwendest: $\\overline{A \\land B} = \\overline{A} \\lor \\overline{B}$"
     ],
     "tests": [
-        {"inputs": [[0,1],[0,1]], "expected_output": [[0,1],[0,1],[1,1]]},
-        {"inputs": [[0,1],[1,1]], "expected_output": [[0,1],[1,1],[1,1]]},
-        {"inputs": [[1,1],[0,1]], "expected_output": [[0,1],[1,1],[0,1]]},
-        {"inputs": [[1,1],[1,1]], "expected_output": [[1,1],[1,1],[0,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
     ],
-
     "success_message": "Congratulations! That was not that easy. If you liked this level, try the bonus levels in this block",
     "success_message_de": "Glückwunsch! Das war nicht so einfach. Wenn dir dieses Level gefallen hat, probiere die Bonuslevels in diesem Block aus"
-}   
+}

@@ -23,14 +23,47 @@
         "Hinweis: $S = 1$ und $R = 1$ würde $Q$ und $\\overline{Q}$ auf 0 zwingen, was einen ungültigen (undefinierten) Zustand für ein RS-Flipflop darstellt."
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "R"},
-        {"type": "Input", "position": [0,5], "immovable": true, "label": "S"},
-        {"type": "Output", "position": [7,1], "immovable": true, "label": "Q"},
-        {"type":  "Output", "position": [7,5], "immovable": true, "label": "NOT Q"}
-
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "R"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                5
+            ],
+            "immovable": true,
+            "label": "S"
+        },
+        {
+            "type": "Output",
+            "position": [
+                7,
+                1
+            ],
+            "immovable": true,
+            "label": "Q"
+        },
+        {
+            "type": "Output",
+            "position": [
+                7,
+                5
+            ],
+            "immovable": true,
+            "label": "NOT Q"
+        }
     ],
     "available_components": [
-        {"type": "Nor"}
+        {
+            "type": "Nor"
+        }
     ],
     "hints": [
         "Try connecting outputs of the NOR gates with inputs of the NOR gates.",
@@ -44,24 +77,94 @@
     ],
     "tests": [
         {
-            "inputs": [[1,1], [0,1]],
-            "expected_output": [[0,1], [1,1]]
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
         },
         {
-            "inputs": [[0,1], [0,1]],
-            "expected_output": [[0,1], [1,1]]
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
         },
         {
-            "inputs": [[0,1], [1,1]],
-            "expected_output": [[1,1], [0,1]]
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
         },
         {
-            "inputs": [[0,1], [0,1]],
-            "expected_output": [[1,1], [0,1]]
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
         }
     ],
-
     "success_message": "Congratulations! You've successfully built an RS flip-flop using two NOR gates. This is the fundamental memory element in digital logic, demonstrating how state can be preserved through feedback. You can use this knowledge to build more complex sequential circuits in the next levels. For example to get rid of the undefined state",
     "success_message_de": "Herzlichen Glückwunsch! Du hast erfolgreich ein RS-Flipflop mit zwei NOR-Gattern gebaut. Dies ist das fundamentale Speicherelement in der digitalen Logik, das zeigt, wie der Zustand durch Rückkopplung erhalten werden kann. Du kannst dieses Wissen nutzen, um in den nächsten Levels komplexere sequentielle Schaltungen zu bauen. Zum Beispiel um den undefinierten Zustand loszuwerden"
-
 }

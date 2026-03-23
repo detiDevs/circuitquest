@@ -15,46 +15,276 @@
         "Hier gibt es keine Einschränkungen. Der Ausgang sollte ein 16-Bit-Ausgang sein, da der höchste Ausgang des Verteilers 128 sein wird und 128*64 größer als 255 ist. Andernfalls würdest du die bedeutendsten Bits des Ausgangs verlieren."
     ],
     "components": [
-        {"type": "Input", "position": [0,3], "immovable": true, "initialBitWidth": 8, "label": "A"}, 
-        {"type": "Output", "position": [8,3], "immovable": true, "label": "64*A"}  
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "initialBitWidth": 8,
+            "label": "A"
+        },
+        {
+            "type": "Output",
+            "position": [
+                8,
+                3
+            ],
+            "immovable": true,
+            "label": "64*A"
+        }
     ],
     "available_components": [
-        {"type": "Splitter8to1"},
-        {"type": "Collector1to8"},
-        {"type": "Collector8to16"}
+        {
+            "type": "Splitter8to1"
+        },
+        {
+            "type": "Collector1to8"
+        },
+        {
+            "type": "Collector8to16"
+        }
     ],
     "hints": [
         "Think about how the bits of a number change when you multiply it by 64. For example, the number 13 is represented in binary as 00001101. Think about how 832 would be represented in binary.",
         "The outputs of the Splitter are ordered from top to bottom. From $2^0$ to $2^7$",
         "To multiply a number by 64, you need two 8-bit Collectors. You need to connect those to a 8to16 Collector. ",
-        "You can connect the output of the Splitter that corresponds to $2^0$ to the input of the Collector that corresponds to $2^6$, the output of the Splitter that corresponds to $2^1$ to the input of the Collector that corresponds to $2^7$. The higher outputs of the Splitter need to be connected to the second 8-bit Collector. Here the first input usually representing $2^0$ represents $2^8$, since we will connect the output of this Collector to the input of the 8to16 Collector that corresponds to $2^8$. The second input representing $2^1$ represents $2^9$, and so on." 
-        ],
+        "You can connect the output of the Splitter that corresponds to $2^0$ to the input of the Collector that corresponds to $2^6$, the output of the Splitter that corresponds to $2^1$ to the input of the Collector that corresponds to $2^7$. The higher outputs of the Splitter need to be connected to the second 8-bit Collector. Here the first input usually representing $2^0$ represents $2^8$, since we will connect the output of this Collector to the input of the 8to16 Collector that corresponds to $2^8$. The second input representing $2^1$ represents $2^9$, and so on."
+    ],
     "hints_de": [
-         "Denke darüber nach, wie sich die Bits einer Zahl ändern, wenn du sie mit 64 multiplizierst. Zum Beispiel wird die Zahl 13 in binär als 00001101 dargestellt. Überlege, wie 832 in binär dargestellt werden würde.",
-         "Die Ausgänge des Verteilers sind von oben nach unten angeordnet. Von $2^0$ bis $2^7$",
-         "Um eine Zahl mit 64 zu multiplizieren, benötigst du zwei 8-Bit-Sammler. Du musst diese mit einem 8-zu-16-Sammler verbinden.",
-         "Du kannst den Ausgang des Verteilers, der $2^0$ entspricht, mit dem Eingang des Sammlers verbinden, der $2^6$ entspricht, den Ausgang des Verteilers, der $2^1$ entspricht, mit dem Eingang des Sammlers verbinden, der $2^7$ entspricht. Die höheren Ausgänge des Verteilers müssen mit dem zweiten 8-Bit-Sammler verbunden werden. Hier repräsentiert der erste Eingang, der normalerweise $2^0$ repräsentiert, $2^8$, da wir den Ausgang dieses Sammlers mit dem Eingang des 8-zu-16-Sammlers verbinden, der $2^8$ entspricht. Der zweite Eingang, der $2^1$ repräsentiert, repräsentiert $2^9$, und so weiter."
-        ],
+        "Denke darüber nach, wie sich die Bits einer Zahl ändern, wenn du sie mit 64 multiplizierst. Zum Beispiel wird die Zahl 13 in binär als 00001101 dargestellt. Überlege, wie 832 in binär dargestellt werden würde.",
+        "Die Ausgänge des Verteilers sind von oben nach unten angeordnet. Von $2^0$ bis $2^7$",
+        "Um eine Zahl mit 64 zu multiplizieren, benötigst du zwei 8-Bit-Sammler. Du musst diese mit einem 8-zu-16-Sammler verbinden.",
+        "Du kannst den Ausgang des Verteilers, der $2^0$ entspricht, mit dem Eingang des Sammlers verbinden, der $2^6$ entspricht, den Ausgang des Verteilers, der $2^1$ entspricht, mit dem Eingang des Sammlers verbinden, der $2^7$ entspricht. Die höheren Ausgänge des Verteilers müssen mit dem zweiten 8-Bit-Sammler verbunden werden. Hier repräsentiert der erste Eingang, der normalerweise $2^0$ repräsentiert, $2^8$, da wir den Ausgang dieses Sammlers mit dem Eingang des 8-zu-16-Sammlers verbinden, der $2^8$ entspricht. Der zweite Eingang, der $2^1$ repräsentiert, repräsentiert $2^9$, und so weiter."
+    ],
     "tests": [
-        {"inputs": [[0,8]], "expected_output": [[0,8]]},
-        {"inputs": [[1,8]], "expected_output": [[64,8]]},
-        {"inputs": [[13,8]], "expected_output": [[832,8]]},
-        {"inputs": [[64,8]], "expected_output": [[4096,8]]},
-        {"inputs": [[127,8]], "expected_output": [[8128,8]]},
-        {"inputs": [[45,8]], "expected_output": [[2880,8]]},
-        {"inputs": [[85,8]], "expected_output": [[5440,8]]},
-        {"inputs": [[100,8]], "expected_output": [[6400,8]]},
-        {"inputs": [[2,8]], "expected_output": [[128,8]]},
-        {"inputs": [[25,8]], "expected_output": [[1600,8]]},
-        {"inputs": [[63,8]], "expected_output": [[4032,8]]},
-        {"inputs": [[120,8]], "expected_output": [[7680,8]]},
-        {"inputs": [[32,8]], "expected_output": [[2048,8]]},
-        {"inputs": [[16,8]], "expected_output": [[1024,8]]},
-        {"inputs": [[8,8]], "expected_output": [[512,8]]},
-        {"inputs": [[4,8]], "expected_output": [[256,8]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    64,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    13,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    832,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    64,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    4096,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    127,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    8128,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    45,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    2880,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    85,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    5440,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    100,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    6400,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    2,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    128,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    25,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    1600,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    63,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    4032,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    120,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    7680,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    32,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    2048,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    16,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    1024,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    8,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    512,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    4,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    256,
+                    8
+                ]
+            ]
+        }
     ],
     "success_message": "Congrats! That was a little bit harder. Keep it up!",
     "success_message_de": "Glückwunsch! Das war schon etwas schwerer. Weiter so!",
-
     "bonus_level": true
 }

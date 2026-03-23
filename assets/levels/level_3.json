@@ -7,9 +7,31 @@
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
     "truth_table": [
-        ["x", 0,1],
-        [0,0,1],
-        [1,1,0]
+        [
+            "A",
+            "B",
+            "A XOR B"
+        ],
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            1,
+            1
+        ],
+        [
+            1,
+            0,
+            1
+        ],
+        [
+            1,
+            1,
+            0
+        ]
     ],
     "objectives": [
         "Given the truth table, can you figure out how to create an XOR gate using NOT, AND, and OR gates?"
@@ -18,14 +40,43 @@
         "Anhand der Wahrheitstabelle, kannst du herausfinden, wie man ein XOR-Gatter mit NOT-, AND- und OR-Gattern erstellt?"
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"},
-        {"type": "Output", "position": [7,2], "immovable": true}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Output",
+            "position": [
+                7,
+                2
+            ],
+            "immovable": true
+        }
     ],
     "available_components": [
-        {"type": "Not"},
-        {"type": "And"},
-        {"type": "Or"}
+        {
+            "type": "Not"
+        },
+        {
+            "type": "And"
+        },
+        {
+            "type": "Or"
+        }
     ],
     "hints": [
         "The XOR gate can be constructed using a combination of NOT, AND, and OR gates. Try to think about how you can use these gates to achieve the desired output based on the truth table.",
@@ -42,9 +93,77 @@
         "Eine mögliche Lösung ist: (A UND NICHT B) ODER (NICHT A UND B)"
     ],
     "tests": [
-        {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1]], "expected_output": [[0,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
     ]
 }

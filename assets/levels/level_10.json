@@ -13,12 +13,38 @@
         "Jetzt weißt du, wie Sammler und Verteiler funktionieren. Mit diesem Wissen extrahiere die Bits mit dem Wert von $2^4$ und $2^6$"
     ],
     "components": [
-        {"type": "Input", "position": [0,3], "immovable": true, "initialBitWidth": 8}, 
-        {"type": "Output", "position": [4,2], "immovable": true, "label": "2^4"},
-        {"type": "Output", "position": [4,4], "immovable": true, "label": "2^6"}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "initialBitWidth": 8
+        },
+        {
+            "type": "Output",
+            "position": [
+                4,
+                2
+            ],
+            "immovable": true,
+            "label": "2^4"
+        },
+        {
+            "type": "Output",
+            "position": [
+                4,
+                4
+            ],
+            "immovable": true,
+            "label": "2^6"
+        }
     ],
     "available_components": [
-        {"type": "Splitter8to1"}
+        {
+            "type": "Splitter8to1"
+        }
     ],
     "hints": [
         "The outputs of the Splitter are ordered from top to bottom. From $2^0$ to $2^7$",
@@ -29,10 +55,95 @@
         "Verbinde den 5. Ausgang des Verteilers mit dem Ausgang labeled outValue16 mit dem Ausgang labeled \"2^4\" und verbinde den 7. Ausgang des Verteilers mit dem Ausgang labeled outValue64 mit dem Ausgang labeled \"2^6\""
     ],
     "tests": [
-        {"inputs": [[0,8]], "expected_output": [[0,1],[0,1]]},
-        {"inputs": [[16,8]], "expected_output": [[1,1],[0,0]]},
-        {"inputs": [[32,8]], "expected_output": [[0,1],[0,1]]},
-        {"inputs": [[64,8]], "expected_output": [[0,1],[1,1]]},
-        {"inputs": [[255,8]], "expected_output": [[1,1],[1,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    16,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    0
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    32,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    64,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    255,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        }
     ]
 }

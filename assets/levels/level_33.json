@@ -14,7 +14,6 @@
         "use the Constant Zero input to force all output bits (except the output from slice 1) to zero when op = 11.",
         "Connect the constant zero to the input 3 of the mux in the MSB slice, the bottom one.",
         "Connect the output of the fulladder in the MSB slice (the bottom one) to the input 3 of the mux in the LSB slice, the top one."
-
     ],
     "name_de": "SLT (Setze-Kleiner-Als)",
     "description_de": "SLT (Set-Less-Than) führt einen Vergleich mit Vorzeichen durch: Es gibt true zurück, wenn A streng kleiner als B ist, sonst false. \n\nIn der Zweierkomplement-Arithmetik wird dieser Vergleich durchgeführt, indem A minus B berechnet wird und das Vorzeichen (das höchstwertige Bit) dieses Subtraktionsergebnisses überprüft wird – ein Wert von 1 im MSB bedeutet, dass das Ergebnis negativ ist und daher A kleiner als B ist. \n\nIn dieser winzigen 2-Bit-ALU muss die SLT-Operation eine Ausgabe erzeugen, die Null auf allen Bits ist, außer auf dem niederwertigsten, das das Vorzeichen von A minus B enthalten sollte (1 wenn A kleiner als B ist, sonst 0). \n\nUm SLT in die existierenden zwei 1-Bit-ALU-Schichten zu integrieren, führe Subtraktion durch, indem du binvert auf B aktivierst und Carry-In gleich 1 auf der niederwertigsten Schicht verwendest; erfasse dann das MSB von der oberen Schicht als Vergleichsergebnis. Wenn der Opcode \"11\" ist, verwende die Multiplexer der ALU, um nur diesen Vergleichsbit im LSB auszugeben und alle anderen Bits auf Null zu setzen; für alle anderen Opcodes behalte das bisherige Mapping (00 = UND, 01 = ODER, 10 = ADD oder SUB).",
@@ -23,7 +22,6 @@
         "Erweitere die bestehende 2-Bit-ALU so, dass op = `11` SLT implementiert.",
         "Wenn op = 11, erzeuge einen ALU-Ausgang, der Null auf allen ALU-Ergebnis-Bits ist, außer der niederwertigsten Ausgabe, die 1 sein sollte, wenn A streng kleiner als B ist, sonst 0.",
         "Behalte das vorherige Operationsmapping bei: 00 -> UND, 01 -> ODER, 10 -> ADD/SUB (verwende `binvert` zum Auswählen von Subtraktion)."
-        
     ],
     "hints_de": [
         "Wie SLT funktioniert (Konzept): Um zu bestimmen, ob A kleiner als B ist, berechne A minus B unter Verwendung der Zweierkomplement-Arithmetik. Wenn das Ergebnis negativ ist, dann ist A kleiner als B. In einer mehrbitigen ALU ist das Vorzeichen einfach das Ergebnis der letzten ALU-Schicht, in diesem Fall der Ausgang des unteren Addierers.",
@@ -671,7 +669,6 @@
             ]
         }
     ],
-
     "success_message": "Congratulations! You've successfully implemented the SLT operation in your 2-bit ALU. It is now complete. You understood the concept and we won't bore you with building the 32-bit version of that cirquit, so you can use it from now on.",
     "success_message_de": "Glückwunsch! Du hast erfolgreich die SLT-Operation in deiner 2-Bit-ALU implementiert. Sie ist jetzt komplett. Du hast das Konzept verstanden und wir werden dich nicht mit dem Bau der 32-Bit-Version dieses Schaltkreises langweilen, also kannst du sie von jetzt an verwenden."
 }

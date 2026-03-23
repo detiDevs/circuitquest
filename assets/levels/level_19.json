@@ -291,7 +291,7 @@
         "Verwende den zweiten Halbaddierer, um die Summe des ersten Addierers mit CarryIn zu addieren",
         "Wenn einer der Halbaddierer einen Carry produziert, sollte das endgültige CarryOut 1 sein",
         "Verbinde die Carry-Ausgänge beider Halbaddierer mit einem ODER-Gatter"
-    ], 
+    ],
     "success_message": "Congratulations! You built a full adder using two half adders and an OR gate. This is a fundamental building block for arithmetic in CPUs. You can use this knowledge to build more complex arithmetic circuits like multi-bit adders in the next levels.",
     "success_message_de": "Glückwunsch! Du hast einen Volladdierer mit zwei Halbaddierern und einem ODER-Gatter gebaut. Dies ist ein grundlegender Baustein für die Arithmetik in CPUs. Du kannst dieses Wissen nutzen, um komplexere arithmetische Schaltungen wie Mehrbit-Addierer in den nächsten Levels zu bauen."
 }

@@ -7,9 +7,31 @@
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
     "truth_table": [
-        ["x", 0,1],
-        [0,1,0],
-        [1,0,0]
+        [
+            "A",
+            "B",
+            "A NOR B"
+        ],
+        [
+            0,
+            0,
+            1
+        ],
+        [
+            0,
+            1,
+            0
+        ],
+        [
+            1,
+            0,
+            0
+        ],
+        [
+            1,
+            1,
+            0
+        ]
     ],
     "objectives": [
         "Given the truth table, can you figure out how to create a NOR gate using NOT and OR gates?"
@@ -18,13 +40,40 @@
         "Anhand der Wahrheitstabelle, kannst du herausfinden, wie man ein NOR-Gatter mit NOT- und OR-Gattern erstellt?"
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"},
-        {"type": "Output", "position": [6,2], "immovable": true}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                2
+            ],
+            "immovable": true
+        }
     ],
     "available_components": [
-        {"type": "Not"},
-        {"type": "Or"}
+        {
+            "type": "Not"
+        },
+        {
+            "type": "Or"
+        }
     ],
     "hints": [
         "You can create a NOR gate by first creating an OR gate and then inverting its output with a NOT gate."
@@ -33,14 +82,80 @@
         "Das NOR-Gatter kann erstellt werden, indem zuerst ein OR-Gatter erstellt und dann dessen Ausgang mit einem NICHT-Gatter invertiert wird."
     ],
     "tests": [
-        {"inputs": [[0,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1]], "expected_output": [[0,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
     ],
-
     "success_message": "Was easy right?",
     "success_message_de": "War doch einfach, oder?",
-
     "bonus_level": true
-}   
+}

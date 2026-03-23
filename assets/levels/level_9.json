@@ -13,75 +13,323 @@
         "Baue einen Schaltkreis gleicher Funktionalität, allerdings mit maximal 5 Gattern neben den Inputs und dem Output."
     ],
     "components": [
-        {"type": "Input", "position": [0,2], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,4], "immovable": true, "label": "B"},
-        {"type": "Input", "position": [0,6], "immovable": true, "label": "C"},
-        {"type": "Not", "position": [2,2], "label": "NOT A"},
-        {"type": "Not", "position": [2,4], "label": "NOT B"},
-        {"type": "Not", "position": [2,6], "label": "NOT C"},
-        {"type": "And", "position": [5,0]},
-        {"type": "And", "position": [5,2]},
-        {"type": "And", "position": [5,4]},
-        {"type": "And", "position": [5,6]},
-        {"type": "And", "position": [6,1]},
-        {"type": "And", "position": [6,3]},
-        {"type": "And", "position": [6,5]},
-        {"type": "And", "position": [6,7]},
-        {"type": "Or", "position": [8,2]},
-        {"type": "Or", "position": [8,6]},
-        {"type": "Or", "position": [10,4]},
-        {"type": "Output", "position": [12,4], "immovable": true}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                2
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                4
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                6
+            ],
+            "immovable": true,
+            "label": "C"
+        },
+        {
+            "type": "Not",
+            "position": [
+                2,
+                2
+            ],
+            "label": "NOT A"
+        },
+        {
+            "type": "Not",
+            "position": [
+                2,
+                4
+            ],
+            "label": "NOT B"
+        },
+        {
+            "type": "Not",
+            "position": [
+                2,
+                6
+            ],
+            "label": "NOT C"
+        },
+        {
+            "type": "And",
+            "position": [
+                5,
+                0
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                5,
+                2
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                5,
+                4
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                5,
+                6
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                6,
+                1
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                6,
+                3
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                6,
+                5
+            ]
+        },
+        {
+            "type": "And",
+            "position": [
+                6,
+                7
+            ]
+        },
+        {
+            "type": "Or",
+            "position": [
+                8,
+                2
+            ]
+        },
+        {
+            "type": "Or",
+            "position": [
+                8,
+                6
+            ]
+        },
+        {
+            "type": "Or",
+            "position": [
+                10,
+                4
+            ]
+        },
+        {
+            "type": "Output",
+            "position": [
+                12,
+                4
+            ],
+            "immovable": true
+        }
     ],
     "connections": [
-      {"origin": 0, "originKey": "outValue", "destination": 3, "destinationKey": "input"},
-      {"origin": 1, "originKey": "outValue", "destination": 4, "destinationKey": "input"},
-      {"origin": 2, "originKey": "outValue", "destination": 5, "destinationKey": "input"},
-
-      {"origin": 0, "originKey": "outValue", "destination": 6, "destinationKey": "input1"},
-      {"origin": 4, "originKey": "outValue", "destination": 6, "destinationKey": "input2"},
-      {"origin": 6, "originKey": "outValue", "destination": 10, "destinationKey": "input1"},
-
-      {"origin": 2, "originKey": "outValue", "destination": 10, "destinationKey": "input2"},
-
-      {"origin": 3, "originKey": "outValue", "destination": 7, "destinationKey": "input1"},
-      {"origin": 4, "originKey": "outValue", "destination": 7, "destinationKey": "input2"},
-      {"origin": 7, "originKey": "outValue", "destination": 11, "destinationKey": "input1"},
-
-      {"origin": 2, "originKey": "outValue", "destination": 11, "destinationKey": "input2"},
-
-      {"origin": 3, "originKey": "outValue", "destination": 8, "destinationKey": "input1"},
-      {"origin": 1, "originKey": "outValue", "destination": 8, "destinationKey": "input2"},
-      {"origin": 8, "originKey": "outValue", "destination": 12, "destinationKey": "input1"},
-
-      {"origin": 5, "originKey": "outValue", "destination": 12, "destinationKey": "input2"},
-
-      {"origin": 3, "originKey": "outValue", "destination": 9, "destinationKey": "input1"},
-      {"origin": 1, "originKey": "outValue", "destination": 9, "destinationKey": "input2"},
-      {"origin": 9, "originKey": "outValue", "destination": 13, "destinationKey": "input1"},
-
-      {"origin": 2, "originKey": "outValue", "destination": 13, "destinationKey": "input2"},
-
-      {"origin": 10, "originKey": "outValue", "destination": 14, "destinationKey": "input1"},
-      {"origin": 11, "originKey": "outValue", "destination": 14, "destinationKey": "input2"},
-
-      {"origin": 14, "originKey": "outValue", "destination": 16, "destinationKey": "input1"},
-
-      {"origin": 12, "originKey": "outValue", "destination": 15, "destinationKey": "input1"},
-      {"origin": 13, "originKey": "outValue", "destination": 15, "destinationKey": "input2"},
-
-      {"origin": 15, "originKey": "outValue", "destination": 16, "destinationKey": "input2"},
-
-      {"origin": 16, "originKey": "outValue", "destination": 17, "destinationKey": "input"}
-      
+        {
+            "origin": 0,
+            "originKey": "outValue",
+            "destination": 3,
+            "destinationKey": "input"
+        },
+        {
+            "origin": 1,
+            "originKey": "outValue",
+            "destination": 4,
+            "destinationKey": "input"
+        },
+        {
+            "origin": 2,
+            "originKey": "outValue",
+            "destination": 5,
+            "destinationKey": "input"
+        },
+        {
+            "origin": 0,
+            "originKey": "outValue",
+            "destination": 6,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 4,
+            "originKey": "outValue",
+            "destination": 6,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 6,
+            "originKey": "outValue",
+            "destination": 10,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 2,
+            "originKey": "outValue",
+            "destination": 10,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 3,
+            "originKey": "outValue",
+            "destination": 7,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 4,
+            "originKey": "outValue",
+            "destination": 7,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 7,
+            "originKey": "outValue",
+            "destination": 11,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 2,
+            "originKey": "outValue",
+            "destination": 11,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 3,
+            "originKey": "outValue",
+            "destination": 8,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 1,
+            "originKey": "outValue",
+            "destination": 8,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 8,
+            "originKey": "outValue",
+            "destination": 12,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 5,
+            "originKey": "outValue",
+            "destination": 12,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 3,
+            "originKey": "outValue",
+            "destination": 9,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 1,
+            "originKey": "outValue",
+            "destination": 9,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 9,
+            "originKey": "outValue",
+            "destination": 13,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 2,
+            "originKey": "outValue",
+            "destination": 13,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 10,
+            "originKey": "outValue",
+            "destination": 14,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 11,
+            "originKey": "outValue",
+            "destination": 14,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 14,
+            "originKey": "outValue",
+            "destination": 16,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 12,
+            "originKey": "outValue",
+            "destination": 15,
+            "destinationKey": "input1"
+        },
+        {
+            "origin": 13,
+            "originKey": "outValue",
+            "destination": 15,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 15,
+            "originKey": "outValue",
+            "destination": 16,
+            "destinationKey": "input2"
+        },
+        {
+            "origin": 16,
+            "originKey": "outValue",
+            "destination": 17,
+            "destinationKey": "input"
+        }
     ],
     "available_components": [
-        {"type": "And"},
-        {"type": "Or"},
-        {"type": "Not"},
-        {"type": "Nand"},
-        {"type": "Nor"},
-        {"type": "Xor"},
-        {"type": "Xnor"}
+        {
+            "type": "And"
+        },
+        {
+            "type": "Or"
+        },
+        {
+            "type": "Not"
+        },
+        {
+            "type": "Nand"
+        },
+        {
+            "type": "Nor"
+        },
+        {
+            "type": "Xor"
+        },
+        {
+            "type": "Xnor"
+        }
     ],
     "hints": [
         "Try to simplify the circuit using Boolean algebra rules. For example, look for common sub-expressions that can be factored out, or apply De Morgan's laws to reduce the number of gates needed.",
@@ -97,14 +345,182 @@
     ],
     "maxComponentCount": 9,
     "tests": [
-        {"inputs": [[0,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[0,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[1,1],[1,1]], "expected_output": [[0,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
     ],
     "success_message": "Congratulations! You've successfully simplified the circuit to meet the component count requirement. This demonstrates a strong understanding of Boolean algebra and circuit optimization techniques.",
     "success_message_de": "Herzlichen Glückwunsch! Du hast die Schaltung erfolgreich vereinfacht, um die Anforderung an die Anzahl der Komponenten zu erfüllen. Dies zeigt ein starkes Verständnis der booleschen Algebra und der Techniken zur Schaltungsoptimierung.",
