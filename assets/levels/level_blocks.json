@@ -158,6 +158,63 @@
           "bonus_level": true
         }
       ]
+    },
+    {
+      "name": "Sequential Logic",
+      "name_de": "Sequentielle Logik",
+      "levels": [
+        {
+          "id": 25,
+          "name": "RS Flip-Flop",
+          "name_de": "RS-Flipflop"
+        },
+        {
+          "id": 26,
+          "name": "D-Latch",
+          "name_de": "D-Latch"
+        },
+        {
+          "id": 27,
+          "name": "D-Flip-Flop",
+          "name_de": "D-Flipflop"
+        }
+      ]
+    },
+    {
+      "name": "Arithmetic",
+      "name_de": "Arithmetik",
+      "levels": [
+        {
+          "id": 28,
+          "name": "Subtraction with a Full Adder",
+          "name_de": "Subtraktion mit einem Volladdierer"
+        },
+        {
+          "id": 29,
+          "name": "1-bit ALU",
+          "name_de": "1-Bit-ALU"
+        },
+        {
+          "id": 30,
+          "name": "Adding Subtraction",
+          "name_de": "Subtraktion hinzufügen"
+        },
+        {
+          "id": 31,
+          "name": "Adding NOR",
+          "name_de": "NOR hinzufügen"
+        },
+        {
+          "id": 32,
+          "name": "Zero Flag Logic",
+          "name_de": "Zero-Flag-Logik"
+        },
+        {
+          "id": 33,
+          "name": "SLT (Set Less Than)",
+          "name_de": "SLT (Set Less Than)"
+        }
+      ]
     }
   ]
 }

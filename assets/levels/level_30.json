@@ -1,11 +1,11 @@
 {
-    "level_id": 16,
-    "name": "Adding NOR",
-    "description": "we also want our ALU to also handle the NOR operation. Again, we don’t need to implement a different Gate but can rather alter the signal to achieve the same result. Remember: A NOR B = NOT (A OR B) = NOT(A) AND NOT(B). This level adds a separate control signal `ainvert` to enable NOR operation.",
+    "level_id": 30,
+    "name": "Adding Subtraction",
+    "description": "Of course we want our ALU to also handle subtractions. We don’t add a different Adder, but rather reuse the same Adder. Remember: A - B = A + (NOT B) + 1. This level adds a separate control signal `binvert` to enable subtracting B. Also Note that the CarryIn Input you had in the last level is not needed here anymore",
     "difficulty": "Medium",
     "objectives": [
-        "expand the previous processor to also handle NOR. ",
-        "Use the seperate control input `ainvert` so that when `ainvert`=1 and op selects the OR operation, the circuit computes A NOR B."
+        "Expand the previous 1-bit ALU so it can perform subtraction as well.",
+        "Use a separate control input `binvert` so that when `binvert`=1 and op selects the addition operation, the circuit computes A - B (via A + NOT(B) + 1)."
     ],
     "components": [
         {
@@ -30,18 +30,18 @@
             "type": "Input",
             "position": [
                 12,
-                10
+                1
             ],
-            "immovable": false,
+            "immovable": true,
             "label": "op0"
         },
         {
             "type": "Input",
             "position": [
                 12,
-                11
+                0
             ],
-            "immovable": false,
+            "immovable": true,
             "label": "op1"
         },
         {
@@ -57,15 +57,15 @@
             "type": "Collector1to2",
             "position": [
                 13,
-                10
+                1
             ],
-            "immovable": false
+            "immovable": true
         },
         {
             "type": "FullAdder",
             "position": [
                 11,
-                2
+                8
             ],
             "immovable": false
         },
@@ -73,7 +73,7 @@
             "type": "And",
             "position": [
                 11,
-                5
+                2
             ],
             "immovable": false
         },
@@ -81,7 +81,7 @@
             "type": "Or",
             "position": [
                 11,
-                8
+                5
             ],
             "immovable": false
         },
@@ -97,7 +97,7 @@
             "type": "Output",
             "position": [
                 13,
-                3
+                7
             ],
             "immovable": false,
             "label": "Carry_out"
@@ -110,65 +110,14 @@
             ],
             "immovable": false,
             "label": "OUT"
-        },
-        {
-            "type": "Not",
-            "position": [
-                5,
-                7
-            ],
-            "immovable": false,
-            "label": "NotBinvert"
-        },
-        {
-            "type": "Multiplexer2Inp",
-            "position": [
-                6,
-                7
-            ],
-            "immovable": false,
-            "label": "MUXbinvert"
-        },
-        {
-            "type": "Input",
-            "position": [
-                3,
-                11
-            ],
-            "immovable": false,
-            "label": "ainvert"
         }
     ],
     "connections": [
         {
-            "origin": 4,
+            "origin": 0,
             "originKey": "outValue",
             "destination": 6,
-            "destinationKey": "inputCin"
-        },
-        {
-            "origin": 4,
-            "originKey": "outValue",
-            "destination": 13,
-            "destinationKey": "selection"
-        },
-        {
-            "origin": 1,
-            "originKey": "outValue",
-            "destination": 13,
-            "destinationKey": "input1"
-        },
-        {
-            "origin": 12,
-            "originKey": "outValue",
-            "destination": 13,
-            "destinationKey": "input2"
-        },
-        {
-            "origin": 1,
-            "originKey": "outValue",
-            "destination": 12,
-            "destinationKey": "input"
+            "destinationKey": "inputA"
         },
         {
             "origin": 2,
@@ -183,22 +132,16 @@
             "destinationKey": "input2"
         },
         {
-            "origin": 13,
-            "originKey": "outputValue",
+            "origin": 0,
+            "originKey": "outValue",
             "destination": 8,
-            "destinationKey": "input2"
+            "destinationKey": "input1"
         },
         {
-            "origin": 13,
-            "originKey": "outputValue",
+            "origin": 0,
+            "originKey": "outValue",
             "destination": 7,
-            "destinationKey": "input2"
-        },
-        {
-            "origin": 13,
-            "originKey": "outputValue",
-            "destination": 6,
-            "destinationKey": "inputB"
+            "destinationKey": "input1"
         },
         {
             "origin": 5,
@@ -226,13 +169,13 @@
         },
         {
             "origin": 6,
-            "originKey": "cOut",
+            "originKey": "carryOut",
             "destination": 10,
             "destinationKey": "input"
         },
         {
             "origin": 9,
-            "originKey": "outputValue",
+            "originKey": "outValue",
             "destination": 11,
             "destinationKey": "input"
         }
@@ -246,21 +189,51 @@
         }
     ],
     "hints": [
-        "Remember: A NOR B = NOT (A OR B) = NOT(A) AND NOT(B).",
-        "You can use the ainvert signal to invert A before it goes into the OR gate.",
-        "Use a NOT gate to invert the A input when ainvert=1, then feed that into the OR gate along with B.",
-        "The output of the OR gate will then be inverted if ainvert=1, giving you the NOR result."
+        "Subtraction is implemented by inverting B when `binvert`=1 and adding 1 into the adder (carry-in). Use NOT gates to conditionally invert B.",
+        "Route `binvert` so it controls a NOT on B (i.e. NOT(B) when binvert=1, B when binvert=0). You can achieve this by using a MUX that selects between B and NOT(B) under `binvert` as selector, or by wiring logic that only places a NOT when binvert is active.",
+        "Feed the resulting (possibly inverted) B into the FullAdder. Also feed `binvert` as the carry-in (1 when subtracting) so the adder computes A + NOT(B) + 1 when `binvert`=1.",
+        "Keep the ALU selection mapping the same as before: selector 00 => AND, 01 => OR, 10 => ADD/SUB (use binvert to switch between add and subtract). The selector 11 is unused for this level."
     ],
     "solution": "",
     "tests": [
         {
             "inputs": [
                 [
-                    0,
+                    1,
+                    1
+                ],
+                [
+                    1,
                     1
                 ],
                 [
                     0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
                     1
                 ],
                 [
@@ -306,10 +279,6 @@
                     1
                 ],
                 [
-                    0,
-                    1
-                ],
-                [
                     1,
                     1
                 ],
@@ -320,21 +289,17 @@
             ],
             "expected_output": [
                 [
-                    1,
+                    0,
                     1
                 ],
                 [
-                    0,
+                    1,
                     1
                 ]
             ]
         },
         {
             "inputs": [
-                [
-                    1,
-                    1
-                ],
                 [
                     0,
                     1
@@ -370,14 +335,6 @@
         {
             "inputs": [
                 [
-                    1,
-                    1
-                ],
-                [
-                    1,
-                    1
-                ],
-                [
                     0,
                     1
                 ],
@@ -386,17 +343,123 @@
                     1
                 ],
                 [
-                    1,
+                    0,
                     1
                 ],
                 [
                     1,
+                    1
+                ],
+                [
+                    0,
                     1
                 ]
             ],
             "expected_output": [
                 [
                     0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
                     1
                 ],
                 [
@@ -406,17 +469,17 @@
             ]
         }
     ],
-    "name_de": "Addition von NOR",
-    "description_de": "Wir wollen, dass unsere ALU auch die NOR-Operation handhaben kann. Wiederum müssen wir kein anderes Gatter implementieren, sondern können das Signal vielmehr verändern, um das gleiche Ergebnis zu erreichen. Denke daran: A NOR B = NOT (A ODER B) = NOT(A) UND NOT(B). Diese Stufe fügt ein separates Steuersignal `ainvert` hinzu, um NOR-Operation zu aktivieren.",
+    "name_de": "Addition von Subtraktion",
+    "description_de": "Natürlich wollen wir, dass unsere ALU auch Subtraktionen handhaben kann. Wir fügen keinen anderen Addierer hinzu, sondern verwenden denselben Addierer wieder. Denke daran: A - B = A + (NOT B) + 1. Diese Stufe fügt ein separates Steuersignal `binvert` hinzu, um Subtraktion von B zu aktivieren. Beachte auch, dass der CarryIn-Eingang, den du in der letzten Stufe hattest, hier nicht mehr benötigt wird",
     "difficulty_de": "Mittel",
     "objectives_de": [
-        "Erweitere den bisherigen Prozessor auch um NOR.",
-        "Verwende den separaten Steuereingangn `ainvert` so, dass wenn `ainvert`=1 und op die ODER-Operation auswählt, die Schaltung A NOR B berechnet."
+        "Erweitere die bisherige 1-Bit-ALU so, dass sie auch Subtraktion durchführen kann.",
+        "Verwende einen separaten Steuereingangn `binvert` so, dass wenn `binvert`=1 und op die Additionsoperation auswählt, die Schaltung A - B berechnet (via A + NOT(B) + 1)."
     ],
     "hints_de": [
-        "Denke daran: A NOR B = NOT (A ODER B) = NOT(A) UND NOT(B).",
-        "Du kannst das ainvert-Signal verwenden, um A zu invertieren, bevor es ins ODER-Gatter geht.",
-        "Verwende ein NICHT-Gatter, um die A-Eingabe zu invertieren, wenn ainvert=1, dann speise das ins ODER-Gatter zusammen mit B.",
-        "Der Ausgang des ODER-Gatters wird dann invertiert, wenn ainvert=1, was dir das NOR-Ergebnis gibt."
+        "Subtraktion wird implementiert, indem B invertiert wird, wenn `binvert`=1 und 1 in den Addierer (Carry-In) addiert wird. Verwende NICHT-Gatter, um B bedingt zu invertieren.",
+        "Leite `binvert` so, dass es ein NICHT auf B steuert (d.h. NOT(B) wenn binvert=1, B wenn binvert=0). Du kannst dies durch die Verwendung eines MUX erreichen, der zwischen B und NOT(B) unter `binvert` als Selektor auswählt, oder durch Verdrahtungslogik, die nur dann ein NICHT platziert, wenn binvert aktiv ist.",
+        "Speise das resultierende (möglicherweise invertierte) B in den FullAdder ein. Speise auch `binvert` als das Carry-In (1 bei Subtraktion), damit der Addierer A + NOT(B) + 1 berechnet, wenn `binvert`=1.",
+        "Behalte das gleiche ALU-Mapping wie zuvor: Selektor 00 => UND, 01 => ODER, 10 => ADD/SUB (verwende binvert zum Umschalten zwischen Addition und Subtraktion). Der Selektor 11 ist für diese Stufe ungenutzt."
     ]
 }

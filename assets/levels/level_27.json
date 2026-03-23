@@ -1,0 +1,95 @@
+{
+    "level_id": 10,
+    "name": "D-Flipflop",
+    "name_de": "D-Flipflop",
+    "description": "Now we want to build a D-Flipflop. A D-Flipflop is a digital memory element that stores one bit of information. It has two main inputs: the data input (D) and the clock input. It consists of two D-Latches. The first D-Latch is transparent when the clock input is 0, while the second D-Latch is transparent when the clock input is 1. This configuration allows the D-Flipflop to capture and hold the value of the data input (D) at the moment of a clock transition.",
+    "description_de": "Jetzt wollen wir ein D-Flipflop bauen. Ein D-Flipflop ist ein digitales Speicherelement, das ein Bit an Informationen speichert. Es hat zwei Haupteingänge: den Dateneingang (D) und den Clock-Eingang. Es besteht aus zwei D-Latches. Der erste D-Latch ist transparent, wenn der Clock-Eingang 0 ist, während der zweite D-Latch transparent ist, wenn der Clock-Eingang 1 ist. Diese Konfiguration ermöglicht es dem D-Flipflop, den Wert des Dateneingangs (D) zum Zeitpunkt eines Clock-Übergangs zu erfassen und zu halten.",
+    "difficulty": "Middle",
+    "difficulty_de": "Mittel",
+    "objectives": [
+        "Build two D-Latches using two NOR gates, two AND gates and one NOT gate each.",
+        "Connect the two D-Latches to create a D-Flipflop."
+    ],
+    "objectives_de": [
+        "Erstelle zwei D-Latches mit jeweils zwei NOR-Gattern, zwei UND-Gattern und einem NICHT-Gatter.",
+        "Verbinde die beiden D-Latches, um ein D-Flipflop zu erstellen."
+    ],
+    "components": [
+        {
+            "type": "Input",
+            "position": [0,1],
+            "immovable": true,
+            "label": "D"
+        },
+        {
+            "type": "Input",
+            "position": [0,5],
+            "immovable": true,
+            "label": "Clock"
+        },
+        {
+            "type": "Output",
+            "position": [10,1],
+            "immovable": true,
+            "label": "Q"
+        },
+        {
+            "type":  "Output",
+            "position": [10,5],
+            "immovable": true,
+            "label": "NOT Q"
+        }
+        
+    ],
+    "available_components": [
+        {
+            "type": "Nor"
+        },
+        {
+            "type": "And"
+        },
+        {
+            "type": "Not"
+        }
+    ],
+    "hints": [
+        "Think about how the D-Latches are connected to each other.",
+        "The Q output of the first D-Latch should be connected to the D input of the second D-Latch.",
+        "The clock input should be connected to both D-Latches, but the first D-Latch should be transparent when the clock is 0, while the second D-Latch should be transparent when the clock is 1."
+    ],
+    "hints_de": [
+        "Denke darüber nach, wie die D-Latches miteinander verbunden sind.",
+        "Der Q-Ausgang des ersten D-Latches sollte mit dem D-Eingang des zweiten D-Latches verbunden sein.",
+        "Der Clock-Eingang sollte mit beiden D-Latches verbunden sein, aber der erste D-Latch sollte transparent sein, wenn der Clock 0 ist, während der zweite D-Latch transparent sein sollte, wenn der Clock 1 ist."
+    ],
+    "tests": [
+        {
+            "inputs": [[0,1], [1,1]],
+            "expected_output": [[0,1], [1,1]]
+        },
+        {
+            "inputs": [[1,1], [0,1]],
+            "expected_output": [[0,1], [1,1]]
+        },
+        {
+            "inputs": [[1,1], [1,1]],
+            "expected_output": [[1,1], [0,1]]
+        },
+        {
+            "inputs": [[0,1], [0,1]],
+            "expected_output": [[1,1], [0,1]]
+        },
+        {
+            "inputs": [[1,1], [0,1]],
+            "expected_output": [[1,1], [0,1]]
+        },
+        {
+            "inputs": [[1,1], [1,1]],
+            "expected_output": [[1,1], [0,1]]
+        }
+    ],
+
+    "success_message": "Congratulations! You have successfully built a D-Flipflop. This level was hard to understand and due to the way we implemented the clock we couldn't let you use the D-Latches. Too Bad.But it will get better from now on",
+    "success_message_de": "Glückwunsch! Du hast erfolgreich ein D-Flipflop gebaut. Dieses Level war schwer zu verstehen und aufgrund der Art und Weise, wie wir den Clock implementiert haben, konnten wir dir nicht erlauben, die D-Latches zu verwenden. Schade. Aber es wird von jetzt an besser!"
+    
+}
