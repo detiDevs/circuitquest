@@ -62,7 +62,6 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
   Widget build(BuildContext context) {
     final outputPin = widget.inputComponent.outputs['outValue']!;
     final bitWidth = outputPin.bitWidth;
-    final maxValue = (1 << bitWidth) - 1;
     final currentValue = outputPin.value;
     final isImmutable = widget.placedComponent.immutable;
 
@@ -121,11 +120,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                           } else {
                             newBitWidth = 1;
                           }
-                          // Create new output pin with new bitwidth
-                          widget.inputComponent.outputs['outValue'] = widget
-                              .inputComponent
-                              .outputs['outValue']!
-                              .copyWith(newBitWidth);
+                          widget.inputComponent.setBitWidth(newBitWidth);
 
                           // Trigger evaluation after bitwidth change
                           _triggerEvaluation();
@@ -231,11 +226,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                         ? null
                         : (value) {
                             final intValue = int.tryParse(value) ?? 0;
-                            final constrainedValue = intValue.clamp(
-                              0,
-                              maxValue,
-                            );
-                            widget.inputComponent.setValue(constrainedValue);
+                            final constrainedValue = widget.inputComponent.setValue(intValue);
 
                             // Trigger evaluation after value change
                             _triggerEvaluation();

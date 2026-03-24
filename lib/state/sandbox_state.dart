@@ -195,7 +195,7 @@ class SandboxState extends ChangeNotifier {
     initializeClockFromLevel(level.clockConfig);
 
     for (final lc in level.components) {
-      final resolved = _resolveComponentForLevelType(lc.type);
+      final resolved = _resolveComponentForLevelComponent(lc);
       if (resolved == null) continue;
 
       final position = Offset(
@@ -244,17 +244,17 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
-  ({String typeName, Component component})? _resolveComponentForLevelType(
-    String type,
+  ({String typeName, Component component})? _resolveComponentForLevelComponent(
+    LevelComponent lc,
   ) {
-    switch (type) {
+    switch (lc.type) {
       case 'Input':
-        return (typeName: 'InputSource', component: InputSource());
+        return (typeName: 'InputSource', component: InputSource(bitWidth: lc.initialBitWidth ?? 1, value: lc.initialValue ?? 0));
       case 'Output':
         return (typeName: 'OutputProbe', component: OutputProbe());
       default:
         try {
-          final ct = availableComponents.firstWhere((c) => c.name == type);
+          final ct = availableComponents.firstWhere((c) => c.name == lc.type);
           return (typeName: ct.name, component: ct.createComponent());
         } catch (_) {
           return null;
