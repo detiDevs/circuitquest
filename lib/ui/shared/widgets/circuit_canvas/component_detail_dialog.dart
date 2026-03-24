@@ -37,16 +37,23 @@ class ComponentDetailDialog {
               // Text field for label:
               TextField(
                 controller: textController,
-                onSubmitted: (value) {
-                  final command = RenameComponentCommand(
-                    state,
-                    placedComponent.id,
-                    textController.text,
-                  );
-                  CommandController.executeCommand(command);
-                },
+                enabled: !placedComponent.immutable,
+                onSubmitted: placedComponent.immutable
+                    ? null
+                    : (value) {
+                        final command = RenameComponentCommand(
+                          state,
+                          placedComponent.id,
+                          textController.text,
+                        );
+                        CommandController.executeCommand(command);
+                      },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
+                  filled: placedComponent.immutable,
+                  fillColor: placedComponent.immutable
+                      ? Colors.grey[200]
+                      : null,
                   hintText: AppLocalizations.of(context)!.enterComponentLabel,
                 ),
               ),
@@ -67,7 +74,7 @@ class ComponentDetailDialog {
                           placedComponent,
                           PinPosition.TOP,
                           imageContainerHeight,
-                          context
+                          context,
                         ),
                       ),
                     ),
@@ -85,7 +92,7 @@ class ComponentDetailDialog {
                                 placedComponent,
                                 PinPosition.LEFT,
                                 imageContainerHeight,
-                                context
+                                context,
                               ),
                             ),
                           ),
@@ -112,7 +119,7 @@ class ComponentDetailDialog {
                                 placedComponent,
                                 PinPosition.RIGHT,
                                 imageContainerHeight,
-                                context
+                                context,
                               ),
                             ),
                           ),
@@ -128,7 +135,7 @@ class ComponentDetailDialog {
                           placedComponent,
                           PinPosition.BOTTOM,
                           imageContainerHeight,
-                          context
+                          context,
                         ),
                       ),
                     ),
@@ -137,19 +144,20 @@ class ComponentDetailDialog {
               ),
               Divider(),
               // Delete option and closing button
-              if (!placedComponent.immovable) TextButton(
-                onPressed: () {
-                  // Use command pattern for undo/redo support
-                  final command = RemoveComponentCommand(
-                    state,
-                    placedComponent.id,
-                  );
-                  CommandController.executeCommand(command);
-                  Navigator.pop(context);
-                },
-                style: TextButton.styleFrom(backgroundColor: Colors.red),
-                child: Text(AppLocalizations.of(context)!.delete),
-              ),
+              if (!placedComponent.immovable)
+                TextButton(
+                  onPressed: () {
+                    // Use command pattern for undo/redo support
+                    final command = RemoveComponentCommand(
+                      state,
+                      placedComponent.id,
+                    );
+                    CommandController.executeCommand(command);
+                    Navigator.pop(context);
+                  },
+                  style: TextButton.styleFrom(backgroundColor: Colors.red),
+                  child: Text(AppLocalizations.of(context)!.delete),
+                ),
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -171,7 +179,7 @@ class ComponentDetailDialog {
     PlacedComponent placedComponent,
     PinPosition side,
     double containerSize,
-    BuildContext context
+    BuildContext context,
   ) {
     final inputs = placedComponent.component.inputs.entries.toList();
     final outputs = placedComponent.component.outputs.entries.toList();
@@ -216,17 +224,26 @@ class ComponentDetailDialog {
           children: [
             TextSpan(
               text: '${entry.key}\n',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 10,
+              ),
             ),
             WidgetSpan(child: Icon(Icons.usb, size: 12)),
             TextSpan(
               text: '${pin.bitWidth}',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 10,
+              ),
             ),
             WidgetSpan(child: Icon(Icons.power_settings_new, size: 12)),
             TextSpan(
               text: '${pin.value}',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 10,
+              ),
             ),
           ],
         ),

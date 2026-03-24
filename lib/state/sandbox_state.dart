@@ -47,6 +47,9 @@ class PlacedComponent {
   /// Whether this component can be moved/removed by the player
   final bool immovable;
 
+  /// Whether user-editable values/properties for this component are locked
+  final bool immutable;
+
   /// Optional display label from level configuration (e.g., "A", "B")
   final String? label;
 
@@ -56,6 +59,7 @@ class PlacedComponent {
     required this.position,
     required this.id,
     this.immovable = false,
+    this.immutable = false,
     this.label,
   });
 
@@ -66,6 +70,7 @@ class PlacedComponent {
       'position': [position.dx.toInt(), position.dy.toInt()],
       'id': id,
       if (immovable) 'immovable': immovable,
+      if (immutable) 'immutable': immutable,
       if (label != null) 'label': label,
     };
   }
@@ -198,11 +203,13 @@ class SandboxState extends ChangeNotifier {
         lc.position[1] * gridSize,
       );
 
-      if (resolved.component is InstructionMemory && level.memoryContents != null) {
+      if (resolved.component is InstructionMemory &&
+          level.memoryContents != null) {
         (resolved.component as InstructionMemory).loadInstructions(
           level.memoryContents!.instructionMemory,
         );
-      } else if (resolved.component is DataMemory && level.memoryContents != null) {
+      } else if (resolved.component is DataMemory &&
+          level.memoryContents != null) {
         (resolved.component as DataMemory).loadData(
           level.memoryContents!.dataMemory,
         );
@@ -218,6 +225,7 @@ class SandboxState extends ChangeNotifier {
         position,
         resolved.component,
         immovable: lc.immovable,
+        immutable: lc.immutable,
         label: lc.label,
       );
     }
@@ -300,6 +308,7 @@ class SandboxState extends ChangeNotifier {
     Offset position,
     Component component, {
     bool immovable = false,
+    bool immutable = false,
     String? label,
   }) {
     final id = '${_nextComponentId++}';
@@ -309,6 +318,7 @@ class SandboxState extends ChangeNotifier {
       position: position,
       id: id,
       immovable: immovable,
+      immutable: immutable,
       label: label,
     );
     _placedComponents.add(placed);
@@ -355,6 +365,7 @@ class SandboxState extends ChangeNotifier {
         position: newPosition,
         id: component.id,
         immovable: component.immovable,
+        immutable: component.immutable,
         label: component.label,
       );
       notifyListeners();
@@ -366,12 +377,17 @@ class SandboxState extends ChangeNotifier {
     final index = _placedComponents.indexWhere((c) => c.id == componentId);
     if (index != -1) {
       final component = _placedComponents[index];
+      if (component.immutable) {
+        return;
+      }
       if (newName != "") {
         _placedComponents[index] = PlacedComponent(
           type: component.type,
           component: component.component,
           position: component.position,
           id: component.id,
+          immovable: component.immovable,
+          immutable: component.immutable,
           label: newName,
         );
       } else {
@@ -381,6 +397,8 @@ class SandboxState extends ChangeNotifier {
           component: component.component,
           position: component.position,
           id: component.id,
+          immovable: component.immovable,
+          immutable: component.immutable,
         );
       }
 
@@ -803,6 +821,7 @@ class SandboxState extends ChangeNotifier {
         );
         final id = compData['id'] as String;
         final immovable = compData['immovable'] as bool? ?? false;
+        final immutable = compData['immutable'] as bool? ?? false;
         final label = compData['label'] as String?;
 
         // Create component instance
@@ -828,6 +847,7 @@ class SandboxState extends ChangeNotifier {
             position: position,
             id: id,
             immovable: immovable,
+            immutable: immutable,
             label: label,
           ),
         );
@@ -969,19 +989,22 @@ class SandboxState extends ChangeNotifier {
       if (inputCount == 0 || outputCount == 0) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Circuit must have inputs and outputs')),
+            const SnackBar(
+              content: Text('Circuit must have inputs and outputs'),
+            ),
           );
         }
         return;
       }
 
-      final validationResult = await LevelValidator.validateCircuitWithSimulation(
-        components: _placedComponents.map((pc) => pc.component).toList(),
-        tests: level.tests,
-        maxComponentCount: level.maxComponentCount,
-        resetBeforeTest: resetSimulation,
-        runSimulation: startSimulation,
-      );
+      final validationResult =
+          await LevelValidator.validateCircuitWithSimulation(
+            components: _placedComponents.map((pc) => pc.component).toList(),
+            tests: level.tests,
+            maxComponentCount: level.maxComponentCount,
+            resetBeforeTest: resetSimulation,
+            runSimulation: startSimulation,
+          );
 
       if (!context.mounted) return;
 
@@ -1023,9 +1046,9 @@ class SandboxState extends ChangeNotifier {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error checking solution: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error checking solution: $e')));
       }
     }
   }

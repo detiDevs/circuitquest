@@ -64,6 +64,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
     final bitWidth = outputPin.bitWidth;
     final maxValue = (1 << bitWidth) - 1;
     final currentValue = outputPin.value;
+    final isImmutable = widget.placedComponent.immutable;
 
     // Update controller if value changed externally
     if (_controller.text != currentValue.toString()) {
@@ -78,136 +79,180 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if(widget.placedComponent.label != null) Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 4,
-                  vertical: 2,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: Colors.blue[200]!),
-                ),
-                child: Text(
-                  widget.placedComponent.label!,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black
+              if (widget.placedComponent.label != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                    vertical: 2,
                   ),
-                ),
-              ),
-          // Bitwidth toggle button
-          Tooltip(
-            message: AppLocalizations.of(context)!.toggleBitwidth,
-            child: GestureDetector(
-              onTap: () {
-                print("OutputWires: ${outputPin.connections}");
-                if (outputPin.connections.isNotEmpty){
-                  SnackBarUtils.showError(context, AppLocalizations.of(context)!.cantChangeBitwidth);
-                  return;
-                }
-                int newBitWidth;
-                if (bitWidth == 1) {
-                  newBitWidth = 8;
-                } else if (bitWidth == 8) {
-                  newBitWidth = 32;
-                } else {
-                  newBitWidth = 1;
-                }
-                // Create new output pin with new bitwidth
-                widget.inputComponent.outputs['outValue'] =
-                  widget.inputComponent.outputs['outValue']!.copyWith(newBitWidth);
-
-                // Trigger evaluation after bitwidth change
-                _triggerEvaluation();
-
-                setState(() {
-                  _controller.text = currentValue.toString();
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.blue[100],
-                  border: Border.all(color: Colors.blue[700]!),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  AppLocalizations.of(context)!.bitwidthLabel(bitWidth),
-                  style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue[700],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // Value input
-          if (bitWidth == 1)
-            // Toggle button for 1-bit
-            GestureDetector(
-              onTap: () {
-                widget.inputComponent.setValue(currentValue == 0 ? 1 : 0);
-                
-                // Trigger evaluation after value change
-                _triggerEvaluation();
-                
-                setState(() {
-                  _controller.text = (currentValue == 0 ? 1 : 0).toString();
-                });
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: currentValue == 0 ? Colors.red : Colors.green,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  currentValue == 0 ? '0' : '1',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            )
-          else
-            // Text field for 8/32-bit
-            SizedBox(
-              width: widget.gridSize - 8,
-              height: 24,
-              child: TextField(
-                controller: _controller,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  border: OutlineInputBorder(
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
                     borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: Colors.blue[200]!),
+                  ),
+                  child: Text(
+                    widget.placedComponent.label!,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-                style: const TextStyle(fontSize: 11),
-                onChanged: (value) {
-                  final intValue = int.tryParse(value) ?? 0;
-                  final constrainedValue = intValue.clamp(0, maxValue);
-                  widget.inputComponent.setValue(constrainedValue);
+              // Bitwidth toggle button
+              Tooltip(
+                message: AppLocalizations.of(context)!.toggleBitwidth,
+                child: GestureDetector(
+                  onTap: isImmutable
+                      ? null
+                      : () {
+                          if (outputPin.connections.isNotEmpty) {
+                            SnackBarUtils.showError(
+                              context,
+                              AppLocalizations.of(context)!.cantChangeBitwidth,
+                            );
+                            return;
+                          }
+                          int newBitWidth;
+                          if (bitWidth == 1) {
+                            newBitWidth = 8;
+                          } else if (bitWidth == 8) {
+                            newBitWidth = 32;
+                          } else {
+                            newBitWidth = 1;
+                          }
+                          // Create new output pin with new bitwidth
+                          widget.inputComponent.outputs['outValue'] = widget
+                              .inputComponent
+                              .outputs['outValue']!
+                              .copyWith(newBitWidth);
 
-                  // Trigger evaluation after value change
-                  _triggerEvaluation();
+                          // Trigger evaluation after bitwidth change
+                          _triggerEvaluation();
 
-                  // Update display only if the value was out of range
-                  if (constrainedValue != intValue) {
-                    _controller.text = constrainedValue.toString();
-                    _controller.selection = TextSelection.fromPosition(
-                      TextPosition(offset: constrainedValue.toString().length),
-                    );
-                  }
-                },
+                          setState(() {
+                            _controller.text = currentValue.toString();
+                          });
+                        },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isImmutable ? Colors.grey[300] : Colors.blue[100],
+                      border: Border.all(
+                        color: isImmutable
+                            ? Colors.grey[600]!
+                            : Colors.blue[700]!,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.bitwidthLabel(bitWidth),
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        color: isImmutable
+                            ? Colors.grey[700]
+                            : Colors.blue[700],
+                      ),
+                    ),
+                  ),
+                ),
               ),
-            ),
+              // Value input
+              if (bitWidth == 1)
+                // Toggle button for 1-bit
+                GestureDetector(
+                  onTap: isImmutable
+                      ? null
+                      : () {
+                          widget.inputComponent.setValue(
+                            currentValue == 0 ? 1 : 0,
+                          );
+
+                          // Trigger evaluation after value change
+                          _triggerEvaluation();
+
+                          setState(() {
+                            _controller.text = (currentValue == 0 ? 1 : 0)
+                                .toString();
+                          });
+                        },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isImmutable
+                          ? Colors.grey[400]
+                          : (currentValue == 0 ? Colors.red : Colors.green),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      currentValue == 0 ? '0' : '1',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: isImmutable ? Colors.black87 : Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+              else
+                // Text field for 8/32-bit
+                SizedBox(
+                  width: widget.gridSize - 8,
+                  height: 24,
+                  child: TextField(
+                    controller: _controller,
+                    enabled: !isImmutable,
+                    readOnly: isImmutable,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 2,
+                      ),
+                      filled: isImmutable,
+                      fillColor: isImmutable ? Colors.grey[200] : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isImmutable ? Colors.grey[700] : null,
+                    ),
+                    onChanged: isImmutable
+                        ? null
+                        : (value) {
+                            final intValue = int.tryParse(value) ?? 0;
+                            final constrainedValue = intValue.clamp(
+                              0,
+                              maxValue,
+                            );
+                            widget.inputComponent.setValue(constrainedValue);
+
+                            // Trigger evaluation after value change
+                            _triggerEvaluation();
+
+                            // Update display only if the value was out of range
+                            if (constrainedValue != intValue) {
+                              _controller.text = constrainedValue.toString();
+                              _controller
+                                  .selection = TextSelection.fromPosition(
+                                TextPosition(
+                                  offset: constrainedValue.toString().length,
+                                ),
+                              );
+                            }
+                          },
+                  ),
+                ),
             ],
           ),
         ),
