@@ -1,6 +1,8 @@
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/commands/command_controller.dart';
-import 'package:circuitquest/core/commands/place_component_command.dart';import 'package:circuitquest/core/logic/pin.dart';import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
+import 'package:circuitquest/core/commands/place_component_command.dart';
+import 'package:circuitquest/core/logic/pin.dart';
+import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/placed_component_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +10,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../state/sandbox_state.dart';
 import '../../../../core/components/component_registry.dart';
 import 'package:circuitquest/levels/level.dart';
-
 
 /// The main canvas where components are placed and connected.
 ///
@@ -31,8 +32,21 @@ class CircuitCanvas extends ConsumerStatefulWidget {
 class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   /// Grid size in pixels
   static const double gridSize = Constants.kGridCellSize;
-  static const double _minScale = 0.1;
-  static const double _maxScale = 4.0;
+  // Absolute scene-scale limits (independent from initial fit scale).
+  static const double _absoluteMinScale = 0.1;
+  static const double _absoluteMaxScale = 8.0;
+
+  // Large boundary so pan constraints do not effectively raise min zoom
+  // depending on where the circuit is centered.
+  static const double _boundaryMarginSize =
+      Constants.kGridSizeInPixels / _absoluteMinScale;
+
+  // Initial viewport fit should not start already at max zoom.
+  static const double _maxInitialFitScale = 2.0;
+
+  // Last applied initial fit scale used to derive InteractiveViewer
+  // relative min/max limits so absolute zoom range remains constant.
+  double _initialFitScale = 1.0;
 
   /// Current mouse/touch position for wire drawing
   Offset? _currentPointerPosition;
@@ -66,7 +80,10 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
     _sandboxState = ref.read(sandboxProvider);
     // Try to initialize from level after first frame to ensure provider readiness
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _sandboxState.initializeFromLevelIfNeeded(widget.level, gridSize: gridSize);
+      _sandboxState.initializeFromLevelIfNeeded(
+        widget.level,
+        gridSize: gridSize,
+      );
       _lastViewportCenterRequestId = _sandboxState.viewportCenterRequestId;
       _centerViewportOnCircuit(_sandboxState.placedComponents);
     });
@@ -123,10 +140,17 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
           final scaleY = size.height / boundsHeight;
           scale = scaleX < scaleY ? scaleX : scaleY;
         }
-
-        final clampedScale = scale.clamp(_minScale, _maxScale);
+        final clampedScale = scale.clamp(
+          _absoluteMinScale,
+          _maxInitialFitScale,
+        );
         final offsetX = size.width / 2 - (targetCenter.dx * clampedScale);
         final offsetY = size.height / 2 - (targetCenter.dy * clampedScale);
+        if ((_initialFitScale - clampedScale).abs() > 0.0001) {
+          setState(() {
+            _initialFitScale = clampedScale;
+          });
+        }
 
         _transformationController.value = Matrix4.identity()
           ..setEntry(0, 0, clampedScale)
@@ -159,7 +183,9 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
 
         // Convert viewport coordinates to scene (canvas) coordinates,
         // accounting for current pan/zoom/initial centering transform.
-        final scenePosition = _transformationController.toScene(viewportPosition);
+        final scenePosition = _transformationController.toScene(
+          viewportPosition,
+        );
         final gridPosition = _snapToGrid(scenePosition);
 
         // Create and place the component using command pattern
@@ -177,11 +203,20 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
         CommandController.executeCommand(command);
       },
       builder: (context, candidateData, rejectedData) {
+        final effectiveMinScale = (_absoluteMinScale / _initialFitScale).clamp(
+          0.01,
+          1000.0,
+        );
+        final effectiveMaxScale = (_absoluteMaxScale / _initialFitScale).clamp(
+          0.01,
+          1000.0,
+        );
+
         return InteractiveViewer(
           transformationController: _transformationController,
-          boundaryMargin: const EdgeInsets.all(1000),
-          minScale: _minScale,
-          maxScale: _maxScale,
+          boundaryMargin: const EdgeInsets.all(_boundaryMarginSize),
+          minScale: effectiveMinScale,
+          maxScale: effectiveMaxScale,
           constrained: false,
           onInteractionEnd: (details) {
             // Cancel wire drawing when zoom/pan interaction ends
@@ -205,7 +240,10 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
               onTapDown: (details) {
                 // Cancel wire drawing only when tapping empty space
                 if (state.wireDrawingStart != null) {
-                  final hitComponent = _hitTestComponent(state, details.localPosition);
+                  final hitComponent = _hitTestComponent(
+                    state,
+                    details.localPosition,
+                  );
                   if (hitComponent == null) {
                     state.cancelWireDrawing();
                     setState(() {
@@ -289,17 +327,26 @@ class _GridPainter extends CustomPainter {
       ..strokeWidth = 0.5;
 
     const cellSize = Constants.kGridCellSize;
-    const canvasCenter = (Constants.kGridSizeInPixels / 2); // Center of the 4000x4000 canvas
-    
+    const canvasCenter =
+        (Constants.kGridSizeInPixels / 2); // Center of the 4000x4000 canvas
+
     // Calculate grid line positions centered at canvasCenter
     final gridStartX = (canvasCenter % cellSize).toInt();
     final gridStartY = (canvasCenter % cellSize).toInt();
-    
-    final int offsetGridX = ((canvasCenter - gridStartX) / cellSize).floor().toInt();
-    final int offsetGridY = ((canvasCenter - gridStartY) / cellSize).floor().toInt();
+
+    final int offsetGridX = ((canvasCenter - gridStartX) / cellSize)
+        .floor()
+        .toInt();
+    final int offsetGridY = ((canvasCenter - gridStartY) / cellSize)
+        .floor()
+        .toInt();
 
     // Draw vertical lines
-    for (int i = -offsetGridX - 1; i < (size.width / cellSize).ceil() + 1; i++) {
+    for (
+      int i = -offsetGridX - 1;
+      i < (size.width / cellSize).ceil() + 1;
+      i++
+    ) {
       final x = (Constants.kGridSizeInPixels / 2) + i * cellSize;
       if (x >= 0 && x <= size.width) {
         canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
@@ -307,7 +354,11 @@ class _GridPainter extends CustomPainter {
     }
 
     // Draw horizontal lines
-    for (int i = -offsetGridY - 1; i < (size.height / cellSize).ceil() + 1; i++) {
+    for (
+      int i = -offsetGridY - 1;
+      i < (size.height / cellSize).ceil() + 1;
+      i++
+    ) {
       final y = (Constants.kGridSizeInPixels / 2) + i * cellSize;
       if (y >= 0 && y <= size.height) {
         canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
@@ -480,10 +531,7 @@ class _WirePainter extends CustomPainter {
         );
       }
 
-      final controlPoint1 = Offset(
-        midPoint1.dx,
-        (start.dy + midPoint1.dy) / 2,
-      );
+      final controlPoint1 = Offset(midPoint1.dx, (start.dy + midPoint1.dy) / 2);
       final controlPoint2 = Offset(
         midPoint1.dx,
         (midPoint1.dy + midPoint2.dy) / 2,
@@ -492,10 +540,7 @@ class _WirePainter extends CustomPainter {
         midPoint2.dx,
         (midPoint1.dy + midPoint2.dy) / 2,
       );
-      final controlPoint4 = Offset(
-        midPoint2.dx,
-        (midPoint2.dy + end.dy) / 2,
-      );
+      final controlPoint4 = Offset(midPoint2.dx, (midPoint2.dy + end.dy) / 2);
 
       path.cubicTo(
         controlPoint1.dx,
