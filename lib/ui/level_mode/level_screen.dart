@@ -84,11 +84,15 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         ],
       ),
       body: _LevelScreenBody(level: widget.level),
-      floatingActionButton: isMobile ? null : FloatingActionButton.extended(
-        onPressed: _showLevelInfoDialog,
-        label: Text(AppLocalizations.of(context)!.levelInformationTooltip),
-        icon: Icon(Icons.info)
-      ),
+      floatingActionButton: isMobile
+          ? null
+          : FloatingActionButton.extended(
+              onPressed: _showLevelInfoDialog,
+              label: Text(
+                AppLocalizations.of(context)!.levelInformationTooltip,
+              ),
+              icon: Icon(Icons.info),
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: isMobile
           ? LevelBottomAppBar(level: widget.level)

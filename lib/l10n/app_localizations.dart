@@ -692,6 +692,18 @@ abstract class AppLocalizations {
   /// **'Hide'**
   String get hide;
 
+  /// Button label to reveal the first hint in level info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Show a hint'**
+  String get showAHint;
+
+  /// Button label to reveal the next hint in level info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Show next hint'**
+  String get showNextHint;
+
   /// OK button label
   ///
   /// In en, this message translates to:
