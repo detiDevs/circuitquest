@@ -341,6 +341,14 @@
   "@hide": {
     "description": "Label to hide details or hints"
   },
+  "showAHint": "Show a hint",
+  "@showAHint": {
+    "description": "Button label to reveal the first hint in level info dialog"
+  },
+  "showNextHint": "Show next hint",
+  "@showNextHint": {
+    "description": "Button label to reveal the next hint in level info dialog"
+  },
   "ok": "OK",
   "@ok": {
     "description": "OK button label"
