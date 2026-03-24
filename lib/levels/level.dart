@@ -42,6 +42,7 @@ class LevelComponent {
   final String type;
   final List<int> position;
   final bool immovable;
+  final bool immutable;
   final String? label;
   final int? initialValue;
   final int? initialBitWidth;
@@ -52,6 +53,7 @@ class LevelComponent {
     required this.type,
     required this.position,
     required this.immovable,
+    this.immutable = false,
     this.label,
     this.initialValue,
     this.initialBitWidth,
@@ -62,11 +64,12 @@ class LevelComponent {
   factory LevelComponent.fromJson(Map<String, dynamic> json) {
     final initialValueJson = json['initialValue'];
     final bool isListValue = initialValueJson is List;
-    
+
     return LevelComponent(
       type: json['type'] as String,
       position: (json['position'] as List<dynamic>).cast<int>(),
       immovable: json['immovable'] as bool? ?? false,
+      immutable: json['immutable'] as bool? ?? false,
       label: json['label'] as String?,
       initialValue: isListValue ? null : (initialValueJson as int?),
       initialBitWidth: json['initialBitWidth'] as int?,
@@ -81,6 +84,7 @@ class LevelComponent {
       'type': type,
       'position': position,
       'immovable': immovable,
+      if (immutable) 'immutable': immutable,
       if (label != null) 'label': label,
       if (initialValue != null) 'initialValue': initialValue,
       if (initialBitWidth != null) 'initialBitWidth': initialBitWidth,
@@ -132,23 +136,18 @@ class MemoryContents {
   final List<int> instructionMemory;
   final List<int> dataMemory;
 
-  MemoryContents({
-    required this.instructionMemory,
-    required this.dataMemory,
-  });
+  MemoryContents({required this.instructionMemory, required this.dataMemory});
 
   factory MemoryContents.fromJson(Map<String, dynamic> json) {
     return MemoryContents(
-      instructionMemory: (json['instructionMemory'] as List<dynamic>? ?? []).cast<int>(),
+      instructionMemory: (json['instructionMemory'] as List<dynamic>? ?? [])
+          .cast<int>(),
       dataMemory: (json['dataMemory'] as List<dynamic>? ?? []).cast<int>(),
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'instructionMemory': instructionMemory,
-      'dataMemory': dataMemory,
-    };
+    return {'instructionMemory': instructionMemory, 'dataMemory': dataMemory};
   }
 }
 
@@ -221,7 +220,9 @@ class Level {
           .map((e) => LevelTest.fromJson(e as Map<String, dynamic>))
           .toList(),
       memoryContents: json['memoryContents'] != null
-          ? MemoryContents.fromJson(json['memoryContents'] as Map<String, dynamic>)
+          ? MemoryContents.fromJson(
+              json['memoryContents'] as Map<String, dynamic>,
+            )
           : null,
       clockConfig: json['clockConfig'] != null
           ? ClockConfig.fromJson(json['clockConfig'] as Map<String, dynamic>)
@@ -258,9 +259,13 @@ class Level {
       case 'name':
         return localeCode == 'de' && nameDe != null ? nameDe! : name;
       case 'description':
-        return localeCode == 'de' && descriptionDe != null ? descriptionDe! : description;
+        return localeCode == 'de' && descriptionDe != null
+            ? descriptionDe!
+            : description;
       case 'difficulty':
-        return localeCode == 'de' && difficultyDe != null ? difficultyDe! : difficulty;
+        return localeCode == 'de' && difficultyDe != null
+            ? difficultyDe!
+            : difficulty;
       default:
         return '';
     }
@@ -271,7 +276,9 @@ class Level {
   List<String> getLocalizedStringList(String field, String localeCode) {
     switch (field) {
       case 'objectives':
-        return localeCode == 'de' && objectivesDe != null ? objectivesDe! : objectives;
+        return localeCode == 'de' && objectivesDe != null
+            ? objectivesDe!
+            : objectives;
       case 'hints':
         return localeCode == 'de' && hintsDe != null ? hintsDe! : hints;
       default:
@@ -325,11 +332,7 @@ class LevelCategory {
   final String? nameDe;
   final List<LevelBlockItem> levels;
 
-  LevelCategory({
-    required this.name,
-    this.nameDe,
-    required this.levels,
-  });
+  LevelCategory({required this.name, this.nameDe, required this.levels});
 
   factory LevelCategory.fromJson(Map<String, dynamic> json) {
     return LevelCategory(
