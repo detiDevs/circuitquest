@@ -137,7 +137,7 @@ class ComponentDetailDialog {
               ),
               Divider(),
               // Delete option and closing button
-              TextButton(
+              if (!placedComponent.immovable) TextButton(
                 onPressed: () {
                   // Use command pattern for undo/redo support
                   final command = RemoveComponentCommand(
