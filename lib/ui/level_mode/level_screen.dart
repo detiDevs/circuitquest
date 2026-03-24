@@ -51,9 +51,6 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     // Clear undo/redo stacks when leaving level
     CommandController.clear();
 
-    // Reset level clock
-    resetLevelClock(ref);
-
     super.dispose();
   }
 
