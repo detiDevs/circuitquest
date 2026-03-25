@@ -216,8 +216,6 @@ class SandboxState extends ChangeNotifier {
         (lc.position[1] * gridSize) + canvasCenter,
       );
 
-      if (resolved.component is InstructionMemory &&
-          level.memoryContents != null) {
         if (resolved.component is InstructionMemory &&
             level.memoryContents != null) {
           (resolved.component as InstructionMemory).loadInstructions(
@@ -235,32 +233,31 @@ class SandboxState extends ChangeNotifier {
           (resolved.component as RegisterBlock).loadRegisters(
             lc.initialRegisterValues!,
           );
-        }
-
-        placeComponent(
-          resolved.typeName,
-          position,
-          resolved.component,
-          immovable: lc.immovable,
-          immutable: lc.immutable,
-          label: lc.label,
-        );
       }
 
-      for (final connection in level.connections) {
-        addConnection(
-          connection.sourceComponentId,
-          connection.sourcePin,
-          connection.targetComponentId,
-          connection.targetPin,
-        );
-      }
-
-      _initializedFromLevel = true;
-      _initializedLevelId = level.levelId;
-      _viewportCenterRequestId++;
-      notifyListeners();
+      placeComponent(
+        resolved.typeName,
+        position,
+        resolved.component,
+        immovable: lc.immovable,
+        immutable: lc.immutable,
+        label: lc.label,
+      );
     }
+
+    for (final connection in level.connections) {
+      addConnection(
+        connection.sourceComponentId,
+        connection.sourcePin,
+        connection.targetComponentId,
+        connection.targetPin,
+      );
+    }
+
+    _initializedFromLevel = true;
+    _initializedLevelId = level.levelId;
+    _viewportCenterRequestId++;
+    notifyListeners();
   }
 
   ({String typeName, Component component})? _resolveComponentForLevelComponent(
