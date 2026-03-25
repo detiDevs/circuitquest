@@ -26,22 +26,22 @@ void main() {
       );
 
       // Test case: 0 AND 0 = 0
-      inputA.setValue(0);
-      inputB.setValue(0);
+      inputA.value = 0;
+      inputB.value = 0;
       final result1 = simulator.evaluateEventDriven();
       expect(result1, true);
       expect(output.value, 0);
 
       // Test case: 1 AND 1 = 1
-      inputA.setValue(1);
-      inputB.setValue(1);
+      inputA.value = 1;
+      inputB.value = 1;
       final result2 = simulator.evaluateEventDriven();
       expect(result2, true);
       expect(output.value, 1);
 
       // Test case: 1 AND 0 = 0
-      inputA.setValue(1);
-      inputB.setValue(0);
+      inputA.value = 1;
+      inputB.value = 0;
       final result3 = simulator.evaluateEventDriven();
       expect(result3, true);
       expect(output.value, 0);
@@ -68,23 +68,23 @@ void main() {
       );
 
       // Test case: (1 AND 1) OR 0 = 1
-      inputA.setValue(1);
-      inputB.setValue(1);
-      inputC.setValue(0);
+      inputA.value = 1;
+      inputB.value = 1;
+      inputC.value = 0;
       simulator.evaluateEventDriven();
       expect(output.value, 1);
 
       // Test case: (0 AND 1) OR 0 = 0
-      inputA.setValue(0);
-      inputB.setValue(1);
-      inputC.setValue(0);
+      inputA.value = 0;
+      inputB.value = 1;
+      inputC.value = 0;
       simulator.evaluateEventDriven();
       expect(output.value, 0);
 
       // Test case: (0 AND 0) OR 1 = 1
-      inputA.setValue(0);
-      inputB.setValue(0);
-      inputC.setValue(1);
+      inputA.value = 0;
+      inputB.value = 0;
+      inputC.value = 1;
       simulator.evaluateEventDriven();
       expect(output.value, 1);
     });
@@ -105,13 +105,13 @@ void main() {
       );
 
       // Start with 0, which should propagate through: NOT(NOT(0)) = 0
-      input.setValue(0);
+      input.value = 0;
       simulator.evaluateEventDriven();
       output.evaluate();
       expect(output.value, 0); // NOT(NOT(0)) = 0
 
       // Now change to 1, which should propagate: NOT(NOT(1)) = 1
-      input.setValue(1);
+      input.value = 1;
       simulator.evaluateEventDriven();
       output.evaluate();
       expect(output.value, 1); // NOT(NOT(1)) = 1
@@ -132,7 +132,7 @@ void main() {
 
       final List<Set<Component>> updates = [];
       
-      input.setValue(1);
+      input.value = 1;
       simulator.evaluateEventDriven(
         onUpdate: (components) => updates.add(components),
       );
@@ -158,7 +158,7 @@ void main() {
         inputComponents: {input},
       );
 
-      input.setValue(1);
+      input.value = 1;
       final result = simulator.evaluateEventDriven();
       expect(result, true); // Should complete successfully
     });
@@ -190,8 +190,8 @@ void main() {
         inputComponents: {inputA, inputB},
       );
 
-      inputA.setValue(1);
-      inputB.setValue(1);
+      inputA.value = 1;
+      inputB.value = 1;
 
       // Start evaluation from the AND gate instead of inputs
       final result = simulator.evaluateEventDriven(
@@ -219,8 +219,8 @@ void main() {
         inputComponents: {inputA, inputB},
       );
 
-      inputA.setValue(1);
-      inputB.setValue(1);
+      inputA.value = 1;
+      inputB.value = 1;
 
       final result = simulator.evaluateTopological();
       expect(result, true);
@@ -244,8 +244,8 @@ void main() {
         inputComponents: {inputA, inputB},
       );
 
-      inputA.setValue(1);
-      inputB.setValue(1);
+      inputA.value = 1;
+      inputB.value = 1;
 
       final result = simulator.evaluateTopological();
       expect(result, true);
@@ -269,7 +269,7 @@ void main() {
 
       final List<Set<Component>> updates = [];
       
-      input.setValue(1);
+      input.value = 1;
       simulator.evaluateTopological(
         onUpdate: (components) => updates.add(components),
       );

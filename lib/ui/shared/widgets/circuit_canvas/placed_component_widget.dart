@@ -114,24 +114,27 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
             widget.placedComponent.id,
             snapped,
             oldPosition,
-            onError: (_) => SnackBarUtils.showError(context, AppLocalizations.of(context)!.gridCellOccupied),
+            onError: (_) => SnackBarUtils.showError(
+              context,
+              AppLocalizations.of(context)!.gridCellOccupied,
+            ),
           );
           CommandController.executeCommand(command);
         },
         onSecondaryTapDown: (details) {
           // Show context menu on right-click
-          ComponentDetailDialog.displayDialog(
-            context,
-            widget.placedComponent,
-            state,
+          showDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                ComponentDetailDialog(placedComponent: widget.placedComponent),
           );
         },
         onLongPress: () {
           // Show context menu on long press (for touch devices)
-          ComponentDetailDialog.displayDialog(
-            context,
-            widget.placedComponent,
-            state,
+          showDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                ComponentDetailDialog(placedComponent: widget.placedComponent),
           );
         },
         child: Container(
@@ -185,7 +188,7 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                               fontWeight: FontWeight.bold,
                               // Exceptional use of direct color for text
                               // This is only because the label background is always light blue
-                              color: Colors.black
+                              color: Colors.black,
                             ),
                           ),
                         ),

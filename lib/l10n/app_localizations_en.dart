@@ -390,5 +390,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetLevel => 'Reset level';
 
   @override
+  String get instructionMemoryContents => 'Instruction Memory Contents';
+
+  @override
+  String get instructionMemoryFormatHint =>
+      'Instructions are configured as the decimal version of a 32 bit number. For more info, see MIPS Reference Sheet';
+
+  @override
+  String get showInstructions => 'Show instructions';
+
+  @override
+  String get noInstructionsConfigured => 'No instructions configured';
+
+  @override
+  String get addInstruction => 'Befehl hinzufügen';
+
+  @override
+  String get unsavedChanges => 'Unsaved changes!';
+
+  @override
+  String get overrideNextProgramCounterValue =>
+      'Override next Program Counter value';
+
+  @override
+  String get invalidProgramCounterValue =>
+      'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).';
+
+  @override
   String get gridCellOccupied => 'This grid cell is already occupied.';
 }

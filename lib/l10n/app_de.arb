@@ -398,5 +398,15 @@
     }
   },
   "resetLevel": "Level zurücksetzen",
+
+  "instructionMemoryContents": "Instruction Memory Befehlsliste",
+  "instructionMemoryFormatHint": "Befehle werden als Dezimalversion einer 32-Bit-Zahl angegeben. Für mehr Infos, siehe MIPS Reference Sheet",
+  "showInstructions": "Befehle anzeigen",
+  "noInstructionsConfigured": "Keine Befehle konfiguriert",
+  "addInstruction": "Befehl hinzufügen",
+  "unsavedChanges": "Ungespeicherte Änderungen!",
+
+  "overrideNextProgramCounterValue": "Nächsten Program Counter Wert überschreiben",
+  "invalidProgramCounterValue": "Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).",
   "gridCellOccupied": "Diese Zelle ist bereits belegt."
 }
