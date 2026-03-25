@@ -10,23 +10,30 @@ import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/instruction_memory_contents_dialog.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/program_counter_value_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 const double imageContainerHeight = 400;
 const double maxDialogWidth = 600;
 
-class ComponentDetailDialog {
-  static void displayDialog(
-    BuildContext context,
-    PlacedComponent placedComponent,
-    SandboxState sandboxState,
-  ) {
-    var textController = TextEditingController();
+class ComponentDetailDialog extends ConsumerStatefulWidget {
+  final PlacedComponent placedComponent;
+
+  const ComponentDetailDialog({super.key, required this.placedComponent});
+
+  @override
+  ConsumerState<ComponentDetailDialog> createState() => _ComponentDetailDialogState();
+}
+
+class _ComponentDetailDialogState extends ConsumerState<ComponentDetailDialog> {
+  final textController = TextEditingController();
+  
+  @override
+  Widget build(BuildContext context) {
+    PlacedComponent placedComponent = widget.placedComponent;
     textController.text = placedComponent.label ?? "";
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => StatefulBuilder(
-        builder: (context, setDialogState) => Dialog(
+    SandboxState sandboxState = ref.watch(sandboxProvider);
+    return Dialog(
           constraints: BoxConstraints(maxWidth: maxDialogWidth),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -190,9 +197,7 @@ class ComponentDetailDialog {
               ],
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   /// Builds pin widgets for a specific side of the component in the dialog grid layout.
