@@ -397,5 +397,6 @@
       }
     }
   },
-  "resetLevel": "Reset level"
+  "resetLevel": "Reset level",
+  "gridCellOccupied": "This grid cell is already occupied."
 }

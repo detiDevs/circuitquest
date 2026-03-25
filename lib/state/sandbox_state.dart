@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
 import 'package:circuitquest/core/components/cpu/data_memory.dart';
 import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
@@ -65,9 +66,15 @@ class PlacedComponent {
 
   /// Converts this PlacedComponent to JSON format
   Map<String, dynamic> toJson() {
+    final canvasCenter = Constants.kGridSizeInPixels / 2;
+    final logicalX = ((position.dx - canvasCenter) / Constants.kGridCellSize)
+        .round();
+    final logicalY = ((position.dy - canvasCenter) / Constants.kGridCellSize)
+        .round();
+
     return {
       'type': type,
-      'position': [position.dx.toInt(), position.dy.toInt()],
+      'position': [logicalX, logicalY],
       'id': id,
       if (immovable) 'immovable': immovable,
       if (immutable) 'immutable': immutable,
@@ -174,6 +181,9 @@ class SandboxState extends ChangeNotifier {
   /// Tracks which level was used for one-time initialization
   int? _initializedLevelId;
 
+  /// Monotonic token used by UI to recenter viewport after a circuit load.
+  int _viewportCenterRequestId = 0;
+
   /// Initializes the clock manager from level configuration
   void initializeClockFromLevel(ClockConfig? clockConfig) {
     if (clockConfig != null && clockConfig.mode > 0) {
@@ -198,26 +208,31 @@ class SandboxState extends ChangeNotifier {
       final resolved = _resolveComponentForLevelComponent(lc);
       if (resolved == null) continue;
 
+      // Convert logical coordinates (centered at 0,0) to canvas coordinates
+      // Canvas center is at (2000, 2000) in the 4000x4000 pixel grid
+      final canvasCenter = Constants.kGridSizeInPixels / 2;
       final position = Offset(
-        lc.position[0] * gridSize,
-        lc.position[1] * gridSize,
+        (lc.position[0] * gridSize) + canvasCenter,
+        (lc.position[1] * gridSize) + canvasCenter,
       );
 
-      if (resolved.component is InstructionMemory &&
-          level.memoryContents != null) {
-        (resolved.component as InstructionMemory).loadInstructions(
-          level.memoryContents!.instructionMemory,
-        );
-      } else if (resolved.component is DataMemory &&
-          level.memoryContents != null) {
-        (resolved.component as DataMemory).loadData(
-          level.memoryContents!.dataMemory,
-        );
-      } else if (resolved.component is RegisterBlock &&
-          lc.initialRegisterValues != null) {
-        (resolved.component as RegisterBlock).loadRegisters(
-          lc.initialRegisterValues!,
-        );
+        if (resolved.component is InstructionMemory &&
+            level.memoryContents != null) {
+          (resolved.component as InstructionMemory).loadInstructions(
+            level.memoryContents!.instructionMemory,
+          );
+        } else if (resolved.component is DataMemory &&
+            level.memoryContents != null) {
+        } else if (resolved.component is DataMemory &&
+            level.memoryContents != null) {
+          (resolved.component as DataMemory).loadData(
+            level.memoryContents!.dataMemory,
+          );
+        } else if (resolved.component is RegisterBlock &&
+            lc.initialRegisterValues != null) {
+          (resolved.component as RegisterBlock).loadRegisters(
+            lc.initialRegisterValues!,
+          );
       }
 
       placeComponent(
@@ -241,6 +256,7 @@ class SandboxState extends ChangeNotifier {
 
     _initializedFromLevel = true;
     _initializedLevelId = level.levelId;
+    _viewportCenterRequestId++;
     notifyListeners();
   }
 
@@ -249,7 +265,13 @@ class SandboxState extends ChangeNotifier {
   ) {
     switch (lc.type) {
       case 'Input':
-        return (typeName: 'InputSource', component: InputSource(bitWidth: lc.initialBitWidth ?? 1, value: lc.initialValue ?? 0));
+        return (
+          typeName: 'InputSource',
+          component: InputSource(
+            bitWidth: lc.initialBitWidth ?? 1,
+            value: lc.initialValue ?? 0,
+          ),
+        );
       case 'Output':
         return (typeName: 'OutputProbe', component: OutputProbe());
       default:
@@ -275,6 +297,7 @@ class SandboxState extends ChangeNotifier {
   ({String componentId, String pinName})? get wireDrawingStart =>
       _wireDrawingStart;
   ClockManager? get clockManager => _clockmanager;
+  int get viewportCenterRequestId => _viewportCenterRequestId;
 
   // Undo/Redo getters
   bool get canUndo => CommandController.canUndo;
@@ -303,7 +326,8 @@ class SandboxState extends ChangeNotifier {
   /// Adds a new component to the canvas at the specified position.
   ///
   /// Returns the ID of the newly placed component.
-  String placeComponent(
+  /// Null if position occupied
+  String? placeComponent(
     String type,
     Offset position,
     Component component, {
@@ -311,6 +335,8 @@ class SandboxState extends ChangeNotifier {
     bool immutable = false,
     String? label,
   }) {
+    if (_placedComponents.indexWhere((comp) => comp.position == position) != -1)
+      return null;
     final id = '${_nextComponentId++}';
     final placed = PlacedComponent(
       type: type,
@@ -354,21 +380,47 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Moves a component to a new position.
-  void moveComponent(String componentId, Offset newPosition) {
+  /// Moves a component to a new position unless position already occupied.
+  /// Returns true iff component was successfully moved
+  bool moveComponent(
+    String componentId,
+    Offset newPosition, {
+    Offset? oldPosition,
+  }) {
     final index = _placedComponents.indexWhere((c) => c.id == componentId);
+    final bool cellOccupied =
+        _placedComponents.indexWhere((c) => c.position == newPosition) != -1;
     if (index != -1) {
       final component = _placedComponents[index];
-      _placedComponents[index] = PlacedComponent(
-        type: component.type,
-        component: component.component,
-        position: newPosition,
-        id: component.id,
-        immovable: component.immovable,
-        immutable: component.immutable,
-        label: component.label,
-      );
+      if (cellOccupied) {
+        if (oldPosition != null) {
+          _placedComponents[index] = PlacedComponent(
+            type: component.type,
+            component: component.component,
+            position: oldPosition,
+            id: component.id,
+            immovable: component.immovable,
+            immutable: component.immutable,
+            label: component.label,
+          );
+        }
+        notifyListeners();
+        return false;
+      } else {
+        _placedComponents[index] = PlacedComponent(
+          type: component.type,
+          component: component.component,
+          position: newPosition,
+          id: component.id,
+          immovable: component.immovable,
+          immutable: component.immutable,
+          label: component.label,
+        );
+      }
       notifyListeners();
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -815,11 +867,18 @@ class SandboxState extends ChangeNotifier {
       for (final compData in components) {
         final type = compData['type'] as String;
         final positionList = compData['position'] as List<dynamic>;
+        final id = compData['id']?.toString();
+        if (id == null) {
+          continue;
+        }
+
+        final logicalX = (positionList[0] as num).toDouble();
+        final logicalY = (positionList[1] as num).toDouble();
+        final canvasCenter = Constants.kGridSizeInPixels / 2;
         final position = Offset(
-          (positionList[0] as num).toDouble(),
-          (positionList[1] as num).toDouble(),
+          logicalX * Constants.kGridCellSize + canvasCenter,
+          logicalY * Constants.kGridCellSize + canvasCenter,
         );
-        final id = compData['id'] as String;
         final immovable = compData['immovable'] as bool? ?? false;
         final immutable = compData['immutable'] as bool? ?? false;
         final label = compData['label'] as String?;
@@ -840,7 +899,7 @@ class SandboxState extends ChangeNotifier {
           continue;
         }
 
-        _placedComponents.add(
+        restoreComponentWithId(
           PlacedComponent(
             type: type,
             component: component,
@@ -856,18 +915,41 @@ class SandboxState extends ChangeNotifier {
       // Load connections
       final connections = data['connections'] as List<dynamic>;
       for (final connData in connections) {
+        final sourceId =
+            connData['sourceComponentId']?.toString() ??
+            connData['origin']?.toString();
+        final targetId =
+            connData['targetComponentId']?.toString() ??
+            connData['destination']?.toString();
+        final sourcePin =
+            connData['sourcePin']?.toString() ??
+            connData['originKey']?.toString();
+        final targetPin =
+            connData['targetPin']?.toString() ??
+            connData['destinationKey']?.toString();
+
+        if (sourceId == null ||
+            targetId == null ||
+            sourcePin == null ||
+            targetPin == null) {
+          continue;
+        }
+
         _connections.add(
           WireConnection(
-            sourceComponentId: connData['sourceComponentId'] as String,
-            sourcePin: connData['sourcePin'] as String,
-            targetComponentId: connData['targetComponentId'] as String,
-            targetPin: connData['targetPin'] as String,
+            sourceComponentId: sourceId,
+            sourcePin: sourcePin,
+            targetComponentId: targetId,
+            targetPin: targetPin,
           ),
         );
       }
 
       // Rebuild wire connections
       _rebuildWireConnections();
+
+      // Ask canvas to recenter on the newly loaded circuit.
+      _viewportCenterRequestId++;
 
       notifyListeners();
       return true;
@@ -1022,7 +1104,10 @@ class SandboxState extends ChangeNotifier {
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text('Continue'),
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),

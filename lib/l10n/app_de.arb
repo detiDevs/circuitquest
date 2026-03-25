@@ -397,5 +397,6 @@
       }
     }
   },
-  "resetLevel": "Level zurücksetzen"
+  "resetLevel": "Level zurücksetzen",
+  "gridCellOccupied": "Diese Zelle ist bereits belegt."
 }

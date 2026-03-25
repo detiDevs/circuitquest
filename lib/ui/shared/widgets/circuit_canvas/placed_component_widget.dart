@@ -6,6 +6,7 @@ import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/core/logic/pin.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/custom_component_library.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
@@ -113,6 +114,7 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
             widget.placedComponent.id,
             snapped,
             oldPosition,
+            onError: (_) => SnackBarUtils.showError(context, AppLocalizations.of(context)!.gridCellOccupied),
           );
           CommandController.executeCommand(command);
         },

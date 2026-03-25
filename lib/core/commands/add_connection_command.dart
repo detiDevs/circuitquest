@@ -7,7 +7,6 @@ class AddConnectionCommand extends Command {
   final String _sourcePinName;
   final String _targetComponentId;
   final String _targetPinName;
-  final void Function(String message)? _onError;
 
   WireConnection? _connection;
 
@@ -16,9 +15,9 @@ class AddConnectionCommand extends Command {
     this._sourceComponentId,
     this._sourcePinName,
     this._targetComponentId,
-    this._targetPinName, {
-    void Function(String message)? onError,
-  }) : _onError = onError;
+    this._targetPinName,
+    {super.onError}
+  );
 
   @override
   void execute() {
@@ -37,7 +36,7 @@ class AddConnectionCommand extends Command {
             _sourcePinName,
             _targetComponentId,
             _targetPinName,
-            onError: _onError,
+            onError: onError,
           )!;
         },
       );
@@ -49,7 +48,7 @@ class AddConnectionCommand extends Command {
         _sourcePinName,
         _targetComponentId,
         _targetPinName,
-        onError: _onError,
+        onError: onError,
       );
     }
   }
@@ -71,5 +70,6 @@ class AddConnectionCommand extends Command {
   }
 
   @override
-  String get description => 'Add connection from $_sourceComponentId.$_sourcePinName to $_targetComponentId.$_targetPinName';
+  String get description =>
+      'Add connection from $_sourceComponentId.$_sourcePinName to $_targetComponentId.$_targetPinName';
 }
