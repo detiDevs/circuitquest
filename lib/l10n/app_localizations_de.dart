@@ -420,4 +420,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get invalidProgramCounterValue =>
       'Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).';
+
+  @override
+  String get gridCellOccupied => 'Diese Zelle ist bereits belegt.';
 }

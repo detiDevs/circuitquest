@@ -829,6 +829,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).'**
   String get invalidProgramCounterValue;
+
+  /// No description provided for @gridCellOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'This grid cell is already occupied.'**
+  String get gridCellOccupied;
 }
 
 class _AppLocalizationsDelegate

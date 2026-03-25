@@ -21,6 +21,7 @@ class PlaceComponentCommand extends Command {
     this._componentType,
     this._position,
     this._component, {
+    super.onError,
     bool immovable = false,
     bool immutable = false,
     String? label,
@@ -43,6 +44,11 @@ class PlaceComponentCommand extends Command {
         immutable: _immutable,
         label: _label,
       );
+      if (_componentId == null) {
+        onError!("");
+        return;
+      }
+
       // Store the placed component for future redo operations
       _placedComponent = _sandboxState.getComponent(_componentId!);
     }

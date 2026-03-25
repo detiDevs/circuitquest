@@ -407,5 +407,6 @@
   "unsavedChanges": "Ungespeicherte Änderungen!",
 
   "overrideProgramCounterValue": "Program Counter Wert überschreiben",
-  "invalidProgramCounterValue": "Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4)."
+  "invalidProgramCounterValue": "Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).",
+  "gridCellOccupied": "Diese Zelle ist bereits belegt."
 }
