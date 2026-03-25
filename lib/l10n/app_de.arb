@@ -398,5 +398,8 @@
     }
   },
   "resetLevel": "Level zurücksetzen",
-  "gridCellOccupied": "Diese Zelle ist bereits belegt."
+  "gridCellOccupied": "Diese Zelle ist bereits belegt.",
+  "locked": "Gesperrt",
+  "completed": "Abgeschlossen",
+  "bonusLevel": "Bonuslevel"
 }

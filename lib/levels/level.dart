@@ -293,12 +293,16 @@ class LevelBlockItem {
   final String name;
   final String? nameDe;
   final bool recommended;
+  final bool isBonus;
+  final int? requiredLevelId;
 
   LevelBlockItem({
     required this.id,
     required this.name,
     this.nameDe,
     this.recommended = false,
+    this.isBonus = false,
+    this.requiredLevelId,
   });
 
   factory LevelBlockItem.fromJson(Map<String, dynamic> json) {
@@ -307,6 +311,8 @@ class LevelBlockItem {
       name: json['name'] as String,
       nameDe: json['name_de'] as String?,
       recommended: json['recommended'] as bool? ?? false,
+      isBonus: json['bonus_level'] as bool? ?? false,
+      requiredLevelId: json['required_level_id'] as int?,
     );
   }
 
@@ -316,6 +322,8 @@ class LevelBlockItem {
       'name': name,
       if (nameDe != null) 'name_de': nameDe,
       'recommended': recommended,
+      'bonus_level': isBonus,
+      if (requiredLevelId != null) 'required_level_id' : requiredLevelId,
     };
   }
 
