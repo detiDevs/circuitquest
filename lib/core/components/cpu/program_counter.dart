@@ -8,6 +8,7 @@ class ProgramCounter extends SequentialComponent {
   int _currentPC = 0;
   bool _shoudEvaluateNormally = true;
   int _nextValue = 0;
+  bool _nextValueWasManuallySet = false;
 
   ProgramCounter() {
     _nextPcInput = InputPin(this, bitWidth: 32);
@@ -18,19 +19,24 @@ class ProgramCounter extends SequentialComponent {
     outputs['outValue']!.value = 0;
   }
 
-  int get value => outputs['outValue']!.value;
+  int get nextValue => _nextValue;
 
-  /// Sets the value of the PC to the given byte adress [newValue]
-  /// If [newValue] cannot be converted to a word adress (i.e. is not divisible by 4), the PC value will remain unchanged.
-  set value(int newValue) {
-    if (newValue % 4 == 0) outputs['outValue']!.value = newValue;
+  /// Sets the value of the PC to the given byte adress [nextValue]
+  /// If [nextValue] cannot be converted to a word adress (i.e. is not divisible by 4), the PC value will remain unchanged.
+  set nextValue(int nextValue) {
+    if (nextValue % 4 == 0) {
+      _nextValue = nextValue;
+      _nextValueWasManuallySet = true;
+    }
   }
 
   @override
   bool evaluate() {
-    _nextPcInput.updateFromSource();
-    final nextValue = _nextPcInput.value;
-    _nextValue = nextValue;
+    if (!_nextValueWasManuallySet) {
+      _nextPcInput.updateFromSource();
+      final nextValue = _nextPcInput.value;
+      _nextValue = nextValue;
+    }
 
     // On first evaluation in cycle return true, wait for clock afterwards
     if (_shoudEvaluateNormally) {
@@ -44,8 +50,9 @@ class ProgramCounter extends SequentialComponent {
   void applyNewState() {
     if (_currentPC != _nextValue) {
       _currentPC = _nextValue;
-      _pcOutput.value =_currentPC;
+      _pcOutput.value = _currentPC;
       _shoudEvaluateNormally = true;
+      _nextValueWasManuallySet = false;
     }
   }
 

@@ -406,7 +406,7 @@
   "addInstruction": "Befehl hinzufügen",
   "unsavedChanges": "Unsaved changes!",
 
-  "overrideProgramCounterValue": "Override Program Counter value",
+  "overrideNextProgramCounterValue": "Override next Program Counter value",
   "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).",
   "gridCellOccupied": "This grid cell is already occupied."
 }

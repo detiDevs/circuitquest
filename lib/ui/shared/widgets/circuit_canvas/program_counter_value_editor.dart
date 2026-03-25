@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 
 class ProgramCounterValueEditor extends StatefulWidget {
   final ProgramCounter pc;
-  final VoidCallback? onValueChanged;
 
   const ProgramCounterValueEditor({
     super.key,
     required this.pc,
-    this.onValueChanged,
   });
 
   @override
@@ -24,22 +22,21 @@ class _ProgramCounterValueEditorState extends State<ProgramCounterValueEditor> {
   @override
   void initState() {
     super.initState();
-    textController.text = widget.pc.value.toString();
+    textController.text = widget.pc.nextValue.toString();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(AppLocalizations.of(context)!.overrideProgramCounterValue),
+        Text(AppLocalizations.of(context)!.overrideNextProgramCounterValue),
         TextField(
           controller: textController,
           onSubmitted: (strValue) {
             final int intValue = int.tryParse(strValue) ?? 0;
-            widget.pc.value = intValue;
-            textController.text = widget.pc.value.toString();
-            widget.onValueChanged?.call();
-            if (intValue != widget.pc.value) {
+            widget.pc.nextValue = intValue;
+            textController.text = widget.pc.nextValue.toString();
+            if (intValue != widget.pc.nextValue) {
               setState(() {
                 enteredInvalidValue = true;
               });

@@ -818,11 +818,11 @@ abstract class AppLocalizations {
   /// **'Unsaved changes!'**
   String get unsavedChanges;
 
-  /// No description provided for @overrideProgramCounterValue.
+  /// No description provided for @overrideNextProgramCounterValue.
   ///
   /// In en, this message translates to:
-  /// **'Override Program Counter value'**
-  String get overrideProgramCounterValue;
+  /// **'Override next Program Counter value'**
+  String get overrideNextProgramCounterValue;
 
   /// No description provided for @invalidProgramCounterValue.
   ///

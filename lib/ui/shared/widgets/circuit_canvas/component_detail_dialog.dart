@@ -161,12 +161,6 @@ class ComponentDetailDialog {
                     !placedComponent.immutable)
                   ProgramCounterValueEditor(
                     pc: placedComponent.component as ProgramCounter,
-                    onValueChanged: () {
-                      setDialogState(() {
-                        // Updates grid
-                        sandboxState.nofifyManually();
-                      });
-                    },
                   ),
                 Divider(),
                 // Delete option and closing button

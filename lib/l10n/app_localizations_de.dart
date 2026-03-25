@@ -414,8 +414,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get unsavedChanges => 'Ungespeicherte Änderungen!';
 
   @override
-  String get overrideProgramCounterValue =>
-      'Program Counter Wert überschreiben';
+  String get overrideNextProgramCounterValue =>
+      'Nächsten Program Counter Wert überschreiben';
 
   @override
   String get invalidProgramCounterValue =>

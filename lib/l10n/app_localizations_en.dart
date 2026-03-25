@@ -409,7 +409,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unsavedChanges => 'Unsaved changes!';
 
   @override
-  String get overrideProgramCounterValue => 'Override Program Counter value';
+  String get overrideNextProgramCounterValue =>
+      'Override next Program Counter value';
 
   @override
   String get invalidProgramCounterValue =>
