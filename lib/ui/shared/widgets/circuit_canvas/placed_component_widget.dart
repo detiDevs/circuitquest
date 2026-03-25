@@ -119,7 +119,6 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
           CommandController.executeCommand(command);
         },
         onSecondaryTapDown: (details) {
-          if (widget.placedComponent.immovable) return;
           // Show context menu on right-click
           ComponentDetailDialog.displayDialog(
             context,
@@ -128,7 +127,6 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
           );
         },
         onLongPress: () {
-          if (widget.placedComponent.immovable) return;
           // Show context menu on long press (for touch devices)
           ComponentDetailDialog.displayDialog(
             context,

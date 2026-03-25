@@ -48,6 +48,9 @@ class PlacedComponent {
   /// Whether this component can be moved/removed by the player
   final bool immovable;
 
+  /// Whether user-editable values/properties for this component are locked
+  final bool immutable;
+
   /// Optional display label from level configuration (e.g., "A", "B")
   final String? label;
 
@@ -57,6 +60,7 @@ class PlacedComponent {
     required this.position,
     required this.id,
     this.immovable = false,
+    this.immutable = false,
     this.label,
   });
 
@@ -73,6 +77,7 @@ class PlacedComponent {
       'position': [logicalX, logicalY],
       'id': id,
       if (immovable) 'immovable': immovable,
+      if (immutable) 'immutable': immutable,
       if (label != null) 'label': label,
     };
   }
@@ -200,7 +205,7 @@ class SandboxState extends ChangeNotifier {
     initializeClockFromLevel(level.clockConfig);
 
     for (final lc in level.components) {
-      final resolved = _resolveComponentForLevelType(lc.type);
+      final resolved = _resolveComponentForLevelComponent(lc);
       if (resolved == null) continue;
 
       // Convert logical coordinates (centered at 0,0) to canvas coordinates
@@ -213,9 +218,13 @@ class SandboxState extends ChangeNotifier {
 
       if (resolved.component is InstructionMemory &&
           level.memoryContents != null) {
+      if (resolved.component is InstructionMemory &&
+          level.memoryContents != null) {
         (resolved.component as InstructionMemory).loadInstructions(
           level.memoryContents!.instructionMemory,
         );
+      } else if (resolved.component is DataMemory &&
+          level.memoryContents != null) {
       } else if (resolved.component is DataMemory &&
           level.memoryContents != null) {
         (resolved.component as DataMemory).loadData(
@@ -233,6 +242,7 @@ class SandboxState extends ChangeNotifier {
         position,
         resolved.component,
         immovable: lc.immovable,
+        immutable: lc.immutable,
         label: lc.label,
       );
     }
@@ -252,17 +262,17 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
-  ({String typeName, Component component})? _resolveComponentForLevelType(
-    String type,
+  ({String typeName, Component component})? _resolveComponentForLevelComponent(
+    LevelComponent lc,
   ) {
-    switch (type) {
+    switch (lc.type) {
       case 'Input':
-        return (typeName: 'InputSource', component: InputSource());
+        return (typeName: 'InputSource', component: InputSource(bitWidth: lc.initialBitWidth ?? 1, value: lc.initialValue ?? 0));
       case 'Output':
         return (typeName: 'OutputProbe', component: OutputProbe());
       default:
         try {
-          final ct = availableComponents.firstWhere((c) => c.name == type);
+          final ct = availableComponents.firstWhere((c) => c.name == lc.type);
           return (typeName: ct.name, component: ct.createComponent());
         } catch (_) {
           return null;
@@ -318,6 +328,7 @@ class SandboxState extends ChangeNotifier {
     Offset position,
     Component component, {
     bool immovable = false,
+    bool immutable = false,
     String? label,
   }) {
     if (_placedComponents.indexWhere((comp) => comp.position == position) != -1)
@@ -329,6 +340,7 @@ class SandboxState extends ChangeNotifier {
       position: position,
       id: id,
       immovable: immovable,
+      immutable: immutable,
       label: label,
     );
     _placedComponents.add(placed);
@@ -384,6 +396,7 @@ class SandboxState extends ChangeNotifier {
             position: oldPosition,
             id: component.id,
             immovable: component.immovable,
+            immutable: component.immutable,
             label: component.label,
           );
         }
@@ -396,7 +409,8 @@ class SandboxState extends ChangeNotifier {
           position: newPosition,
           id: component.id,
           immovable: component.immovable,
-          label: component.label,
+          immutable: component.immutable,
+        label: component.label,
         );
       }
       notifyListeners();
@@ -411,12 +425,17 @@ class SandboxState extends ChangeNotifier {
     final index = _placedComponents.indexWhere((c) => c.id == componentId);
     if (index != -1) {
       final component = _placedComponents[index];
+      if (component.immutable) {
+        return;
+      }
       if (newName != "") {
         _placedComponents[index] = PlacedComponent(
           type: component.type,
           component: component.component,
           position: component.position,
           id: component.id,
+          immovable: component.immovable,
+          immutable: component.immutable,
           label: newName,
         );
       } else {
@@ -426,6 +445,8 @@ class SandboxState extends ChangeNotifier {
           component: component.component,
           position: component.position,
           id: component.id,
+          immovable: component.immovable,
+          immutable: component.immutable,
         );
       }
 
@@ -855,6 +876,7 @@ class SandboxState extends ChangeNotifier {
           logicalY * Constants.kGridCellSize + canvasCenter,
         );
         final immovable = compData['immovable'] as bool? ?? false;
+        final immutable = compData['immutable'] as bool? ?? false;
         final label = compData['label'] as String?;
 
         // Create component instance
@@ -880,6 +902,7 @@ class SandboxState extends ChangeNotifier {
             position: position,
             id: id,
             immovable: immovable,
+            immutable: immutable,
             label: label,
           ),
         );

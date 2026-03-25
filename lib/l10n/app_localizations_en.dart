@@ -338,6 +338,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hide => 'Hide';
 
   @override
+  String get showAHint => 'Show a hint';
+
+  @override
+  String get showNextHint => 'Show next hint';
+
+  @override
   String get ok => 'OK';
 
   @override

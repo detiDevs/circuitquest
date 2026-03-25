@@ -1,4 +1,5 @@
 {
+  "@@locale": "de",
   "appTitle": "CircuitQuest",
   "@appTitle": {
     "description": "Anwendungstitel"
@@ -339,6 +340,14 @@
   "hide": "Ausblenden",
   "@hide": {
     "description": "Beschriftung zum Ausblenden von Details oder Tipps"
+  },
+  "showAHint": "Tipp anzeigen",
+  "@showAHint": {
+    "description": "Schaltflächenbeschriftung zum Anzeigen des ersten Tipps im Level-Info-Dialog"
+  },
+  "showNextHint": "Nächsten Tipp anzeigen",
+  "@showNextHint": {
+    "description": "Schaltflächenbeschriftung zum Anzeigen des nächsten Tipps im Level-Info-Dialog"
   },
   "ok": "OK",
   "@ok": {

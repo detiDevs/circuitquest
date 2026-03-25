@@ -10,6 +10,7 @@ class PlaceComponentCommand extends Command {
   final Offset _position;
   final Component _component;
   final bool _immovable;
+  final bool _immutable;
   final String? _label;
 
   String? _componentId; // Will be set after first execution
@@ -22,8 +23,10 @@ class PlaceComponentCommand extends Command {
     this._component, {
     super.onError,
     bool immovable = false,
+    bool immutable = false,
     String? label,
   }) : _immovable = immovable,
+       _immutable = immutable,
        _label = label;
 
   @override
@@ -38,6 +41,7 @@ class PlaceComponentCommand extends Command {
         _position,
         _component,
         immovable: _immovable,
+        immutable: _immutable,
         label: _label,
       );
       if (_componentId == null) {

@@ -343,6 +343,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get hide => 'Ausblenden';
 
   @override
+  String get showAHint => 'Tipp anzeigen';
+
+  @override
+  String get showNextHint => 'Nächsten Tipp anzeigen';
+
+  @override
   String get ok => 'OK';
 
   @override

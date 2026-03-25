@@ -15,25 +15,35 @@ final levelMetaProvider = FutureProvider<LevelMeta>((ref) async {
 });
 
 /// Provider to check if a specific level is completed
-final levelCompletedProvider = FutureProvider.family<bool, int>((ref, levelId) async {
+final levelCompletedProvider = FutureProvider.family<bool, int>((
+  ref,
+  levelId,
+) async {
   final meta = await ref.watch(levelMetaProvider.future);
   return meta.completedLevels.contains(levelId);
 });
 
 /// Provider to check if a specific level can be accessed
-final levelAccessProvider = FutureProvider.family<bool, int>((ref, levelId) async {
+final levelAccessProvider = FutureProvider.family<bool, int>((
+  ref,
+  levelId,
+) async {
   final loader = ref.watch(levelLoaderProvider);
   return await loader.canAccessLevel(levelId);
 });
 
 /// Provider for level blocks
-final levelBlocksProvider = FutureProvider<Map<String, List<LevelBlockItem>>>((ref) async {
+final levelBlocksProvider = FutureProvider<Map<String, List<LevelBlockItem>>>((
+  ref,
+) async {
   final loader = ref.watch(levelLoaderProvider);
   return await loader.loadLevelBlocks();
 });
 
 /// Provider for level categories with localization support
-final levelCategoriesProvider = FutureProvider<List<LevelCategory>>((ref) async {
+final levelCategoriesProvider = FutureProvider<List<LevelCategory>>((
+  ref,
+) async {
   final loader = ref.watch(levelLoaderProvider);
   return await loader.loadLevelCategories();
 });
@@ -42,7 +52,7 @@ final levelCategoriesProvider = FutureProvider<List<LevelCategory>>((ref) async 
 Future<void> markLevelCompleted(WidgetRef ref, int levelId) async {
   final loader = ref.read(levelLoaderProvider);
   await loader.completeLevel(levelId);
-  
+
   // Invalidate providers to trigger refresh
   ref.invalidate(levelMetaProvider);
   ref.invalidate(levelCompletedProvider);
@@ -52,11 +62,16 @@ Future<void> markLevelCompleted(WidgetRef ref, int levelId) async {
 /// Provider for current level's clock configuration
 final currentLevelClockProvider = StateProvider<ClockConfig?>((ref) => null);
 
+/// Provider tracking how many hints are revealed for a level.
+final levelRevealedHintsCountProvider = StateProvider.family<int, int>(
+  (ref, levelId) => 0,
+);
+
 /// Helper method to initialize clock for current level
 void initializeLevelClock(WidgetRef ref, Level level) {
   final clockConfig = level.clockConfig;
   ref.read(currentLevelClockProvider.notifier).state = clockConfig;
-  
+
   // Initialize clock in sandbox state
   final sandbox = ref.read(sandboxProvider);
   sandbox.initializeClockFromLevel(clockConfig);
@@ -67,11 +82,19 @@ void resetLevelClock(WidgetRef ref) {
   ref.read(currentLevelClockProvider.notifier).state = null;
 }
 
+/// Reveal one more hint for a level, up to [totalHints].
+void revealNextLevelHint(WidgetRef ref, int levelId, int totalHints) {
+  final notifier = ref.read(levelRevealedHintsCountProvider(levelId).notifier);
+  if (notifier.state < totalHints) {
+    notifier.state++;
+  }
+}
+
 /// Helper method to toggle all levels unlocked and refresh the state
 Future<void> toggleAllLevelsUnlocked(WidgetRef ref) async {
   final loader = ref.read(levelLoaderProvider);
   await loader.toggleAllLevelsUnlocked();
-  
+
   // Invalidate providers to trigger refresh
   ref.invalidate(levelMetaProvider);
   ref.invalidate(levelAccessProvider);
