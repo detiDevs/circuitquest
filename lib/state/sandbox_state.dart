@@ -218,48 +218,49 @@ class SandboxState extends ChangeNotifier {
 
       if (resolved.component is InstructionMemory &&
           level.memoryContents != null) {
-      if (resolved.component is InstructionMemory &&
-          level.memoryContents != null) {
-        (resolved.component as InstructionMemory).loadInstructions(
-          level.memoryContents!.instructionMemory,
-        );
-      } else if (resolved.component is DataMemory &&
-          level.memoryContents != null) {
-      } else if (resolved.component is DataMemory &&
-          level.memoryContents != null) {
-        (resolved.component as DataMemory).loadData(
-          level.memoryContents!.dataMemory,
-        );
-      } else if (resolved.component is RegisterBlock &&
-          lc.initialRegisterValues != null) {
-        (resolved.component as RegisterBlock).loadRegisters(
-          lc.initialRegisterValues!,
+        if (resolved.component is InstructionMemory &&
+            level.memoryContents != null) {
+          (resolved.component as InstructionMemory).loadInstructions(
+            level.memoryContents!.instructionMemory,
+          );
+        } else if (resolved.component is DataMemory &&
+            level.memoryContents != null) {
+        } else if (resolved.component is DataMemory &&
+            level.memoryContents != null) {
+          (resolved.component as DataMemory).loadData(
+            level.memoryContents!.dataMemory,
+          );
+        } else if (resolved.component is RegisterBlock &&
+            lc.initialRegisterValues != null) {
+          (resolved.component as RegisterBlock).loadRegisters(
+            lc.initialRegisterValues!,
+          );
+        }
+
+        placeComponent(
+          resolved.typeName,
+          position,
+          resolved.component,
+          immovable: lc.immovable,
+          immutable: lc.immutable,
+          label: lc.label,
         );
       }
 
-      placeComponent(
-        resolved.typeName,
-        position,
-        resolved.component,
-        immovable: lc.immovable,
-        immutable: lc.immutable,
-        label: lc.label,
-      );
-    }
+      for (final connection in level.connections) {
+        addConnection(
+          connection.sourceComponentId,
+          connection.sourcePin,
+          connection.targetComponentId,
+          connection.targetPin,
+        );
+      }
 
-    for (final connection in level.connections) {
-      addConnection(
-        connection.sourceComponentId,
-        connection.sourcePin,
-        connection.targetComponentId,
-        connection.targetPin,
-      );
+      _initializedFromLevel = true;
+      _initializedLevelId = level.levelId;
+      _viewportCenterRequestId++;
+      notifyListeners();
     }
-
-    _initializedFromLevel = true;
-    _initializedLevelId = level.levelId;
-    _viewportCenterRequestId++;
-    notifyListeners();
   }
 
   ({String typeName, Component component})? _resolveComponentForLevelComponent(
@@ -267,7 +268,13 @@ class SandboxState extends ChangeNotifier {
   ) {
     switch (lc.type) {
       case 'Input':
-        return (typeName: 'InputSource', component: InputSource(bitWidth: lc.initialBitWidth ?? 1, value: lc.initialValue ?? 0));
+        return (
+          typeName: 'InputSource',
+          component: InputSource(
+            bitWidth: lc.initialBitWidth ?? 1,
+            value: lc.initialValue ?? 0,
+          ),
+        );
       case 'Output':
         return (typeName: 'OutputProbe', component: OutputProbe());
       default:
@@ -410,7 +417,7 @@ class SandboxState extends ChangeNotifier {
           id: component.id,
           immovable: component.immovable,
           immutable: component.immutable,
-        label: component.label,
+          label: component.label,
         );
       }
       notifyListeners();
@@ -1100,7 +1107,10 @@ class SandboxState extends ChangeNotifier {
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text('Continue', style: TextStyle(color: Colors.white)),
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
