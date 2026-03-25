@@ -2,7 +2,9 @@ import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:circuitquest/core/commands/place_component_command.dart';
 import 'package:circuitquest/core/logic/pin.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
+import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/placed_component_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -197,6 +199,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
           details.data.name,
           gridPosition,
           component,
+          onError: (_) => SnackBarUtils.showError(context, AppLocalizations.of(context)!.gridCellOccupied)
         );
 
         // Execute command (this will also add it to undo history if SandboxState supports it)

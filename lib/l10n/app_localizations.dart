@@ -769,6 +769,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset level'**
   String get resetLevel;
+
+  /// No description provided for @gridCellOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'This grid cell is already occupied.'**
+  String get gridCellOccupied;
 }
 
 class _AppLocalizationsDelegate

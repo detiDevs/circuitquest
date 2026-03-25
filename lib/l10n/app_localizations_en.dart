@@ -382,4 +382,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetLevel => 'Reset level';
+
+  @override
+  String get gridCellOccupied => 'This grid cell is already occupied.';
 }

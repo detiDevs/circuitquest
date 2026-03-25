@@ -1,5 +1,9 @@
 /// Base interface for all undoable commands in the circuit editor.
 abstract class Command {
+  final void Function(String message)? onError;
+
+  Command({this.onError});
+
   /// Executes the command.
   void execute();
   

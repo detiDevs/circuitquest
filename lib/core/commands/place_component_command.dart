@@ -11,7 +11,7 @@ class PlaceComponentCommand extends Command {
   final Component _component;
   final bool _immovable;
   final String? _label;
-  
+
   String? _componentId; // Will be set after first execution
   PlacedComponent? _placedComponent; // Store the full component for restoration
 
@@ -20,6 +20,7 @@ class PlaceComponentCommand extends Command {
     this._componentType,
     this._position,
     this._component, {
+    super.onError,
     bool immovable = false,
     String? label,
   }) : _immovable = immovable,
@@ -39,6 +40,11 @@ class PlaceComponentCommand extends Command {
         immovable: _immovable,
         label: _label,
       );
+      if (_componentId == null) {
+        onError!("");
+        return;
+      }
+
       // Store the placed component for future redo operations
       _placedComponent = _sandboxState.getComponent(_componentId!);
     }

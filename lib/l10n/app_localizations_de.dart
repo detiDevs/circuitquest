@@ -387,4 +387,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get resetLevel => 'Level zurücksetzen';
+
+  @override
+  String get gridCellOccupied => 'Diese Zelle ist bereits belegt.';
 }

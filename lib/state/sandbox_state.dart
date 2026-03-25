@@ -211,11 +211,13 @@ class SandboxState extends ChangeNotifier {
         (lc.position[1] * gridSize) + canvasCenter,
       );
 
-      if (resolved.component is InstructionMemory && level.memoryContents != null) {
+      if (resolved.component is InstructionMemory &&
+          level.memoryContents != null) {
         (resolved.component as InstructionMemory).loadInstructions(
           level.memoryContents!.instructionMemory,
         );
-      } else if (resolved.component is DataMemory && level.memoryContents != null) {
+      } else if (resolved.component is DataMemory &&
+          level.memoryContents != null) {
         (resolved.component as DataMemory).loadData(
           level.memoryContents!.dataMemory,
         );
@@ -310,13 +312,16 @@ class SandboxState extends ChangeNotifier {
   /// Adds a new component to the canvas at the specified position.
   ///
   /// Returns the ID of the newly placed component.
-  String placeComponent(
+  /// Null if position occupied
+  String? placeComponent(
     String type,
     Offset position,
     Component component, {
     bool immovable = false,
     String? label,
   }) {
+    if (_placedComponents.indexWhere((comp) => comp.position == position) != -1)
+      return null;
     final id = '${_nextComponentId++}';
     final placed = PlacedComponent(
       type: type,
@@ -359,20 +364,45 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Moves a component to a new position.
-  void moveComponent(String componentId, Offset newPosition) {
+  /// Moves a component to a new position unless position already occupied.
+  /// Returns true iff component was successfully moved
+  bool moveComponent(
+    String componentId,
+    Offset newPosition, {
+    Offset? oldPosition,
+  }) {
     final index = _placedComponents.indexWhere((c) => c.id == componentId);
+    final bool cellOccupied =
+        _placedComponents.indexWhere((c) => c.position == newPosition) != -1;
     if (index != -1) {
       final component = _placedComponents[index];
-      _placedComponents[index] = PlacedComponent(
-        type: component.type,
-        component: component.component,
-        position: newPosition,
-        id: component.id,
-        immovable: component.immovable,
-        label: component.label,
-      );
+      if (cellOccupied) {
+        if (oldPosition != null) {
+          _placedComponents[index] = PlacedComponent(
+            type: component.type,
+            component: component.component,
+            position: oldPosition,
+            id: component.id,
+            immovable: component.immovable,
+            label: component.label,
+          );
+        }
+        notifyListeners();
+        return false;
+      } else {
+        _placedComponents[index] = PlacedComponent(
+          type: component.type,
+          component: component.component,
+          position: newPosition,
+          id: component.id,
+          immovable: component.immovable,
+          label: component.label,
+        );
+      }
       notifyListeners();
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -1014,19 +1044,22 @@ class SandboxState extends ChangeNotifier {
       if (inputCount == 0 || outputCount == 0) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Circuit must have inputs and outputs')),
+            const SnackBar(
+              content: Text('Circuit must have inputs and outputs'),
+            ),
           );
         }
         return;
       }
 
-      final validationResult = await LevelValidator.validateCircuitWithSimulation(
-        components: _placedComponents.map((pc) => pc.component).toList(),
-        tests: level.tests,
-        maxComponentCount: level.maxComponentCount,
-        resetBeforeTest: resetSimulation,
-        runSimulation: startSimulation,
-      );
+      final validationResult =
+          await LevelValidator.validateCircuitWithSimulation(
+            components: _placedComponents.map((pc) => pc.component).toList(),
+            tests: level.tests,
+            maxComponentCount: level.maxComponentCount,
+            resetBeforeTest: resetSimulation,
+            runSimulation: startSimulation,
+          );
 
       if (!context.mounted) return;
 
@@ -1068,9 +1101,9 @@ class SandboxState extends ChangeNotifier {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error checking solution: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error checking solution: $e')));
       }
     }
   }
