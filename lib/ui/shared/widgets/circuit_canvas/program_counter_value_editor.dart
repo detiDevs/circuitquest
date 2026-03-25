@@ -1,12 +1,16 @@
 import 'package:circuitquest/core/components/cpu/program_counter.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 
 class ProgramCounterValueEditor extends StatefulWidget {
   final ProgramCounter pc;
+  final VoidCallback? onValueChanged;
 
-  const ProgramCounterValueEditor({super.key, required this.pc});
+  const ProgramCounterValueEditor({
+    super.key,
+    required this.pc,
+    this.onValueChanged,
+  });
 
   @override
   State<ProgramCounterValueEditor> createState() =>
@@ -34,6 +38,7 @@ class _ProgramCounterValueEditorState extends State<ProgramCounterValueEditor> {
             final int intValue = int.tryParse(strValue) ?? 0;
             widget.pc.value = intValue;
             textController.text = widget.pc.value.toString();
+            widget.onValueChanged?.call();
             if (intValue != widget.pc.value) {
               setState(() {
                 enteredInvalidValue = true;

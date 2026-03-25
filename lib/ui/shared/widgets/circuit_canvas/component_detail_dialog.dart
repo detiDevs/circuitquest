@@ -25,14 +25,15 @@ class ComponentDetailDialog {
     textController.text = placedComponent.label ?? "";
     showDialog(
       context: context,
-      builder: (BuildContext context) => Dialog(
-        constraints: BoxConstraints(maxWidth: maxDialogWidth),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+      builder: (BuildContext context) => StatefulBuilder(
+        builder: (context, setDialogState) => Dialog(
+          constraints: BoxConstraints(maxWidth: maxDialogWidth),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
               // Title: Component type
               Text(
                 placedComponent.type,
@@ -156,11 +157,14 @@ class ComponentDetailDialog {
                       ),
                   child: Text(AppLocalizations.of(context)!.showInstructions),
                 ),
-              if (placedComponent.component is ProgramCounter &&
-                  !placedComponent.immutable)
-                ProgramCounterValueEditor(
-                  pc: placedComponent.component as ProgramCounter,
-                ),
+                if (placedComponent.component is ProgramCounter &&
+                    !placedComponent.immutable)
+                  ProgramCounterValueEditor(
+                    pc: placedComponent.component as ProgramCounter,
+                    onValueChanged: () {
+                      setDialogState(() {});
+                    },
+                  ),
               Divider(),
               // Delete option and closing button
               if (!(placedComponent.immovable || placedComponent.immutable))
@@ -186,7 +190,8 @@ class ComponentDetailDialog {
                 },
                 child: Text(AppLocalizations.of(context)!.close),
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
