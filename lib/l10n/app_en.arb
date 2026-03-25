@@ -397,5 +397,12 @@
       }
     }
   },
-  "resetLevel": "Reset level"
+  "resetLevel": "Reset level",
+
+  "instructionMemoryContents": "Instruction Memory Contents",
+  "instructionMemoryFormatHint": "Instructions are configured as the decimal version of a 32 bit number. For more info, see MIPS Reference Sheet",
+  "showInstructions": "Show instructions",
+  "noInstructionsConfigured": "No instructions configured",
+  "addInstruction": "Befehl hinzufügen",
+  "unsavedChanges": "Unsaved changes!"
 }

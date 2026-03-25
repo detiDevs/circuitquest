@@ -397,5 +397,12 @@
       }
     }
   },
-  "resetLevel": "Level zurücksetzen"
+  "resetLevel": "Level zurücksetzen",
+
+  "instructionMemoryContents": "Instruction Memory Befehlsliste",
+  "instructionMemoryFormatHint": "Befehle werden als Dezimalversion einer 32-Bit-Zahl angegeben. Für mehr Infos, siehe MIPS Reference Sheet",
+  "showInstructions": "Befehle anzeigen",
+  "noInstructionsConfigured": "Keine Befehle konfiguriert",
+  "addInstruction": "Befehl hinzufügen",
+  "unsavedChanges": "Ungespeicherte Änderungen!"
 }

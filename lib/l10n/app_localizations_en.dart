@@ -388,4 +388,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get resetLevel => 'Reset level';
+
+  @override
+  String get instructionMemoryContents => 'Instruction Memory Contents';
+
+  @override
+  String get instructionMemoryFormatHint =>
+      'Instructions are configured as the decimal version of a 32 bit number. For more info, see MIPS Reference Sheet';
+
+  @override
+  String get showInstructions => 'Show instructions';
+
+  @override
+  String get noInstructionsConfigured => 'No instructions configured';
+
+  @override
+  String get addInstruction => 'Befehl hinzufügen';
+
+  @override
+  String get unsavedChanges => 'Unsaved changes!';
 }

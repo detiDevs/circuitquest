@@ -781,6 +781,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset level'**
   String get resetLevel;
+
+  /// No description provided for @instructionMemoryContents.
+  ///
+  /// In en, this message translates to:
+  /// **'Instruction Memory Contents'**
+  String get instructionMemoryContents;
+
+  /// No description provided for @instructionMemoryFormatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions are configured as the decimal version of a 32 bit number. For more info, see MIPS Reference Sheet'**
+  String get instructionMemoryFormatHint;
+
+  /// No description provided for @showInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Show instructions'**
+  String get showInstructions;
+
+  /// No description provided for @noInstructionsConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'No instructions configured'**
+  String get noInstructionsConfigured;
+
+  /// No description provided for @addInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Befehl hinzufügen'**
+  String get addInstruction;
+
+  /// No description provided for @unsavedChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved changes!'**
+  String get unsavedChanges;
 }
 
 class _AppLocalizationsDelegate
