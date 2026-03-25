@@ -87,7 +87,7 @@ class CustomComponent extends Component {
       final pin = inputs[key];
       if (pin == null) continue;
       pin.updateFromSource();
-      _internalInputs[i].setValue(pin.value);
+      _internalInputs[i].value = pin.value;
     }
   }
 
