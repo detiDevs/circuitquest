@@ -407,4 +407,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unsavedChanges => 'Unsaved changes!';
+
+  @override
+  String get overrideProgramCounterValue => 'Override Program Counter value';
+
+  @override
+  String get invalidProgramCounterValue =>
+      'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).';
 }

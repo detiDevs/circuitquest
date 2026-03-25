@@ -412,4 +412,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get unsavedChanges => 'Ungespeicherte Änderungen!';
+
+  @override
+  String get overrideProgramCounterValue =>
+      'Program Counter Wert überschreiben';
+
+  @override
+  String get invalidProgramCounterValue =>
+      'Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).';
 }

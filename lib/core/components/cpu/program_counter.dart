@@ -18,6 +18,14 @@ class ProgramCounter extends SequentialComponent {
     outputs['outValue']!.value = 0;
   }
 
+  int get value => outputs['outValue']!.value;
+
+  /// Sets the value of the PC to the given byte adress [newValue]
+  /// If [newValue] cannot be converted to a word adress (i.e. is not divisible by 4), the PC value will remain unchanged.
+  set value(int newValue) {
+    if (newValue % 4 == 0) outputs['outValue']!.value = newValue;
+  }
+
   @override
   bool evaluate() {
     _nextPcInput.updateFromSource();

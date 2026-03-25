@@ -404,5 +404,8 @@
   "showInstructions": "Show instructions",
   "noInstructionsConfigured": "No instructions configured",
   "addInstruction": "Befehl hinzufügen",
-  "unsavedChanges": "Unsaved changes!"
+  "unsavedChanges": "Unsaved changes!",
+
+  "overrideProgramCounterValue": "Override Program Counter value",
+  "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4)."
 }

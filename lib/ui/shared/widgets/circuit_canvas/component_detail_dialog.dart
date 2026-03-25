@@ -2,11 +2,13 @@ import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:circuitquest/core/commands/remove_component_command.dart';
 import 'package:circuitquest/core/commands/rename_component_command.dart';
 import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
+import 'package:circuitquest/core/components/cpu/program_counter.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/instruction_memory_contents_dialog.dart';
+import 'package:circuitquest/ui/shared/widgets/circuit_canvas/program_counter_value_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -153,6 +155,11 @@ class ComponentDetailDialog {
                         state,
                       ),
                   child: Text(AppLocalizations.of(context)!.showInstructions),
+                ),
+              if (placedComponent.component is ProgramCounter &&
+                  !placedComponent.immutable)
+                ProgramCounterValueEditor(
+                  pc: placedComponent.component as ProgramCounter,
                 ),
               Divider(),
               // Delete option and closing button

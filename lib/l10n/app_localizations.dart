@@ -817,6 +817,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unsaved changes!'**
   String get unsavedChanges;
+
+  /// No description provided for @overrideProgramCounterValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Override Program Counter value'**
+  String get overrideProgramCounterValue;
+
+  /// No description provided for @invalidProgramCounterValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).'**
+  String get invalidProgramCounterValue;
 }
 
 class _AppLocalizationsDelegate
