@@ -163,7 +163,7 @@ class ComponentDetailDialog {
                 ),
               Divider(),
               // Delete option and closing button
-              if (!placedComponent.immovable)
+              if (!(placedComponent.immovable || placedComponent.immutable))
                 TextButton(
                   onPressed: () {
                     // Use command pattern for undo/redo support
