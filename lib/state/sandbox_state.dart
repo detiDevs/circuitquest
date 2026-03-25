@@ -1077,7 +1077,7 @@ class SandboxState extends ChangeNotifier {
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text('Continue'),
+                child: const Text('Continue', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
