@@ -41,7 +41,7 @@ class Multiplexer extends Component {
 
     // Pin positions
     pinPositions = {
-      "selection": PinPosition.BOTTOM
+      "selection": PinPosition.TOP
     };
   }
 

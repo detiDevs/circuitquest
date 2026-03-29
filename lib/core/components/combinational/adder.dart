@@ -81,6 +81,7 @@ class RippleCarryAdder extends Component {
     inputs['carryIn'] = InputPin(this, bitWidth: 1);
     outputs['outSum'] = OutputPin(this, bitWidth: bitWidth);
     outputs['carryOut'] = OutputPin(this, bitWidth: 1);
+    pinPositions = {'carryIn': PinPosition.TOP, 'carryOut': PinPosition.BOTTOM};
   }
 
   /// Adds A and B and an optional carry-in, producing SUM and carryOut.

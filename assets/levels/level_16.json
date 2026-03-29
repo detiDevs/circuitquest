@@ -1,257 +1,77 @@
 {
     "level_id": 16,
-    "name": "Adding NOR",
-    "description": "we also want our ALU to also handle the NOR operation. Again, we don’t need to implement a different Gate but can rather alter the signal to achieve the same result. Remember: A NOR B = NOT (A OR B) = NOT(A) AND NOT(B). This level adds a separate control signal `ainvert` to enable NOR operation.",
+    "name": "Multiplexer for two 8-bit values",
+    "name_de": "Multiplexer für zwei 8-Bit-Werte",
+    "description": "You already know how to select between two single-bit values with a multiplexer. But what if you want to select between two 8-bit values? ",
+    "description_de": "Du weißt bereits, wie man mit einem Multiplexer zwischen zwei einzelnen Bitwerten auswählt. Aber was ist, wenn du zwischen zwei 8-Bit-Werten auswählen möchtest?",
     "difficulty": "Medium",
+    "difficulty_de": "Mittel",
     "objectives": [
-        "expand the previous processor to also handle NOR. ",
-        "Use the seperate control input `ainvert` so that when `ainvert`=1 and op selects the OR operation, the circuit computes A NOR B."
+        "Given inputs A and B and control S, build a circuit so that:\n- if S=0 the Output equals A\n- if S=1 the Output equals B"
+    ],
+    "objectives_de": [
+        "Erstelle bei Eingängen A und B und Steuerung S eine Schaltung, so dass:\n- wenn S=0, ist der Ausgang gleich A\n- wenn S=1, ist der Ausgang gleich B"
     ],
     "components": [
         {
             "type": "Input",
             "position": [
                 0,
-                5
+                1
             ],
-            "immovable": false,
+            "immovable": true,
+            "label": "S"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "initialBitWidth": 8,
             "label": "A"
         },
         {
             "type": "Input",
             "position": [
                 0,
-                7
+                5
             ],
-            "immovable": false,
+            "immovable": true,
+            "initialBitWidth": 8,
             "label": "B"
         },
         {
-            "type": "Input",
-            "position": [
-                12,
-                10
-            ],
-            "immovable": false,
-            "label": "op0"
-        },
-        {
-            "type": "Input",
-            "position": [
-                12,
-                11
-            ],
-            "immovable": false,
-            "label": "op1"
-        },
-        {
-            "type": "Input",
-            "position": [
-                6,
-                11
-            ],
-            "immovable": false,
-            "label": "binvert"
-        },
-        {
-            "type": "Collector1to2",
-            "position": [
-                13,
-                10
-            ],
-            "immovable": false
-        },
-        {
-            "type": "FullAdder",
-            "position": [
-                11,
-                2
-            ],
-            "immovable": false
-        },
-        {
-            "type": "And",
-            "position": [
-                11,
-                5
-            ],
-            "immovable": false
-        },
-        {
-            "type": "Or",
-            "position": [
-                11,
-                8
-            ],
-            "immovable": false
-        },
-        {
-            "type": "Multiplexer4Inp",
-            "position": [
-                14,
-                5
-            ],
-            "immovable": false
-        },
-        {
             "type": "Output",
             "position": [
-                13,
+                8,
                 3
             ],
-            "immovable": false,
-            "label": "Carry_out"
-        },
-        {
-            "type": "Output",
-            "position": [
-                16,
-                5
-            ],
-            "immovable": false,
-            "label": "OUT"
-        },
-        {
-            "type": "Not",
-            "position": [
-                5,
-                7
-            ],
-            "immovable": false,
-            "label": "NotBinvert"
-        },
-        {
-            "type": "Multiplexer2Inp",
-            "position": [
-                6,
-                7
-            ],
-            "immovable": false,
-            "label": "MUXbinvert"
-        },
-        {
-            "type": "Input",
-            "position": [
-                3,
-                11
-            ],
-            "immovable": false,
-            "label": "ainvert"
-        }
-    ],
-    "connections": [
-        {
-            "origin": 4,
-            "originKey": "outValue",
-            "destination": 6,
-            "destinationKey": "inputCin"
-        },
-        {
-            "origin": 4,
-            "originKey": "outValue",
-            "destination": 13,
-            "destinationKey": "selection"
-        },
-        {
-            "origin": 1,
-            "originKey": "outValue",
-            "destination": 13,
-            "destinationKey": "input1"
-        },
-        {
-            "origin": 12,
-            "originKey": "outValue",
-            "destination": 13,
-            "destinationKey": "input2"
-        },
-        {
-            "origin": 1,
-            "originKey": "outValue",
-            "destination": 12,
-            "destinationKey": "input"
-        },
-        {
-            "origin": 2,
-            "originKey": "outValue",
-            "destination": 5,
-            "destinationKey": "input1"
-        },
-        {
-            "origin": 3,
-            "originKey": "outValue",
-            "destination": 5,
-            "destinationKey": "input2"
-        },
-        {
-            "origin": 13,
-            "originKey": "outputValue",
-            "destination": 8,
-            "destinationKey": "input2"
-        },
-        {
-            "origin": 13,
-            "originKey": "outputValue",
-            "destination": 7,
-            "destinationKey": "input2"
-        },
-        {
-            "origin": 13,
-            "originKey": "outputValue",
-            "destination": 6,
-            "destinationKey": "inputB"
-        },
-        {
-            "origin": 5,
-            "originKey": "outValue",
-            "destination": 9,
-            "destinationKey": "selection"
-        },
-        {
-            "origin": 7,
-            "originKey": "outValue",
-            "destination": 9,
-            "destinationKey": "input1"
-        },
-        {
-            "origin": 8,
-            "originKey": "outValue",
-            "destination": 9,
-            "destinationKey": "input2"
-        },
-        {
-            "origin": 6,
-            "originKey": "outSum",
-            "destination": 9,
-            "destinationKey": "input3"
-        },
-        {
-            "origin": 6,
-            "originKey": "cOut",
-            "destination": 10,
-            "destinationKey": "input"
-        },
-        {
-            "origin": 9,
-            "originKey": "outputValue",
-            "destination": 11,
-            "destinationKey": "input"
+            "immovable": true
         }
     ],
     "available_components": [
         {
-            "type": "Not"
+            "type": "Multiplexer2Inp"
         },
         {
-            "type": "Multiplexer2Inp"
+            "type": "Splitter8to1"
+        },
+        {
+            "type": "Collector1to8"
         }
     ],
     "hints": [
-        "Remember: A NOR B = NOT (A OR B) = NOT(A) AND NOT(B).",
-        "You can use the ainvert signal to invert A before it goes into the OR gate.",
-        "Use a NOT gate to invert the A input when ainvert=1, then feed that into the OR gate along with B.",
-        "The output of the OR gate will then be inverted if ainvert=1, giving you the NOR result."
+        "You can split the 8-bit inputs into single bits, select each bit with a 2-input MUX, and then collect the selected bits back into an 8-bit output.",
+        "Use the Splitter to break A and B into their individual bits, feed those bits into 2-input MUXes along with the control S, and then use the Collector to combine the outputs of the MUXes back into an 8-bit output.",
+        "The expression for a 2-to-1 multiplexer is: $(A \\cdot \\overline{S}) + (B \\cdot S)$, apply this to each bit of A and B."
     ],
-    "solution": "",
+    "hints_de": [
+        "Du kannst die 8-Bit-Eingänge in einzelne Bits aufteilen, jedes Bit mit einem 2-Eingang-MUX auswählen und dann die ausgewählten Bits wieder in einen 8-Bit-Ausgang sammeln.",
+        "Verwende den Splitter, um A und B in ihre einzelnen Bits aufzuteilen, füttere diese Bits in 2-Eingang-MUXes zusammen mit der Steuerung S und verwende dann den Collector, um die Ausgänge der MUXes wieder in einen 8-Bit-Ausgang zu kombinieren.",
+        "Der Ausdruck für einen 2-zu-1-Multiplexer lautet: $(A \\cdot \\overline{S}) + (B \\cdot S)$, wende dies auf jedes Bit von A und B an."
+    ],
     "tests": [
         {
             "inputs": [
@@ -261,33 +81,17 @@
                 ],
                 [
                     0,
-                    1
+                    8
                 ],
                 [
                     0,
-                    1
-                ],
-                [
-                    0,
-                    1
-                ],
-                [
-                    1,
-                    1
-                ],
-                [
-                    1,
-                    1
+                    255
                 ]
             ],
             "expected_output": [
                 [
-                    1,
-                    1
-                ],
-                [
-                    1,
-                    1
+                    0,
+                    8
                 ]
             ]
         },
@@ -298,34 +102,106 @@
                     1
                 ],
                 [
-                    1,
-                    1
-                ],
-                [
                     0,
-                    1
-                ],
-                [
-                    0,
-                    1
+                    8
                 ],
                 [
                     1,
-                    1
-                ],
-                [
-                    1,
-                    1
+                    8
                 ]
             ],
             "expected_output": [
                 [
-                    1,
-                    1
-                ],
+                    0,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
                 [
                     0,
                     1
+                ],
+                [
+                    45,
+                    8
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    45,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    94,
+                    8
+                ],
+                [
+                    1,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    94,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    146,
+                    8
+                ],
+                [
+                    0,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    146,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    67,
+                    8
+                ],
+                [
+                    1,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    67,
+                    8
                 ]
             ]
         },
@@ -337,33 +213,17 @@
                 ],
                 [
                     0,
-                    1
+                    8
                 ],
                 [
                     0,
-                    1
-                ],
-                [
-                    0,
-                    1
-                ],
-                [
-                    1,
-                    1
-                ],
-                [
-                    1,
-                    1
+                    8
                 ]
             ],
             "expected_output": [
                 [
-                    1,
-                    1
-                ],
-                [
                     0,
-                    1
+                    8
                 ]
             ]
         },
@@ -374,49 +234,110 @@
                     1
                 ],
                 [
-                    1,
-                    1
-                ],
-                [
                     0,
-                    1
-                ],
-                [
-                    0,
-                    1
+                    8
                 ],
                 [
                     1,
-                    1
-                ],
-                [
-                    1,
-                    1
+                    8
                 ]
             ],
             "expected_output": [
                 [
-                    0,
+                    1,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    45,
+                    8
+                ],
+                [
+                    34,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    34,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    45,
+                    8
+                ],
+                [
+                    245,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    245,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    255,
+                    8
+                ],
+                [
+                    55,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    55,
+                    8
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
                     1
                 ],
                 [
                     0,
-                    1
+                    8
+                ],
+                [
+                    255,
+                    8
+                ]
+            ],
+            "expected_output": [
+                [
+                    255,
+                    8
                 ]
             ]
         }
     ],
-    "name_de": "Addition von NOR",
-    "description_de": "Wir wollen, dass unsere ALU auch die NOR-Operation handhaben kann. Wiederum müssen wir kein anderes Gatter implementieren, sondern können das Signal vielmehr verändern, um das gleiche Ergebnis zu erreichen. Denke daran: A NOR B = NOT (A ODER B) = NOT(A) UND NOT(B). Diese Stufe fügt ein separates Steuersignal `ainvert` hinzu, um NOR-Operation zu aktivieren.",
-    "difficulty_de": "Mittel",
-    "objectives_de": [
-        "Erweitere den bisherigen Prozessor auch um NOR.",
-        "Verwende den separaten Steuereingangn `ainvert` so, dass wenn `ainvert`=1 und op die ODER-Operation auswählt, die Schaltung A NOR B berechnet."
-    ],
-    "hints_de": [
-        "Denke daran: A NOR B = NOT (A ODER B) = NOT(A) UND NOT(B).",
-        "Du kannst das ainvert-Signal verwenden, um A zu invertieren, bevor es ins ODER-Gatter geht.",
-        "Verwende ein NICHT-Gatter, um die A-Eingabe zu invertieren, wenn ainvert=1, dann speise das ins ODER-Gatter zusammen mit B.",
-        "Der Ausgang des ODER-Gatters wird dann invertiert, wenn ainvert=1, was dir das NOR-Ergebnis gibt."
-    ]
+    "success_message": "Congratulations! You built a multiplexer for two 8-bit values. Now you know how to handle larger data widths with multiplexers. You can connect any bitwidth to all the multiplexers from now on.",
+    "success_message_de": "Glückwunsch! Du hast einen Multiplexer für zwei 8-Bit-Werte gebaut. Jetzt weißt du, wie man mit Multiplexern größere Datenbreiten verarbeitet. Du kannst von nun an jede Bitbreite mit allen Multiplexern verbinden."
 }

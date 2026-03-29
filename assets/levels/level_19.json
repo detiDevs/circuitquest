@@ -1,151 +1,98 @@
 {
     "level_id": 19,
-    "name": "Register block",
-    "description": "We already looked at how single registers work. Now we want to control how to read from them and use them in the context of our processor.",
-    "difficulty": "Easy",
+    "name": "Full Adder",
+    "description": "A Full-Adder adds A + B + CarryIn and outputs Sum + CarryOut.\nThis is the core building block of CPUs for arithmetic",
+    "difficulty": "Medium",
     "objectives": [
-        "Create a register block wich lets you select two different registers from an array of four registers and outputs their values.",
-        "The Input has to be a value between 0 and 3 to select one of the four registers."
+        "Build a full-adder using two half adders and one or gate"
     ],
     "components": [
         {
             "type": "Input",
             "position": [
                 0,
-                3
+                1
             ],
             "immovable": true,
-            "label": "read register 1",
-            "initialBitWidth": 8
+            "label": "A"
         },
         {
             "type": "Input",
             "position": [
                 0,
-                4
-            ],
-            "immovable": true,
-            "label": "read register 2",
-            "initialBitWidth": 8
-        },
-        {
-            "type": "Output",
-            "position": [
-                7,
                 3
             ],
             "immovable": true,
-            "label": "read data 1"
+            "label": "B"
         },
         {
-            "type": "Output",
+            "type": "Input",
             "position": [
-                7,
-                4
-            ],
-            "immovable": true,
-            "label": "read data 2"
-        },
-        {
-            "type": "Register",
-            "position": [
-                3,
-                2
-            ],
-            "immovable": true,
-            "label": "Register 0",
-            "initialValue": 42
-        },
-        {
-            "type": "Register",
-            "position": [
-                3,
-                3
-            ],
-            "immovable": true,
-            "label": "Register 1",
-            "initialValue": 84
-        },
-        {
-            "type": "Register",
-            "position": [
-                3,
-                4
-            ],
-            "immovable": true,
-            "label": "Register 2",
-            "initialValue": 126
-        },
-        {
-            "type": "Register",
-            "position": [
-                3,
+                0,
                 5
             ],
             "immovable": true,
-            "label": "Register 3",
-            "initialValue": 168
+            "label": "CarryIn"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                2
+            ],
+            "immovable": true,
+            "label": "Sum"
+        },
+        {
+            "type": "Output",
+            "position": [
+                6,
+                4
+            ],
+            "immovable": true,
+            "label": "CarryOut"
         }
     ],
-    "connections": [],
     "available_components": [
         {
-            "type": "Multiplexer4Inp"
+            "type": "HalfAdder"
         },
         {
-            "type": "Collector1to2"
-        },
-        {
-            "type": "Splitter8to1"
+            "type": "Or"
         }
     ],
     "hints": [
-        "Use two 4-input multiplexers to select the registers.",
-        "The two 8 bit inputs have to be converted to 2 bit inputs for the multiplexers.",
-        "Use splitters to convert the 8 bit input to 1 bit outputs and collect them again to form 2 bit inputs for the multiplexers."
+        "A Full Adder needs to add three bits: A, B, and CarryIn",
+        "Use the first Half Adder to add A and B together",
+        "Use the second Half Adder to add the Sum from the first adder with CarryIn",
+        "If either Half Adder produces a carry, the final CarryOut should be 1",
+        "Connect the carry outputs from both Half Adders to an OR gate"
     ],
+    "solution": "",
     "tests": [
         {
             "inputs": [
                 [
                     0,
-                    8
+                    1
                 ],
                 [
                     0,
-                    8
+                    1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
-                    42,
-                    32
+                    0,
+                    1
                 ],
-                [
-                    42,
-                    32
-                ]
-            ]
-        },
-        {
-            "inputs": [
                 [
                     0,
-                    8
-                ],
-                [
-                    1,
-                    8
-                ]
-            ],
-            "expected_output": [
-                [
-                    42,
-                    32
-                ],
-                [
-                    84,
-                    32
+                    1
                 ]
             ]
         },
@@ -153,21 +100,25 @@
             "inputs": [
                 [
                     0,
-                    8
+                    1
                 ],
                 [
-                    2,
-                    8
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
                 ]
             ],
             "expected_output": [
                 [
-                    42,
-                    32
+                    1,
+                    1
                 ],
                 [
-                    126,
-                    32
+                    0,
+                    1
                 ]
             ]
         },
@@ -175,299 +126,172 @@
             "inputs": [
                 [
                     0,
-                    8
+                    1
                 ],
-                [
-                    3,
-                    8
-                ]
-            ],
-            "expected_output": [
-                [
-                    42,
-                    32
-                ],
-                [
-                    168,
-                    32
-                ]
-            ]
-        },
-        {
-            "inputs": [
                 [
                     1,
-                    8
+                    1
                 ],
                 [
                     0,
-                    8
+                    1
                 ]
             ],
             "expected_output": [
                 [
-                    84,
-                    32
-                ],
-                [
-                    42,
-                    32
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
                     1,
-                    8
-                ],
-                [
-                    1,
-                    8
-                ]
-            ],
-            "expected_output": [
-                [
-                    84,
-                    32
-                ],
-                [
-                    84,
-                    32
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    1,
-                    8
-                ],
-                [
-                    2,
-                    8
-                ]
-            ],
-            "expected_output": [
-                [
-                    84,
-                    32
-                ],
-                [
-                    126,
-                    32
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    1,
-                    8
-                ],
-                [
-                    3,
-                    8
-                ]
-            ],
-            "expected_output": [
-                [
-                    84,
-                    32
-                ],
-                [
-                    168,
-                    32
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    2,
-                    8
+                    1
                 ],
                 [
                     0,
-                    8
-                ]
-            ],
-            "expected_output": [
-                [
-                    126,
-                    32
-                ],
-                [
-                    42,
-                    32
+                    1
                 ]
             ]
         },
         {
             "inputs": [
                 [
-                    2,
-                    8
+                    0,
+                    1
                 ],
                 [
                     1,
-                    8
+                    1
+                ],
+                [
+                    1,
+                    1
                 ]
             ],
             "expected_output": [
                 [
-                    126,
-                    32
+                    0,
+                    1
                 ],
                 [
-                    84,
-                    32
+                    1,
+                    1
                 ]
             ]
         },
         {
             "inputs": [
                 [
-                    2,
-                    8
-                ],
-                [
-                    2,
-                    8
-                ]
-            ],
-            "expected_output": [
-                [
-                    126,
-                    32
-                ],
-                [
-                    126,
-                    32
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    2,
-                    8
-                ],
-                [
-                    3,
-                    8
-                ]
-            ],
-            "expected_output": [
-                [
-                    126,
-                    32
-                ],
-                [
-                    168,
-                    32
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    3,
-                    8
+                    1,
+                    1
                 ],
                 [
                     0,
-                    8
+                    1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
-                    168,
-                    32
+                    1,
+                    1
                 ],
                 [
-                    42,
-                    32
+                    0,
+                    1
                 ]
             ]
         },
         {
             "inputs": [
                 [
-                    3,
-                    8
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
                 ],
                 [
                     1,
-                    8
+                    1
                 ]
             ],
             "expected_output": [
                 [
-                    168,
-                    32
+                    0,
+                    1
                 ],
                 [
-                    84,
-                    32
+                    1,
+                    1
                 ]
             ]
         },
         {
             "inputs": [
                 [
-                    3,
-                    8
+                    1,
+                    1
                 ],
                 [
-                    2,
-                    8
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
                 ]
             ],
             "expected_output": [
                 [
-                    168,
-                    32
+                    0,
+                    1
                 ],
                 [
-                    126,
-                    32
+                    1,
+                    1
                 ]
             ]
         },
         {
             "inputs": [
                 [
-                    3,
-                    8
+                    1,
+                    1
                 ],
                 [
-                    3,
-                    8
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
                 ]
             ],
             "expected_output": [
                 [
-                    168,
-                    32
+                    1,
+                    1
                 ],
                 [
-                    168,
-                    32
+                    1,
+                    1
                 ]
             ]
         }
     ],
-    "name_de": "Register-Block",
-    "description_de": "Wir haben bereits untersucht, wie einzelne Register funktionieren. Jetzt wollen wir steuern, wie wir von ihnen lesen und sie im Kontext unseres Prozessors verwenden.",
-    "difficulty_de": "Einfach",
+    "name_de": "Volladdierer",
+    "description_de": "Ein Volladdierer addiert A + B + CarryIn und gibt Sum + CarryOut aus.\nDies ist der Kernbaustein von CPUs für Arithmetik",
+    "difficulty_de": "Mittel",
     "objectives_de": [
-        "Erstelle einen Register-Block, mit dem du zwei verschiedene Register aus einer Anordnung von vier Registern auswählen und ihre Werte ausgeben kannst.",
-        "Der Eingang muss ein Wert zwischen 0 und 3 sein, um eines der vier Register auszuwählen."
+        "Erstelle einen Volladdierer mit zwei Halbaddierern und einem ODER-Gatter"
     ],
     "hints_de": [
-        "Verwende zwei 4-Eingang-Multiplexer, um die Register auszuwählen.",
-        "Die zwei 8-Bit-Eingänge müssen in 2-Bit-Eingänge für die Multiplexer konvertiert werden.",
-        "Verwende Splitter, um die 8-Bit-Eingabe in 1-Bit-Ausgänge zu konvertieren und kombiniere sie dann wieder, um 2-Bit-Eingänge für die Multiplexer zu bilden."
-    ]
+        "Ein Volladdierer muss drei Bits addieren: A, B und CarryIn",
+        "Verwende den ersten Halbaddierer, um A und B zusammen zu addieren",
+        "Verwende den zweiten Halbaddierer, um die Summe des ersten Addierers mit CarryIn zu addieren",
+        "Wenn einer der Halbaddierer einen Carry produziert, sollte das endgültige CarryOut 1 sein",
+        "Verbinde die Carry-Ausgänge beider Halbaddierer mit einem ODER-Gatter"
+    ],
+    "success_message": "Congratulations! You built a full adder using two half adders and an OR gate. This is a fundamental building block for arithmetic in CPUs. You can use this knowledge to build more complex arithmetic circuits like multi-bit adders in the next levels.",
+    "success_message_de": "Glückwunsch! Du hast einen Volladdierer mit zwei Halbaddierern und einem ODER-Gatter gebaut. Dies ist ein grundlegender Baustein für die Arithmetik in CPUs. Du kannst dieses Wissen nutzen, um komplexere arithmetische Schaltungen wie Mehrbit-Addierer in den nächsten Levels zu bauen."
 }

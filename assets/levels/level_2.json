@@ -6,6 +6,20 @@
     "description_de": "Das NICHT-Gatter invertiert die Eingabe einfach. Wenn es 1 erhält, gibt es 0 zurück, und umgekehrt.",
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
+    "truth_table": [
+        [
+            "A",
+            "NOT A"
+        ],
+        [
+            0,
+            1
+        ],
+        [
+            1,
+            0
+        ]
+    ],
     "objectives": [
         "Connect the input to the NOT gate. Then connect the NOT gate to the Output"
     ],
@@ -13,11 +27,28 @@
         "Verbinde die Eingabe mit dem NICHT-Gatter. Verbinde dann das NICHT-Gatter mit dem Ausgang"
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
-        {"type": "Output", "position": [4,1], "immovable": true}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Output",
+            "position": [
+                4,
+                1
+            ],
+            "immovable": true
+        }
     ],
     "available_components": [
-        {"type": "Not"}
+        {
+            "type": "Not"
+        }
     ],
     "hints": [
         "The NOT gate is very useful when combined with other gates"
@@ -26,7 +57,33 @@
         "Das NICHT-Gatter ist sehr nützlich, wenn es mit anderen Gattern kombiniert wird"
     ],
     "tests": [
-        {"inputs": [[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1]], "expected_output": [[0,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
     ]
 }

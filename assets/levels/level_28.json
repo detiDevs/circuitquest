@@ -1,10 +1,23 @@
 {
-    "level_id": 21,
-    "name": "Full Adder again?",
-    "description": "Full Adder again!",
-    "difficulty": "Annoying",
+    "level_id": 28,
+    "name": "Subtraction with a Full Adder",
+    "name_de": "Subtraktion mit einem Volladdierer",
+    "description": "Binary subtraction can be done without building a separate subtractor.\nInstead, CPUs reuse the Full-Adder by converting: $A − B \\rightarrow A + (\\overline{B}) + 1$\nThis is called two’s complement subtraction.\nYou will invert B and set the carry-in to 1 to subtract",
+    "description_de": "Binärsubtraktion kann ohne einen separaten Subtrahierer durchgeführt werden.\nStattdessen verwenden CPUs den Volladdierer wieder durch Konvertierung: $A − B ↦ A + (\\overline{B}) + 1$\nDies heißt Zweierkomplement-Subtraktion.\nDu invertierst B und stellst den Carry-in auf 1, um zu subtrahieren",
+    "difficulty": "Medium",
     "objectives": [
-        "Build a full-adder using only nand gates"
+        "Create a circuit that computes A-B"
+    ],
+    "difficulty_de": "Mittel",
+    "objectives_de": [
+        "Erstelle eine Schaltung, die A-B berechnet"
+    ],
+    "hints_de": [
+        "Subtraktion A - B ist das gleiche wie A + (-B) im Zweierkomplement",
+        "Um -B (negatives B) zu erhalten, invertiere alle Bits von B und addiere 1",
+        "Verwende ein NICHT-Gatter, um B zu invertieren, bevor du es in den Volladdierer speist",
+        "Das Setzen von CarryIn auf 1 addiert die '+1' für Zweierkomplement",
+        "Verbinde A direkt, $\\overline{B}$ als zweiten Eingang und setze CarryIn=1"
     ],
     "components": [
         {
@@ -37,16 +50,16 @@
         {
             "type": "Output",
             "position": [
-                6,
+                4,
                 2
             ],
             "immovable": true,
-            "label": "Sum"
+            "label": "Difference"
         },
         {
             "type": "Output",
             "position": [
-                6,
+                4,
                 4
             ],
             "immovable": true,
@@ -55,12 +68,18 @@
     ],
     "available_components": [
         {
-            "type": "Nand"
+            "type": "FullAdder"
+        },
+        {
+            "type": "Not"
         }
     ],
     "hints": [
-        "Don't forget that NAND gates are functionally complete, meaning you can build any logic gate using just NANDs.",
-        "Don't give up!"
+        "Subtraction A - B is the same as A + (-B) in two's complement",
+        "To get -B (negative B), invert all bits of B and add 1",
+        "Use a NOT gate to invert B before feeding it to the Full Adder",
+        "Setting CarryIn to 1 adds the '+1' needed for two's complement",
+        "Connect A directly, $\\overline{B}$ as the second input, and set CarryIn=1"
     ],
     "solution": "",
     "tests": [
@@ -81,7 +100,7 @@
             ],
             "expected_output": [
                 [
-                    0,
+                    1,
                     1
                 ],
                 [
@@ -107,11 +126,11 @@
             ],
             "expected_output": [
                 [
-                    1,
+                    0,
                     1
                 ],
                 [
-                    0,
+                    1,
                     1
                 ]
             ]
@@ -133,7 +152,7 @@
             ],
             "expected_output": [
                 [
-                    1,
+                    0,
                     1
                 ],
                 [
@@ -154,32 +173,6 @@
                 ],
                 [
                     1,
-                    1
-                ]
-            ],
-            "expected_output": [
-                [
-                    0,
-                    1
-                ],
-                [
-                    1,
-                    1
-                ]
-            ]
-        },
-        {
-            "inputs": [
-                [
-                    1,
-                    1
-                ],
-                [
-                    0,
-                    1
-                ],
-                [
-                    0,
                     1
                 ]
             ],
@@ -205,13 +198,39 @@
                     1
                 ],
                 [
-                    1,
+                    0,
                     1
                 ]
             ],
             "expected_output": [
                 [
                     0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
                     1
                 ],
                 [
@@ -237,11 +256,11 @@
             ],
             "expected_output": [
                 [
-                    0,
+                    1,
                     1
                 ],
                 [
-                    1,
+                    0,
                     1
                 ]
             ]
@@ -263,7 +282,7 @@
             ],
             "expected_output": [
                 [
-                    1,
+                    0,
                     1
                 ],
                 [
@@ -272,18 +291,5 @@
                 ]
             ]
         }
-    ],
-    "name_de": "Volladdierer nochmal?",
-    "description_de": "Volladdierer nochmal!",
-    "difficulty_de": "Nervig",
-    "objectives_de": [
-        "Baue einen Volladdierer nur mit NAND-Gattern"
-    ],
-    "hints_de": [
-        "Vergiss nicht, dass NAND-Gatter funktional vollständig sind, was bedeutet, dass du mit nur NANDs jedes Logikgatter bauen kannst.",
-        "Gib nicht auf!"
-    ],
-    "success_message": "Wow never would i have thought that someone would actually be so crazy to finish this level. Congrats! \n\nPS: There are even worse levels coming, have fun!",
-    "success_message_de": "Wow, ich hätte nie gedacht, dass jemand so verrückt sein könnte, um dieses Level tatsächlich zu schaffen. Glückwunsch! \n\nPS: Es kommen noch schlimmere Level, viel Spaß!",
-    "bonus_level": true
+    ]
 }
