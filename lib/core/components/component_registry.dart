@@ -102,10 +102,10 @@ final List<ComponentType> availableComponents = [
     createComponent: () => FullAdder(),
   ),
   ComponentType(
-    name: 'DLatch',
+    name: 'DFlipflop',
     displayName: 'D-Latch',
-    iconPath: 'assets/gates/DLatch.svg',
-    createComponent: () => DLatch(),
+    iconPath: 'assets/gates/DFlipflop.svg',
+    createComponent: () => DFlipflop(),
   ),
   ComponentType(
     name: 'Register',
