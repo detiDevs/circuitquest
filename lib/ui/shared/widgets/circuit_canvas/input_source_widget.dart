@@ -120,7 +120,7 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                           } else {
                             newBitWidth = 1;
                           }
-                          widget.inputComponent.setBitWidth(newBitWidth);
+                          widget.inputComponent.bitWidth = newBitWidth;
 
                           // Trigger evaluation after bitwidth change
                           _triggerEvaluation();
@@ -163,9 +163,9 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                   onTap: isImmutable
                       ? null
                       : () {
-                          widget.inputComponent.setValue(
-                            currentValue == 0 ? 1 : 0,
-                          );
+                          widget.inputComponent.value = currentValue == 0
+                              ? 1
+                              : 0;
 
                           // Trigger evaluation after value change
                           _triggerEvaluation();
@@ -226,18 +226,18 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                         ? null
                         : (value) {
                             final intValue = int.tryParse(value) ?? 0;
-                            final constrainedValue = widget.inputComponent.setValue(intValue);
+                            widget.inputComponent.value = intValue;
 
                             // Trigger evaluation after value change
                             _triggerEvaluation();
 
                             // Update display only if the value was out of range
-                            if (constrainedValue != intValue) {
-                              _controller.text = constrainedValue.toString();
+                            if (widget.inputComponent.value != intValue) {
+                              _controller.text = widget.inputComponent.value.toString();
                               _controller
                                   .selection = TextSelection.fromPosition(
                                 TextPosition(
-                                  offset: constrainedValue.toString().length,
+                                  offset: widget.inputComponent.value.toString().length,
                                 ),
                               );
                             }

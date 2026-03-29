@@ -1137,4 +1137,8 @@ class SandboxState extends ChangeNotifier {
       }
     }
   }
+
+  void nofifyManually() {
+    notifyListeners();
+  }
 }
