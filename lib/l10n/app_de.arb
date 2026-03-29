@@ -1,4 +1,5 @@
 {
+  "@@locale": "de",
   "appTitle": "CircuitQuest",
   "@appTitle": {
     "description": "Anwendungstitel"
@@ -340,6 +341,14 @@
   "@hide": {
     "description": "Beschriftung zum Ausblenden von Details oder Tipps"
   },
+  "showAHint": "Tipp anzeigen",
+  "@showAHint": {
+    "description": "Schaltflächenbeschriftung zum Anzeigen des ersten Tipps im Level-Info-Dialog"
+  },
+  "showNextHint": "Nächsten Tipp anzeigen",
+  "@showNextHint": {
+    "description": "Schaltflächenbeschriftung zum Anzeigen des nächsten Tipps im Level-Info-Dialog"
+  },
   "ok": "OK",
   "@ok": {
     "description": "OK-Schaltflächenbeschriftung"
@@ -388,5 +397,16 @@
       }
     }
   },
-  "resetLevel": "Level zurücksetzen"
+  "resetLevel": "Level zurücksetzen",
+
+  "instructionMemoryContents": "Instruction Memory Befehlsliste",
+  "instructionMemoryFormatHint": "Befehle werden als Dezimalversion einer 32-Bit-Zahl angegeben. Für mehr Infos, siehe MIPS Reference Sheet",
+  "showInstructions": "Befehle anzeigen",
+  "noInstructionsConfigured": "Keine Befehle konfiguriert",
+  "addInstruction": "Befehl hinzufügen",
+  "unsavedChanges": "Ungespeicherte Änderungen!",
+
+  "overrideNextProgramCounterValue": "Nächsten Program Counter Wert überschreiben",
+  "invalidProgramCounterValue": "Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).",
+  "gridCellOccupied": "Diese Zelle ist bereits belegt."
 }

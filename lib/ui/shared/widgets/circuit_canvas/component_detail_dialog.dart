@@ -1,166 +1,203 @@
 import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:circuitquest/core/commands/remove_component_command.dart';
 import 'package:circuitquest/core/commands/rename_component_command.dart';
+import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
+import 'package:circuitquest/core/components/cpu/program_counter.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
+import 'package:circuitquest/ui/shared/widgets/circuit_canvas/instruction_memory_contents_dialog.dart';
+import 'package:circuitquest/ui/shared/widgets/circuit_canvas/program_counter_value_editor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 const double imageContainerHeight = 400;
 const double maxDialogWidth = 600;
 
-class ComponentDetailDialog {
-  static void displayDialog(
-    BuildContext context,
-    PlacedComponent placedComponent,
-    SandboxState state,
-  ) {
-    var textController = TextEditingController();
+class ComponentDetailDialog extends ConsumerStatefulWidget {
+  final PlacedComponent placedComponent;
+
+  const ComponentDetailDialog({super.key, required this.placedComponent});
+
+  @override
+  ConsumerState<ComponentDetailDialog> createState() => _ComponentDetailDialogState();
+}
+
+class _ComponentDetailDialogState extends ConsumerState<ComponentDetailDialog> {
+  final textController = TextEditingController();
+  
+  @override
+  Widget build(BuildContext context) {
+    PlacedComponent placedComponent = widget.placedComponent;
     textController.text = placedComponent.label ?? "";
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => Dialog(
-        constraints: BoxConstraints(maxWidth: maxDialogWidth),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              // Title: Component type
-              Text(
-                placedComponent.type,
-                style: TextTheme.of(context).displayLarge,
-              ),
-              // Text field for label:
-              TextField(
-                controller: textController,
-                onSubmitted: (value) {
-                  final command = RenameComponentCommand(
-                    state,
-                    placedComponent.id,
-                    textController.text,
-                  );
-                  CommandController.executeCommand(command);
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: AppLocalizations.of(context)!.enterComponentLabel,
+    SandboxState sandboxState = ref.watch(sandboxProvider);
+    return Dialog(
+          constraints: BoxConstraints(maxWidth: maxDialogWidth),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // Title: Component type
+                Text(
+                  placedComponent.type,
+                  style: TextTheme.of(context).displayLarge,
                 ),
-              ),
-              Divider(),
-              // Component image with pins on all 4 sides using grid layout
-              SizedBox(
-                width: double.infinity,
-                height: imageContainerHeight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // TOP pins row
-                    SizedBox(
-                      height: 60,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _buildGridPinsForSide(
-                          placedComponent,
-                          PinPosition.TOP,
-                          imageContainerHeight,
-                          context
+                // Text field for label:
+                TextField(
+                  controller: textController,
+                  enabled: !placedComponent.immutable,
+                  onSubmitted: placedComponent.immutable
+                      ? null
+                      : (value) {
+                          final command = RenameComponentCommand(
+                            sandboxState,
+                            placedComponent.id,
+                            textController.text,
+                          );
+                          CommandController.executeCommand(command);
+                        },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: placedComponent.immutable,
+                    fillColor: placedComponent.immutable
+                        ? Colors.grey[200]
+                        : null,
+                    hintText: AppLocalizations.of(context)!.enterComponentLabel,
+                  ),
+                ),
+                Divider(),
+                // Component image with pins on all 4 sides using grid layout
+                SizedBox(
+                  width: double.infinity,
+                  height: imageContainerHeight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // TOP pins row
+                      SizedBox(
+                        height: 60,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: _buildGridPinsForSide(
+                            placedComponent,
+                            PinPosition.TOP,
+                            imageContainerHeight,
+                            context,
+                          ),
                         ),
                       ),
-                    ),
-                    // Middle row: LEFT | Image | RIGHT
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // LEFT pins column
-                          SizedBox(
-                            width: 100,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: _buildGridPinsForSide(
-                                placedComponent,
-                                PinPosition.LEFT,
-                                imageContainerHeight,
-                                context
+                      // Middle row: LEFT | Image | RIGHT
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // LEFT pins column
+                            SizedBox(
+                              width: 100,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: _buildGridPinsForSide(
+                                  placedComponent,
+                                  PinPosition.LEFT,
+                                  imageContainerHeight,
+                                  context,
+                                ),
                               ),
                             ),
-                          ),
-                          // Center image
-                          Expanded(
-                            // ComponentIcon class does not make sense here so I use SvgPicture directly
-                            child: SvgPicture.asset(
-                              'assets/gates/${placedComponent.type}.svg',
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.onSurface,
-                                BlendMode.srcIn,
-                              ),
-                              fit: BoxFit.contain,
-                              placeholderBuilder: (context) =>
-                                  Text(placedComponent.type),
-                            ),
-                          ),
-                          // RIGHT pins column
-                          SizedBox(
-                            width: 100,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: _buildGridPinsForSide(
-                                placedComponent,
-                                PinPosition.RIGHT,
-                                imageContainerHeight,
-                                context
+                            // Center image
+                            Expanded(
+                              // ComponentIcon class does not make sense here so I use SvgPicture directly
+                              child: SvgPicture.asset(
+                                'assets/gates/${placedComponent.type}.svg',
+                                colorFilter: ColorFilter.mode(
+                                  Theme.of(context).colorScheme.onSurface,
+                                  BlendMode.srcIn,
+                                ),
+                                fit: BoxFit.contain,
+                                placeholderBuilder: (context) =>
+                                    Text(placedComponent.type),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // BOTTOM pins row
-                    SizedBox(
-                      height: 60,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: _buildGridPinsForSide(
-                          placedComponent,
-                          PinPosition.BOTTOM,
-                          imageContainerHeight,
-                          context
+                            // RIGHT pins column
+                            SizedBox(
+                              width: 100,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: _buildGridPinsForSide(
+                                  placedComponent,
+                                  PinPosition.RIGHT,
+                                  imageContainerHeight,
+                                  context,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+                      // BOTTOM pins row
+                      SizedBox(
+                        height: 60,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: _buildGridPinsForSide(
+                            placedComponent,
+                            PinPosition.BOTTOM,
+                            imageContainerHeight,
+                            context,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Divider(),
-              // Delete option and closing button
-              TextButton(
-                onPressed: () {
-                  // Use command pattern for undo/redo support
-                  final command = RemoveComponentCommand(
-                    state,
-                    placedComponent.id,
-                  );
-                  CommandController.executeCommand(command);
-                  Navigator.pop(context);
-                },
-                style: TextButton.styleFrom(backgroundColor: Colors.red),
-                child: Text(AppLocalizations.of(context)!.delete),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(AppLocalizations.of(context)!.close),
-              ),
-            ],
+                if (placedComponent.component is InstructionMemory)
+                  ElevatedButton(
+                    onPressed: () =>
+                        InstructionMemoryContentsDialog.displayDialog(
+                          context,
+                          placedComponent,
+                          sandboxState,
+                        ),
+                    child: Text(AppLocalizations.of(context)!.showInstructions),
+                  ),
+                if (placedComponent.component is ProgramCounter &&
+                    !placedComponent.immutable)
+                  ProgramCounterValueEditor(
+                    pc: placedComponent.component as ProgramCounter,
+                  ),
+                Divider(),
+                // Delete option and closing button
+                if (!(placedComponent.immovable || placedComponent.immutable))
+                  TextButton(
+                    onPressed: () {
+                      // Use command pattern for undo/redo support
+                      final command = RemoveComponentCommand(
+                        sandboxState,
+                        placedComponent.id,
+                      );
+                      CommandController.executeCommand(command);
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(backgroundColor: Colors.red),
+                    child: Text(
+                      AppLocalizations.of(context)!.delete,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(AppLocalizations.of(context)!.close),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   /// Builds pin widgets for a specific side of the component in the dialog grid layout.
@@ -171,7 +208,7 @@ class ComponentDetailDialog {
     PlacedComponent placedComponent,
     PinPosition side,
     double containerSize,
-    BuildContext context
+    BuildContext context,
   ) {
     final inputs = placedComponent.component.inputs.entries.toList();
     final outputs = placedComponent.component.outputs.entries.toList();
@@ -216,17 +253,26 @@ class ComponentDetailDialog {
           children: [
             TextSpan(
               text: '${entry.key}\n',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 10,
+              ),
             ),
             WidgetSpan(child: Icon(Icons.usb, size: 12)),
             TextSpan(
               text: '${pin.bitWidth}',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 10,
+              ),
             ),
             WidgetSpan(child: Icon(Icons.power_settings_new, size: 12)),
             TextSpan(
               text: '${pin.value}',
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 10),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
+                fontSize: 10,
+              ),
             ),
           ],
         ),

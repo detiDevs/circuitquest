@@ -6,6 +6,7 @@ import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/core/logic/pin.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/custom_component_library.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
@@ -113,25 +114,27 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
             widget.placedComponent.id,
             snapped,
             oldPosition,
+            onError: (_) => SnackBarUtils.showError(
+              context,
+              AppLocalizations.of(context)!.gridCellOccupied,
+            ),
           );
           CommandController.executeCommand(command);
         },
         onSecondaryTapDown: (details) {
-          if (widget.placedComponent.immovable) return;
           // Show context menu on right-click
-          ComponentDetailDialog.displayDialog(
-            context,
-            widget.placedComponent,
-            state,
+          showDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                ComponentDetailDialog(placedComponent: widget.placedComponent),
           );
         },
         onLongPress: () {
-          if (widget.placedComponent.immovable) return;
           // Show context menu on long press (for touch devices)
-          ComponentDetailDialog.displayDialog(
-            context,
-            widget.placedComponent,
-            state,
+          showDialog(
+            context: context,
+            builder: (BuildContext context) =>
+                ComponentDetailDialog(placedComponent: widget.placedComponent),
           );
         },
         child: Container(
@@ -185,7 +188,7 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                               fontWeight: FontWeight.bold,
                               // Exceptional use of direct color for text
                               // This is only because the label background is always light blue
-                              color: Colors.black
+                              color: Colors.black,
                             ),
                           ),
                         ),

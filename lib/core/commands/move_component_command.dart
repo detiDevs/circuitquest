@@ -12,20 +12,22 @@ class MoveComponentCommand extends Command {
     this._sandboxState,
     this._componentId,
     this._newPosition,
-    this._oldPosition
-  );
+    this._oldPosition, {
+    super.onError,
+  });
 
   @override
-  void execute(){
-    _sandboxState.moveComponent(_componentId, _newPosition);
+  void execute() {
+    if (!_sandboxState.moveComponent(_componentId, _newPosition, oldPosition: _oldPosition)) {
+      onError!("");
+    }
   }
 
   @override
-  void undo(){
+  void undo() {
     _sandboxState.moveComponent(_componentId, _oldPosition);
   }
 
   @override
   String get description => 'Move component';
-
 }

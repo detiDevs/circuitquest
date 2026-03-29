@@ -2,9 +2,9 @@ import 'package:circuitquest/core/components/sequential/d_latch.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('DLatch', () {
+  group('DFlipflop', () {
     test('should have correct pins', () {
-      final latch = DLatch();
+      final latch = DFlipflop();
 
       expect(latch.inputs.length, 2);
       expect(latch.outputs.length, 2);
@@ -15,7 +15,7 @@ void main() {
     });
 
     test('should store value when clock is high', () {
-      final latch = DLatch();
+      final latch = DFlipflop();
 
       // Set D = 1, clock = 1
       latch.inputs['D']!.value = 1;
@@ -27,7 +27,7 @@ void main() {
     });
 
     test('should hold value when clock goes low', () {
-      final latch = DLatch();
+      final latch = DFlipflop();
 
       // Set D = 1, clock = 1 (store the value)
       latch.inputs['D']!.value = 1;
@@ -46,7 +46,7 @@ void main() {
     });
 
     test('should be transparent when clock is high', () {
-      final latch = DLatch();
+      final latch = DFlipflop();
 
       // Clock high, D changes should propagate immediately
       latch.inputs['clock']!.value = 1;
@@ -65,7 +65,7 @@ void main() {
     });
 
     test('should return true when output changes', () {
-      final latch = DLatch();
+      final latch = DFlipflop();
 
       latch.inputs['D']!.value = 1;
       latch.inputs['clock']!.value = 1;
@@ -75,7 +75,7 @@ void main() {
     });
 
     test('should return false when output does not change', () {
-      final latch = DLatch();
+      final latch = DFlipflop();
 
       // Set initial value
       latch.inputs['D']!.value = 1;
@@ -88,7 +88,7 @@ void main() {
     });
 
     test('should work with multi-bit values', () {
-      final latch = DLatch(bitWidth: 4);
+      final latch = DFlipflop(bitWidth: 4);
 
       latch.inputs['D']!.value = 12; // 0b1100
       latch.inputs['clock']!.value = 1;

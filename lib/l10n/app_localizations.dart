@@ -692,6 +692,18 @@ abstract class AppLocalizations {
   /// **'Hide'**
   String get hide;
 
+  /// Button label to reveal the first hint in level info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Show a hint'**
+  String get showAHint;
+
+  /// Button label to reveal the next hint in level info dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Show next hint'**
+  String get showNextHint;
+
   /// OK button label
   ///
   /// In en, this message translates to:
@@ -769,6 +781,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reset level'**
   String get resetLevel;
+
+  /// No description provided for @instructionMemoryContents.
+  ///
+  /// In en, this message translates to:
+  /// **'Instruction Memory Contents'**
+  String get instructionMemoryContents;
+
+  /// No description provided for @instructionMemoryFormatHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Instructions are configured as the decimal version of a 32 bit number. For more info, see MIPS Reference Sheet'**
+  String get instructionMemoryFormatHint;
+
+  /// No description provided for @showInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Show instructions'**
+  String get showInstructions;
+
+  /// No description provided for @noInstructionsConfigured.
+  ///
+  /// In en, this message translates to:
+  /// **'No instructions configured'**
+  String get noInstructionsConfigured;
+
+  /// No description provided for @addInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Befehl hinzufügen'**
+  String get addInstruction;
+
+  /// No description provided for @unsavedChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsaved changes!'**
+  String get unsavedChanges;
+
+  /// No description provided for @overrideNextProgramCounterValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Override next Program Counter value'**
+  String get overrideNextProgramCounterValue;
+
+  /// No description provided for @invalidProgramCounterValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).'**
+  String get invalidProgramCounterValue;
+
+  /// No description provided for @gridCellOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'This grid cell is already occupied.'**
+  String get gridCellOccupied;
 }
 
 class _AppLocalizationsDelegate
