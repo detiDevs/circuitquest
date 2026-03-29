@@ -21,9 +21,10 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
 
   // Render plain text with inline LaTeX (dollar-delimited) using flutter_math_fork.
   // If no $ delimiters are present, returns a simple Text widget.
-  Widget _renderMaybeMath(String s) {
+  Widget _renderMaybeMath(String s, TextStyle? initialTheme) {
+    final theme = initialTheme ?? Theme.of(context).textTheme.bodySmall;
     if (!s.contains(r'$')) {
-      return Text(s, style: Theme.of(context).textTheme.bodySmall);
+      return Text(s, style: theme);
     }
 
     final regex = RegExp(r'(\$.*?\$)');
@@ -35,7 +36,7 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
       children.add(
         TextSpan(
           text: nonMathParts[i],
-          style: Theme.of(context).textTheme.bodySmall,
+          style: theme,
         ),
       );
       if (i < mathParts.length) {
@@ -44,7 +45,7 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
             alignment: PlaceholderAlignment.middle,
             child: Math.tex(
               mathParts[i].substring(1, mathParts[i].length - 1),
-              textStyle: Theme.of(context).textTheme.bodySmall,
+              textStyle: theme,
               onErrorFallback: (err) => Text(
                 'Error rendering math: $err',
                 style: Theme.of(
@@ -61,7 +62,7 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
       width: double.infinity,
       child: RichText(
         text: TextSpan(
-          style: Theme.of(context).textTheme.bodySmall,
+          style: theme,
           children: children,
         ),
       ),
@@ -101,117 +102,121 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
           ),
         ],
       ),
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Description
-            Text(
-              AppLocalizations.of(context)!.levelDescription,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              widget.level.getLocalizedString('description', localeCode),
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            const SizedBox(height: 16),
-
-            // Objectives
-            Text(
-              AppLocalizations.of(context)!.levelObjectives,
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            ...widget.level
-                .getLocalizedStringList('objectives', localeCode)
-                .asMap()
-                .entries
-                .map(
-                  (entry) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${entry.key + 1}. ',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(
-                          child: Text(
-                            entry.value,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-            // Hints
-            if (hints.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!.levelHints,
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  if (canRevealMoreHints)
-                    TextButton(
-                      onPressed: () =>
-                          revealNextLevelHint(ref, level.levelId, hints.length),
-                      child: Text(
-                        visibleHintCount == 0
-                            ? AppLocalizations.of(context)!.showAHint
-                            : AppLocalizations.of(context)!.showNextHint,
-                      ),
-                    ),
-                ],
+      content: SizedBox(
+        width: 500,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Description
+              Text(
+                AppLocalizations.of(context)!.levelDescription,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               ),
-              if (visibleHintCount > 0) ...[
-                const SizedBox(height: 8),
-                ...hints
-                    .take(visibleHintCount)
-                    .map(
-                      (hint) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.yellow[50],
-                            border: Border.all(color: Colors.yellow[200]!),
-                            borderRadius: BorderRadius.circular(4),
+              const SizedBox(height: 8),
+              _renderMaybeMath(
+                widget.level.getLocalizedString('description', localeCode), null
+              ),
+              const SizedBox(height: 16),
+
+              // Objectives
+              Text(
+                AppLocalizations.of(context)!.levelObjectives,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              ...widget.level
+                  .getLocalizedStringList('objectives', localeCode)
+                  .asMap()
+                  .entries
+                  .map(
+                    (entry) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${entry.key + 1}. ',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Icon(
-                                Icons.lightbulb,
-                                size: 16,
-                                color: Colors.yellow[700],
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  hint,
-                                  style: TextStyle(color: Colors.black),
+                          Expanded(
+                            child: _renderMaybeMath(
+                              entry.value, null 
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+              // Hints
+              if (hints.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.levelHints,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (canRevealMoreHints)
+                      TextButton(
+                        onPressed: () => revealNextLevelHint(
+                          ref,
+                          level.levelId,
+                          hints.length,
+                        ),
+                        child: Text(
+                          visibleHintCount == 0
+                              ? AppLocalizations.of(context)!.showAHint
+                              : AppLocalizations.of(context)!.showNextHint,
+                        ),
+                      ),
+                  ],
+                ),
+                if (visibleHintCount > 0) ...[
+                  const SizedBox(height: 8),
+                  ...hints
+                      .take(visibleHintCount)
+                      .map(
+                        (hint) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[50],
+                              border: Border.all(color: Colors.yellow[200]!),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.all(8),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.lightbulb,
+                                  size: 16,
+                                  color: Colors.yellow[700],
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: _renderMaybeMath(
+                                    hint,
+                                    TextStyle(color: Colors.black)
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                ],
               ],
             ],
           ),
@@ -226,4 +231,3 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
     );
   }
 }
-
