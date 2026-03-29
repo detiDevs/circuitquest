@@ -4,11 +4,11 @@ import 'package:circuitquest/core/logic/pin.dart';
 /// D Latch - stores a value when clock is high
 /// When clock is high (1), output Q follows input D
 /// When clock is low (0), output Q holds its previous value
-class DLatch extends SequentialComponent {
+class DFlipflop extends SequentialComponent {
   int _storedValue = 0;
   int _newState = 0;
 
-  DLatch({int bitWidth = 1}) {
+  DFlipflop({int bitWidth = 1}) {
     inputs['D'] = InputPin(this, bitWidth: bitWidth);
     outputs['Q'] = OutputPin(this, bitWidth: bitWidth);
     outputs['!Q'] = OutputPin(this, bitWidth: bitWidth);
