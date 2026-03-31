@@ -395,6 +395,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get resetLevel => 'Level zurücksetzen';
 
   @override
+  String get gridCellOccupied => 'Diese Zelle ist bereits belegt.';
+
+  @override
+  String get locked => 'Gesperrt';
+
+  @override
+  String get completed => 'Abgeschlossen';
+
+  @override
+  String get bonusLevel => 'Bonuslevel';
+
+  @override
   String get instructionMemoryContents => 'Instruction Memory Befehlsliste';
 
   @override
@@ -420,16 +432,4 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get invalidProgramCounterValue =>
       'Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).';
-
-  @override
-  String get gridCellOccupied => 'Diese Zelle ist bereits belegt.';
-
-  @override
-  String get locked => 'Gesperrt';
-
-  @override
-  String get completed => 'Abgeschlossen';
-
-  @override
-  String get bonusLevel => 'Bonuslevel';
 }
