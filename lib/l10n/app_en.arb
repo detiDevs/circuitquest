@@ -393,5 +393,5 @@
   "unsavedChanges": "Unsaved changes!",
 
   "overrideNextProgramCounterValue": "Override next Program Counter value",
-  "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).",
+  "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4)."
 }
