@@ -50,6 +50,25 @@ class LevelCard extends ConsumerWidget {
                       children: [
                         
                         const Spacer(),
+                        if (levelItem.isBonus)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.orange,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.bonusLevel,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
                         if (isCompleted)
                           Container(
                             decoration: BoxDecoration(
@@ -60,8 +79,8 @@ class LevelCard extends ConsumerWidget {
                               horizontal: 8,
                               vertical: 4,
                             ),
-                            child: const Text(
-                              'Done',
+                            child: Text(
+                              AppLocalizations.of(context)!.completed,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
@@ -79,8 +98,8 @@ class LevelCard extends ConsumerWidget {
                               horizontal: 8,
                               vertical: 4,
                             ),
-                            child: const Text(
-                              'Locked',
+                            child: Text(
+                              AppLocalizations.of(context)!.locked,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
@@ -91,13 +110,6 @@ class LevelCard extends ConsumerWidget {
                       ],
                     ),
                     const Spacer(),
-                    // Level number
-                    Text(
-                      'Level ${levelItem.id}',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
-                    ),
                     // Level name
                     Text(
                       levelName,

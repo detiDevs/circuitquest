@@ -418,4 +418,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gridCellOccupied => 'This grid cell is already occupied.';
+
+  @override
+  String get locked => 'Locked';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get bonusLevel => 'Bonus level';
 }

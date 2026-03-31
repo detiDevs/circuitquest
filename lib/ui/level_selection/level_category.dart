@@ -1,7 +1,6 @@
 import 'package:circuitquest/levels/levels.dart';
 import 'package:flutter/material.dart';
 import './level_card.dart';
-import '../../state/level_state.dart';
 
 /// Widget displaying a category of levels.
 class LevelCategoryWidget extends StatelessWidget {

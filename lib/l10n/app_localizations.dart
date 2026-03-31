@@ -835,6 +835,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This grid cell is already occupied.'**
   String get gridCellOccupied;
+
+  /// No description provided for @locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get locked;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @bonusLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus level'**
+  String get bonusLevel;
 }
 
 class _AppLocalizationsDelegate
