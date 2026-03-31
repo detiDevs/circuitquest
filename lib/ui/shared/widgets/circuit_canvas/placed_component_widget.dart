@@ -137,20 +137,9 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                 ComponentDetailDialog(placedComponent: widget.placedComponent),
           );
         },
-        child: Container(
+        child: SizedBox(
           width: widget.gridSize,
           height: widget.gridSize,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue[700]!, width: 2),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 4,
-                offset: const Offset(2, 2),
-              ),
-            ],
-          ),
           child: widget.placedComponent.component is InputSource
               ? _buildInputControls(
                   widget.placedComponent.component as InputSource,

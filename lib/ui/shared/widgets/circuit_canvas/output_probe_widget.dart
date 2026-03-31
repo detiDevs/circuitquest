@@ -1,3 +1,4 @@
+import 'package:circuitquest/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/components/output_probe.dart';
@@ -84,7 +85,7 @@ class OutputProbeWidget extends ConsumerWidget {
         // Input pin on the left edge
         Positioned(
           left: 0,
-          top: gridSize / 2 - 6,
+          top: gridSize / 2 - Constants.kPinSize / 2,
           child: GestureDetector(
             onTap: () {
               if (state.wireDrawingStart != null) {
@@ -105,8 +106,8 @@ class OutputProbeWidget extends ConsumerWidget {
               }
             },
             child: Container(
-              width: 20,
-              height: 20,
+              width: Constants.kPinSize,
+              height: Constants.kPinSize,
               decoration: BoxDecoration(
                 color: inputPin.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,
