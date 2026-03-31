@@ -383,5 +383,15 @@
   "gridCellOccupied": "This grid cell is already occupied.",
   "locked": "Locked",
   "completed": "Completed",
-  "bonusLevel": "Bonus level"
+  "bonusLevel": "Bonus level",
+
+  "instructionMemoryContents": "Instruction Memory Contents",
+  "instructionMemoryFormatHint": "Instructions are configured as the decimal version of a 32 bit number. For more info, see MIPS Reference Sheet",
+  "showInstructions": "Show instructions",
+  "noInstructionsConfigured": "No instructions configured",
+  "addInstruction": "Befehl hinzufügen",
+  "unsavedChanges": "Unsaved changes!",
+
+  "overrideNextProgramCounterValue": "Override next Program Counter value",
+  "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).",
 }

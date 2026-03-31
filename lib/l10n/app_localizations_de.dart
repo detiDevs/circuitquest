@@ -395,6 +395,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String get resetLevel => 'Level zurücksetzen';
 
   @override
+  String get instructionMemoryContents => 'Instruction Memory Befehlsliste';
+
+  @override
+  String get instructionMemoryFormatHint =>
+      'Befehle werden als Dezimalversion einer 32-Bit-Zahl angegeben. Für mehr Infos, siehe MIPS Reference Sheet';
+
+  @override
+  String get showInstructions => 'Befehle anzeigen';
+
+  @override
+  String get noInstructionsConfigured => 'Keine Befehle konfiguriert';
+
+  @override
+  String get addInstruction => 'Befehl hinzufügen';
+
+  @override
+  String get unsavedChanges => 'Ungespeicherte Änderungen!';
+
+  @override
+  String get overrideNextProgramCounterValue =>
+      'Nächsten Program Counter Wert überschreiben';
+
+  @override
+  String get invalidProgramCounterValue =>
+      'Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).';
+
+  @override
   String get gridCellOccupied => 'Diese Zelle ist bereits belegt.';
 
   @override

@@ -99,7 +99,7 @@ class LevelValidator {
         for (int i = 0; i < test.inputs.length; i++) {
           final inputValues = test.inputs[i];
           if (inputValues.isNotEmpty) {
-            inputSources[i].setValue(inputValues[0]);
+            inputSources[i].value = inputValues[0];
           }
         }
 
@@ -154,7 +154,7 @@ class LevelValidator {
       final inputSource = inputSources[i];
       // InputSource typically has an 'output' pin, set its value
       if (inputValues.isNotEmpty) {
-        inputSource.setValue(inputValues[0]);
+        inputSource.value = inputValues[0];
       }
     }
 

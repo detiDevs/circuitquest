@@ -20,8 +20,10 @@ class InstructionMemory extends Component {
   /// Load a list of instructions into the instruction memory.
   /// Only for testing and level initialization.
   void loadInstructions(List<int> instructions) {
-    _instructionList = instructions;
+    _instructionList = List<int>.from(instructions);
   }
+
+  List<int> get instructions => List<int>.unmodifiable(_instructionList);
 
   int getInstructionListLenght(){
     return _instructionList.length;
