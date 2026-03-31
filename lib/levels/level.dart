@@ -167,6 +167,8 @@ class Level {
   final List<WireConnection> connections;
   final List<String> hints;
   final List<String>? hintsDe;
+  final String? successMessage;
+  final String? successMessageDe;
   final int? maxComponentCount;
   final List<LevelTest> tests;
   final MemoryContents? memoryContents;
@@ -187,6 +189,8 @@ class Level {
     required this.connections,
     required this.hints,
     this.hintsDe,
+    this.successMessage,
+    this.successMessageDe,
     this.maxComponentCount,
     required this.tests,
     this.memoryContents,
@@ -215,6 +219,8 @@ class Level {
           .toList(),
       hints: (json['hints'] as List<dynamic>).cast<String>(),
       hintsDe: (json['hints_de'] as List<dynamic>?)?.cast<String>(),
+      successMessage: json['success_message'] as String?,
+      successMessageDe: json['success_message_de'] as String?,
       maxComponentCount: json['maxComponentCount'] as int?,
       tests: ((json['tests'] ?? []) as List<dynamic>)
           .map((e) => LevelTest.fromJson(e as Map<String, dynamic>))
@@ -247,6 +253,8 @@ class Level {
           .toList(),
       'hints': hints,
       if (hintsDe != null) 'hints_de': hintsDe,
+      if (successMessage != null) 'success_message' : successMessage,
+      if (successMessageDe != null) 'success_message_de' : successMessageDe,
       'tests': tests.map((t) => t.toJson()).toList(),
       if (memoryContents != null) 'memoryContents': memoryContents!.toJson(),
     };
@@ -266,6 +274,10 @@ class Level {
         return localeCode == 'de' && difficultyDe != null
             ? difficultyDe!
             : difficulty;
+      case 'success_message':
+        return localeCode == 'de' && successMessageDe != null
+            ? successMessageDe!
+            : successMessage ?? "";
       default:
         return '';
     }

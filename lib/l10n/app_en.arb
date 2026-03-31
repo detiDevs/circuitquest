@@ -394,4 +394,12 @@
 
   "overrideNextProgramCounterValue": "Override next Program Counter value",
   "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).",
+
+  "success": "Success!",
+  "allTestsPassedMessage": "All tests passed! Level completed.",
+  "continue_": "Continue",
+  "testFailed": "Test failed",
+  "testFailedDescription": "One or more tests failed",
+  "tryAgain": "Try again"
+
 }

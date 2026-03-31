@@ -390,6 +390,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get resetLevel => 'Reset level';
 
   @override
+  String get gridCellOccupied => 'This grid cell is already occupied.';
+
+  @override
+  String get locked => 'Locked';
+
+  @override
+  String get completed => 'Completed';
+
+  @override
+  String get bonusLevel => 'Bonus level';
+
+  @override
   String get instructionMemoryContents => 'Instruction Memory Contents';
 
   @override
@@ -417,14 +429,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).';
 
   @override
-  String get gridCellOccupied => 'This grid cell is already occupied.';
+  String get success => 'Success!';
 
   @override
-  String get locked => 'Locked';
+  String get allTestsPassedMessage => 'All tests passed! Level completed.';
 
   @override
-  String get completed => 'Completed';
+  String get continue_ => 'Continue';
 
   @override
-  String get bonusLevel => 'Bonus level';
+  String get testFailed => 'Test failed';
+
+  @override
+  String get testFailedDescription => 'One or more tests failed';
+
+  @override
+  String get tryAgain => 'Try again';
 }

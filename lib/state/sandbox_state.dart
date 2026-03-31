@@ -9,6 +9,7 @@ import 'package:circuitquest/core/components/cpu/data_memory.dart';
 import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
 import 'package:circuitquest/core/components/cpu/register_block.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/levels/level.dart';
 import 'package:circuitquest/levels/level_validator.dart';
 import 'package:flutter/material.dart';
@@ -216,23 +217,23 @@ class SandboxState extends ChangeNotifier {
         (lc.position[1] * gridSize) + canvasCenter,
       );
 
-        if (resolved.component is InstructionMemory &&
-            level.memoryContents != null) {
-          (resolved.component as InstructionMemory).loadInstructions(
-            level.memoryContents!.instructionMemory,
-          );
-        } else if (resolved.component is DataMemory &&
-            level.memoryContents != null) {
-        } else if (resolved.component is DataMemory &&
-            level.memoryContents != null) {
-          (resolved.component as DataMemory).loadData(
-            level.memoryContents!.dataMemory,
-          );
-        } else if (resolved.component is RegisterBlock &&
-            lc.initialRegisterValues != null) {
-          (resolved.component as RegisterBlock).loadRegisters(
-            lc.initialRegisterValues!,
-          );
+      if (resolved.component is InstructionMemory &&
+          level.memoryContents != null) {
+        (resolved.component as InstructionMemory).loadInstructions(
+          level.memoryContents!.instructionMemory,
+        );
+      } else if (resolved.component is DataMemory &&
+          level.memoryContents != null) {
+      } else if (resolved.component is DataMemory &&
+          level.memoryContents != null) {
+        (resolved.component as DataMemory).loadData(
+          level.memoryContents!.dataMemory,
+        );
+      } else if (resolved.component is RegisterBlock &&
+          lc.initialRegisterValues != null) {
+        (resolved.component as RegisterBlock).loadRegisters(
+          lc.initialRegisterValues!,
+        );
       }
 
       placeComponent(
@@ -1097,33 +1098,45 @@ class SandboxState extends ChangeNotifier {
 
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Success!'),
-            content: const Text('All tests passed! Level completed.'),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(color: Colors.white),
-                ),
+          builder: (context) {
+            final localeCode = Localizations.localeOf(context).languageCode;
+            final message = level.getLocalizedString(
+              'success_message',
+              localeCode,
+            );
+
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)!.success),
+              content: Text(
+                message != "" ? message : AppLocalizations.of(context)!.allTestsPassedMessage,
               ),
-            ],
-          ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.continue_,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       } else {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Test Failed'),
+            title: Text(AppLocalizations.of(context)!.testFailed),
             content: Text(
-              validationResult.errorMessage ?? 'One or more tests failed',
+              validationResult.errorMessage ?? AppLocalizations.of(context)!.testFailedDescription,
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Try Again'),
+                child: Text(AppLocalizations.of(context)!.tryAgain),
               ),
             ],
           ),

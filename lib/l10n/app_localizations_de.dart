@@ -395,6 +395,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get resetLevel => 'Level zurücksetzen';
 
   @override
+  String get gridCellOccupied => 'Diese Zelle ist bereits belegt.';
+
+  @override
+  String get locked => 'Gesperrt';
+
+  @override
+  String get completed => 'Abgeschlossen';
+
+  @override
+  String get bonusLevel => 'Bonuslevel';
+
+  @override
   String get instructionMemoryContents => 'Instruction Memory Befehlsliste';
 
   @override
@@ -422,14 +434,22 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).';
 
   @override
-  String get gridCellOccupied => 'Diese Zelle ist bereits belegt.';
+  String get success => 'Geschafft!';
 
   @override
-  String get locked => 'Gesperrt';
+  String get allTestsPassedMessage =>
+      'Alle Tests wurden bestanden und das Level ist abgeschlossen.';
 
   @override
-  String get completed => 'Abgeschlossen';
+  String get continue_ => 'Fortfahren';
 
   @override
-  String get bonusLevel => 'Bonuslevel';
+  String get testFailed => 'Test fehlgeschlagen';
+
+  @override
+  String get testFailedDescription =>
+      'Ein oder mehrere Tests sind fehlgeschlagen';
+
+  @override
+  String get tryAgain => 'Noch einmal versuchen';
 }

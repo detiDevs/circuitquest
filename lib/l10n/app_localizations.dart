@@ -782,6 +782,30 @@ abstract class AppLocalizations {
   /// **'Reset level'**
   String get resetLevel;
 
+  /// No description provided for @gridCellOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'This grid cell is already occupied.'**
+  String get gridCellOccupied;
+
+  /// No description provided for @locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get locked;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @bonusLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus level'**
+  String get bonusLevel;
+
   /// No description provided for @instructionMemoryContents.
   ///
   /// In en, this message translates to:
@@ -830,29 +854,41 @@ abstract class AppLocalizations {
   /// **'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).'**
   String get invalidProgramCounterValue;
 
-  /// No description provided for @gridCellOccupied.
+  /// No description provided for @success.
   ///
   /// In en, this message translates to:
-  /// **'This grid cell is already occupied.'**
-  String get gridCellOccupied;
+  /// **'Success!'**
+  String get success;
 
-  /// No description provided for @locked.
+  /// No description provided for @allTestsPassedMessage.
   ///
   /// In en, this message translates to:
-  /// **'Locked'**
-  String get locked;
+  /// **'All tests passed! Level completed.'**
+  String get allTestsPassedMessage;
 
-  /// No description provided for @completed.
+  /// No description provided for @continue_.
   ///
   /// In en, this message translates to:
-  /// **'Completed'**
-  String get completed;
+  /// **'Continue'**
+  String get continue_;
 
-  /// No description provided for @bonusLevel.
+  /// No description provided for @testFailed.
   ///
   /// In en, this message translates to:
-  /// **'Bonus level'**
-  String get bonusLevel;
+  /// **'Test failed'**
+  String get testFailed;
+
+  /// No description provided for @testFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'One or more tests failed'**
+  String get testFailedDescription;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
 }
 
 class _AppLocalizationsDelegate
