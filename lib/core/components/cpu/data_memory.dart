@@ -28,7 +28,7 @@ class DataMemory extends SequentialComponent {
     outputs['readData'] = _readData;
     outputs['readData']!.value = 0;
 
-    pinPositions = {'memWrite': PinPosition.TOP, 'memRead': PinPosition.TOP};
+    pinPositions = {'memWrite': PinPosition.TOP, 'memRead': PinPosition.BOTTOM};
   }
 
   /// Load a list of data into the data memory.
