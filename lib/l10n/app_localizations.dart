@@ -884,6 +884,64 @@ abstract class AppLocalizations {
   /// **'One or more tests failed'**
   String get testFailedDescription;
 
+  /// Shown when the circuit exceeds the maximum allowed components
+  ///
+  /// In en, this message translates to:
+  /// **'Too many components: {actual} used, maximum is {expectedMax}.'**
+  String validationTooManyComponents(int actual, int expectedMax);
+
+  /// Shown when the circuit has no inputs or outputs
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit must have at least one input and one output. Found {inputCount} inputs and {outputCount} outputs.'**
+  String validationMissingInputsOutputs(int inputCount, int outputCount);
+
+  /// Shown when a test input count does not match the circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Test {testNumber} expects {expected} inputs but got {actual}.'**
+  String validationInputCountMismatch(int testNumber, int expected, int actual);
+
+  /// Shown when a test output count does not match the circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Test {testNumber} expects {expected} outputs but got {actual}.'**
+  String validationOutputCountMismatch(
+    int testNumber,
+    int expected,
+    int actual,
+  );
+
+  /// Fallback input label when no custom label is available
+  ///
+  /// In en, this message translates to:
+  /// **'Input {id}'**
+  String validationInputIdLabel(int id);
+
+  /// Fallback output label when no custom label is available
+  ///
+  /// In en, this message translates to:
+  /// **'Output {id}'**
+  String validationOutputIdLabel(int id);
+
+  /// No description provided for @validationInputsUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get validationInputsUnknown;
+
+  /// Shown when a test fails with details
+  ///
+  /// In en, this message translates to:
+  /// **'Test {testNumber} failed at output {outputLabel}. \nExpected {expected} but got {actual}. \nInputs: {inputs}.'**
+  String validationTestFailed(
+    int testNumber,
+    String outputLabel,
+    int expected,
+    int actual,
+    String inputs,
+  );
+
   /// No description provided for @tryAgain.
   ///
   /// In en, this message translates to:

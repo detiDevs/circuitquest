@@ -11,6 +11,7 @@ import 'package:circuitquest/core/components/cpu/register_block.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/levels/level_validation_result.dart';
 import 'package:circuitquest/levels/level_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -1062,24 +1063,6 @@ class SandboxState extends ChangeNotifier {
     Level level,
   ) async {
     try {
-      final inputCount = _placedComponents
-          .where((c) => c.component is InputSource)
-          .length;
-      final outputCount = _placedComponents
-          .where((c) => c.component is OutputProbe)
-          .length;
-
-      if (inputCount == 0 || outputCount == 0) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Circuit must have inputs and outputs'),
-            ),
-          );
-        }
-        return;
-      }
-
       final validationResult =
           await LevelValidator.validateCircuitWithSimulation(
             components: _placedComponents.map((pc) => pc.component).toList(),
@@ -1126,13 +1109,12 @@ class SandboxState extends ChangeNotifier {
           },
         );
       } else {
+        final message = _validationFailureMessage(context, validationResult);
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Text(AppLocalizations.of(context)!.testFailed),
-            content: Text(
-              validationResult.errorMessage ?? AppLocalizations.of(context)!.testFailedDescription,
-            ),
+            content: Text(message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -1153,5 +1135,80 @@ class SandboxState extends ChangeNotifier {
 
   void nofifyManually() {
     notifyListeners();
+  }
+
+  String _validationFailureMessage(
+    BuildContext context,
+    LevelValidationResult result,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (result is NumberOfComponentsMismatch) {
+      return l10n.validationTooManyComponents(
+        result.actual,
+        result.expectedMax,
+      );
+    }
+
+    if (result is MissingInputsOrOutputs) {
+      return l10n.validationMissingInputsOutputs(
+        result.inputCount,
+        result.outputCount,
+      );
+    }
+
+    if (result is NumberOfInputsMismatch) {
+      return l10n.validationInputCountMismatch(
+        result.testIndex + 1,
+        result.expected,
+        result.actual,
+      );
+    }
+
+    if (result is NumberOfOutputsMismatch) {
+      return l10n.validationOutputCountMismatch(
+        result.testIndex + 1,
+        result.expected,
+        result.actual,
+      );
+    }
+
+    if (result is TestFailed) {
+      if (result.expectedOutput < 0 || result.actualOutput < 0) {
+        return l10n.testFailedDescription;
+      }
+
+      final inputsText = result.failedInputConfiguration.isNotEmpty
+          ? result.failedInputConfiguration
+              .map(
+                (entry) =>
+                    '${_labelForComponentId(entry.componentId) ?? l10n.validationInputIdLabel(entry.componentId)}=${entry.value}',
+              )
+              .join(', ')
+          : l10n.validationInputsUnknown;
+
+      final outputLabel =
+          _labelForComponentId(result.outputComponentId) ??
+          l10n.validationOutputIdLabel(result.outputComponentId);
+
+      return l10n.validationTestFailed(
+        result.testIndex + 1,
+        outputLabel,
+        result.expectedOutput,
+        result.actualOutput,
+        inputsText,
+      );
+    }
+
+    return l10n.testFailedDescription;
+  }
+
+  String? _labelForComponentId(int componentId) {
+    for (final placed in _placedComponents) {
+      if (placed.component.id == componentId) {
+        return placed.label;
+      }
+    }
+    return null;
   }
 }
