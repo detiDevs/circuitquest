@@ -432,4 +432,76 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get invalidProgramCounterValue =>
       'Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).';
+
+  @override
+  String get success => 'Geschafft!';
+
+  @override
+  String get allTestsPassedMessage =>
+      'Alle Tests wurden bestanden und das Level ist abgeschlossen.';
+
+  @override
+  String get continue_ => 'Fortfahren';
+
+  @override
+  String get testFailed => 'Test fehlgeschlagen';
+
+  @override
+  String get testFailedDescription =>
+      'Ein oder mehrere Tests sind fehlgeschlagen';
+
+  @override
+  String validationTooManyComponents(int actual, int expectedMax) {
+    return 'Zu viele Komponenten: $actual verwendet, maximal erlaubt sind $expectedMax.';
+  }
+
+  @override
+  String validationMissingInputsOutputs(int inputCount, int outputCount) {
+    return 'Der Schaltkreis muss mindestens einen Eingang und einen Ausgang haben. Gefunden: $inputCount Eingänge und $outputCount Ausgänge.';
+  }
+
+  @override
+  String validationInputCountMismatch(
+    int testNumber,
+    int expected,
+    int actual,
+  ) {
+    return 'Test $testNumber erwartet $expected Eingänge, aber es wurden $actual gefunden.';
+  }
+
+  @override
+  String validationOutputCountMismatch(
+    int testNumber,
+    int expected,
+    int actual,
+  ) {
+    return 'Test $testNumber erwartet $expected Ausgänge, aber es wurden $actual gefunden.';
+  }
+
+  @override
+  String validationInputIdLabel(int id) {
+    return 'Eingang $id';
+  }
+
+  @override
+  String validationOutputIdLabel(int id) {
+    return 'Ausgang $id';
+  }
+
+  @override
+  String get validationInputsUnknown => 'unbekannt';
+
+  @override
+  String validationTestFailed(
+    int testNumber,
+    String outputLabel,
+    int expected,
+    int actual,
+    String inputs,
+  ) {
+    return 'Test $testNumber ist bei Ausgang $outputLabel fehlgeschlagen. \nErwartet: $expected, erhalten: $actual. \nEingänge: $inputs.';
+  }
+
+  @override
+  String get tryAgain => 'Noch einmal versuchen';
 }

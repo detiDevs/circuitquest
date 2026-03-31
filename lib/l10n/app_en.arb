@@ -393,5 +393,107 @@
   "unsavedChanges": "Unsaved changes!",
 
   "overrideNextProgramCounterValue": "Override next Program Counter value",
-  "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4)."
+  "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).",
+
+  "success": "Success!",
+  "allTestsPassedMessage": "All tests passed! Level completed.",
+  "continue_": "Continue",
+  "testFailed": "Test failed",
+  "testFailedDescription": "One or more tests failed",
+  "validationTooManyComponents": "Too many components: {actual} used, maximum is {expectedMax}.",
+  "@validationTooManyComponents": {
+    "description": "Shown when the circuit exceeds the maximum allowed components",
+    "placeholders": {
+      "actual": {
+        "type": "int"
+      },
+      "expectedMax": {
+        "type": "int"
+      }
+    }
+  },
+  "validationMissingInputsOutputs": "Circuit must have at least one input and one output. Found {inputCount} inputs and {outputCount} outputs.",
+  "@validationMissingInputsOutputs": {
+    "description": "Shown when the circuit has no inputs or outputs",
+    "placeholders": {
+      "inputCount": {
+        "type": "int"
+      },
+      "outputCount": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputCountMismatch": "Test {testNumber} expects {expected} inputs but got {actual}.",
+  "@validationInputCountMismatch": {
+    "description": "Shown when a test input count does not match the circuit",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      }
+    }
+  },
+  "validationOutputCountMismatch": "Test {testNumber} expects {expected} outputs but got {actual}.",
+  "@validationOutputCountMismatch": {
+    "description": "Shown when a test output count does not match the circuit",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputIdLabel": "Input {id}",
+  "@validationInputIdLabel": {
+    "description": "Fallback input label when no custom label is available",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "validationOutputIdLabel": "Output {id}",
+  "@validationOutputIdLabel": {
+    "description": "Fallback output label when no custom label is available",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputsUnknown": "unknown",
+  "validationTestFailed": "Test {testNumber} failed at output {outputLabel}. \nExpected {expected} but got {actual}. \nInputs: {inputs}.",
+  "@validationTestFailed": {
+    "description": "Shown when a test fails with details",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "outputLabel": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      },
+      "inputs": {
+        "type": "String"
+      }
+    }
+  },
+  "tryAgain": "Try again"
+
 }

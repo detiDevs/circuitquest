@@ -427,4 +427,74 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get invalidProgramCounterValue =>
       'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).';
+
+  @override
+  String get success => 'Success!';
+
+  @override
+  String get allTestsPassedMessage => 'All tests passed! Level completed.';
+
+  @override
+  String get continue_ => 'Continue';
+
+  @override
+  String get testFailed => 'Test failed';
+
+  @override
+  String get testFailedDescription => 'One or more tests failed';
+
+  @override
+  String validationTooManyComponents(int actual, int expectedMax) {
+    return 'Too many components: $actual used, maximum is $expectedMax.';
+  }
+
+  @override
+  String validationMissingInputsOutputs(int inputCount, int outputCount) {
+    return 'Circuit must have at least one input and one output. Found $inputCount inputs and $outputCount outputs.';
+  }
+
+  @override
+  String validationInputCountMismatch(
+    int testNumber,
+    int expected,
+    int actual,
+  ) {
+    return 'Test $testNumber expects $expected inputs but got $actual.';
+  }
+
+  @override
+  String validationOutputCountMismatch(
+    int testNumber,
+    int expected,
+    int actual,
+  ) {
+    return 'Test $testNumber expects $expected outputs but got $actual.';
+  }
+
+  @override
+  String validationInputIdLabel(int id) {
+    return 'Input $id';
+  }
+
+  @override
+  String validationOutputIdLabel(int id) {
+    return 'Output $id';
+  }
+
+  @override
+  String get validationInputsUnknown => 'unknown';
+
+  @override
+  String validationTestFailed(
+    int testNumber,
+    String outputLabel,
+    int expected,
+    int actual,
+    String inputs,
+  ) {
+    return 'Test $testNumber failed at output $outputLabel. \nExpected $expected but got $actual. \nInputs: $inputs.';
+  }
+
+  @override
+  String get tryAgain => 'Try again';
 }
