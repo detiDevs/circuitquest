@@ -120,7 +120,7 @@ class LevelTest {
       inputs: (json['inputs'] as List<dynamic>)
           .map((e) => (e as List<dynamic>).cast<int>())
           .toList(),
-      expectedOutput: (json['expected_output'] as List<dynamic>)
+      expectedOutput: ((json['expected_output'] as List<dynamic>?) ?? [])
           .map((e) => (e as List<dynamic>).cast<int>())
           .toList(),
     );

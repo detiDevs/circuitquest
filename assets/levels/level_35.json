@@ -1,5 +1,5 @@
 {
-    "level_id": 19,
+    "level_id": 35,
     "name": "Register block",
     "description": "We already looked at how single registers work. Now we want to control how to read from them and use them in the context of our processor.",
     "difficulty": "Easy",

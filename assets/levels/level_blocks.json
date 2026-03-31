@@ -215,6 +215,27 @@
           "name_de": "SLT (Set Less Than)"
         }
       ]
+    },
+    {
+      "name": "Registers",
+      "name_de": "Register",
+      "levels": [
+        {
+          "id": 34,
+          "name": "Register with D-Flip-Flops",
+          "name_de": "Register mit D-Flipflops"
+        },
+        {
+          "id": 35,
+          "name": "Register File",
+          "name_de": "Registerdatei"
+        },
+        {
+          "id": 36,
+          "name": "Register File with write operation",
+          "name_de": "Registerdatei mit Schreiboperation"
+        }
+      ]
     }
   ]
 }

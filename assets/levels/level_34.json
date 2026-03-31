@@ -1,0 +1,94 @@
+{
+  "level_id": 34,
+  "name": "Register",
+  "name_de": "Register",
+  "description": "A register is a small amount of storage available as part of a CPU. Registers are used to quickly accept, store, and transfer data and instructions that are being used immediately by the CPU. In this level, you will build a simple 8-bit register using D-Flipflops. A register can be built using multiple D-Flipflops, where each D-Flipflop stores one bit of information. The clock input of all D-Flipflops is connected together, allowing them to update their stored values simultaneously. The data inputs of the D-Flipflops are connected to the outputs of a multiplexer, which selects between the current stored value and the new input value based on a control signal. When the control signal is active, the multiplexer selects the new input value, allowing it to be stored in the register on the next clock cycle. When the control signal is inactive, the multiplexer selects the current stored value, allowing it to be retained in the register.",
+  "description_de": "Ein Register ist eine kleine Menge an Speicher, die als Teil einer CPU verfügbar ist. Register werden verwendet, um Daten und Anweisungen, die von der CPU sofort verwendet werden, schnell zu akzeptieren, zu speichern und zu übertragen. In diesem Level wirst du ein einfaches 8-Bit-Register mit D-Flipflops bauen. Ein Register kann aus mehreren D-Flipflops bestehen, wobei jedes D-Flipflop ein Bit Information speichert. Der Taktanschluss aller D-Flipflops ist miteinander verbunden, sodass sie ihre gespeicherten Werte gleichzeitig aktualisieren können. Die Dateneingänge der D-Flipflops sind mit den Ausgängen eines Multiplexers verbunden, der zwischen dem aktuellen gespeicherten Wert und dem neuen Eingabewert basierend auf einem Steuersignal auswählt. Wenn das Steuersignal aktiv ist, wählt der Multiplexer den neuen Eingabewert aus, sodass er im Register im nächsten Taktzyklus gespeichert werden kann. Wenn das Steuersignal inaktiv ist, wählt der Multiplexer den aktuellen gespeicherten Wert aus, sodass er im Register beibehalten werden kann.",
+  "difficulty": "Hard",
+  "difficulty_de": "Schwer",
+  "objectives": [
+    "Build a 4-bit register using D-Flipflops and multiplexers.",
+    "Ensure that the register can store and retain values based on the control signal.",
+    "You dont need to worry about the clock signal. The evaluation engine will take care of the clock and the state changes."
+  ],
+  "objectives_de": [
+    "Baue ein 4-Bit-Register mit D-Flipflops und Multiplexern.",
+    "Stelle sicher, dass das Register Werte basierend auf dem Steuersignal speichern und beibehalten kann.",
+    "Du musst dir keine Gedanken über das Taktsignal machen. Die Bewertungs-Engine kümmert sich um den Takt und die Zustandsänderungen."
+  ],
+  "components": [
+    {
+      "type": "Input",
+      "position": [
+        0,
+        1
+      ],
+      "immovable": true,
+      "label": "Data Input",
+      "initialBitWidth": 8
+    },
+    {
+      "type": "Input",
+      "position": [
+        0,
+        3
+      ],
+      "immovable": true,
+      "label": "Control Signal",
+      "initialBitWidth": 1
+    },
+    {
+      "type": "Output",
+      "position": [
+        7,
+        2
+      ],
+      "immovable": true,
+      "label": "Register Output",
+      "initialBitWidth": 8
+    }
+  ],
+  "available_components": [
+    {
+      "type": "DFlipflop"
+    },
+    {
+      "type": "Multiplexer2Inp"
+    },
+    {
+      "type": "Splitter8to1"
+    },
+    {
+      "type": "Collector1to8"
+    }
+  ],
+  "hints": [
+    "You need 8 multiplexers to select between the current stored value and the new input value for each bit of the register. The current stored value can be obtained by feeding the output of the Flipflops back into the first input of the multiplexers. ",
+    "The new input value is fed into the second input of the multiplexers. The control signal is connected to the selection input of all multiplexers, allowing them to switch between the current stored value and the new input value simultaneously. The outputs of the multiplexers are then connected to the data inputs of the D-Flipflops, which store the selected value on each clock cycle.",
+    "You have to split the new input value into individual bits to feed them into the multiplexers. Similarly, you have to collect the outputs of the D-Flipflops to form the final output of the Flipflops"
+  ],
+  "hints_de": [
+    "Du musst 8 Multiplexer verwenden, um zwischen dem aktuellen gespeicherten Wert und dem neuen Eingabewert für jedes Bit des Registers auszuwählen. Der aktuelle gespeicherte Wert kann erhalten werden, indem der Ausgang der Flipflops wieder in den ersten Eingang der Multiplexer gespeist wird.",
+    "Der neue Eingabewert wird in den zweiten Eingang der Multiplexer eingespeist. Das Steuersignal ist mit dem Auswahl-Eingang aller Multiplexer verbunden, sodass sie gleichzeitig zwischen dem aktuellen gespeicherten Wert und dem neuen Eingabewert umschalten können. Die Ausgänge der Multiplexer sind dann mit den Dateneingängen der D-Flipflops verbunden, die den ausgewählten Wert bei jedem Taktzyklus speichern.",
+    "Du musst den neuen Eingabewert in einzelne Bits aufteilen, um sie in die Multiplexer einzuspeisen. Ebenso musst du die Ausgänge der D-Flipflops sammeln, um die endgültige Ausgabe der Flipflops zu bilden."
+  ],
+  "tests": [
+    {"inputs": [[0,8],[1,1]], "expected_output": []},
+    {"inputs": [[255,8],[1,1]], "expected_output": [[0,8]]},
+    {"inputs": [[170,8],[0,1]], "expected_output": [[255,8]]},
+    {"inputs": [[85,8],[1,1]], "expected_output": [[255,8]]},
+    {"inputs": [[0,8],[0,1]], "expected_output": [[85,8]]},
+    {"inputs": [[255,8],[0,1]], "expected_output": [[85,8]]},
+    {"inputs": [[170,8],[1,1]], "expected_output": [[85,8]]},
+    {"inputs": [[85,8],[0,1]], "expected_output": [[170,8]]}
+    
+  ],
+  "success_message": "",
+  "success_message_de": "",
+  "clockConfig": {
+    "enabled": true,
+    "ticksPerClockCycle": 0,
+    "startState": 0,
+    "mode": 2
+  }
+}

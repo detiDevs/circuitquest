@@ -43,6 +43,6 @@ class Collector extends Component {
     final OutputPin outPin = outputs['outValue']!;
     final bool changed = outPin.value != aggregated;
     outPin.value = aggregated;
-    return changed;
+    return true;
   }
 }

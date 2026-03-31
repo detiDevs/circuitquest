@@ -85,8 +85,9 @@ class LevelValidator {
                 'Test ${testIndex + 1} failed: expected ${inputSources.length} inputs but got ${test.inputs.length}',
           );
         }
-
-        if (test.expectedOutput.length != outputProbes.length) {
+print(test.expectedOutput);
+        if (test.expectedOutput.length != outputProbes.length && test.expectedOutput.isNotEmpty) {
+          
           return LevelValidationResult(
             isCorrect: false,
             errorMessage:
@@ -164,6 +165,9 @@ class LevelValidator {
     }
 
     // Check output values
+    if (test.expectedOutput.isEmpty) {
+      return true; // No expected outputs means we only care about successful evaluation or we just want to reach a known state of sequential components
+    }
     if (test.expectedOutput.length != outputProbes.length) {
       return false;
     }

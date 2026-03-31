@@ -52,6 +52,7 @@ class Multiplexer extends Component {
     for (int i = 0; i < inputCount; i++) {
       inputs['input${i + 1}']!.updateFromSource();
     }
+    int oldSelectionValue = inputs['selection']!.value;
     inputs['selection']!.updateFromSource();
 
     // Determine selected index, wrap into range to avoid invalid access
@@ -61,7 +62,7 @@ class Multiplexer extends Component {
     // Forward selected data
     final int newValue = inputs['input${selectedIndex + 1}']!.value;
     final OutputPin outPin = outputs['outValue']!;
-    final bool changed = outPin.value != newValue;
+    final bool changed = outPin.value != newValue || oldSelectionValue != inputs['selection']!.value;
     outPin.value = newValue;
     return changed;
   }
