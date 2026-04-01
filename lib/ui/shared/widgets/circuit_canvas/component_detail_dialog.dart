@@ -5,6 +5,7 @@ import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
 import 'package:circuitquest/core/components/cpu/program_counter.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/state/placed_component.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/instruction_memory_contents_dialog.dart';

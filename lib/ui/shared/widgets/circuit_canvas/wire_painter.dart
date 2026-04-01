@@ -1,5 +1,7 @@
 import 'package:circuitquest/core/logic/pin.dart';
+import 'package:circuitquest/state/placed_component.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/state/wire_connection.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:flutter/material.dart';
 

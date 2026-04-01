@@ -1,5 +1,6 @@
 import 'package:circuitquest/core/commands/command.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/state/wire_connection.dart';
 
 class AddConnectionCommand extends Command {
   final SandboxState _sandboxState;

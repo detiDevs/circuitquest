@@ -1,5 +1,6 @@
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
+import 'package:circuitquest/state/wire_connection.dart';
 
 /// Clock configuration for levels
 class ClockConfig {

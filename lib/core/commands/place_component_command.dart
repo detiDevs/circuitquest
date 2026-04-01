@@ -1,5 +1,6 @@
 import 'package:circuitquest/core/commands/command.dart';
 import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/state/placed_component.dart';
 import 'package:flutter/material.dart';
 import '../../state/sandbox_state.dart';
 

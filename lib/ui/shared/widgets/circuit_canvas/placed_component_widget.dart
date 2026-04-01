@@ -8,6 +8,7 @@ import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/custom_component_library.dart';
+import 'package:circuitquest/state/placed_component.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
