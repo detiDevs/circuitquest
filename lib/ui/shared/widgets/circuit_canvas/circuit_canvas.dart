@@ -2,6 +2,7 @@ import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/commands/command_controller.dart';
 import 'package:circuitquest/core/commands/place_component_command.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/state/placed_component.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/grid_painter.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/placed_component_widget.dart';
