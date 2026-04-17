@@ -402,6 +402,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bonusLevel => 'Bonus level';
 
   @override
+  String get resetProgress => 'Reset progress';
+
+  @override
+  String get resetProgressSubtitle =>
+      'Erase all completed levels and reset progression';
+
+  @override
+  String get resetProgressConfirmTitle => 'Reset progress';
+
+  @override
+  String get resetProgressConfirmMessage =>
+      'Are you sure you want to erase your level progress? This cannot be undone.';
+
+  @override
+  String get progressReset => 'Progress reset';
+
+  @override
   String get instructionMemoryContents => 'Instruction Memory Contents';
 
   @override
