@@ -6,8 +6,6 @@ import 'package:circuitquest/levels/level_validation_result.dart';
 
 /// Service for validating circuit solutions against level test cases
 class LevelValidator {
-
-
   /// Validates a circuit solution by running simulation for each test case.
   ///
   /// For every test:
@@ -15,7 +13,7 @@ class LevelValidator {
   /// - optional reset callback is invoked
   /// - simulation callback is awaited
   /// - outputs are verified
-  static Future<NumberOfComponentsMismatch> validateCircuitWithSimulation({
+  static Future<LevelValidationResult> validateCircuitWithSimulation({
     required List<Component> components,
     required List<LevelTest> tests,
     int? maxComponentCount,
@@ -51,6 +49,7 @@ class LevelValidator {
       for (int testIndex = 0; testIndex < tests.length; testIndex++) {
         final test = tests[testIndex];
 
+        
         if (test.inputs.length > inputSources.length) {
           return NumberOfInputsMismatch(
             testIndex: testIndex,
@@ -58,12 +57,9 @@ class LevelValidator {
             actual: test.inputs.length,
           );
         }
-        if (test.expectedOutput.isEmpty) {
-      return ValidationSuccess() // No expected outputs means we only care about successful evaluation or we just want to reach a known state of sequential components
-    }
-print(test.expectedOutput);
-        if (test.expectedOutput.length != outputProbes.length && test.expectedOutput.isNotEmpty) {
-          
+
+        if (test.expectedOutput.length != outputProbes.length &&
+            test.expectedOutput.isNotEmpty) {
           return NumberOfOutputsMismatch(
             testIndex: testIndex,
             expected: outputProbes.length,
@@ -81,6 +77,9 @@ print(test.expectedOutput);
         }
 
         await runSimulation();
+        if (test.expectedOutput.isEmpty) {
+          continue; // No expected outputs means we only care about successful evaluation or we just want to reach a known state of sequential components
+        }
 
         for (int i = 0; i < test.expectedOutput.length; i++) {
           final expectedValues = test.expectedOutput[i];
@@ -88,8 +87,9 @@ print(test.expectedOutput);
           final actualValue = outputProbe.value;
 
           if (expectedValues.isEmpty || expectedValues[0] != actualValue) {
-            final expectedValue =
-                expectedValues.isNotEmpty ? expectedValues[0] : -1;
+            final expectedValue = expectedValues.isNotEmpty
+                ? expectedValues[0]
+                : -1;
             return TestFailed(
               testIndex: testIndex,
               outputIndex: i,
@@ -119,7 +119,6 @@ print(test.expectedOutput);
 
   /// Runs a single test case and returns whether it passed
 
-
   static List<FailedInputConfigurationEntry> _buildFailedInputConfiguration(
     List<InputSource> inputSources,
   ) {
@@ -133,4 +132,3 @@ print(test.expectedOutput);
         .toList();
   }
 }
-

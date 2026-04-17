@@ -33,13 +33,15 @@
           "id": 5,
           "name": "NOR Gate",
           "name_de": "NOR-Gatter",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 4
         },
         {
           "id": 6,
           "name": "XNOR Gate",
           "name_de": "XNOR-Gatter",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 4
         }
       ]
     },
@@ -56,19 +58,22 @@
           "id": 8,
           "name": "Functional Completeness 2",
           "name_de": "Funktionale Vollständigkeit 2",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 7
         },
         {
           "id": 9,
           "name": "Minimization Challenge 1",
           "name_de": "Minimierungsherausforderung 1",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 7
         },
         {
           "id": 23,
           "name": "Minimization Challenge 2",
           "name_de": "Minimierungsherausforderung 2",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 7
         }
       ]
     },
@@ -90,7 +95,8 @@
           "id": 12,
           "name": "Multiply by 64",
           "name_de": "Mit 64 multiplizieren",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 11
         },
         {
           "id": 13,
@@ -106,7 +112,8 @@
           "id": 15,
           "name": "Build a 4 input Multiplexer",
           "name_de": "Baue einen 4-Eingangs-Multiplexer",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 14
         },
         {
           "id": 16,
@@ -122,7 +129,8 @@
           "id": 24,
           "name": "Minimization Challenge 3",
           "name_de": "Minimierungsherausforderung 3",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 17
         }
       ]
     },
