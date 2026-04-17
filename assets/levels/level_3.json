@@ -1,35 +1,169 @@
 {
     "level_id": 3,
-    "name": "Functional Completeness 1",
-    "name_de": "Funktionale Vollständigkeit 1",
-    "description": "Fun fact: Theoretically any function can be created using only NOR gates!",
-    "description_de": "Spaßfakt: Theoretisch kann jede Funktion nur mit NOR-Gattern erstellt werden!",
+    "name": "XOR Gate",
+    "name_de": "XOR-Gatter",
+    "description": "The XOR gate returns true if either, but not both, of the inputs are true.",
+    "description_de": "Das XOR-Gatter gibt wahr zurück, wenn entweder A oder B wahr ist, aber nicht beide.",
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
+    "truth_table": [
+        [
+            "A",
+            "B",
+            "A XOR B"
+        ],
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            1,
+            1
+        ],
+        [
+            1,
+            0,
+            1
+        ],
+        [
+            1,
+            1,
+            0
+        ]
+    ],
     "objectives": [
-        "Create a combination of NOR gates which is functionally identical to an OR gate."
+        "Given the truth table, can you figure out how to create an XOR gate using NOT, AND, and OR gates?"
     ],
     "objectives_de": [
-        "Erstelle eine Kombination von NOR-Gattern, die funktional identisch mit einem ODER-Gatter ist."
+        "Anhand der Wahrheitstabelle, kannst du herausfinden, wie man ein XOR-Gatter mit NOT-, AND- und OR-Gattern erstellt?"
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"}, 
-        {"type": "Output", "position": [6,2], "immovable": true}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Output",
+            "position": [
+                7,
+                2
+            ],
+            "immovable": true
+        }
     ],
     "available_components": [
-        {"type": "Nor"}
+        {
+            "type": "Not"
+        },
+        {
+            "type": "And"
+        },
+        {
+            "type": "Or"
+        }
     ],
     "hints": [
-        "Try making a NOT gate first."
+        "The XOR gate can be constructed using a combination of NOT, AND, and OR gates. Try to think about how you can use these gates to achieve the desired output based on the truth table.",
+        "You can use the NOT gate to invert the inputs and then combine them using AND and OR gates.",
+        "Connect A to an AND gate and B to another AND gate. Then connect the outputs of these AND gates to an OR gate.",
+        "Connect A and B to a Not gate each, then connect the outputs of these Not gates to the AND gates you just created. NOT A should be connected to the AND gate that B is connected to, and vice versa. ",
+        "One possible solution is: (A AND NOT B) OR (NOT A AND B)"
     ],
     "hints_de": [
-        "Versuche zuerst, ein NICHT-Gatter zu erstellen."
+        "Das XOR-Gatter kann mit einer Kombination aus NICHT-, UND- und ODER-Gattern konstruiert werden. Versuche, darüber nachzudenken, wie du diese Gatter verwenden kannst, um die gewünschte Ausgabe basierend auf der Wahrheitstabelle zu erreichen.",
+        "Du kannst das NICHT-Gatter verwenden, um die Eingänge zu invertieren und sie dann mit UND- und ODER-Gattern zu kombinieren.",
+        "Verbinde A mit einem UND-Gatter und B mit einem anderen UND-Gatter. Dann verbinde die Ausgänge dieser UND-Gatter mit einem ODER-Gatter.",
+        "Verbinde A und B mit jeweils einem NICHT-Gatter und verbinde dann die Ausgänge dieser NICHT-Gatter mit den gerade erstellten UND-Gattern. NICHT A sollte mit dem UND-Gatter verbunden werden, mit dem B verbunden ist, und umgekehrt.",
+        "Eine mögliche Lösung ist: (A UND NICHT B) ODER (NICHT A UND B)"
     ],
     "tests": [
-        {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1]], "expected_output": [[1,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
     ]
 }

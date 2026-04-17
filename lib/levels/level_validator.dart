@@ -6,8 +6,6 @@ import 'package:circuitquest/levels/level_validation_result.dart';
 
 /// Service for validating circuit solutions against level test cases
 class LevelValidator {
-
-
   /// Validates a circuit solution by running simulation for each test case.
   ///
   /// For every test:
@@ -51,7 +49,8 @@ class LevelValidator {
       for (int testIndex = 0; testIndex < tests.length; testIndex++) {
         final test = tests[testIndex];
 
-        if (test.inputs.length != inputSources.length) {
+        
+        if (test.inputs.length > inputSources.length) {
           return NumberOfInputsMismatch(
             testIndex: testIndex,
             expected: inputSources.length,
@@ -59,7 +58,8 @@ class LevelValidator {
           );
         }
 
-        if (test.expectedOutput.length != outputProbes.length) {
+        if (test.expectedOutput.length != outputProbes.length &&
+            test.expectedOutput.isNotEmpty) {
           return NumberOfOutputsMismatch(
             testIndex: testIndex,
             expected: outputProbes.length,
@@ -77,6 +77,9 @@ class LevelValidator {
         }
 
         await runSimulation();
+        if (test.expectedOutput.isEmpty) {
+          continue; // No expected outputs means we only care about successful evaluation or we just want to reach a known state of sequential components
+        }
 
         for (int i = 0; i < test.expectedOutput.length; i++) {
           final expectedValues = test.expectedOutput[i];
@@ -84,8 +87,9 @@ class LevelValidator {
           final actualValue = outputProbe.value;
 
           if (expectedValues.isEmpty || expectedValues[0] != actualValue) {
-            final expectedValue =
-                expectedValues.isNotEmpty ? expectedValues[0] : -1;
+            final expectedValue = expectedValues.isNotEmpty
+                ? expectedValues[0]
+                : -1;
             return TestFailed(
               testIndex: testIndex,
               outputIndex: i,
@@ -115,7 +119,6 @@ class LevelValidator {
 
   /// Runs a single test case and returns whether it passed
 
-
   static List<FailedInputConfigurationEntry> _buildFailedInputConfiguration(
     List<InputSource> inputSources,
   ) {
@@ -129,4 +132,3 @@ class LevelValidator {
         .toList();
   }
 }
-

@@ -385,6 +385,27 @@
   "completed": "Completed",
   "bonusLevel": "Bonus level",
 
+  "resetProgress": "Reset progress",
+  "@resetProgress": {
+    "description": "Title for reset progress option in settings"
+  },
+  "resetProgressSubtitle": "Erase all completed levels and reset progression",
+  "@resetProgressSubtitle": {
+    "description": "Subtitle explaining that reset will erase all completed levels"
+  },
+  "resetProgressConfirmTitle": "Reset progress",
+  "@resetProgressConfirmTitle": {
+    "description": "Title for the reset progress confirmation dialog"
+  },
+  "resetProgressConfirmMessage": "Are you sure you want to erase your level progress? This cannot be undone.",
+  "@resetProgressConfirmMessage": {
+    "description": "Confirmation message shown before erasing level progress"
+  },
+  "progressReset": "Progress reset",
+  "@progressReset": {
+    "description": "Snackbar message shown after progress reset"
+  },
+
   "instructionMemoryContents": "Instruction Memory Contents",
   "instructionMemoryFormatHint": "Instructions are configured as the decimal version of a 32 bit number. For more info, see MIPS Reference Sheet",
   "showInstructions": "Show instructions",

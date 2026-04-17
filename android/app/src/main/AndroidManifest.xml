@@ -2,7 +2,8 @@
     <application
         android:label="circuitquest"
         android:name="${applicationName}"
-        android:icon="@mipmap/app_logo">
+        android:icon="@mipmap/app_logo"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"

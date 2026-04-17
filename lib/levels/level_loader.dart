@@ -280,6 +280,30 @@ class LevelLoader {
     _levelMeta = null;
   }
 
+  /// Reset user progress (completed levels / unlock flag)
+  ///
+  /// Deletes any user metadata file and replaces it with a default empty
+  /// meta (no completed levels, locked progression). This makes the
+  /// application behave as if the user has not completed any levels.
+  Future<void> resetUserProgress() async {
+    try {
+      // Remove persisted file if exists
+      final file = await _getUserMetaFile();
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      // Ignore deletion errors but log for debugging
+      print('Warning: Failed to delete user meta file: $e');
+    }
+
+    // Replace in-memory meta with default empty meta and persist it so
+    // subsequent loads read the cleared state.
+    final defaultMeta = LevelMeta(completedLevels: <int>[], allLevelsUnlocked: false);
+    _levelMeta = defaultMeta;
+    await _saveUserMeta(defaultMeta);
+  }
+
   /// Check if a level can be accessed by the player
   /// 
   /// Returns true if the level with the given [levelId] is unlocked.

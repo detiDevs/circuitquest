@@ -806,6 +806,36 @@ abstract class AppLocalizations {
   /// **'Bonus level'**
   String get bonusLevel;
 
+  /// Title for reset progress option in settings
+  ///
+  /// In en, this message translates to:
+  /// **'Reset progress'**
+  String get resetProgress;
+
+  /// Subtitle explaining that reset will erase all completed levels
+  ///
+  /// In en, this message translates to:
+  /// **'Erase all completed levels and reset progression'**
+  String get resetProgressSubtitle;
+
+  /// Title for the reset progress confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Reset progress'**
+  String get resetProgressConfirmTitle;
+
+  /// Confirmation message shown before erasing level progress
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to erase your level progress? This cannot be undone.'**
+  String get resetProgressConfirmMessage;
+
+  /// Snackbar message shown after progress reset
+  ///
+  /// In en, this message translates to:
+  /// **'Progress reset'**
+  String get progressReset;
+
   /// No description provided for @instructionMemoryContents.
   ///
   /// In en, this message translates to:

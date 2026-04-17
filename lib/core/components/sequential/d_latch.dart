@@ -24,7 +24,7 @@ class DFlipflop extends SequentialComponent {
 
       _newState = d;
 
-    return false;
+    return true;
   }
 
   @override

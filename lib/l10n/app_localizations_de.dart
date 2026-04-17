@@ -407,6 +407,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String get bonusLevel => 'Bonuslevel';
 
   @override
+  String get resetProgress => 'Fortschritt zurücksetzen';
+
+  @override
+  String get resetProgressSubtitle =>
+      'Lösche alle abgeschlossenen Levels und setze den Fortschritt zurück';
+
+  @override
+  String get resetProgressConfirmTitle => 'Fortschritt zurücksetzen';
+
+  @override
+  String get resetProgressConfirmMessage =>
+      'Möchten Sie wirklich Ihren Level-Fortschritt löschen? Dies kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get progressReset => 'Fortschritt zurückgesetzt';
+
+  @override
   String get instructionMemoryContents => 'Instruction Memory Befehlsliste';
 
   @override

@@ -1,0 +1,234 @@
+{
+  "level_id": 26,
+  "name": "D-Latch",
+  "description": "Building on the RS-Flipflop, a D latch is a digital memory element that stores one bit of information. It has two main inputs: the data input (D) and the clock input. When the clock input is active (1), the output Q follows the data input D immediately, making the latch \"transparent.\" When the clock input is deactivated (0), the latch holds or \"stores\" the last value present at the data input, regardless of any further changes to D. A D-Latch removes the invalid RS combination by creating S and R from a data input D. The clock imput C is the upper input and the data input D is the lower input.",
+  "difficulty": "Middle",
+  "objectives": [
+    "Build a D-Latch using two NOR gates, two AND gates and one NOT gate."
+  ],
+  "components": [
+    {
+      "type": "Input",
+      "position": [
+        0,
+        1
+      ],
+      "immovable": true,
+      "label": "Clock"
+    },
+    {
+      "type": "Input",
+      "position": [
+        0,
+        5
+      ],
+      "immovable": true,
+      "label": "D"
+    },
+    {
+      "type": "Output",
+      "position": [
+        8,
+        1
+      ],
+      "immovable": true,
+      "label": "Q"
+    },
+    {
+      "type": "Output",
+      "position": [
+        8,
+        5
+      ],
+      "immovable": true,
+      "label": "NOT Q"
+    }
+  ],
+  "available_components": [
+    {
+      "type": "Nor"
+    },
+    {
+      "type": "And"
+    },
+    {
+      "type": "Not"
+    }
+  ],
+  "hints": [
+    "Try To rebuild a RS-Flipflop using two NOR gates first.",
+    "As seen in the RS Flipflop the Q output changes by switching which of the two inputs is 1 and which is 0. In the D-Latch we want to control when the output changes, by only changing the Q output when the clock input is 1. ",
+    "Use AND Gates to check if the clock input is 1. Connect the output of the AND gates to the inputs of the RS Flipfop.",
+    "Connect D to the upper AND Gate and the inverted D, using a Not Gate, to the lower AND Gate."
+  ],
+  "hints_de": [
+    "Versuche zuerst, ein RS-Flipflop mit zwei NOR-Gattern zu rekonstruieren.",
+    "Wie beim RS-Flipflop geändert wird der Q-Ausgang durch Umschalten, welcher der beiden Eingänge 1 und welcher 0 ist. Im D-Latch wollen wir steuern, wann sich die Ausgänge ändern, indem wir den Q-Ausgang nur ändern, wenn der Clock-Eingang 1 ist.",
+    "Verwende UND-Gatter, um zu prüfen, ob der Clock-Eingang 1 ist. Verbinde den Ausgang der UND-Gatter mit den Eingängen des RS-Flipflops.",
+    "Verbinde D mit dem oberen UND-Gatter und das invertierte D mit einem NICHT-Gatter mit dem unteren UND-Gatter."
+  ],
+  "tests": [
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  ],
+  "name_de": "D-Latch",
+  "description_de": "Aufbauend auf dem RS-Flipflop ist ein D-Latch ein digitales Speicherelement, das ein Bit an Informationen speichert. Es hat zwei Haupteingänge: den Dateneingang (D) und den Clock-Eingang. Wenn der Clock-Eingang aktiv ist (1), folgt der Ausgang Q dem Dateneingang D unmittelbar, was den Latch transparent macht. Wenn der Clock-Eingang deaktiviert ist (0), behält der Latch den letzten Wert, der am Dateneingang vorhanden war, unabhängig von weiteren Änderungen an D. Ein D-Latch behebt die ungültige RS-Kombination, indem S und R aus einem Dateneingang D erstellt werden. Der Clock-Eingang C ist der obere Eingang und der Dateneingang D ist der untere Eingang.",
+  "difficulty_de": "Mittel",
+  "objectives_de": [
+    "Erstelle ein D-Latch mit zwei NOR-Gattern, zwei UND-Gattern und einem NICHT-Gatter."
+  ],
+  "success_message": "Congratulations! You have successfully built a D-Latch. You used the clock now. But you dont have to care about the clock when using the prebuild components. The evaluation engine takes care of the clock and the state changes.",
+  "success_message_de": "Glückwunsch! Du hast erfolgreich ein D-Latch gebaut. Du hast jetzt die Uhr verwendet. Aber du musst dich nicht um die Uhr kümmern, wenn du die vorgefertigten Komponenten verwendest. Die Auswertungs-Engine kümmert sich um die Uhr und die Zustandsänderungen."
+}

@@ -398,6 +398,26 @@
     }
   },
   "resetLevel": "Level zurücksetzen",
+  "resetProgress": "Fortschritt zurücksetzen",
+  "@resetProgress": {
+    "description": "Titel für die Option, den Fortschritt zurückzusetzen"
+  },
+  "resetProgressSubtitle": "Lösche alle abgeschlossenen Levels und setze den Fortschritt zurück",
+  "@resetProgressSubtitle": {
+    "description": "Untertitel, der erklärt, dass abgeschlossene Levels gelöscht werden"
+  },
+  "resetProgressConfirmTitle": "Fortschritt zurücksetzen",
+  "@resetProgressConfirmTitle": {
+    "description": "Titel für Bestätigungsdialog zum Zurücksetzen des Fortschritts"
+  },
+  "resetProgressConfirmMessage": "Möchten Sie wirklich Ihren Level-Fortschritt löschen? Dies kann nicht rückgängig gemacht werden.",
+  "@resetProgressConfirmMessage": {
+    "description": "Bestätigungsnachricht bevor der Level-Fortschritt gelöscht wird"
+  },
+  "progressReset": "Fortschritt zurückgesetzt",
+  "@progressReset": {
+    "description": "Snackbar-Nachricht nach dem Zurücksetzen des Fortschritts"
+  },
   "gridCellOccupied": "Diese Zelle ist bereits belegt.",
   "locked": "Gesperrt",
   "completed": "Abgeschlossen",

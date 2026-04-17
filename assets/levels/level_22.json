@@ -1,0 +1,2276 @@
+{
+  "level_id": 22,
+  "name": "Wtf",
+  "name_de": "Wtf",
+  "description": "Something was messed up here.",
+  "description_de": "Hier ist etwas schiefgelaufen.",
+  "difficulty": "Annoying",
+  "difficulty_de": "Nervig",
+  "objectives": [
+    "Fix this circuit to have the same functionality, but with at most 5 gates besides the inputs and the output."
+  ],
+  "objectives_de": [
+    "Repariere diesen Schaltkreis, damit er die gleiche Funktionalität hat, aber mit maximal 5 Gattern neben den Inputs und dem Output."
+  ],
+  "components": [
+    {
+      "type": "Input",
+      "position": [
+        0,
+        0
+      ],
+      "immovable": true
+    },
+    {
+      "type": "Input",
+      "position": [
+        0,
+        2
+      ],
+      "immovable": true
+    },
+    {
+      "type": "Input",
+      "position": [
+        0,
+        4
+      ],
+      "immovable": true
+    },
+    {
+      "type": "Input",
+      "position": [
+        0,
+        6
+      ],
+      "immovable": true
+    },
+    {
+      "type": "Input",
+      "position": [
+        0,
+        8
+      ],
+      "immovable": true
+    },
+    {
+      "type": "Input",
+      "position": [
+        0,
+        10
+      ],
+      "immovable": true
+    },
+    {
+      "type": "Not",
+      "position": [
+        2,
+        3
+      ]
+    },
+    {
+      "type": "Not",
+      "position": [
+        7,
+        14
+      ]
+    },
+    {
+      "type": "And",
+      "position": [
+        3,
+        1
+      ]
+    },
+    {
+      "type": "And",
+      "position": [
+        12,
+        0
+      ]
+    },
+    {
+      "type": "And",
+      "position": [
+        11,
+        5
+      ]
+    },
+    {
+      "type": "And",
+      "position": [
+        6,
+        2
+      ]
+    },
+    {
+      "type": "And",
+      "position": [
+        9,
+        12
+      ]
+    },
+    {
+      "type": "And",
+      "position": [
+        4,
+        8
+      ]
+    },
+    {
+      "type": "And",
+      "position": [
+        10,
+        4
+      ]
+    },
+    {
+      "type": "And",
+      "position": [
+        5,
+        15
+      ]
+    },
+    {
+      "type": "Or",
+      "position": [
+        8,
+        6
+      ]
+    },
+    {
+      "type": "Or",
+      "position": [
+        2,
+        9
+      ]
+    },
+    {
+      "type": "Or",
+      "position": [
+        11,
+        11
+      ]
+    },
+    {
+      "type": "Output",
+      "position": [
+        13,
+        8
+      ],
+      "immovable": true
+    }
+  ],
+  "connections": [
+    {
+      "origin": 0,
+      "originKey": "outValue",
+      "destination": 6,
+      "destinationKey": "input"
+    },
+    {
+      "origin": 1,
+      "originKey": "outValue",
+      "destination": 7,
+      "destinationKey": "input"
+    },
+    {
+      "origin": 6,
+      "originKey": "outValue",
+      "destination": 8,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 7,
+      "originKey": "outValue",
+      "destination": 8,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 0,
+      "originKey": "outValue",
+      "destination": 9,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 7,
+      "originKey": "outValue",
+      "destination": 9,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 6,
+      "originKey": "outValue",
+      "destination": 10,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 1,
+      "originKey": "outValue",
+      "destination": 10,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 0,
+      "originKey": "outValue",
+      "destination": 11,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 1,
+      "originKey": "outValue",
+      "destination": 11,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 8,
+      "originKey": "outValue",
+      "destination": 12,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 2,
+      "originKey": "outValue",
+      "destination": 12,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 9,
+      "originKey": "outValue",
+      "destination": 13,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 3,
+      "originKey": "outValue",
+      "destination": 13,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 10,
+      "originKey": "outValue",
+      "destination": 14,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 4,
+      "originKey": "outValue",
+      "destination": 14,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 11,
+      "originKey": "outValue",
+      "destination": 15,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 5,
+      "originKey": "outValue",
+      "destination": 15,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 12,
+      "originKey": "outValue",
+      "destination": 16,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 13,
+      "originKey": "outValue",
+      "destination": 16,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 14,
+      "originKey": "outValue",
+      "destination": 17,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 15,
+      "originKey": "outValue",
+      "destination": 17,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 16,
+      "originKey": "outValue",
+      "destination": 18,
+      "destinationKey": "input1"
+    },
+    {
+      "origin": 17,
+      "originKey": "outValue",
+      "destination": 18,
+      "destinationKey": "input2"
+    },
+    {
+      "origin": 18,
+      "originKey": "outValue",
+      "destination": 19,
+      "destinationKey": "input"
+    }
+  ],
+  "available_components": [
+    {
+      "type": "And"
+    },
+    {
+      "type": "Or"
+    },
+    {
+      "type": "Not"
+    },
+    {
+      "type": "Nand"
+    },
+    {
+      "type": "Nor"
+    },
+    {
+      "type": "Xor"
+    },
+    {
+      "type": "Xnor"
+    },
+    {
+      "type": "Adder"
+    },
+    {
+      "type": "HalfAdder"
+    },
+    {
+      "type": "Multiplexer4Inp"
+    },
+    {
+      "type": "Multiplexer8Inp"
+    },
+    {
+      "type": "Decoder"
+    },
+    {
+      "type": "Collector1to2"
+    },
+    {
+      "type": "Collector1to8"
+    }
+  ],
+  "hints": [
+    "We don't know what our intern was thinking when they built this circuit, please fix it for us, so we don't have to think about it."
+  ],
+  "hints_de": [
+    "Wir wissen nicht, was unser Praktikant gedacht hat, als er diese Schaltung gebaut hat. Bitte repariere sie für uns, damit wir nicht darüber nachdenken müssen."
+  ],
+  "maxComponentCount": 13,
+  "tests": [
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "expected_output": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "success_message": "Wow — that really was just a 4-bit multiplexer. What do we learn from this? Try to always build in a structured way; it's much easier to keep an overview that way.",
+  "success_message_de": "Krass, das war echt nur ein 4 Bit Mux. Was lernen wir daraus? Versuch immer strukturiert zu bauen. Dann ist es viel leichter den Überblick zu behalten.",
+  "bonus_level": true
+}

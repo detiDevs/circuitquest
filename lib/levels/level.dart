@@ -1,4 +1,3 @@
-import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
 import 'package:circuitquest/state/wire_connection.dart';
 
@@ -121,7 +120,7 @@ class LevelTest {
       inputs: (json['inputs'] as List<dynamic>)
           .map((e) => (e as List<dynamic>).cast<int>())
           .toList(),
-      expectedOutput: (json['expected_output'] as List<dynamic>)
+      expectedOutput: ((json['expected_output'] as List<dynamic>?) ?? [])
           .map((e) => (e as List<dynamic>).cast<int>())
           .toList(),
     );
@@ -174,6 +173,7 @@ class Level {
   final List<LevelTest> tests;
   final MemoryContents? memoryContents;
   final ClockConfig? clockConfig;
+  final List<List<dynamic>>? truthTable;
 
   Level({
     required this.levelId,
@@ -196,6 +196,7 @@ class Level {
     required this.tests,
     this.memoryContents,
     this.clockConfig,
+    this.truthTable,
   });
 
   factory Level.fromJson(Map<String, dynamic> json) {
@@ -232,8 +233,13 @@ class Level {
             )
           : null,
       clockConfig: json['clockConfig'] != null
-          ? ClockConfig.fromJson(json['clockConfig'] as Map<String, dynamic>)
-          : null,
+        ? ClockConfig.fromJson(json['clockConfig'] as Map<String, dynamic>)
+        : null,
+      truthTable: json['truth_table'] != null
+        ? (json['truth_table'] as List<dynamic>)
+          .map((e) => (e as List<dynamic>).toList())
+          .toList()
+        : null,
     );
   }
 
@@ -258,6 +264,7 @@ class Level {
       if (successMessageDe != null) 'success_message_de' : successMessageDe,
       'tests': tests.map((t) => t.toJson()).toList(),
       if (memoryContents != null) 'memoryContents': memoryContents!.toJson(),
+      if (truthTable != null) 'truth_table': truthTable,
     };
   }
 
