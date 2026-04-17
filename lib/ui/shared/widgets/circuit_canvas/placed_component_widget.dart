@@ -8,6 +8,7 @@ import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/custom_component_library.dart';
+import 'package:circuitquest/state/placed_component.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
@@ -137,20 +138,9 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
                 ComponentDetailDialog(placedComponent: widget.placedComponent),
           );
         },
-        child: Container(
+        child: SizedBox(
           width: widget.gridSize,
           height: widget.gridSize,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue[700]!, width: 2),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 4,
-                offset: const Offset(2, 2),
-              ),
-            ],
-          ),
           child: widget.placedComponent.component is InputSource
               ? _buildInputControls(
                   widget.placedComponent.component as InputSource,

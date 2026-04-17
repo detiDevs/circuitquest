@@ -9,8 +9,12 @@ import 'package:circuitquest/core/components/cpu/data_memory.dart';
 import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
 import 'package:circuitquest/core/components/cpu/register_block.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/levels/level_validation_result.dart';
 import 'package:circuitquest/levels/level_validator.dart';
+import 'package:circuitquest/state/placed_component.dart';
+import 'package:circuitquest/state/wire_connection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -32,98 +36,6 @@ final sandboxProvider = ChangeNotifierProvider<SandboxState>(
   (ref) => SandboxState(ref.read(customComponentProvider)),
 );
 
-/// Represents a component instance placed on the canvas.
-class PlacedComponent {
-  /// The component type (e.g., "And", "Or", "Not")
-  final String type;
-
-  /// The actual logic component instance
-  final Component component;
-
-  /// Position on the canvas grid
-  final Offset position;
-
-  /// Unique identifier for this placed component
-  final String id;
-
-  /// Whether this component can be moved/removed by the player
-  final bool immovable;
-
-  /// Whether user-editable values/properties for this component are locked
-  final bool immutable;
-
-  /// Optional display label from level configuration (e.g., "A", "B")
-  final String? label;
-
-  PlacedComponent({
-    required this.type,
-    required this.component,
-    required this.position,
-    required this.id,
-    this.immovable = false,
-    this.immutable = false,
-    this.label,
-  });
-
-  /// Converts this PlacedComponent to JSON format
-  Map<String, dynamic> toJson() {
-    final canvasCenter = Constants.kGridSizeInPixels / 2;
-    final logicalX = ((position.dx - canvasCenter) / Constants.kGridCellSize)
-        .round();
-    final logicalY = ((position.dy - canvasCenter) / Constants.kGridCellSize)
-        .round();
-
-    return {
-      'type': type,
-      'position': [logicalX, logicalY],
-      'id': id,
-      if (immovable) 'immovable': immovable,
-      if (immutable) 'immutable': immutable,
-      if (label != null) 'label': label,
-    };
-  }
-}
-
-/// Represents a wire connection between two component pins.
-class WireConnection {
-  /// Source component ID
-  final String sourceComponentId;
-
-  /// Source output pin name
-  final String sourcePin;
-
-  /// Target component ID
-  final String targetComponentId;
-
-  /// Target input pin name
-  final String targetPin;
-
-  WireConnection({
-    required this.sourceComponentId,
-    required this.sourcePin,
-    required this.targetComponentId,
-    required this.targetPin,
-  });
-
-  factory WireConnection.fromJson(Map<String, dynamic> json) {
-    return WireConnection(
-      sourceComponentId: json['origin'].toString(),
-      sourcePin: json['originKey'],
-      targetComponentId: json['destination'].toString(),
-      targetPin: json['destinationKey'],
-    );
-  }
-
-  /// Converts this WireConnection to JSON format
-  Map<String, dynamic> toJson() {
-    return {
-      'sourceComponentId': sourceComponentId,
-      'sourcePin': sourcePin,
-      'targetComponentId': targetComponentId,
-      'targetPin': targetPin,
-    };
-  }
-}
 
 /// State management for the sandbox circuit designer.
 ///
@@ -217,23 +129,23 @@ class SandboxState extends ChangeNotifier {
         (lc.position[1] * gridSize) + canvasCenter,
       );
 
-        if (resolved.component is InstructionMemory &&
-            level.memoryContents != null) {
-          (resolved.component as InstructionMemory).loadInstructions(
-            level.memoryContents!.instructionMemory,
-          );
-        } else if (resolved.component is DataMemory &&
-            level.memoryContents != null) {
-        } else if (resolved.component is DataMemory &&
-            level.memoryContents != null) {
-          (resolved.component as DataMemory).loadData(
-            level.memoryContents!.dataMemory,
-          );
-        } else if (resolved.component is RegisterBlock &&
-            lc.initialRegisterValues != null) {
-          (resolved.component as RegisterBlock).loadRegisters(
-            lc.initialRegisterValues!,
-          );
+      if (resolved.component is InstructionMemory &&
+          level.memoryContents != null) {
+        (resolved.component as InstructionMemory).loadInstructions(
+          level.memoryContents!.instructionMemory,
+        );
+      } else if (resolved.component is DataMemory &&
+          level.memoryContents != null) {
+      } else if (resolved.component is DataMemory &&
+          level.memoryContents != null) {
+        (resolved.component as DataMemory).loadData(
+          level.memoryContents!.dataMemory,
+        );
+      } else if (resolved.component is RegisterBlock &&
+          lc.initialRegisterValues != null) {
+        (resolved.component as RegisterBlock).loadRegisters(
+          lc.initialRegisterValues!,
+        );
       }
 
       placeComponent(
@@ -613,40 +525,6 @@ class SandboxState extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Evaluates the circuit using event-driven simulation.
-  void evaluateCircuit() {
-    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
-    if (allComponents.isEmpty) return;
-
-    // Treat components with no inputs or explicit InputSources as starting points
-    final inputStarts = _placedComponents
-        .where(
-          (pc) => pc.component.inputs.isEmpty || pc.component is InputSource,
-        )
-        .map((pc) => pc.component)
-        .toSet();
-
-    // Also include ProgramCounter components as starting points (for processor simulation)
-    final programCounters = _placedComponents
-        .where((pc) => pc.component.runtimeType.toString() == 'ProgramCounter')
-        .map((pc) => pc.component)
-        .toSet();
-
-    final startingSet =
-        inputStarts.isEmpty
-              ? (programCounters.isEmpty ? allComponents : programCounters)
-              : inputStarts
-          ..addAll(programCounters);
-
-    _simulator = Simulator(
-      components: allComponents,
-      inputComponents: startingSet,
-    );
-
-    _simulator!.evaluateEventDriven(startingComponents: startingSet);
-    notifyListeners();
-  }
-
   /// Evaluates the circuit starting from a specific component.
   /// This is used when a new connection is added to trigger evaluation
   /// starting from the target component of the connection.
@@ -821,19 +699,12 @@ class SandboxState extends ChangeNotifier {
 
   /// Fully reset the sandbox state (used when entering a fresh scene).
   void reset() {
-    _cancelSimulation = true;
-    _placedComponents.clear();
-    _connections.clear();
-    _wireDrawingStart = null;
-    _isSimulating = false;
+    clearCircuit();
     _selectedComponentType = null;
     _draggingComponent = null;
     _simulator = null;
     _nextComponentId = 0;
     _tickSpeed = 0.0;
-    _savedComponentStates = null;
-    _initializedFromLevel = false;
-    _initializedLevelId = null;
   }
 
   @override
@@ -1070,24 +941,6 @@ class SandboxState extends ChangeNotifier {
     Level level,
   ) async {
     try {
-      final inputCount = _placedComponents
-          .where((c) => c.component is InputSource)
-          .length;
-      final outputCount = _placedComponents
-          .where((c) => c.component is OutputProbe)
-          .length;
-
-      if (inputCount == 0 || outputCount == 0) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Circuit must have inputs and outputs'),
-            ),
-          );
-        }
-        return;
-      }
-
       final validationResult =
           await LevelValidator.validateCircuitWithSimulation(
             components: _placedComponents.map((pc) => pc.component).toList(),
@@ -1106,33 +959,44 @@ class SandboxState extends ChangeNotifier {
 
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Success!'),
-            content: const Text('All tests passed! Level completed.'),
-            actions: [
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(color: Colors.white),
-                ),
+          builder: (context) {
+            final localeCode = Localizations.localeOf(context).languageCode;
+            final message = level.getLocalizedString(
+              'success_message',
+              localeCode,
+            );
+
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)!.success),
+              content: Text(
+                message != "" ? message : AppLocalizations.of(context)!.allTestsPassedMessage,
               ),
-            ],
-          ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                  ),
+                  child: Text(
+                    AppLocalizations.of(context)!.continue_,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       } else {
+        final message = _validationFailureMessage(context, validationResult);
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Test Failed'),
-            content: Text(
-              validationResult.errorMessage ?? 'One or more tests failed',
-            ),
+            title: Text(AppLocalizations.of(context)!.testFailed),
+            content: Text(message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Try Again'),
+                child: Text(AppLocalizations.of(context)!.tryAgain),
               ),
             ],
           ),
@@ -1149,5 +1013,80 @@ class SandboxState extends ChangeNotifier {
 
   void nofifyManually() {
     notifyListeners();
+  }
+
+  String _validationFailureMessage(
+    BuildContext context,
+    LevelValidationResult result,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (result is NumberOfComponentsMismatch) {
+      return l10n.validationTooManyComponents(
+        result.actual,
+        result.expectedMax,
+      );
+    }
+
+    if (result is MissingInputsOrOutputs) {
+      return l10n.validationMissingInputsOutputs(
+        result.inputCount,
+        result.outputCount,
+      );
+    }
+
+    if (result is NumberOfInputsMismatch) {
+      return l10n.validationInputCountMismatch(
+        result.testIndex + 1,
+        result.expected,
+        result.actual,
+      );
+    }
+
+    if (result is NumberOfOutputsMismatch) {
+      return l10n.validationOutputCountMismatch(
+        result.testIndex + 1,
+        result.expected,
+        result.actual,
+      );
+    }
+
+    if (result is TestFailed) {
+      if (result.expectedOutput < 0 || result.actualOutput < 0) {
+        return l10n.testFailedDescription;
+      }
+
+      final inputsText = result.failedInputConfiguration.isNotEmpty
+          ? result.failedInputConfiguration
+              .map(
+                (entry) =>
+                    '${_labelForComponentId(entry.componentId) ?? l10n.validationInputIdLabel(entry.componentId)}=${entry.value}',
+              )
+              .join(', ')
+          : l10n.validationInputsUnknown;
+
+      final outputLabel =
+          _labelForComponentId(result.outputComponentId) ??
+          l10n.validationOutputIdLabel(result.outputComponentId);
+
+      return l10n.validationTestFailed(
+        result.testIndex + 1,
+        outputLabel,
+        result.expectedOutput,
+        result.actualOutput,
+        inputsText,
+      );
+    }
+
+    return l10n.testFailedDescription;
+  }
+
+  String? _labelForComponentId(int componentId) {
+    for (final placed in _placedComponents) {
+      if (placed.component.id == componentId) {
+        return placed.label;
+      }
+    }
+    return null;
   }
 }

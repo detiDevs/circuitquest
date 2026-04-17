@@ -4,13 +4,11 @@
     "description": "Application title"
   },
   "appDescription": "Master Digital Logic and Processor Design",
-
   "sandboxModeTitle": "Sandbox Mode",
   "@sandboxModeTitle": {
     "description": "Title for sandbox mode screen"
   },
   "sandboxModeDescription": "Design circuits freely\nwithout constraints",
-
   "levelModeTitle": "Level Mode",
   "levelModeDescription": "Complete circuit challenges and progress through levels",
   "failedToLoadLevels": "Failed to load levels",
@@ -21,8 +19,6 @@
   "levelDescription": "Description",
   "levelObjectives": "Objectives",
   "levelHints": "Hints",
-
-
   "controlsTitle": "Controls",
   "@controlsTitle": {
     "description": "Control panel title"
@@ -47,15 +43,12 @@
   "simulationSpeedInstant": "Instant",
   "resetCircuitToInitialState": "Reset to Initial State",
   "circuitWasResetToInitialState": "Circuit reset to initial state",
-
   "fileOperationsTitle": "File Operations",
   "saveCircuit": "Save Circuit",
   "saveAsCustomComponent": "Save as Custom Component",
   "customComponentsNeedInputOutputError": "Custom components need at least one input and one output.",
   "loadCircuit": "Load Circuit",
-
   "checkSolution": "Check solution",
-
   "clearCircuit": "Clear Circuit",
   "@clearCircuit": {
     "description": "Button to clear all components from canvas"
@@ -76,7 +69,6 @@
   "@clear": {
     "description": "Clear button in confirmation dialog"
   },
-
   "circuitInfoTitle": "Circuit Info",
   "@circuitInfoTitle": {
     "description": "Circuit information section title"
@@ -101,7 +93,6 @@
   "@statusStopped": {
     "description": "Status when simulation is stopped"
   },
-
   "instructionsTitle": "Instructions",
   "@instructionsTitle": {
     "description": "Instructions section title"
@@ -134,7 +125,6 @@
   "@pinColorsInfo": {
     "description": "Information about pin color coding"
   },
-
   "componentPaletteTitle": "Components",
   "@componentPaletteTitle": {
     "description": "Component palette title"
@@ -149,7 +139,6 @@
       }
     }
   },
-
   "andGate": "AND Gate",
   "orGate": "OR Gate",
   "notGate": "NOT Gate",
@@ -161,7 +150,6 @@
   "dFlipFlop": "D-Flip-Flop",
   "inputSource": "Input",
   "outputProbe": "Output",
-
   "componentMenuTitle": "{componentType} Component",
   "@componentMenuTitle": {
     "description": "Title for component context menu",
@@ -176,7 +164,6 @@
   "@componentMenuPrompt": {
     "description": "Prompt in component context menu"
   },
-
   "toggleBitwidth": "Toggle bitwidth",
   "@toggleBitwidth": {
     "description": "Tooltip for bitwidth toggle button"
@@ -191,7 +178,6 @@
       }
     }
   },
-
   "outputLabel": "{bitWidth}-bit output",
   "@outputLabel": {
     "description": "Output component bitwidth label",
@@ -202,7 +188,6 @@
       }
     }
   },
-
   "rangeLabel": "{min} .. {max}",
   "@rangeLabel": {
     "description": "Value range display",
@@ -266,7 +251,6 @@
   "customComponentSavingError": "Failed to save custom component.",
   "customComponentSaved": "Custom component saved.",
   "deleteCustomComponent": "Delete Custom Component",
-
   "circuitDefaultName": "My Circuit",
   "@circuitDefaultName": {
     "description": "Default name for a new circuit"
@@ -325,11 +309,9 @@
       }
     }
   },
-
   "settings": "Settings",
   "language": "Language",
   "systemDefault": "System default",
-
   "util": "",
   "retry": "Retry",
   "selected": "Selected",
@@ -376,7 +358,7 @@
       "itemToDelete": {
         "type": "String",
         "example": "MyCustomComponent"
-      } 
+      }
     }
   },
   "successfullyDeletedX": "{itemToDelete} deleted successfully",
@@ -389,7 +371,7 @@
     }
   },
   "failedToDeleteX": "Failed to delete {itemToDelete}",
-  "@failedToDeleteX":{
+  "@failedToDeleteX": {
     "placeholders": {
       "itemToDelete": {
         "type": "String",
@@ -398,6 +380,10 @@
     }
   },
   "resetLevel": "Reset level",
+  "gridCellOccupied": "This grid cell is already occupied.",
+  "locked": "Locked",
+  "completed": "Completed",
+  "bonusLevel": "Bonus level",
 
   "instructionMemoryContents": "Instruction Memory Contents",
   "instructionMemoryFormatHint": "Instructions are configured as the decimal version of a 32 bit number. For more info, see MIPS Reference Sheet",
@@ -408,5 +394,106 @@
 
   "overrideNextProgramCounterValue": "Override next Program Counter value",
   "invalidProgramCounterValue": "Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).",
-  "gridCellOccupied": "This grid cell is already occupied."
+
+  "success": "Success!",
+  "allTestsPassedMessage": "All tests passed! Level completed.",
+  "continue_": "Continue",
+  "testFailed": "Test failed",
+  "testFailedDescription": "One or more tests failed",
+  "validationTooManyComponents": "Too many components: {actual} used, maximum is {expectedMax}.",
+  "@validationTooManyComponents": {
+    "description": "Shown when the circuit exceeds the maximum allowed components",
+    "placeholders": {
+      "actual": {
+        "type": "int"
+      },
+      "expectedMax": {
+        "type": "int"
+      }
+    }
+  },
+  "validationMissingInputsOutputs": "Circuit must have at least one input and one output. Found {inputCount} inputs and {outputCount} outputs.",
+  "@validationMissingInputsOutputs": {
+    "description": "Shown when the circuit has no inputs or outputs",
+    "placeholders": {
+      "inputCount": {
+        "type": "int"
+      },
+      "outputCount": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputCountMismatch": "Test {testNumber} expects {expected} inputs but got {actual}.",
+  "@validationInputCountMismatch": {
+    "description": "Shown when a test input count does not match the circuit",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      }
+    }
+  },
+  "validationOutputCountMismatch": "Test {testNumber} expects {expected} outputs but got {actual}.",
+  "@validationOutputCountMismatch": {
+    "description": "Shown when a test output count does not match the circuit",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputIdLabel": "Input {id}",
+  "@validationInputIdLabel": {
+    "description": "Fallback input label when no custom label is available",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "validationOutputIdLabel": "Output {id}",
+  "@validationOutputIdLabel": {
+    "description": "Fallback output label when no custom label is available",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputsUnknown": "unknown",
+  "validationTestFailed": "Test {testNumber} failed at output {outputLabel}. \nExpected {expected} but got {actual}. \nInputs: {inputs}.",
+  "@validationTestFailed": {
+    "description": "Shown when a test fails with details",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "outputLabel": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      },
+      "inputs": {
+        "type": "String"
+      }
+    }
+  },
+  "tryAgain": "Try again"
+
 }

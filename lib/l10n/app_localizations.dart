@@ -782,6 +782,30 @@ abstract class AppLocalizations {
   /// **'Reset level'**
   String get resetLevel;
 
+  /// No description provided for @gridCellOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'This grid cell is already occupied.'**
+  String get gridCellOccupied;
+
+  /// No description provided for @locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get locked;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completed;
+
+  /// No description provided for @bonusLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus level'**
+  String get bonusLevel;
+
   /// No description provided for @instructionMemoryContents.
   ///
   /// In en, this message translates to:
@@ -830,11 +854,99 @@ abstract class AppLocalizations {
   /// **'Invalid Program Counter value. You have to provide a decimal byte address that can be converted to a word adress (i.e. divisible by 4).'**
   String get invalidProgramCounterValue;
 
-  /// No description provided for @gridCellOccupied.
+  /// No description provided for @success.
   ///
   /// In en, this message translates to:
-  /// **'This grid cell is already occupied.'**
-  String get gridCellOccupied;
+  /// **'Success!'**
+  String get success;
+
+  /// No description provided for @allTestsPassedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'All tests passed! Level completed.'**
+  String get allTestsPassedMessage;
+
+  /// No description provided for @continue_.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continue_;
+
+  /// No description provided for @testFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Test failed'**
+  String get testFailed;
+
+  /// No description provided for @testFailedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'One or more tests failed'**
+  String get testFailedDescription;
+
+  /// Shown when the circuit exceeds the maximum allowed components
+  ///
+  /// In en, this message translates to:
+  /// **'Too many components: {actual} used, maximum is {expectedMax}.'**
+  String validationTooManyComponents(int actual, int expectedMax);
+
+  /// Shown when the circuit has no inputs or outputs
+  ///
+  /// In en, this message translates to:
+  /// **'Circuit must have at least one input and one output. Found {inputCount} inputs and {outputCount} outputs.'**
+  String validationMissingInputsOutputs(int inputCount, int outputCount);
+
+  /// Shown when a test input count does not match the circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Test {testNumber} expects {expected} inputs but got {actual}.'**
+  String validationInputCountMismatch(int testNumber, int expected, int actual);
+
+  /// Shown when a test output count does not match the circuit
+  ///
+  /// In en, this message translates to:
+  /// **'Test {testNumber} expects {expected} outputs but got {actual}.'**
+  String validationOutputCountMismatch(
+    int testNumber,
+    int expected,
+    int actual,
+  );
+
+  /// Fallback input label when no custom label is available
+  ///
+  /// In en, this message translates to:
+  /// **'Input {id}'**
+  String validationInputIdLabel(int id);
+
+  /// Fallback output label when no custom label is available
+  ///
+  /// In en, this message translates to:
+  /// **'Output {id}'**
+  String validationOutputIdLabel(int id);
+
+  /// No description provided for @validationInputsUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'unknown'**
+  String get validationInputsUnknown;
+
+  /// Shown when a test fails with details
+  ///
+  /// In en, this message translates to:
+  /// **'Test {testNumber} failed at output {outputLabel}. \nExpected {expected} but got {actual}. \nInputs: {inputs}.'**
+  String validationTestFailed(
+    int testNumber,
+    String outputLabel,
+    int expected,
+    int actual,
+    String inputs,
+  );
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
 }
 
 class _AppLocalizationsDelegate

@@ -1,3 +1,5 @@
+import 'package:circuitquest/constants.dart';
+import 'package:circuitquest/state/placed_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -249,8 +251,8 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
         ),
         // Output pin on the right edge
         Positioned(
-          left: widget.gridSize - 20,
-          top: widget.gridSize / 2 - 10,
+          left: widget.gridSize - Constants.kPinSize,
+          top: widget.gridSize / 2 - Constants.kPinSize / 2,
           child: GestureDetector(
             onTap: () {
               widget.ref
@@ -258,8 +260,8 @@ class _InputSourceWidgetState extends ConsumerState<InputSourceWidget> {
                   .startWireDrawing(widget.placedComponent.id, 'outValue');
             },
             child: Container(
-              width: 20,
-              height: 20,
+              width: Constants.kPinSize,
+              height: Constants.kPinSize,
               decoration: BoxDecoration(
                 color: outputPin.value > 0 ? Colors.green : Colors.red,
                 shape: BoxShape.circle,

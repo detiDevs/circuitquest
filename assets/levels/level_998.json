@@ -32,6 +32,8 @@
     "hints_de": [
         "Gatter auf der linken Seite können in das Raster gezogen werden"
     ],
+    "success_message": "You did it! This is a custom success message",
+    "success_message_de": "Geschafft! Dies ist eine custom success message",
     "maxComponentCount": 4,
 
     "tests": [

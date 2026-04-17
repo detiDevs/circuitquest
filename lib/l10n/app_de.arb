@@ -398,6 +398,10 @@
     }
   },
   "resetLevel": "Level zurücksetzen",
+  "gridCellOccupied": "Diese Zelle ist bereits belegt.",
+  "locked": "Gesperrt",
+  "completed": "Abgeschlossen",
+  "bonusLevel": "Bonuslevel",
 
   "instructionMemoryContents": "Instruction Memory Befehlsliste",
   "instructionMemoryFormatHint": "Befehle werden als Dezimalversion einer 32-Bit-Zahl angegeben. Für mehr Infos, siehe MIPS Reference Sheet",
@@ -408,5 +412,105 @@
 
   "overrideNextProgramCounterValue": "Nächsten Program Counter Wert überschreiben",
   "invalidProgramCounterValue": "Ungültiger Program Counter Wert. Du musst eine dezimale Byteadresse angeben, die sich zu einer Wortadresse konvertieren lässt (d.h. teilbar durch 4).",
-  "gridCellOccupied": "Diese Zelle ist bereits belegt."
+
+  "success": "Geschafft!",
+  "allTestsPassedMessage": "Alle Tests wurden bestanden und das Level ist abgeschlossen.",
+  "continue_": "Fortfahren",
+  "testFailed": "Test fehlgeschlagen",
+  "testFailedDescription": "Ein oder mehrere Tests sind fehlgeschlagen",
+  "validationTooManyComponents": "Zu viele Komponenten: {actual} verwendet, maximal erlaubt sind {expectedMax}.",
+  "@validationTooManyComponents": {
+    "description": "Wird angezeigt, wenn zu viele Komponenten verwendet wurden",
+    "placeholders": {
+      "actual": {
+        "type": "int"
+      },
+      "expectedMax": {
+        "type": "int"
+      }
+    }
+  },
+  "validationMissingInputsOutputs": "Der Schaltkreis muss mindestens einen Eingang und einen Ausgang haben. Gefunden: {inputCount} Eingänge und {outputCount} Ausgänge.",
+  "@validationMissingInputsOutputs": {
+    "description": "Wird angezeigt, wenn Eingänge oder Ausgänge fehlen",
+    "placeholders": {
+      "inputCount": {
+        "type": "int"
+      },
+      "outputCount": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputCountMismatch": "Test {testNumber} erwartet {expected} Eingänge, aber es wurden {actual} gefunden.",
+  "@validationInputCountMismatch": {
+    "description": "Wird angezeigt, wenn die Eingangsanzahl nicht passt",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      }
+    }
+  },
+  "validationOutputCountMismatch": "Test {testNumber} erwartet {expected} Ausgänge, aber es wurden {actual} gefunden.",
+  "@validationOutputCountMismatch": {
+    "description": "Wird angezeigt, wenn die Ausgangsanzahl nicht passt",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputIdLabel": "Eingang {id}",
+  "@validationInputIdLabel": {
+    "description": "Fallback-Label für Eingänge ohne benutzerdefiniertes Label",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "validationOutputIdLabel": "Ausgang {id}",
+  "@validationOutputIdLabel": {
+    "description": "Fallback-Label für Ausgänge ohne benutzerdefiniertes Label",
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "validationInputsUnknown": "unbekannt",
+  "validationTestFailed": "Test {testNumber} ist bei Ausgang {outputLabel} fehlgeschlagen. \nErwartet: {expected}, erhalten: {actual}. \nEingänge: {inputs}.",
+  "@validationTestFailed": {
+    "description": "Wird angezeigt, wenn ein Test mit Details fehlschlagt",
+    "placeholders": {
+      "testNumber": {
+        "type": "int"
+      },
+      "outputLabel": {
+        "type": "String"
+      },
+      "expected": {
+        "type": "int"
+      },
+      "actual": {
+        "type": "int"
+      },
+      "inputs": {
+        "type": "String"
+      }
+    }
+  },
+  "tryAgain": "Noch einmal versuchen"
 }

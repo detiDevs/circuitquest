@@ -1,5 +1,6 @@
 import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/state/placed_component.dart';
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:flutter/material.dart';
 

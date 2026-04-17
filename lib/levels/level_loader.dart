@@ -282,10 +282,14 @@ class LevelLoader {
 
   /// Check if a level can be accessed by the player
   /// 
-  /// Returns true if the level is unlocked (either all levels unlocked,
-  /// or the player has completed the previous level).
+  /// Returns true if the level with the given [levelId] is unlocked.
+  /// That is the case if:
+  /// - allLevelsUnlocked flag is set to true
+  /// - the user has completed the previous non-bonus level in the list from [levelBlocks]
+  /// - the user has completed the [required_level], if any. In that case the previous condition will not be relevant
   Future<bool> canAccessLevel(int levelId) async {
     final meta = await loadLevelMeta();
+    final blocks = await loadLevelBlocks();
     
     // If all levels are unlocked, allow access
     if (meta.allLevelsUnlocked) {
@@ -296,9 +300,53 @@ class LevelLoader {
     if (levelId == 0) {
       return true;
     }
-    
-    // Otherwise, check if previous level is completed
-    return meta.completedLevels.contains(levelId - 1);
+
+    // Completed levels are always replayable
+    if (meta.completedLevels.contains(levelId)) {
+      return true;
+    }
+
+    // Build a flat ordered list from level blocks to evaluate progression
+    final orderedLevels = <LevelBlockItem>[];
+    blocks.forEach((_, items) {
+      orderedLevels.addAll(items);
+    });
+
+    final currentLevelIndex = orderedLevels.indexWhere((item) => item.id == levelId);
+
+    // If level is not part of configured blocks, treat as inaccessible
+    if (currentLevelIndex == -1) {
+      return false;
+    }
+
+    final currentLevelItem = orderedLevels[currentLevelIndex];
+
+    // Explicit prerequisite overrides sequential progression
+    if (currentLevelItem.requiredLevelId != null) {
+      return meta.completedLevels.contains(currentLevelItem.requiredLevelId);
+    }
+
+    // First configured level is always accessible
+    if (currentLevelIndex == 0) {
+      return true;
+    }
+
+    // Progression ignores bonus levels: only previous non-bonus levels gate access
+    int previousNonBonusIndex = currentLevelIndex - 1;
+    while (
+      previousNonBonusIndex >= 0 &&
+      orderedLevels[previousNonBonusIndex].isBonus
+    ) {
+      previousNonBonusIndex--;
+    }
+
+    // If no non-bonus level exists before this one, it is accessible
+    if (previousNonBonusIndex < 0) {
+      return true;
+    }
+
+    final previousRequiredLevelId = orderedLevels[previousNonBonusIndex].id;
+    return meta.completedLevels.contains(previousRequiredLevelId);
   }
 
   /// Mark a level as completed

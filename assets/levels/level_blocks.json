@@ -149,13 +149,15 @@
           "id": 21,
           "name": "Full Adder again?",
           "name_de": "Volladdierer nochmal?",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 20
         },
         {
           "id": 22,
           "name": "Adders Challenge",
           "name_de": "Addierer Herausforderung",
-          "bonus_level": true
+          "bonus_level": true,
+          "required_level_id": 20
         }
       ]
     },

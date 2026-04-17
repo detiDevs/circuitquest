@@ -1,5 +1,6 @@
 import 'package:circuitquest/state/sandbox_state.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
+import 'package:circuitquest/state/wire_connection.dart';
 
 /// Clock configuration for levels
 class ClockConfig {
@@ -167,6 +168,8 @@ class Level {
   final List<WireConnection> connections;
   final List<String> hints;
   final List<String>? hintsDe;
+  final String? successMessage;
+  final String? successMessageDe;
   final int? maxComponentCount;
   final List<LevelTest> tests;
   final MemoryContents? memoryContents;
@@ -187,6 +190,8 @@ class Level {
     required this.connections,
     required this.hints,
     this.hintsDe,
+    this.successMessage,
+    this.successMessageDe,
     this.maxComponentCount,
     required this.tests,
     this.memoryContents,
@@ -215,6 +220,8 @@ class Level {
           .toList(),
       hints: (json['hints'] as List<dynamic>).cast<String>(),
       hintsDe: (json['hints_de'] as List<dynamic>?)?.cast<String>(),
+      successMessage: json['success_message'] as String?,
+      successMessageDe: json['success_message_de'] as String?,
       maxComponentCount: json['maxComponentCount'] as int?,
       tests: ((json['tests'] ?? []) as List<dynamic>)
           .map((e) => LevelTest.fromJson(e as Map<String, dynamic>))
@@ -247,6 +254,8 @@ class Level {
           .toList(),
       'hints': hints,
       if (hintsDe != null) 'hints_de': hintsDe,
+      if (successMessage != null) 'success_message' : successMessage,
+      if (successMessageDe != null) 'success_message_de' : successMessageDe,
       'tests': tests.map((t) => t.toJson()).toList(),
       if (memoryContents != null) 'memoryContents': memoryContents!.toJson(),
     };
@@ -266,6 +275,10 @@ class Level {
         return localeCode == 'de' && difficultyDe != null
             ? difficultyDe!
             : difficulty;
+      case 'success_message':
+        return localeCode == 'de' && successMessageDe != null
+            ? successMessageDe!
+            : successMessage ?? "";
       default:
         return '';
     }
@@ -293,12 +306,16 @@ class LevelBlockItem {
   final String name;
   final String? nameDe;
   final bool recommended;
+  final bool isBonus;
+  final int? requiredLevelId;
 
   LevelBlockItem({
     required this.id,
     required this.name,
     this.nameDe,
     this.recommended = false,
+    this.isBonus = false,
+    this.requiredLevelId,
   });
 
   factory LevelBlockItem.fromJson(Map<String, dynamic> json) {
@@ -307,6 +324,8 @@ class LevelBlockItem {
       name: json['name'] as String,
       nameDe: json['name_de'] as String?,
       recommended: json['recommended'] as bool? ?? false,
+      isBonus: json['bonus_level'] as bool? ?? false,
+      requiredLevelId: json['required_level_id'] as int?,
     );
   }
 
@@ -316,6 +335,8 @@ class LevelBlockItem {
       'name': name,
       if (nameDe != null) 'name_de': nameDe,
       'recommended': recommended,
+      'bonus_level': isBonus,
+      if (requiredLevelId != null) 'required_level_id' : requiredLevelId,
     };
   }
 

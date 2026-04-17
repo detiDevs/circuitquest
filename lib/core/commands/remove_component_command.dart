@@ -1,4 +1,6 @@
 import 'package:circuitquest/core/commands/command.dart';
+import 'package:circuitquest/state/placed_component.dart';
+import 'package:circuitquest/state/wire_connection.dart';
 import '../../state/sandbox_state.dart';
 
 /// Command to remove a component from the canvas.
