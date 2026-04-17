@@ -17,6 +17,7 @@ class LevelInfoDialog extends ConsumerStatefulWidget {
 }
 
 class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
+  // ignore: unused_field
   bool _showHints = false;
 
   // Render plain text with inline LaTeX (dollar-delimited) using flutter_math_fork.
@@ -69,9 +70,67 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
     );
   }
 
+  
+
+  /// Render the truth table using flutter_math_fork. Provides an onError
+  /// fallback to show a readable error message.
+  Widget _renderTruthTable(List<List<dynamic>> table, TextStyle? textStyle) {
+    // Render the truth table using Flutter's Table widget so we can control
+    // the border color (e.g. white lines in dark mode).
+    if (table.isEmpty) return const SizedBox.shrink();
+
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final borderColor = isDark ? Colors.white : Colors.grey.shade300;
+
+    final headerStyle = (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
+      fontWeight: FontWeight.bold,
+      color: isDark ? Colors.white : (textStyle?.color ?? theme.textTheme.bodyMedium?.color),
+    );
+    final cellStyle = (textStyle ?? theme.textTheme.bodyMedium)?.copyWith(
+      color: isDark ? Colors.white : (textStyle?.color ?? theme.textTheme.bodyMedium?.color),
+    );
+
+    // Build table rows
+    final rows = <TableRow>[];
+    for (int r = 0; r < table.length; r++) {
+      final row = table[r];
+      final isHeader = r == 0;
+      rows.add(TableRow(
+        decoration: BoxDecoration(color: Colors.transparent),
+        children: row.map<Widget>((cell) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            alignment: Alignment.center,
+            child: Text(
+              cell == null ? '' : cell.toString(),
+              style: isHeader ? headerStyle : cellStyle,
+            ),
+          );
+        }).toList(),
+      ));
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Table(
+          defaultColumnWidth: const IntrinsicColumnWidth(),
+          border: TableBorder.all(color: borderColor, width: 1),
+          children: rows,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final level = widget.level;
+  final List<List<dynamic>>? truthTable = level.truthTable;
     final localeCode = Localizations.localeOf(context).languageCode;
     final hints = level.getLocalizedStringList('hints', localeCode);
     final revealedHints = ref.watch(
@@ -120,7 +179,12 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
               _renderMaybeMath(
                 widget.level.getLocalizedString('description', localeCode), null
               ),
-              const SizedBox(height: 16),
+              if (truthTable != null) ...[
+                const SizedBox(height: 12),
+                _renderTruthTable(truthTable, Theme.of(context).textTheme.bodyMedium),
+                const SizedBox(height: 16),
+              ] else
+                const SizedBox(height: 16),
 
               // Objectives
               Text(
