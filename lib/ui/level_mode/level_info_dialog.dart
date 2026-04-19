@@ -1,3 +1,4 @@
+import 'package:circuitquest/ui/shared/utils/text_rendering_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/levels/level.dart';
@@ -22,53 +23,7 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
 
   // Render plain text with inline LaTeX (dollar-delimited) using flutter_math_fork.
   // If no $ delimiters are present, returns a simple Text widget.
-  Widget _renderMaybeMath(String s, TextStyle? initialTheme) {
-    final theme = initialTheme ?? Theme.of(context).textTheme.bodySmall;
-    if (!s.contains(r'$')) {
-      return Text(s, style: theme);
-    }
-
-    final regex = RegExp(r'(\$.*?\$)');
-    final children = List<InlineSpan>.empty(growable: true);
-    final mathParts = regex.allMatches(s).map((m) => m.group(0)!).toList();
-    final nonMathParts = s.split(regex);
-
-    for (int i = 0; i < nonMathParts.length; i++) {
-      children.add(
-        TextSpan(
-          text: nonMathParts[i],
-          style: theme,
-        ),
-      );
-      if (i < mathParts.length) {
-        children.add(
-          WidgetSpan(
-            alignment: PlaceholderAlignment.middle,
-            child: Math.tex(
-              mathParts[i].substring(1, mathParts[i].length - 1),
-              textStyle: theme,
-              onErrorFallback: (err) => Text(
-                'Error rendering math: $err',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodySmall?.copyWith(color: Colors.red),
-              ),
-            ),
-          ),
-        );
-      }
-    }
-
-    return SizedBox(
-      width: double.infinity,
-      child: RichText(
-        text: TextSpan(
-          style: theme,
-          children: children,
-        ),
-      ),
-    );
-  }
+  
 
   
 
@@ -176,8 +131,10 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
                 ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              _renderMaybeMath(
-                widget.level.getLocalizedString('description', localeCode), null
+              TextRenderingUtils.renderMaybeMath(
+                context,
+                widget.level.getLocalizedString('description', localeCode),
+                null
               ),
               if (truthTable != null) ...[
                 const SizedBox(height: 12),
@@ -210,8 +167,9 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           Expanded(
-                            child: _renderMaybeMath(
-                              entry.value, null 
+                            child: TextRenderingUtils.renderMaybeMath(
+                              context,
+                              entry.value, null
                             ),
                           ),
                         ],
@@ -270,7 +228,8 @@ class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
-                                  child: _renderMaybeMath(
+                                  child: TextRenderingUtils.renderMaybeMath(
+                                    context,
                                     hint,
                                     TextStyle(color: Colors.black)
                                   ),

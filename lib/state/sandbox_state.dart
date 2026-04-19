@@ -15,6 +15,7 @@ import 'package:circuitquest/levels/level_validation_result.dart';
 import 'package:circuitquest/levels/level_validator.dart';
 import 'package:circuitquest/state/placed_component.dart';
 import 'package:circuitquest/state/wire_connection.dart';
+import 'package:circuitquest/ui/shared/utils/text_rendering_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -968,8 +969,10 @@ class SandboxState extends ChangeNotifier {
 
             return AlertDialog(
               title: Text(AppLocalizations.of(context)!.success),
-              content: Text(
+              content: TextRenderingUtils.renderMaybeMath(
+                context,
                 message != "" ? message : AppLocalizations.of(context)!.allTestsPassedMessage,
+                null,
               ),
               actions: [
                 ElevatedButton(
