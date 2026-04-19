@@ -7,6 +7,7 @@ import 'l10n/app_localizations.dart';
 import 'state/locale_provider.dart';
 import 'state/theme_provider.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();

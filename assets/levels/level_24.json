@@ -1,16 +1,20 @@
 {
     "level_id": 9,
-    "name": "Minimization Challenge 1",
-    "name_de": "Minimierungsherausforderung 1",
-    "description": "Heieiei, looks like an intern was at work here. That's way too many gates!",
-    "description_de": "Heieiei, da war wohl ein Praktikant am Werk. Das sind viel zu viele Gatter!",
+    "name": "Minimization Challenge 3",
+    "name_de": "Minimierungsherausforderung 3",
+    "description": "Spoiler alert: The circuit implements the expression $ABC + \\overline{A}\\overline{B}C + \\overline{A}B\\overline{C} + A\\overline{B}\\overline{C}$.",
+    "description_de": "Spoiler-Alarm: Die Schaltung implementiert den Ausdruck $ABC + \\overline{A}\\overline{B}C + \\overline{A}B\\overline{C} + A\\overline{B}\\overline{C}$.",
     "difficulty": "Hard",
     "difficulty_de": "Schwer",
     "objectives": [
-        "Build a circuit with the same functionality, but with at most 5 gates besides the inputs and the output."
+        "Build a circuit with the same functionality, but with at most 4 gates besides the inputs and the output.",
+        "If you try it the same way as last time you won't be successful. The expression shown above is the minimal expression.",
+        "But there is another way to simplify it. Not minimizing the number of base gates but minimizing the number of components."
     ],
     "objectives_de": [
-        "Baue einen Schaltkreis gleicher Funktionalität, allerdings mit maximal 5 Gattern neben den Inputs und dem Output."
+        "Baue einen Schaltkreis gleicher Funktionalität, allerdings mit maximal 4 Gattern neben den Inputs und dem Output.",
+        "Wenn du es auf die gleiche Weise wie beim letzten Mal versuchst, wirst du nicht erfolgreich sein. Der oben gezeigte Ausdruck ist der minimale Ausdruck.",
+        "Aber es gibt einen anderen Weg, ihn zu vereinfachen. Nicht die Anzahl der Basisgatter zu minimieren, sondern die Anzahl der Komponenten."
     ],
     "components": [
         {
@@ -176,7 +180,7 @@
             "destinationKey": "input1"
         },
         {
-            "origin": 4,
+            "origin": 1,
             "originKey": "outValue",
             "destination": 6,
             "destinationKey": "input2"
@@ -242,13 +246,13 @@
             "destinationKey": "input2"
         },
         {
-            "origin": 3,
+            "origin": 0,
             "originKey": "outValue",
             "destination": 9,
             "destinationKey": "input1"
         },
         {
-            "origin": 1,
+            "origin": 4,
             "originKey": "outValue",
             "destination": 9,
             "destinationKey": "input2"
@@ -260,7 +264,7 @@
             "destinationKey": "input1"
         },
         {
-            "origin": 2,
+            "origin": 5,
             "originKey": "outValue",
             "destination": 13,
             "destinationKey": "input2"
@@ -310,6 +314,9 @@
     ],
     "available_components": [
         {
+            "type": "InputSource"
+        },
+        {
             "type": "And"
         },
         {
@@ -329,21 +336,43 @@
         },
         {
             "type": "Xnor"
+        },
+        {
+            "type": "Multiplexer2Inp"
+        },
+        {
+            "type": "Multiplexer4Inp"
+        },
+        {
+            "type": "Multiplexer8Inp"
+        },
+        {
+            "type": "Collector1to2"
+        },
+        {
+            "type": "Collector1to3"
+        },
+        {
+            "type": "Collector1to8"
         }
     ],
     "hints": [
-        "Try to simplify the circuit using Boolean algebra rules. For example, look for common sub-expressions that can be factored out, or apply De Morgan's laws to reduce the number of gates needed.",
-        "I cannot explain it here but have you heard about KV diagrams? They are a great tool to simplify boolean expressions and thus circuits.",
-        "The expression is $A\\overline{B}C+ \\overline{A}\\overline{B}C + \\overline{A}B\\overline{C} + \\overline{A}BC",
-        "That can be simplified to $\\overline{A}B + \\overline{B}C$"
+        "De Morgan won't help you here...",
+        "You need two additional Inputs. one should be 1 and the other one should be 0.",
+        "You just learned about multiplexers. Can you use them to solve this problem?",
+        "What if you collect A, B and C to one signal and feed it into the selection input of a multiplexer? What would be the inputs of the multiplexer then?",
+        "All the combinations of $A,\\overline{A},B,\\overline{B},C,\\overline{C}$ in the collected wire are unique numbers. So each of those combinations will correspond to one of the multiplexers inputs.",
+        "After you connected A,B,C to the collector have a look into the collector to see the numbers and set the corresponding multiplexer inputs to 1 or 0 based on the original expression."
     ],
     "hints_de": [
-        "Versuche, die Schaltung mit den Regeln der booleschen Algebra zu vereinfachen. Suche zum Beispiel nach gemeinsamen Teilausdrücken, die herausgefiltert werden können, oder wende De Morgans Gesetze an, um die Anzahl der benötigten Gatter zu reduzieren.",
-        "Ich kann es hier nicht erklären, aber hast du schon von KV-Diagrammen gehört? Sie sind ein großartiges Werkzeug, um boolesche Ausdrücke und damit Schaltungen zu vereinfachen.",
-        "Der Ausdruck ist $A\\overline{B}C+ \\overline{A}\\overline{B}C + \\overline{A}B\\overline{C} + \\overline{A}BC$",
-        "Das kann zu $\\overline{A}B + \\overline{B}C$ vereinfacht werden"
+        "De Morgan wird dir hier nicht helfen...",
+        "Du brauchst zwei zusätzliche Inputs. Einer sollte 1 sein und der andere 0.",
+        "Du hast gerade etwas über Multiplexer gelernt. Kannst du sie nutzen, um dieses Problem zu lösen?",
+        "Was wäre, wenn du A, B und C zu einem Signal sammelst und es in den Auswahl-Eingang eines Multiplexers einspeist? Was wären dann die Eingänge des Multiplexers?",
+        "Alle Kombinationen von $A,\\overline{A},B,\\overline{B},C,\\overline{C}$ in der gesammelten Leitung sind einzigartige Zahlen. Also wird jede dieser Kombinationen einem der Multiplexereingänge entsprechen.",
+        "Nachdem du A, B, C mit dem Collector verbunden hast, schau dir den Collector an, um die Zahlen zu sehen, und setze die entsprechenden Multiplexereingänge basierend auf dem ursprünglichen Ausdruck auf 1 oder 0."
     ],
-    "maxComponentCount": 9,
+    "maxComponentCount": 8,
     "tests": [
         {
             "inputs": [
@@ -428,7 +457,7 @@
             ],
             "expected_output": [
                 [
-                    1,
+                    0,
                     1
                 ]
             ]
@@ -450,7 +479,7 @@
             ],
             "expected_output": [
                 [
-                    0,
+                    1,
                     1
                 ]
             ]
@@ -472,7 +501,7 @@
             ],
             "expected_output": [
                 [
-                    1,
+                    0,
                     1
                 ]
             ]
@@ -516,13 +545,13 @@
             ],
             "expected_output": [
                 [
-                    0,
+                    1,
                     1
                 ]
             ]
         }
     ],
-    "success_message": "Congratulations! You've successfully simplified the circuit to meet the component count requirement. This demonstrates a strong understanding of Boolean algebra and circuit optimization techniques.",
-    "success_message_de": "Herzlichen Glückwunsch! Du hast die Schaltung erfolgreich vereinfacht, um die Anforderung an die Anzahl der Komponenten zu erfüllen. Dies zeigt ein starkes Verständnis der booleschen Algebra und der Techniken zur Schaltungsoptimierung.",
+    "success_message": "This was kinda hard. And it is not so common used in practice because it doesn't minimize the number of gates. But a fun way to reach a deeper understanding of how to use multiplexers. And it shows that there are often multiple ways to solve a problem in digital logic.",
+    "success_message_de": "Das war ziemlich schwer. Und es wird in der Praxis nicht so häufig verwendet, weil es nicht die Anzahl der Gatter minimiert. Aber eine lustige Möglichkeit, ein tieferes Verständnis dafür zu bekommen, wie",
     "bonus_level": true
 }

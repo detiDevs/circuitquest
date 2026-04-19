@@ -15,6 +15,7 @@ import 'package:circuitquest/levels/level_validation_result.dart';
 import 'package:circuitquest/levels/level_validator.dart';
 import 'package:circuitquest/state/placed_component.dart';
 import 'package:circuitquest/state/wire_connection.dart';
+import 'package:circuitquest/ui/shared/utils/text_rendering_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/base/component.dart';
@@ -22,6 +23,7 @@ import '../core/logic/wire.dart';
 import '../core/simulation/simulator.dart';
 import '../core/components/input_source.dart';
 import '../core/components/output_probe.dart';
+import '../core/components/sequential/register.dart';
 import '../core/components/component_registry.dart';
 import '../core/components/custom_component.dart';
 import '../core/components/custom_component_data.dart';
@@ -186,6 +188,14 @@ class SandboxState extends ChangeNotifier {
         );
       case 'Output':
         return (typeName: 'OutputProbe', component: OutputProbe());
+      case 'Register':
+        return (
+          typeName: 'Register',
+          component: Register(
+            bitWidth: lc.initialBitWidth ?? 32,
+            initialValue: lc.initialValue ?? 0,
+          ),
+        );
       default:
         try {
           final ct = availableComponents.firstWhere((c) => c.name == lc.type);
@@ -959,8 +969,10 @@ class SandboxState extends ChangeNotifier {
 
             return AlertDialog(
               title: Text(AppLocalizations.of(context)!.success),
-              content: Text(
+              content: TextRenderingUtils.renderMaybeMath(
+                context,
                 message != "" ? message : AppLocalizations.of(context)!.allTestsPassedMessage,
+                null,
               ),
               actions: [
                 ElevatedButton(

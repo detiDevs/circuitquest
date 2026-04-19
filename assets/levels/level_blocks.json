@@ -7,8 +7,7 @@
         {
           "id": 0,
           "name": "AND Gate",
-          "name_de": "UND-Gatter",
-          "recommended": true
+          "name_de": "UND-Gatter"
         },
         {
           "id": 1,
@@ -22,56 +21,116 @@
         },
         {
           "id": 3,
+          "name": "XOR Gate",
+          "name_de": "XOR-Gatter"
+        },
+        {
+          "id": 4,
+          "name": "NAND Gate",
+          "name_de": "NAND-Gatter"
+        },
+        {
+          "id": 5,
+          "name": "NOR Gate",
+          "name_de": "NOR-Gatter",
+          "bonus_level": true,
+          "required_level_id": 4
+        },
+        {
+          "id": 6,
+          "name": "XNOR Gate",
+          "name_de": "XNOR-Gatter",
+          "bonus_level": true,
+          "required_level_id": 4
+        }
+      ]
+    },
+    {
+      "name": "Functional Completeness",
+      "name_de": "Funktionale Vollständigkeit",
+      "levels": [
+        {
+          "id": 7,
           "name": "Functional Completeness 1",
           "name_de": "Funktionale Vollständigkeit 1"
         },
         {
-          "id": 4,
-          "name": "Functional Completeness 2",
-          "name_de": "Funktionale Vollständigkeit 2"
-        },
-        {
-          "id": 5,
-          "name": "Functional Completeness 3",
-          "name_de": "Funktionale Vollständigkeit 3"
-        }
-      ]
-    },
-    {
-      "name": "Further Gates",
-      "name_de": "Weitere Gatter",
-      "levels": [
-        {
-          "id": 6,
-          "name": "Multiplexer",
-          "name_de": "Multiplexer",
-          "recommended": true
-        },
-        {
-          "id": 7,
-          "name": "8-bit Collector and bigger MUX",
-          "name_de": "8-Bit-Kollektor und größerer MUX"
-        },
-        {
           "id": 8,
-          "name": "Decoder",
-          "name_de": "Decoder"
-        }
-      ]
-    },
-    {
-      "name": "Persistence",
-      "name_de": "Speicherung",
-      "levels": [
+          "name": "Functional Completeness 2",
+          "name_de": "Funktionale Vollständigkeit 2",
+          "bonus_level": true,
+          "required_level_id": 7
+        },
         {
           "id": 9,
-          "name": "RS-Flipflop",
-          "name_de": "RS-Flipflop"
+          "name": "Minimization Challenge 1",
+          "name_de": "Minimierungsherausforderung 1",
+          "bonus_level": true,
+          "required_level_id": 7
         },
         {
+          "id": 23,
+          "name": "Minimization Challenge 2",
+          "name_de": "Minimierungsherausforderung 2",
+          "bonus_level": true,
+          "required_level_id": 7
+        }
+      ]
+    },
+    {
+      "name": "Bigger Gates",
+      "name_de": "Größere Gatter",
+      "levels": [
+        {
           "id": 10,
-          "name": "D-Latch",
-          "name_de": "D-Latch"
+          "name": "Collectors and Splitters",
+          "name_de": "Sammler und Verteiler"
+        },
+        {
+          "id": 11,
+          "name": "Multiply by Two",
+          "name_de": "Mit zwei multiplizieren"
+        },
+        {
+          "id": 12,
+          "name": "Multiply by 64",
+          "name_de": "Mit 64 multiplizieren",
+          "bonus_level": true,
+          "required_level_id": 11
+        },
+        {
+          "id": 13,
+          "name": "Multiplexer",
+          "name_de": "Multiplexer"
+        },
+        {
+          "id": 14,
+          "name": "Bigger MUX",
+          "name_de": "Größerer MUX"
+        },
+        {
+          "id": 15,
+          "name": "Build a 4 input Multiplexer",
+          "name_de": "Baue einen 4-Eingangs-Multiplexer",
+          "bonus_level": true,
+          "required_level_id": 14
+        },
+        {
+          "id": 16,
+          "name": "Multiplexer for two 8-bit values",
+          "name_de": "Multiplexer für zwei 8-Bit-Werte"
+        },
+        {
+          "id": 17,
+          "name": "Decoder",
+          "name_de": "Decoder"
+        },
+        {
+          "id": 24,
+          "name": "Minimization Challenge 3",
+          "name_de": "Minimierungsherausforderung 3",
+          "bonus_level": true,
+          "required_level_id": 17
         }
       ]
     },
@@ -80,52 +139,90 @@
       "name_de": "Addierer",
       "levels": [
         {
-          "id": 11,
+          "id": 18,
           "name": "Half Adder",
           "name_de": "Halbaddierer"
         },
         {
-          "id": 12,
+          "id": 19,
           "name": "Full Adder",
           "name_de": "Volladdierer"
         },
         {
-          "id": 13,
-          "name": "Subtraction with a Full Adder",
-          "name_de": "Subtraktion mit einem Volladdierer"
+          "id": 20,
+          "name": "8-bit Adder",
+          "name_de": "8-Bit-Addierer"
+        },
+        {
+          "id": 21,
+          "name": "Full Adder again?",
+          "name_de": "Volladdierer nochmal?",
+          "bonus_level": true,
+          "required_level_id": 20
+        },
+        {
+          "id": 22,
+          "name": "Adders Challenge",
+          "name_de": "Addierer Herausforderung",
+          "bonus_level": true,
+          "required_level_id": 20
         }
       ]
     },
     {
-      "name": "Arithmetic-logical-unit",
-      "name_de": "Arithmetisch-logische Einheit",
+      "name": "Sequential Logic",
+      "name_de": "Sequentielle Logik",
       "levels": [
         {
-          "id": 14,
+          "id": 25,
+          "name": "RS Flip-Flop",
+          "name_de": "RS-Flipflop"
+        },
+        {
+          "id": 26,
+          "name": "D-Latch",
+          "name_de": "D-Latch"
+        },
+        {
+          "id": 27,
+          "name": "D-Flip-Flop",
+          "name_de": "D-Flipflop"
+        }
+      ]
+    },
+    {
+      "name": "Arithmetic",
+      "name_de": "Arithmetik",
+      "levels": [
+        {
+          "id": 28,
+          "name": "Subtraction with a Full Adder",
+          "name_de": "Subtraktion mit einem Volladdierer"
+        },
+        {
+          "id": 29,
           "name": "1-bit ALU",
           "name_de": "1-Bit-ALU"
         },
         {
-          "id": 15,
+          "id": 30,
           "name": "Adding Subtraction",
           "name_de": "Subtraktion hinzufügen"
         },
         {
-          "id": 16,
+          "id": 31,
           "name": "Adding NOR",
-          "name_de": "NOR hinzufügen",
-          "recommended": true
+          "name_de": "NOR hinzufügen"
         },
         {
-          "id": 17,
-          "name": "Zero flag logic",
+          "id": 32,
+          "name": "Zero Flag Logic",
           "name_de": "Zero-Flag-Logik"
         },
         {
-          "id": 18,
-          "name": "SLT (Set-on-Less-Than)",
-          "name_de": "SLT (Set-on-Less-Than)",
-          "recommended": true
+          "id": 33,
+          "name": "SLT (Set Less Than)",
+          "name_de": "SLT (Set Less Than)"
         }
       ]
     },
@@ -134,47 +231,19 @@
       "name_de": "Register",
       "levels": [
         {
-          "id": 19,
+          "id": 34,
+          "name": "Register with D-Flip-Flops",
+          "name_de": "Register mit D-Flipflops"
+        },
+        {
+          "id": 35,
           "name": "Register Block",
           "name_de": "Registerblock"
         },
         {
-          "id": 20,
-          "name": "Adding the write option to Register Block",
-          "name_de": "Schreiboption zum Registerblock hinzufügen",
-          "recommended": true
-        }
-      ]
-    },
-    {
-      "name": "Full Processor",
-      "name_de": "Vollständiger Prozessor",
-      "levels": [
-        {
-          "id": 21,
-          "name": "Limited MIPS Processor",
-          "name_de": "Eingeschränkter MIPS-Prozessor",
-          "recommended": true
-        }
-      ]
-    },
-    {
-      "name": "Testing & Development",
-      "name_de": "Test & Entwicklung",
-      "levels": [
-        {
-          "id": 998,
-          "name": "AND Gate with maxComponentCount",
-          "name_de": "UND-Gatter mit maxComponentCount",
-          "recommended": false,
-          "bonus_level": true,
-          "required_level_id": 0
-        },
-        {
-          "id": 999,
-          "name": "Clock Test Level",
-          "name_de": "Clock Test Level",
-          "recommended": false
+          "id": 36,
+          "name": "Register Block with write operation",
+          "name_de": "Registerblock mit Schreiboperation"
         }
       ]
     }

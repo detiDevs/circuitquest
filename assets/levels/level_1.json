@@ -6,6 +6,33 @@
     "description_de": "Das ODER-Gatter prüft, ob entweder A oder B wahr ist. Wenn eines der beiden wahr ist, gibt es 1 zurück, sonst 0.",
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
+    "truth_table": [
+        [
+            "A",
+            "B",
+            "A OR B"
+        ],
+        [
+            0,
+            0,
+            0
+        ],
+        [
+            0,
+            1,
+            1
+        ],
+        [
+            1,
+            0,
+            1
+        ],
+        [
+            1,
+            1,
+            1
+        ]
+    ],
     "objectives": [
         "Connect the inputs with an OR gate. Then connect the OR gate to the Output"
     ],
@@ -13,12 +40,37 @@
         "Verbinde die Eingänge mit einem ODER-Gatter. Verbinde dann das ODER-Gatter mit dem Ausgang"
     ],
     "components": [
-        {"type": "Input", "position": [0,1], "immovable": true, "label": "A"},
-        {"type": "Input", "position": [0,3], "immovable": true, "label": "B"}, 
-        {"type": "Output", "position": [4,2], "immovable": true}    
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "A"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                3
+            ],
+            "immovable": true,
+            "label": "B"
+        },
+        {
+            "type": "Output",
+            "position": [
+                4,
+                2
+            ],
+            "immovable": true
+        }
     ],
     "available_components": [
-        {"type": "Or"}
+        {
+            "type": "Or"
+        }
     ],
     "hints": [
         "The OR gate will only return false if both A and B are 0."
@@ -27,9 +79,77 @@
         "Das ODER-Gatter gibt nur dann falsch zurück, wenn sowohl A als auch B 0 sind."
     ],
     "tests": [
-        {"inputs": [[0,1],[0,1]], "expected_output": [[0,1]]},
-        {"inputs": [[1,1],[0,1]], "expected_output": [[1,1]]},
-        {"inputs": [[0,1],[1,1]], "expected_output": [[1,1]]},
-        {"inputs": [[1,1],[1,1]], "expected_output": [[1,1]]}
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ]
+            ]
+        }
     ]
 }

@@ -44,6 +44,6 @@ class Splitter extends Component {
         outPin.value = slice; // ensure value is written even if unchanged
       }
     }
-    return changed;
+    return true;
   }
 }

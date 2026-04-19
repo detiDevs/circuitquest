@@ -1,10 +1,16 @@
 {
     "level_id": 13,
-    "name": "Subtraction with a Full Adder",
-    "description": "Binary subtraction can be done without building a separate subtractor.\nInstead, CPUs reuse the Full-Adder by converting: A − B ➜ A + (NOT B) + 1\nThis is called two’s complement subtraction.\nYou will invert B and set the carry-in to 1 to subtract",
+    "name": "Multiplexer",
+    "name_de": "Multiplexer",
+    "description": "A Multiplexer (or MUX) selects one of two inputs (A or B) based on a control input S and forwards it to the output.\n\nThis level teaches the basic 2-to-1 multiplexer: when S=0 the output follows A, and when S=1 the output follows B. Multiplexers are used whenever you need to route one of several signals to a single destination — for example selecting between different register outputs, choosing between ALU results, or steering input data into a bus.",
+    "description_de": "Ein Multiplexer (oder MUX) wählt einen von zwei Eingängen (A oder B) basierend auf einem Steuereingng S aus und leitet ihn an den Ausgang weiter.\n\nDiese Stufe vermittelt den grundlegenden 2-zu-1-Multiplexer: Wenn S=0, folgt der Ausgang A, und wenn S=1, folgt der Ausgang B. Multiplexer werden verwendet, wenn du eines von mehreren Signalen zu einem einzigen Ziel leiten musst – zum Beispiel bei der Auswahl zwischen verschiedenen Registerausgängen, der Auswahl zwischen ALU-Ergebnissen oder der Leitung von Eingabedaten in einen Bus.",
     "difficulty": "Medium",
+    "difficulty_de": "Mittel",
     "objectives": [
-        "Create a circuit that computes A-B"
+        "Given inputs A and B and control S, build a circuit so that:\n- if S=0 the Output equals A\n- if S=1 the Output equals B"
+    ],
+    "objectives_de": [
+        "Erstelle bei Eingängen A und B und Steuerung S eine Schaltung, so dass:\n- wenn S=0, ist der Ausgang gleich A\n- wenn S=1, ist der Ausgang gleich B"
     ],
     "components": [
         {
@@ -14,7 +20,7 @@
                 1
             ],
             "immovable": true,
-            "label": "A"
+            "label": "S"
         },
         {
             "type": "Input",
@@ -23,7 +29,7 @@
                 3
             ],
             "immovable": true,
-            "label": "B"
+            "label": "A"
         },
         {
             "type": "Input",
@@ -32,43 +38,40 @@
                 5
             ],
             "immovable": true,
-            "label": "CarryIn"
+            "label": "B"
         },
         {
             "type": "Output",
             "position": [
-                4,
-                2
+                8,
+                3
             ],
-            "immovable": true,
-            "label": "Difference"
-        },
-        {
-            "type": "Output",
-            "position": [
-                4,
-                4
-            ],
-            "immovable": true,
-            "label": "CarryOut"
+            "immovable": true
         }
     ],
     "available_components": [
         {
-            "type": "FullAdder"
+            "type": "Not"
         },
         {
-            "type": "Not"
+            "type": "And"
+        },
+        {
+            "type": "Or"
         }
     ],
     "hints": [
-        "Subtraction A - B is the same as A + (-B) in two's complement",
-        "To get -B (negative B), invert all bits of B and add 1",
-        "Use a NOT gate to invert B before feeding it to the Full Adder",
-        "Setting CarryIn to 1 adds the '+1' needed for two's complement",
-        "Connect A directly, NOT(B) as the second input, and set CarryIn=1"
+        "S is the selector: use it to choose A or B.",
+        "A common construction: (A AND NOT S) OR (B AND S).",
+        "You can use NOT, AND and OR to implement that formula.",
+        "The expression for a 2-to-1 multiplexer is: $(A \\cdot \\overline{S}) + (B \\cdot S)$."
     ],
-    "solution": "",
+    "hints_de": [
+        "S ist die Auswahl: verwende sie, um A oder B zu wählen.",
+        "Eine häufige Konstruktion: (A UND NICHT S) ODER (B UND S).",
+        "Du kannst NICHT, UND und ODER verwenden, um diese Formel zu implementieren.",
+        "Der Ausdruck für einen 2-zu-1-Multiplexer lautet: $(A \\cdot \\overline{S}) + (B \\cdot S)$."
+    ],
     "tests": [
         {
             "inputs": [
@@ -87,10 +90,6 @@
             ],
             "expected_output": [
                 [
-                    1,
-                    1
-                ],
-                [
                     0,
                     1
                 ]
@@ -115,10 +114,6 @@
                 [
                     0,
                     1
-                ],
-                [
-                    1,
-                    1
                 ]
             ]
         },
@@ -139,11 +134,7 @@
             ],
             "expected_output": [
                 [
-                    0,
-                    1
-                ],
-                [
-                    0,
+                    1,
                     1
                 ]
             ]
@@ -167,10 +158,6 @@
                 [
                     1,
                     1
-                ],
-                [
-                    0,
-                    1
                 ]
             ]
         },
@@ -192,10 +179,6 @@
             "expected_output": [
                 [
                     0,
-                    1
-                ],
-                [
-                    1,
                     1
                 ]
             ]
@@ -219,10 +202,6 @@
                 [
                     1,
                     1
-                ],
-                [
-                    1,
-                    1
                 ]
             ]
         },
@@ -242,10 +221,6 @@
                 ]
             ],
             "expected_output": [
-                [
-                    1,
-                    1
-                ],
                 [
                     0,
                     1
@@ -268,28 +243,11 @@
                 ]
             ],
             "expected_output": [
-                [
-                    0,
-                    1
-                ],
                 [
                     1,
                     1
                 ]
             ]
         }
-    ],
-    "name_de": "Subtraktion mit einem Volladdierer",
-    "description_de": "Binärsubtraktion kann ohne einen separaten Subtrahierer durchgeführt werden.\nStattdessen verwenden CPUs den Volladdierer wieder durch Konvertierung: A − B ↦ A + (NOT B) + 1\nDies heißt Zweierkomplement-Subtraktion.\nDu invertierst B und stellst den Carry-in auf 1, um zu subtrahieren",
-    "difficulty_de": "Mittel",
-    "objectives_de": [
-        "Erstelle eine Schaltung, die A-B berechnet"
-    ],
-    "hints_de": [
-        "Subtraktion A - B ist das gleiche wie A + (-B) im Zweierkomplement",
-        "Um -B (negatives B) zu erhalten, invertiere alle Bits von B und addiere 1",
-        "Verwende ein NICHT-Gatter, um B zu invertieren, bevor du es in den Volladdierer speist",
-        "Das Setzen von CarryIn auf 1 addiert die '+1' für Zweierkomplement",
-        "Verbinde A direkt, NOT(B) als zweiten Eingang und setze CarryIn=1"
     ]
 }

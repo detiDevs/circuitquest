@@ -21,7 +21,7 @@ import 'package:circuitquest/core/components/gates/or_gate.dart';
 import 'package:circuitquest/core/components/gates/xor_gate.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
-import 'package:circuitquest/core/components/sequential/d_latch.dart';
+import 'package:circuitquest/core/components/sequential/d_flip_flop.dart';
 import 'package:circuitquest/core/components/sequential/register.dart';
 
 class ComponentType {
@@ -103,7 +103,7 @@ final List<ComponentType> availableComponents = [
   ),
   ComponentType(
     name: 'DFlipflop',
-    displayName: 'D-Latch',
+    displayName: 'D-Flipflop',
     iconPath: 'assets/gates/DFlipflop.svg',
     createComponent: () => DFlipflop(),
   ),
@@ -138,6 +138,12 @@ final List<ComponentType> availableComponents = [
     createComponent: () => Collector(sliceCount: 2, sliceBitWidth: 1),
   ),
   ComponentType(
+    name: 'Collector1to3',
+    displayName: 'Collector 1 to 3',
+    iconPath: 'assets/gates/Collector1to3.svg',
+    createComponent: () => Collector(sliceCount: 3, sliceBitWidth: 1),
+  ),
+  ComponentType(
     name: 'Collector1to5',
     displayName: 'Collector 1 to 5',
     iconPath: 'assets/gates/Collector1to5.svg',
@@ -148,6 +154,12 @@ final List<ComponentType> availableComponents = [
     displayName: 'Collector 1 to 6',
     iconPath: 'assets/gates/Collector1to6.svg',
     createComponent: () => Collector(sliceCount: 6, sliceBitWidth: 1),
+  ),
+  ComponentType(
+    name: 'Collector1to8',
+    displayName: 'Collector 1 to 8',
+    iconPath: 'assets/gates/Collector1to8.svg',
+    createComponent: () => Collector(sliceCount: 8, sliceBitWidth: 1),
   ),
   ComponentType(
     name: 'Collector8to16',

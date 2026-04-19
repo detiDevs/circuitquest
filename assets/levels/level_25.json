@@ -1,0 +1,170 @@
+{
+    "level_id": 25,
+    "name": "RS-FLipflop",
+    "name_de": "RS-Flipflop",
+    "description": "An RS-Flipflop stores 1-Bit by storing the last value of the input and returning it on the next clock cycle. \nS (Set) forces the output to 1, R (Reset) forces it to 0`.\nIf both inputs are 0, the circuit keeps its previous value due to feedback.\nThis is the fundamental memory element showing how state is preserved.",
+    "description_de": "Ein RS-Flipflop speichert 1-Bit, indem es den letzten Wert der Eingabe speichert und ihn im nächsten Taktzyklus zurückgibt.\nS (Set) zwingt den Ausgang auf 1, R (Reset) zwingt ihn auf 0.\nWenn beide Eingänge 0 sind, behält die Schaltung ihren vorherigen Wert aufgrund von Rückkopplung.\nDies ist das fundamentale Speicherelement, das zeigt, wie der Zustand erhalten bleibt.",
+    "difficulty": "Middle",
+    "difficulty_de": "Mittel",
+    "objectives": [
+        "Build an RS flip-flop using two NOR gates.",
+        "Ensure that:",
+        "$S = 1 \\rightarrow Q = 1$",
+        "$R = 1 \\rightarrow Q = 0$",
+        "$S = 0$ and $R = 0 \\rightarrow Q$ keeps its old value",
+        "Note: $S = 1$ and $R = 1$ would force $Q$ and $\\overline{Q}$ to 0, which is an invalid (undefined) state for an RS flip-flop."
+    ],
+    "objectives_de": [
+        "Erstelle ein RS-Flipflop mit zwei NOR-Gattern.",
+        "Stelle sicher, dass:",
+        "$S = 1 \\rightarrow Q = 1$",
+        "$R = 1 \\rightarrow Q = 0$",
+        "$S = 0$ und $R = 0 \\rightarrow Q$ behält seinen alten Wert",
+        "Hinweis: $S = 1$ und $R = 1$ würde $Q$ und $\\overline{Q}$ auf 0 zwingen, was einen ungültigen (undefinierten) Zustand für ein RS-Flipflop darstellt."
+    ],
+    "components": [
+        {
+            "type": "Input",
+            "position": [
+                0,
+                1
+            ],
+            "immovable": true,
+            "label": "R"
+        },
+        {
+            "type": "Input",
+            "position": [
+                0,
+                5
+            ],
+            "immovable": true,
+            "label": "S"
+        },
+        {
+            "type": "Output",
+            "position": [
+                7,
+                1
+            ],
+            "immovable": true,
+            "label": "Q"
+        },
+        {
+            "type": "Output",
+            "position": [
+                7,
+                5
+            ],
+            "immovable": true,
+            "label": "NOT Q"
+        }
+    ],
+    "available_components": [
+        {
+            "type": "Nor"
+        }
+    ],
+    "hints": [
+        "Try connecting outputs of the NOR gates with inputs of the NOR gates.",
+        "Each of the given inputs, has to be connected to exactly one NOR Gate.",
+        "Connect the outputs of the NOR Gates with the remaining input on the other NOR-Gate"
+    ],
+    "hints_de": [
+        "Versuche, Ausgänge der NOR-Gatter mit Eingängen der NOR-Gatter zu verbinden.",
+        "Jeder der gegebenen Eingänge muss mit genau einem NOR-Gatter verbunden werden.",
+        "Verbinde die Ausgänge der NOR-Gatter mit dem verbleibenden Eingang am anderen NOR-Gatter"
+    ],
+    "tests": [
+        {
+            "inputs": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    1,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        },
+        {
+            "inputs": [
+                [
+                    0,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ],
+            "expected_output": [
+                [
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    1
+                ]
+            ]
+        }
+    ],
+    "success_message": "Congratulations! You've successfully built an RS flip-flop using two NOR gates. This is the fundamental memory element in digital logic, demonstrating how state can be preserved through feedback. You can use this knowledge to build more complex sequential circuits in the next levels. For example to get rid of the undefined state",
+    "success_message_de": "Herzlichen Glückwunsch! Du hast erfolgreich ein RS-Flipflop mit zwei NOR-Gattern gebaut. Dies ist das fundamentale Speicherelement in der digitalen Logik, das zeigt, wie der Zustand durch Rückkopplung erhalten werden kann. Du kannst dieses Wissen nutzen, um in den nächsten Levels komplexere sequentielle Schaltungen zu bauen. Zum Beispiel um den undefinierten Zustand loszuwerden"
+}
