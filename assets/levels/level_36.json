@@ -955,7 +955,7 @@
         "Der writeReg-Eingang muss in eine einzelne Bit-Auswahl für jedes Register konvertiert werden.",
         "Verwende einen Splitter und dann einen Decoder, um dies zu erreichen.",
         "Verwende UND-Gatter, um zu steuern, ob jedes Register geschrieben werden soll, basierend auf dem regWrite-Eingang und den dekodierten writeReg-Signalen.",
-        "Verbinde die writeData-Eingabe direkt mit dem Dateneingabng jedes Registers."
+        "Verbinde die writeData-Eingabe direkt mit dem Dateneingang jedes Registers."
     ],
     "clockConfig": {
     "enabled": true,
