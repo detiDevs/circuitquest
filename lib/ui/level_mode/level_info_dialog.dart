@@ -5,7 +5,6 @@ import 'package:circuitquest/levels/level.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/state/level_state.dart';
 import './difficulty_badge.dart';
-import 'package:flutter_math_fork/flutter_math.dart';
 
 // Dialog displaying level information.
 class LevelInfoDialog extends ConsumerStatefulWidget {
@@ -18,14 +17,6 @@ class LevelInfoDialog extends ConsumerStatefulWidget {
 }
 
 class LevelInfoDialogState extends ConsumerState<LevelInfoDialog> {
-  // ignore: unused_field
-  bool _showHints = false;
-
-  // Render plain text with inline LaTeX (dollar-delimited) using flutter_math_fork.
-  // If no $ delimiters are present, returns a simple Text widget.
-  
-
-  
 
   /// Render the truth table using flutter_math_fork. Provides an onError
   /// fallback to show a readable error message.

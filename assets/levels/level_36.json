@@ -945,7 +945,7 @@
         }
     ],
     "name_de": "Hinzufügen der Schreib-Option zum Register-Block",
-    "description_de": "In der letzten Stufe bauten wir Lese-Funktionalität in den Register-Block ein. Wir verbanden zwei große Multiplexer mit jedem einzelnen Register und den Ausgängen. Die Eingänge 'read register 1' und 'read register 2' bestimmen, welcher Register-Wert zum Ausgang führen sollte. Jetzt wollen wir steuern, wie wir von Registern im Kontext unseres Prozessors lesen und in sie schreiben. Wir haben drei neue Eingänge. 'regWrite' entscheidet, ob wir überhaupt in ein Register schreiben wollen oder nicht. 'writeData' ist die Daten, die in das Register geschrieben werden sollen, wenn 'regWrite' hoch ist. 'writeReg' definiert, welches Register wir überschreiben wollen.",
+    "description_de": "In der letzten Stufe bauten wir Lese-Funktionalität in den Register-Block ein. Wir verbanden zwei große Multiplexer mit jedem einzelnen Register und den Ausgängen. Die Eingänge 'read register 1' und 'read register 2' bestimmen, welcher Register-Wert zum Ausgang führen sollte. Jetzt wollen wir steuern, wie wir von Registern im Kontext unseres Prozessors lesen und in sie schreiben. Wir haben drei neue Eingänge. 'regWrite' entscheidet, ob wir überhaupt in ein Register schreiben wollen oder nicht. 'writeData' ist für die Daten, die in das Register geschrieben werden sollen, wenn 'regWrite' hoch ist. 'writeReg' definiert, welches Register wir überschreiben wollen.",
     "difficulty_de": "Einfach",
     "objectives_de": [
         "Wenn der regWrite-Eingang hoch ist, sollte der Wert auf writeData in das Register geschrieben werden, das vom writeReg-Eingang ausgewählt wurde.",

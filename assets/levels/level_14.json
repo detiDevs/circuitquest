@@ -2,8 +2,8 @@
     "level_id": 14,
     "name": "Bigger MUX",
     "name_de": "Größerer MUX",
-    "description": "What if we want to select from more than 2 input values with a MUX? This cannot be done with a 0 or 1 control signal. Combining 2 inputs gives a 2-bit selector which can choose among 2^2 = 4 values in a 4-input MUX.",
-    "description_de": "Was ist, wenn wir mit einem MUX aus mehr als 2 Eingabewerten wählen möchten? Dies kann nicht mit einem 0- oder 1-Steuersignal erreicht werden. Kombinieren von 2 Eingängen einen 2-Bit-Selektor, der unter 2^2 = 4 Werten in einem 4-Eingang-MUX wählen kann.",
+    "description": "What if we want to select from more than 2 input values with a MUX? This cannot be done with a 0 or 1 control signal. Combining 2 inputs gives a 2-bit selector which can choose among $2^2 = 4$ values in a 4-input MUX.",
+    "description_de": "Was ist, wenn wir mit einem MUX aus mehr als 2 Eingabewerten wählen möchten? Dies kann nicht mit einem 0- oder 1-Steuersignal erreicht werden. Kombinieren von 2 Eingängen einen 2-Bit-Selektor, der unter $2^2 = 4$ Werten in einem 4-Eingang-MUX wählen kann.",
     "difficulty": "Medium",
     "difficulty_de": "Mittel",
     "objectives": [

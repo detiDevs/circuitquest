@@ -7,14 +7,14 @@
   "difficulty": "Hard",
   "difficulty_de": "Schwer",
   "objectives": [
-    "Build a 4-bit register using D-Flipflops and multiplexers.",
+    "Build a 8-bit register using D-Flipflops and multiplexers.",
     "Ensure that the register can store and retain values based on the control signal.",
     "You dont need to worry about the clock signal. The evaluation engine will take care of the clock and the state changes."
   ],
   "objectives_de": [
-    "Baue ein 4-Bit-Register mit D-Flipflops und Multiplexern.",
+    "Baue ein 8-Bit-Register mit D-Flipflops und Multiplexern.",
     "Stelle sicher, dass das Register Werte basierend auf dem Steuersignal speichern und beibehalten kann.",
-    "Du musst dir keine Gedanken über das Taktsignal machen. Die Bewertungs-Engine kümmert sich um den Takt und die Zustandsänderungen."
+    "Du musst dir keine Gedanken über das Taktsignal machen. Die Auswertungs-Engine kümmert sich um den Takt und die Zustandsänderungen."
   ],
   "components": [
     {

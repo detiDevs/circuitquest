@@ -237,13 +237,13 @@
         },
         {
           "id": 35,
-          "name": "Register File",
-          "name_de": "Registerdatei"
+          "name": "Register Block",
+          "name_de": "Registerblock"
         },
         {
           "id": 36,
-          "name": "Register File with write operation",
-          "name_de": "Registerdatei mit Schreiboperation"
+          "name": "Register Block with write operation",
+          "name_de": "Registerblock mit Schreiboperation"
         }
       ]
     }

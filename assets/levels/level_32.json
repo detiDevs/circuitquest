@@ -19,7 +19,7 @@
     ],
     "hints_de": [
         "Denke daran: die Zero-Flagge sollte genau dann 1 sein, wenn das 2-Bit-ALU-Ergebnis 00 ist (beide Bits sind Null).",
-        "Eine einfache Implementierung: OR die beiden Ausgangsbits zusammen und invertiere dann das Ergebnis mit einem NOT. Wenn eines der Bits 1 ist, ist das OR 1 -> NOT gibt 0; wenn beide 0 sind, ist das OR 0 -> NOT gibt 1.",
+        "Eine einfache Implementierung: Verbinde die beiden Ausgangsbits mit einem OR und invertiere dann das Ergebnis mit einem NOT. Wenn eines der Bits 1 ist, ist das OR 1 -> NOT gibt 0; wenn beide 0 sind, ist das OR 0 -> NOT gibt 1.",
         "Verbinde die beiden OUT-Ausgänge deiner zwei 1-Bit-ALUs mit einem OR-Gatter (oder kette ORs), dann speise diesen OR-Ausgang in ein NOT und verbinde den Ausgang des NOT mit dem `Zero`-Ausgangskomponenten."
     ],
     "components": [

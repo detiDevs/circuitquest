@@ -3,7 +3,7 @@
     "name": "Multiply by Two",
     "name_de": "Mit zwei multiplizieren",
     "description": "Now you will face an important principle. We will see how to multiply a number by two. (or powers of two in general) \n\nTo do that, we will use Collectors and Splitters.",
-    "description_de": "Jetzt wirst du mit einem wichtigen Prinzip konfrontiert. Wir werden sehen, wie man eine Zahl mit zwei multipliziert. (oder im Allgemeinen mit Potenzen von zwei) \n\nUm dies zu tun, werden wir Sammler und Verteiler verwenden.",
+    "description_de": "Jetzt lernst du ein wichtiges Prinzip kennen. Wir werden sehen, wie man eine Zahl mit zwei multipliziert. (oder im Allgemeinen mit Potenzen von zwei) \n\nUm dies zu tun, werden wir Sammler und Verteiler verwenden.",
     "difficulty": "Easy",
     "difficulty_de": "Einfach",
     "objectives": [

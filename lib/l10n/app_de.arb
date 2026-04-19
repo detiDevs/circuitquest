@@ -410,7 +410,7 @@
   "@resetProgressConfirmTitle": {
     "description": "Titel für Bestätigungsdialog zum Zurücksetzen des Fortschritts"
   },
-  "resetProgressConfirmMessage": "Möchten Sie wirklich Ihren Level-Fortschritt löschen? Dies kann nicht rückgängig gemacht werden.",
+  "resetProgressConfirmMessage": "Möchtest du wirklich deinen Level-Fortschritt löschen? Dies kann nicht rückgängig gemacht werden.",
   "@resetProgressConfirmMessage": {
     "description": "Bestätigungsnachricht bevor der Level-Fortschritt gelöscht wird"
   },

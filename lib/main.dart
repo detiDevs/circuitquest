@@ -6,7 +6,6 @@ import 'ui/home/home_screen.dart';
 import 'l10n/app_localizations.dart';
 import 'state/locale_provider.dart';
 import 'state/theme_provider.dart';
-import 'package:flutter/foundation.dart';
 
 
 Future<void> main() async {
