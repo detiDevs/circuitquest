@@ -43,16 +43,17 @@ Widget buildResponsiveComponentList(
               ),
             ),
           if (showHeader) const Divider(height: 1),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: components.length,
-            itemBuilder: (context, index) {
-              final componentType = components[index];
-              return custom
-                  ? CustomComponentPaletteItem(componentType: componentType)
-                  : PaletteItem(componentType: componentType);
-            },
+          Flexible(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: components.length,
+              itemBuilder: (context, index) {
+                final componentType = components[index];
+                return custom
+                    ? CustomComponentPaletteItem(componentType: componentType)
+                    : PaletteItem(componentType: componentType);
+              },
+            ),
           ),
         ],
       );
