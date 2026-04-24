@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:circuitquest/constants.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'level.dart';
+
+const _kMetaPrefsKey = '${Constants.kAppName}_level_meta';
 
 /// Service class for loading level data from JSON assets
 class LevelLoader {
@@ -195,15 +196,12 @@ class LevelLoader {
     }
   }
 
-  /// Load metadata from user documents directory if it exists
+  /// Load metadata from shared preferences if it exists
   Future<LevelMeta?> _loadUserMeta() async {
     try {
-      final file = await _getUserMetaFile();
-      if (!await file.exists()) {
-        return null;
-      }
-      
-      final jsonString = await file.readAsString();
+      final prefs = await SharedPreferences.getInstance();
+      final jsonString = prefs.getString(_kMetaPrefsKey);
+      if (jsonString == null) return null;
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       return LevelMeta.fromJson(jsonData);
     } catch (e) {
@@ -211,27 +209,15 @@ class LevelLoader {
     }
   }
 
-  /// Get the path to the user meta file
-  Future<File> _getUserMetaFile() async {
-    final documentsDir = await getApplicationDocumentsDirectory();
-    final dirPath = [documentsDir.path, Constants.kAppName]
-        .join(Platform.pathSeparator);
-    final dir = Directory(dirPath);
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
-    return File('${dir.path}/level_meta.json');
-  }
-
-  /// Save metadata to user documents directory
+  /// Save metadata to shared preferences
   Future<void> _saveUserMeta(LevelMeta meta) async {
     try {
-      final file = await _getUserMetaFile();
+      final prefs = await SharedPreferences.getInstance();
       final jsonData = {
         'completed_levels': meta.completedLevels,
         'all_levels_unlocked': meta.allLevelsUnlocked,
       };
-      await file.writeAsString(json.encode(jsonData));
+      await prefs.setString(_kMetaPrefsKey, json.encode(jsonData));
     } catch (e) {
       print('Warning: Failed to save level metadata: $e');
     }
@@ -282,19 +268,16 @@ class LevelLoader {
 
   /// Reset user progress (completed levels / unlock flag)
   ///
-  /// Deletes any user metadata file and replaces it with a default empty
+  /// Clears any persisted user metadata and replaces it with a default empty
   /// meta (no completed levels, locked progression). This makes the
   /// application behave as if the user has not completed any levels.
   Future<void> resetUserProgress() async {
     try {
-      // Remove persisted file if exists
-      final file = await _getUserMetaFile();
-      if (await file.exists()) {
-        await file.delete();
-      }
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_kMetaPrefsKey);
     } catch (e) {
       // Ignore deletion errors but log for debugging
-      print('Warning: Failed to delete user meta file: $e');
+      print('Warning: Failed to delete user meta: $e');
     }
 
     // Replace in-memory meta with default empty meta and persist it so

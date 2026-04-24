@@ -1,12 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/shared/utils/platform_file_utils.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import '../../../state/sandbox_state.dart';
 import '../../../state/custom_component_library.dart';
 import '../../../core/components/input_source.dart';
@@ -189,7 +187,7 @@ class CircuitFileManager extends ConsumerWidget {
                 if (spritePath != null) ...[
                   const SizedBox(height: 6),
                   Text(
-                    '${AppLocalizations.of(context)!.selected}: ${spritePath!.split(Platform.pathSeparator).last}',
+                    '${AppLocalizations.of(context)!.selected}: ${fileNameFromPath(spritePath!)}',
                     style: const TextStyle(fontSize: 12),
                   ),
                 ],
@@ -322,8 +320,8 @@ class CircuitFileManager extends ConsumerWidget {
     if (confirmed != true) return;
 
     try {
-      // Ensure default save directory exists
-      final defaultDir = await _ensureDefaultDirectory();
+      // Get platform-appropriate default directory (null on web)
+      final defaultDir = await getDefaultCircuitsDirectory();
 
       // Serialize circuit
       final jsonString = state.serializeCircuit(
@@ -331,13 +329,13 @@ class CircuitFileManager extends ConsumerWidget {
         description: descriptionController.text,
       );
 
-      // Convert to bytes for mobile compatibility
+      // Convert to bytes for mobile/web compatibility
       final bytes = utf8.encode(jsonString);
 
       // Build default file name
       final defaultFileName = '${_sanitizeFileName(nameController.text)}.json';
 
-      // Save file (bytes required for Android/iOS)
+      // Save file (bytes required for Android/iOS and web download)
       final result = await FilePicker.platform.saveFile(
         dialogTitle: AppLocalizations.of(context)!.save,
         fileName: defaultFileName,
@@ -351,9 +349,7 @@ class CircuitFileManager extends ConsumerWidget {
 
       // On desktop platforms, saveFile may only return a path and not write
       // the content automatically. Ensure bytes are persisted to disk.
-      final outFile = File(result);
-      await outFile.parent.create(recursive: true);
-      await outFile.writeAsBytes(bytes, flush: true);
+      await writeBytesToFile(result, bytes);
 
       if (context.mounted) {
         SnackBarUtils.showSuccess(
@@ -374,8 +370,8 @@ class CircuitFileManager extends ConsumerWidget {
   /// Shows dialog to load a circuit
   Future<void> _loadCircuit(BuildContext context, SandboxState state) async {
     try {
-      // Ensure default directory exists before opening picker
-      final defaultDir = await _ensureDefaultDirectory();
+      // Get platform-appropriate default directory (null on web)
+      final defaultDir = await getDefaultCircuitsDirectory();
 
       // Pick file
       final result = await FilePicker.platform.pickFiles(
@@ -383,12 +379,16 @@ class CircuitFileManager extends ConsumerWidget {
         initialDirectory: defaultDir,
         type: FileType.custom,
         allowedExtensions: ['json'],
+        withData: true,
       );
 
       if (result == null || result.files.isEmpty) return;
 
-      final file = File(result.files.single.path!);
-      final jsonString = await file.readAsString();
+      final pickedFile = result.files.single;
+      final jsonString = await readPickedFileContent(
+        path: pickedFile.path,
+        bytes: pickedFile.bytes?.toList(),
+      );
 
       // Confirm if circuit is not empty
       if (state.placedComponents.isNotEmpty) {
@@ -438,21 +438,6 @@ class CircuitFileManager extends ConsumerWidget {
         );
       }
     }
-  }
-
-  /// Returns (and creates if needed) the default save/load directory.
-  Future<String> _ensureDefaultDirectory() async {
-    final documentsDir = await getApplicationDocumentsDirectory();
-    final dirPath = [
-      documentsDir.path,
-      Constants.kAppName,
-      'Saved Circuits',
-    ].join(Platform.pathSeparator);
-    final dir = Directory(dirPath);
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
-    return dir.path;
   }
 
   /// Sanitizes the provided file name to a filesystem-safe string.

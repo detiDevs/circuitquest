@@ -6,7 +6,7 @@ import 'package:circuitquest/constants.dart';
 import '../sandbox_mode/sandbox_screen.dart';
 import '../level_selection/level_selection_screen.dart';
 import 'package:circuitquest/ui/shared/widgets/rich_button.dart';
-import 'dart:io';
+import 'package:circuitquest/ui/shared/utils/platform_utils.dart';
 
 /// Home screen for CircuitQuest.
 ///
@@ -106,8 +106,8 @@ class HomeScreen extends StatelessWidget {
                       description: "",
                       icon: Icons.exit_to_app_sharp,
                       color: Colors.red,
-                      onPressed: (){
-                        exit(0);
+                      onPressed: () {
+                        exitApp(0);
                       },
                     ),
                   ],
