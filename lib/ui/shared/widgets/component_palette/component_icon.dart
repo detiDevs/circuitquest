@@ -1,6 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+// dart:io is only available on non-web platforms
+import 'package:circuitquest/ui/shared/utils/platform_file_utils.dart';
 
 /// Widget to display a component's SVG icon.
 class ComponentIcon extends StatelessWidget {
@@ -41,20 +43,20 @@ class ComponentIcon extends StatelessWidget {
 
   Widget _buildFileIcon(BuildContext context) {
     if (iconPath.toLowerCase().endsWith('.svg')) {
-      return SvgPicture.file(
-        File(iconPath),
+      return buildSvgFromFilePath(
+        path: iconPath,
+        size: size,
         colorFilter: ColorFilter.mode(
           Theme.of(context).colorScheme.onSurface,
           BlendMode.srcIn,
         ),
-        fit: BoxFit.contain,
         placeholderBuilder: (context) =>
             Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
       );
     }
-    return Image.file(
-      File(iconPath),
-      fit: BoxFit.contain,
+    return buildImageFromFilePath(
+      path: iconPath,
+      size: size,
       errorBuilder: (context, error, stackTrace) =>
           Icon(Icons.memory, size: size * 0.6, color: Colors.grey),
     );
