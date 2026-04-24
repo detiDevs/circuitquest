@@ -38,7 +38,12 @@ Future<String> readPickedFileContent({
 }
 
 /// Returns the last path component (filename) from a full path.
-String fileNameFromPath(String path) => path.split(Platform.pathSeparator).last;
+/// Handles trailing separators and empty paths gracefully.
+String fileNameFromPath(String path) {
+  if (path.isEmpty) return path;
+  final segments = path.split(Platform.pathSeparator);
+  return segments.lastWhere((s) => s.isNotEmpty, orElse: () => path);
+}
 
 /// Builds a widget to display an SVG from a local file path.
 Widget buildSvgFromFilePath({

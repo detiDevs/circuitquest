@@ -20,8 +20,13 @@ Future<String> readPickedFileContent({
   return utf8.decode(bytes);
 }
 
-/// On web there are no file paths, so just return an empty string.
-String fileNameFromPath(String path) => path;
+/// On web, the file's "path" from the picker is typically just the filename.
+/// Split on common separators and return the last non-empty segment.
+String fileNameFromPath(String path) {
+  if (path.isEmpty) return path;
+  final segments = path.split(RegExp(r'[/\\]'));
+  return segments.lastWhere((s) => s.isNotEmpty, orElse: () => path);
+}
 
 /// On web, file-based SVG loading is not supported – return the placeholder.
 Widget buildSvgFromFilePath({
