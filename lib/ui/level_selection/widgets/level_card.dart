@@ -1,5 +1,5 @@
+import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/levels/levels.dart';
 import 'package:circuitquest/data/repositories/level_repository_impl.dart';
 import 'package:circuitquest/ui/shared/providers/level_providers.dart';
 import 'package:circuitquest/app/providers/theme_provider.dart';

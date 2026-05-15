@@ -1,6 +1,6 @@
 import 'package:circuitquest/core/components/component_registry.dart';
+import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/levels/levels.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

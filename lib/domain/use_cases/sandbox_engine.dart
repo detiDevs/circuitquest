@@ -21,7 +21,7 @@ import 'package:circuitquest/core/logic/wire.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
 import 'package:circuitquest/core/simulation/simulator.dart';
 import 'package:circuitquest/data/repositories/custom_component_repository.dart';
-import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/domain/models/placed_component.dart';
 import 'package:circuitquest/domain/models/wire_connection.dart';
 import 'package:flutter/material.dart';

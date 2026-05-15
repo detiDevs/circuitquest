@@ -1,4 +1,4 @@
-import 'package:circuitquest/levels/levels.dart';
+import 'package:circuitquest/domain/models/level.dart';
 import 'package:flutter/material.dart';
 import './level_card.dart';
 

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import '../../../../core/components/component_registry.dart';
-import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/domain/models/level.dart';
 
 /// The main canvas where components are placed and connected.
 ///

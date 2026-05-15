@@ -1,5 +1,5 @@
 import 'package:circuitquest/domain/commands/command.dart';
-import 'package:circuitquest/domain/sandbox/sandbox_engine.dart';
+import 'package:circuitquest/domain/use_cases/sandbox_engine.dart';
 import 'package:circuitquest/domain/models/wire_connection.dart';
 
 /// Command to remove a wire connection.

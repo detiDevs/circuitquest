@@ -1,10 +1,10 @@
 import 'package:circuitquest/data/repositories/custom_component_repository.dart';
 import 'package:circuitquest/data/repositories/custom_component_repository_impl.dart';
-import 'package:circuitquest/domain/sandbox/sandbox_engine.dart';
+import 'package:circuitquest/domain/use_cases/sandbox_engine.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/levels/level.dart';
-import 'package:circuitquest/levels/level_validation_result.dart';
-import 'package:circuitquest/levels/level_validator.dart';
+import 'package:circuitquest/domain/models/level.dart';
+import 'package:circuitquest/domain/use_cases/level_validation/level_validation_result.dart';
+import 'package:circuitquest/domain/use_cases/level_validation/level_validator.dart';
 import 'package:circuitquest/ui/shared/providers/level_providers.dart';
 import 'package:circuitquest/ui/shared/utils/text_rendering_utils.dart';
 import 'package:flutter/material.dart';

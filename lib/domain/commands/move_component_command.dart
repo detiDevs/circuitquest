@@ -1,5 +1,5 @@
 import 'package:circuitquest/domain/commands/command.dart';
-import 'package:circuitquest/domain/sandbox/sandbox_engine.dart';
+import 'package:circuitquest/domain/use_cases/sandbox_engine.dart';
 import 'package:flutter/material.dart';
 
 class MoveComponentCommand extends Command {

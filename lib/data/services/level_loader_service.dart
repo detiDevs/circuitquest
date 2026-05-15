@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:circuitquest/constants.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
-import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/domain/models/level.dart';
 
 /// Service class for loading level data from JSON assets
 class LevelLoader {

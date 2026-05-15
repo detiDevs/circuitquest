@@ -1,4 +1,4 @@
-import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/domain/models/level.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

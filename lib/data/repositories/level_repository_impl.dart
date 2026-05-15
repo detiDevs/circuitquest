@@ -1,6 +1,6 @@
 import 'package:circuitquest/data/repositories/level_repository.dart';
 import 'package:circuitquest/data/services/level_loader_service.dart';
-import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/domain/models/level.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final levelLoaderServiceProvider = Provider<LevelLoader>(

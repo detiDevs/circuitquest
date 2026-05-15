@@ -1,5 +1,5 @@
 import 'package:circuitquest/data/repositories/level_repository_impl.dart';
-import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

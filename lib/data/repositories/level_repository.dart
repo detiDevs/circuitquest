@@ -1,4 +1,4 @@
-import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/domain/models/level.dart';
 
 abstract class LevelRepository {
   Future<Level> loadLevel(int levelId);

@@ -1,8 +1,8 @@
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/core/components/base/component.dart';
-import 'package:circuitquest/levels/level.dart';
-import 'package:circuitquest/levels/level_validation_result.dart';
+import 'package:circuitquest/domain/models/level.dart';
+import 'package:circuitquest/domain/use_cases/level_validation/level_validation_result.dart';
 
 /// Service for validating circuit solutions against level test cases
 class LevelValidator {

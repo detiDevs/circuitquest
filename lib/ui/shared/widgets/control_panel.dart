@@ -1,10 +1,10 @@
 import 'package:circuitquest/constants.dart';
+import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
-import '../../../levels/levels.dart';
 import 'circuit_file_manager.dart';
 
 /// Control panel for circuit simulation and evaluation.
