@@ -1,9 +1,10 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/state/locale_provider.dart';
-import 'package:circuitquest/state/theme_provider.dart';
+import 'package:circuitquest/app/providers/locale_provider.dart';
+import 'package:circuitquest/app/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:circuitquest/state/level_state.dart';
+import 'package:circuitquest/data/repositories/level_repository_impl.dart';
+import 'package:circuitquest/ui/shared/providers/level_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -157,8 +158,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
 
     if (confirmed == true) {
-      final loader = ref.read(levelLoaderProvider);
-      await loader.resetUserProgress();
+      final repository = ref.read(levelRepositoryProvider);
+      await repository.resetUserProgress();
 
       // Invalidate providers so UI refreshes
       ref.invalidate(levelMetaProvider);

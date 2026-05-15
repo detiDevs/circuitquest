@@ -3,7 +3,7 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../state/sandbox_state.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import '../../../levels/levels.dart';
 import 'circuit_file_manager.dart';
 
@@ -274,7 +274,10 @@ class ControlPanel extends ConsumerWidget {
   }
 
   /// Shows a confirmation dialog before clearing the circuit.
-  void _showClearConfirmation(BuildContext context, SandboxState state) {
+  void _showClearConfirmation(
+    BuildContext context,
+    SandboxViewModel state,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

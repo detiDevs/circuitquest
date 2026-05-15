@@ -1,4 +1,4 @@
-import 'package:circuitquest/core/commands/command.dart';
+import 'package:circuitquest/domain/commands/command.dart';
 
 class CommandController {
   static final List<Command> _undoStack = [];

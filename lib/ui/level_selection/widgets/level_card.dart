@@ -1,7 +1,8 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/levels/levels.dart';
-import 'package:circuitquest/state/level_state.dart';
-import 'package:circuitquest/state/theme_provider.dart';
+import 'package:circuitquest/data/repositories/level_repository_impl.dart';
+import 'package:circuitquest/ui/shared/providers/level_providers.dart';
+import 'package:circuitquest/app/providers/theme_provider.dart';
 import 'package:circuitquest/ui/level_mode/level_screen.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
@@ -142,8 +143,8 @@ class LevelCard extends ConsumerWidget {
 
   Future<void> _accessLevel(BuildContext context, WidgetRef ref) async {
     try {
-      final loader = ref.read(levelLoaderProvider);
-      final level = await loader.loadLevel(levelItem.id);
+      final repository = ref.read(levelRepositoryProvider);
+      final level = await repository.loadLevel(levelItem.id);
       if (context.mounted) {
         await Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => LevelScreen(level: level)),

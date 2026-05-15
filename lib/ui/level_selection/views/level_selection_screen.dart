@@ -1,25 +1,20 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/levels/level.dart';
-import 'package:circuitquest/ui/level_selection/level_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../state/level_state.dart';
+import 'package:circuitquest/ui/level_selection/widgets/level_category.dart';
+import '../view_models/level_selection_view_model.dart';
 
 /// Screen for selecting a level to play.
 ///
 /// Displays all available levels organized by their category blocks.
 /// Users can tap on a level to start playing it.
-class LevelSelectionScreen extends ConsumerStatefulWidget {
+class LevelSelectionScreen extends ConsumerWidget {
   const LevelSelectionScreen({super.key});
 
   @override
-  ConsumerState<LevelSelectionScreen> createState() =>
-      _LevelSelectionScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(levelSelectionViewModelProvider);
 
-class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.selectALevel),
@@ -30,20 +25,19 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
           IconButton(
             icon: const Icon(Icons.lock_open),
             tooltip: 'Toggle unlock all levels (testing)',
-            onPressed: () => _toggleAllLevelsUnlocked(context),
+            onPressed: viewModel.toggleAllLevelsUnlocked,
           ),
         ],
       ),
-      body: _buildBody(),
+      body: _buildBody(context, viewModel),
     );
   }
 
-  Future<void> _toggleAllLevelsUnlocked(BuildContext context) async {
-    await toggleAllLevelsUnlocked(ref);
-  }
-
-  Widget _buildBody() {
-    final levelCategoriesAsync = ref.watch(levelCategoriesProvider);
+  Widget _buildBody(
+    BuildContext context,
+    LevelSelectionViewModel viewModel,
+  ) {
+    final levelCategoriesAsync = viewModel.categories;
 
     return levelCategoriesAsync.when(
       data: (categories) {
@@ -71,9 +65,7 @@ class _LevelSelectionScreenState extends ConsumerState<LevelSelectionScreen> {
             Text('${AppLocalizations.of(context)!.failedToLoadLevels}: $error'),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                ref.invalidate(levelCategoriesProvider);
-              },
+              onPressed: viewModel.refresh,
               child: Text(AppLocalizations.of(context)!.retry),
             ),
           ],

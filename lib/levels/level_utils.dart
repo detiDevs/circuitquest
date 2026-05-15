@@ -1,5 +1,5 @@
 import 'level.dart';
-import 'level_loader.dart';
+import 'package:circuitquest/data/services/level_loader_service.dart';
 
 /// Utility class providing helper functions for working with levels
 class LevelUtils {

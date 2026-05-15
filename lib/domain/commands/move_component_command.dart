@@ -1,9 +1,9 @@
-import 'package:circuitquest/core/commands/command.dart';
-import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/domain/commands/command.dart';
+import 'package:circuitquest/domain/sandbox/sandbox_engine.dart';
 import 'package:flutter/material.dart';
 
 class MoveComponentCommand extends Command {
-  final SandboxState _sandboxState;
+  final SandboxEngine _sandboxState;
   final String _componentId;
   final Offset _newPosition;
   final Offset _oldPosition;

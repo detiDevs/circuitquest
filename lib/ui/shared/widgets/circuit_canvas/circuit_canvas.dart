@@ -1,8 +1,8 @@
 import 'package:circuitquest/constants.dart';
-import 'package:circuitquest/core/commands/command_controller.dart';
-import 'package:circuitquest/core/commands/place_component_command.dart';
+import 'package:circuitquest/domain/commands/command_controller.dart';
+import 'package:circuitquest/domain/commands/place_component_command.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/state/placed_component.dart';
+import 'package:circuitquest/domain/models/placed_component.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/grid_painter.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/placed_component_widget.dart';
@@ -10,7 +10,7 @@ import 'package:circuitquest/ui/shared/widgets/circuit_canvas/wire_painter.dart'
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../state/sandbox_state.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import '../../../../core/components/component_registry.dart';
 import 'package:circuitquest/levels/level.dart';
 
@@ -59,7 +59,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
       TransformationController();
 
   /// Cached reference to sandbox state for cleanup
-  late final SandboxState _sandboxState;
+  late final SandboxViewModel _sandboxState;
 
   /// Last handled recenter request id from SandboxState.
   int _lastViewportCenterRequestId = -1;
@@ -169,7 +169,7 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   Widget build(BuildContext context) {
     final state = ref.watch(sandboxProvider);
 
-    ref.listen<SandboxState>(sandboxProvider, (_, next) {
+    ref.listen<SandboxViewModel>(sandboxProvider, (_, next) {
       if (next.viewportCenterRequestId == _lastViewportCenterRequestId) {
         return;
       }
@@ -306,7 +306,10 @@ class _CircuitCanvasState extends ConsumerState<CircuitCanvas> {
   }
 
   /// Returns the component under the given local canvas position, if any.
-  PlacedComponent? _hitTestComponent(SandboxState state, Offset position) {
+  PlacedComponent? _hitTestComponent(
+    SandboxViewModel state,
+    Offset position,
+  ) {
     for (final component in state.placedComponents) {
       final rect = Rect.fromLTWH(
         component.position.dx,

@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
 import '../shared/widgets/control_panel.dart';
-import '../../state/sandbox_state.dart';
-import '../../core/commands/command_controller.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
+import '../../domain/commands/command_controller.dart';
 
 /// Main sandbox screen where users can design and simulate circuits.
 ///

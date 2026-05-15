@@ -1,57 +1,50 @@
+import 'package:circuitquest/data/repositories/level_repository_impl.dart';
+import 'package:circuitquest/levels/level.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../levels/level_loader.dart';
-import '../levels/level.dart';
-import '../state/sandbox_state.dart';
-
-/// Provider for the LevelLoader instance
-final levelLoaderProvider = Provider<LevelLoader>((ref) {
-  return LevelLoader();
-});
 
 /// Provider for level metadata (completed levels, unlock status)
 final levelMetaProvider = FutureProvider<LevelMeta>((ref) async {
-  final loader = ref.watch(levelLoaderProvider);
-  return await loader.loadLevelMeta();
+  final repository = ref.watch(levelRepositoryProvider);
+  return await repository.loadLevelMeta();
 });
 
 /// Provider to check if a specific level is completed
-final levelCompletedProvider = FutureProvider.family<bool, int>((
-  ref,
-  levelId,
-) async {
-  final meta = await ref.watch(levelMetaProvider.future);
-  return meta.completedLevels.contains(levelId);
-});
+final levelCompletedProvider = FutureProvider.family<bool, int>(
+  (ref, levelId) async {
+    final meta = await ref.watch(levelMetaProvider.future);
+    return meta.completedLevels.contains(levelId);
+  },
+);
 
 /// Provider to check if a specific level can be accessed
-final levelAccessProvider = FutureProvider.family<bool, int>((
-  ref,
-  levelId,
-) async {
-  final loader = ref.watch(levelLoaderProvider);
-  return await loader.canAccessLevel(levelId);
-});
+final levelAccessProvider = FutureProvider.family<bool, int>(
+  (ref, levelId) async {
+    final repository = ref.watch(levelRepositoryProvider);
+    return await repository.canAccessLevel(levelId);
+  },
+);
 
 /// Provider for level blocks
-final levelBlocksProvider = FutureProvider<Map<String, List<LevelBlockItem>>>((
-  ref,
-) async {
-  final loader = ref.watch(levelLoaderProvider);
-  return await loader.loadLevelBlocks();
-});
+final levelBlocksProvider = FutureProvider<Map<String, List<LevelBlockItem>>>(
+  (ref) async {
+    final repository = ref.watch(levelRepositoryProvider);
+    return await repository.loadLevelBlocks();
+  },
+);
 
 /// Provider for level categories with localization support
-final levelCategoriesProvider = FutureProvider<List<LevelCategory>>((
-  ref,
-) async {
-  final loader = ref.watch(levelLoaderProvider);
-  return await loader.loadLevelCategories();
-});
+final levelCategoriesProvider = FutureProvider<List<LevelCategory>>(
+  (ref) async {
+    final repository = ref.watch(levelRepositoryProvider);
+    return await repository.loadLevelCategories();
+  },
+);
 
 /// Helper method to mark a level as completed and refresh the state
 Future<void> markLevelCompleted(WidgetRef ref, int levelId) async {
-  final loader = ref.read(levelLoaderProvider);
-  await loader.completeLevel(levelId);
+  final repository = ref.read(levelRepositoryProvider);
+  await repository.completeLevel(levelId);
 
   // Invalidate providers to trigger refresh
   ref.invalidate(levelMetaProvider);
@@ -92,8 +85,8 @@ void revealNextLevelHint(WidgetRef ref, int levelId, int totalHints) {
 
 /// Helper method to toggle all levels unlocked and refresh the state
 Future<void> toggleAllLevelsUnlocked(WidgetRef ref) async {
-  final loader = ref.read(levelLoaderProvider);
-  await loader.toggleAllLevelsUnlocked();
+  final repository = ref.read(levelRepositoryProvider);
+  await repository.toggleAllLevelsUnlocked();
 
   // Invalidate providers to trigger refresh
   ref.invalidate(levelMetaProvider);

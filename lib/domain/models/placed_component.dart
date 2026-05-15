@@ -1,5 +1,3 @@
-//TODO: Split up this file for modularity
-
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/components/base/component.dart';
 import 'package:flutter/material.dart';

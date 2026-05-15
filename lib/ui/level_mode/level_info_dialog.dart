@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/levels/level.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/state/level_state.dart';
+import 'package:circuitquest/ui/shared/providers/level_providers.dart';
 import './difficulty_badge.dart';
 
 // Dialog displaying level information.

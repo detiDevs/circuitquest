@@ -1,10 +1,10 @@
-import 'package:circuitquest/core/commands/command.dart';
-import 'package:circuitquest/state/sandbox_state.dart';
-import 'package:circuitquest/state/wire_connection.dart';
+import 'package:circuitquest/domain/commands/command.dart';
+import 'package:circuitquest/domain/sandbox/sandbox_engine.dart';
+import 'package:circuitquest/domain/models/wire_connection.dart';
 
 /// Command to remove a wire connection.
 class RemoveConnectionCommand extends Command {
-  final SandboxState _sandboxState;
+  final SandboxEngine _sandboxState;
   final String _sourceComponentId;
   final String _sourcePinName; 
   final String _targetComponentId;

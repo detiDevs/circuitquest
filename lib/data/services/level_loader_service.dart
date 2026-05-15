@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:circuitquest/constants.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
-import 'level.dart';
+import 'package:circuitquest/levels/level.dart';
 
 /// Service class for loading level data from JSON assets
 class LevelLoader {
@@ -149,7 +149,7 @@ class LevelLoader {
               .map((item) => LevelBlockItem.fromJson(item as Map<String, dynamic>))
               .toList();
           categories.add(LevelCategory(
-            name: categoryName as String,
+            name: categoryName,
             levels: levels,
           ));
         });

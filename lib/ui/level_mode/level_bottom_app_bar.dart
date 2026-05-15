@@ -1,6 +1,6 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/levels/level.dart';
-import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import 'package:circuitquest/ui/level_mode/level_info_dialog.dart';
 import 'package:circuitquest/ui/level_mode/level_component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/bottom_app_bar.dart'
@@ -26,7 +26,7 @@ class _LevelBottomAppBarState
           _LevelBottomSheetType,
           LevelBottomAppBar
         > {
-  late final SandboxState sandboxState;
+  late final SandboxViewModel sandboxState;
   bool _isCheckingSolution = false;
 
   @override

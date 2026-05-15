@@ -19,6 +19,6 @@
 library levels;
 
 export 'level.dart';
-export 'level_loader.dart';
+export '../data/services/level_loader_service.dart';
 export 'level_utils.dart';
 export 'level_validator.dart';

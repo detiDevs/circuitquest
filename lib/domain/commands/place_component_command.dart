@@ -1,12 +1,12 @@
-import 'package:circuitquest/core/commands/command.dart';
+import 'package:circuitquest/domain/commands/command.dart';
 import 'package:circuitquest/core/components/base/component.dart';
-import 'package:circuitquest/state/placed_component.dart';
+import 'package:circuitquest/domain/models/placed_component.dart';
 import 'package:flutter/material.dart';
-import '../../state/sandbox_state.dart';
+import 'package:circuitquest/domain/sandbox/sandbox_engine.dart';
 
 /// Command to place a component on the canvas.
 class PlaceComponentCommand extends Command {
-  final SandboxState _sandboxState;
+  final SandboxEngine _sandboxState;
   final String _componentType;
   final Offset _position;
   final Component _component;

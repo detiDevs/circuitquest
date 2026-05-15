@@ -1,11 +1,11 @@
-import 'package:circuitquest/core/commands/command.dart';
-import 'package:circuitquest/state/placed_component.dart';
-import 'package:circuitquest/state/wire_connection.dart';
-import '../../state/sandbox_state.dart';
+import 'package:circuitquest/domain/commands/command.dart';
+import 'package:circuitquest/domain/models/placed_component.dart';
+import 'package:circuitquest/domain/models/wire_connection.dart';
+import 'package:circuitquest/domain/sandbox/sandbox_engine.dart';
 
 /// Command to remove a component from the canvas.
 class RemoveComponentCommand extends Command {
-  final SandboxState _sandboxState;
+  final SandboxEngine _sandboxState;
   final String _componentId;
   
   // Store component data for undo

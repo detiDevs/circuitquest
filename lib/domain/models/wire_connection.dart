@@ -1,5 +1,3 @@
-//TODO: Split up this file for modularity
-
 /// Represents a wire connection between two component pins.
 class WireConnection {
   /// Source component ID

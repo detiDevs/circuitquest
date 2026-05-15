@@ -1,5 +1,5 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/state/custom_component_library.dart';
+import 'package:circuitquest/data/repositories/custom_component_repository_impl.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/palette_item.dart';
 import 'package:flutter/material.dart';
@@ -61,8 +61,8 @@ class CustomComponentPaletteItem extends PaletteItem {
           ),
           TextButton(
             onPressed: () async {
-              final success = await ref
-                  .read(customComponentProvider)
+                final success = await ref
+                  .read(customComponentRepositoryProvider)
                   .deleteCustomComponentByName(componentType.name);
               if (context.mounted) {
                 Navigator.pop(context);

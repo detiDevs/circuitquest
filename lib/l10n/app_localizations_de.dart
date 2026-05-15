@@ -418,7 +418,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get resetProgressConfirmMessage =>
-      'Möchten Sie wirklich Ihren Level-Fortschritt löschen? Dies kann nicht rückgängig gemacht werden.';
+      'Möchtest du wirklich deinen Level-Fortschritt löschen? Dies kann nicht rückgängig gemacht werden.';
 
   @override
   String get progressReset => 'Fortschritt zurückgesetzt';

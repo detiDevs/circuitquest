@@ -7,9 +7,9 @@ import 'package:circuitquest/levels/levels.dart';
 import 'package:circuitquest/constants.dart';
 import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
 import '../shared/widgets/control_panel.dart';
-import '../../state/sandbox_state.dart';
-import '../../state/level_state.dart';
-import '../../core/commands/command_controller.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
+import 'package:circuitquest/ui/shared/providers/level_providers.dart';
+import '../../domain/commands/command_controller.dart';
 import './level_info_dialog.dart';
 
 /// Screen for playing a specific level.

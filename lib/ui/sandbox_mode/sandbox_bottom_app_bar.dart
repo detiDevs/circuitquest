@@ -1,8 +1,9 @@
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/core/components/custom_component.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/state/custom_component_library.dart';
-import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/data/repositories/custom_component_repository.dart';
+import 'package:circuitquest/data/repositories/custom_component_repository_impl.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_file_manager.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/control_panel.dart';
@@ -27,14 +28,14 @@ class _SandboxBottomAppBarState
           _SandboxBottomSheetType,
           SandboxBottomAppBar
         > {
-  late final SandboxState sandboxState;
-  late final CustomComponentLibrary ccl;
+  late final SandboxViewModel sandboxState;
+  late final CustomComponentRepository ccl;
 
   @override
   void initState() {
     super.initState();
     sandboxState = ref.read(sandboxProvider);
-    ccl = ref.read(customComponentProvider);
+    ccl = ref.read(customComponentRepositoryProvider);
   }
 
   @override

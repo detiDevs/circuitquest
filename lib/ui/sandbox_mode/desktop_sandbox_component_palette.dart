@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/core/components/custom_component.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/state/custom_component_library.dart';
+import 'package:circuitquest/data/repositories/custom_component_repository_impl.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/component_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +13,7 @@ class DesktopSandboxComponentPalette extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customLibrary = ref.watch(customComponentProvider);
+    final customLibrary = ref.watch(customComponentRepositoryProvider);
     final customComponents = customLibrary.components
         .map(
           (entry) => ComponentType(

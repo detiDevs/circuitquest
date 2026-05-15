@@ -4,38 +4,27 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'package:circuitquest/constants.dart';
+import 'package:circuitquest/domain/commands/add_connection_command.dart';
+import 'package:circuitquest/domain/commands/command_controller.dart';
+import 'package:circuitquest/core/components/base/component.dart';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
+import 'package:circuitquest/core/components/component_registry.dart';
+import 'package:circuitquest/core/components/custom_component.dart';
+import 'package:circuitquest/core/components/custom_component_data.dart';
 import 'package:circuitquest/core/components/cpu/data_memory.dart';
 import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
 import 'package:circuitquest/core/components/cpu/register_block.dart';
+import 'package:circuitquest/core/components/input_source.dart';
+import 'package:circuitquest/core/components/output_probe.dart';
+import 'package:circuitquest/core/components/sequential/register.dart';
+import 'package:circuitquest/core/logic/wire.dart';
 import 'package:circuitquest/core/simulation/clock_manager.dart';
-import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/core/simulation/simulator.dart';
+import 'package:circuitquest/data/repositories/custom_component_repository.dart';
 import 'package:circuitquest/levels/level.dart';
-import 'package:circuitquest/levels/level_validation_result.dart';
-import 'package:circuitquest/levels/level_validator.dart';
-import 'package:circuitquest/state/placed_component.dart';
-import 'package:circuitquest/state/wire_connection.dart';
-import 'package:circuitquest/ui/shared/utils/text_rendering_utils.dart';
+import 'package:circuitquest/domain/models/placed_component.dart';
+import 'package:circuitquest/domain/models/wire_connection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/components/base/component.dart';
-import '../core/logic/wire.dart';
-import '../core/simulation/simulator.dart';
-import '../core/components/input_source.dart';
-import '../core/components/output_probe.dart';
-import '../core/components/sequential/register.dart';
-import '../core/components/component_registry.dart';
-import '../core/components/custom_component.dart';
-import '../core/components/custom_component_data.dart';
-import '../state/custom_component_library.dart';
-import '../core/commands/command_controller.dart';
-import '../core/commands/add_connection_command.dart';
-import 'level_state.dart';
-
-/// Riverpod provider for sandbox state.
-final sandboxProvider = ChangeNotifierProvider<SandboxState>(
-  (ref) => SandboxState(ref.read(customComponentProvider)),
-);
 
 
 /// State management for the sandbox circuit designer.
@@ -45,10 +34,10 @@ final sandboxProvider = ChangeNotifierProvider<SandboxState>(
 /// - Wire connections between components
 /// - Circuit simulation and evaluation
 /// - Drag and drop interactions
-class SandboxState extends ChangeNotifier {
-  SandboxState(this._customComponentLibrary);
+class SandboxEngine extends ChangeNotifier {
+  SandboxEngine(this._customComponentRepository);
 
-  final CustomComponentLibrary _customComponentLibrary;
+  final CustomComponentRepository _customComponentRepository;
 
   /// All components placed on the canvas
   final List<PlacedComponent> _placedComponents = [];
@@ -841,7 +830,7 @@ class SandboxState extends ChangeNotifier {
   }
 
   CustomComponent? _createCustomComponent(String name) {
-    final data = _customComponentLibrary.getByName(name);
+    final data = _customComponentRepository.getByName(name);
     if (data == null) return null;
     return CustomComponent(data);
   }
@@ -936,160 +925,7 @@ class SandboxState extends ChangeNotifier {
     }
   }
 
-  Future<void> checkLevelSolution(
-    BuildContext context,
-    WidgetRef ref,
-    Level level,
-  ) async {
-    try {
-      final validationResult =
-          await LevelValidator.validateCircuitWithSimulation(
-            components: _placedComponents.map((pc) => pc.component).toList(),
-            tests: level.tests,
-            maxComponentCount: level.maxComponentCount,
-            resetBeforeTest: resetSimulation,
-            runSimulation: startSimulation,
-          );
-
-      if (!context.mounted) return;
-
-      if (validationResult.isCorrect) {
-        await markLevelCompleted(ref, level.levelId);
-
-        if (!context.mounted) return;
-
-        showDialog(
-          context: context,
-          builder: (context) {
-            final localeCode = Localizations.localeOf(context).languageCode;
-            final message = level.getLocalizedString(
-              'success_message',
-              localeCode,
-            );
-
-            return AlertDialog(
-              title: Text(AppLocalizations.of(context)!.success),
-              content: TextRenderingUtils.renderMaybeMath(
-                context,
-                message != "" ? message : AppLocalizations.of(context)!.allTestsPassedMessage,
-                null,
-              ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.continue_,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        final message = _validationFailureMessage(context, validationResult);
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(AppLocalizations.of(context)!.testFailed),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(AppLocalizations.of(context)!.tryAgain),
-              ),
-            ],
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error checking solution: $e')));
-      }
-    }
-  }
-
   void nofifyManually() {
     notifyListeners();
-  }
-
-  String _validationFailureMessage(
-    BuildContext context,
-    LevelValidationResult result,
-  ) {
-    final l10n = AppLocalizations.of(context)!;
-
-    if (result is NumberOfComponentsMismatch) {
-      return l10n.validationTooManyComponents(
-        result.actual,
-        result.expectedMax,
-      );
-    }
-
-    if (result is MissingInputsOrOutputs) {
-      return l10n.validationMissingInputsOutputs(
-        result.inputCount,
-        result.outputCount,
-      );
-    }
-
-    if (result is NumberOfInputsMismatch) {
-      return l10n.validationInputCountMismatch(
-        result.testIndex + 1,
-        result.expected,
-        result.actual,
-      );
-    }
-
-    if (result is NumberOfOutputsMismatch) {
-      return l10n.validationOutputCountMismatch(
-        result.testIndex + 1,
-        result.expected,
-        result.actual,
-      );
-    }
-
-    if (result is TestFailed) {
-      if (result.expectedOutput < 0 || result.actualOutput < 0) {
-        return l10n.testFailedDescription;
-      }
-
-      final inputsText = result.failedInputConfiguration.isNotEmpty
-          ? result.failedInputConfiguration
-              .map(
-                (entry) =>
-                    '${_labelForComponentId(entry.componentId) ?? l10n.validationInputIdLabel(entry.componentId)}=${entry.value}',
-              )
-              .join(', ')
-          : l10n.validationInputsUnknown;
-
-      final outputLabel =
-          _labelForComponentId(result.outputComponentId) ??
-          l10n.validationOutputIdLabel(result.outputComponentId);
-
-      return l10n.validationTestFailed(
-        result.testIndex + 1,
-        outputLabel,
-        result.expectedOutput,
-        result.actualOutput,
-        inputsText,
-      );
-    }
-
-    return l10n.testFailedDescription;
-  }
-
-  String? _labelForComponentId(int componentId) {
-    for (final placed in _placedComponents) {
-      if (placed.component.id == componentId) {
-        return placed.label;
-      }
-    }
-    return null;
   }
 }

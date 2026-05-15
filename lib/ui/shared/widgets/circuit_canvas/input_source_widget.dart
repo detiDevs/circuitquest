@@ -1,10 +1,10 @@
 import 'package:circuitquest/constants.dart';
-import 'package:circuitquest/state/placed_component.dart';
+import 'package:circuitquest/domain/models/placed_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/components/input_source.dart';
-import '../../../../state/sandbox_state.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import '../../utils/snackbar_utils.dart';
 
 /// A stateful widget to manage input source controls properly.

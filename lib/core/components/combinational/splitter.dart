@@ -39,11 +39,9 @@ class Splitter extends Component {
       final OutputPin outPin = outputs['outValue${1 << i}']!;
       if (outPin.value != slice) {
         changed = true;
-        outPin.value = slice;
-      } else {
-        outPin.value = slice; // ensure value is written even if unchanged
       }
+      outPin.value = slice;
     }
-    return true;
+    return changed;
   }
 }
