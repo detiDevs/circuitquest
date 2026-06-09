@@ -3,7 +3,7 @@ import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/data/repositories/level_repository_impl.dart';
 import 'package:circuitquest/ui/shared/providers/level_providers.dart';
 import 'package:circuitquest/app/providers/theme_provider.dart';
-import 'package:circuitquest/ui/level_mode/level_screen.dart';
+import 'package:circuitquest/ui/level_mode/widgets/level_screen.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

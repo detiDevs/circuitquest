@@ -1,14 +1,12 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/app/providers/locale_provider.dart';
-import 'package:circuitquest/app/providers/theme_provider.dart';
+import 'package:circuitquest/ui/settings/view_models/settings_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:circuitquest/data/repositories/level_repository_impl.dart';
-import 'package:circuitquest/ui/shared/providers/level_providers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, required this.viewModel});
+
+  final SettingsViewModel viewModel;
 
   @override
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
@@ -24,10 +22,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    final savedLocale = ref.read(localeProvider);
+    final savedLocale = widget.viewModel.getSavedLocale(ref);
     _localeChoice = savedLocale?.languageCode ?? 'sys-default';
 
-    final savedThemeMode = ref.read(themeProvider);
+    final savedThemeMode = widget.viewModel.getSaveThemeMode(ref);
     _themeChoice = savedThemeMode.name;
   }
 
@@ -37,19 +35,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       _localeChoice = choice;
     });
 
-    final notifier = ref.read(localeProvider.notifier);
-    if (choice == 'sys-default') {
-      notifier.state = null; // Use device locale
-    } else {
-      notifier.state = Locale(choice);
-    }
-
-    final prefs = await SharedPreferences.getInstance();
-    if (choice == 'sys-default') {
-      await prefs.remove(kLocalePrefsKey);
-    } else {
-      await prefs.setString(kLocalePrefsKey, choice);
-    }
+    widget.viewModel.updateLocale(ref, choice);
   }
 
   Future<void> _updateTheme(String? value) async {
@@ -58,12 +44,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       _themeChoice = choice;
     });
 
-    final themeMode = ThemeMode.values.byName(choice);
-    final notifier = ref.read(themeProvider.notifier);
-    notifier.state = themeMode;
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(kThemePrefsKey, choice);
+    await widget.viewModel.updateTheme(ref, choice);
   }
 
   @override
@@ -158,13 +139,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
 
     if (confirmed == true) {
-      final repository = ref.read(levelRepositoryProvider);
-      await repository.resetUserProgress();
-
-      // Invalidate providers so UI refreshes
-      ref.invalidate(levelMetaProvider);
-      ref.invalidate(levelCompletedProvider);
-      ref.invalidate(levelAccessProvider);
+      await widget.viewModel.resetUserProgress(ref);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.progressReset)),

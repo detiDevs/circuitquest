@@ -1,6 +1,6 @@
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/core/components/component_registry.dart';
-import 'package:circuitquest/ui/sandbox_mode/custom_component_palette_item.dart';
+import 'package:circuitquest/ui/sandbox_mode/widgets/custom_component_palette_item.dart';
 import 'package:circuitquest/ui/shared/widgets/component_palette/palette_item.dart';
 import 'package:flutter/material.dart';
 

@@ -1,13 +1,13 @@
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/sandbox_mode/sandbox_bottom_app_bar.dart';
-import 'package:circuitquest/ui/sandbox_mode/desktop_sandbox_component_palette.dart';
+import 'package:circuitquest/ui/sandbox_mode/widgets/sandbox_bottom_app_bar.dart';
+import 'package:circuitquest/ui/sandbox_mode/widgets/desktop_sandbox_component_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
-import '../shared/widgets/control_panel.dart';
+import '../../shared/widgets/circuit_canvas/circuit_canvas.dart';
+import '../../shared/widgets/control_panel.dart';
 import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
-import '../../domain/commands/command_controller.dart';
+import '../../../domain/commands/command_controller.dart';
 
 /// Main sandbox screen where users can design and simulate circuits.
 ///

@@ -1,16 +1,16 @@
 import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/level_mode/level_bottom_app_bar.dart';
-import 'package:circuitquest/ui/level_mode/level_component_palette.dart';
+import 'package:circuitquest/ui/level_mode/widgets/level_bottom_app_bar.dart';
+import 'package:circuitquest/ui/level_mode/widgets/level_component_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/constants.dart';
-import '../shared/widgets/circuit_canvas/circuit_canvas.dart';
-import '../shared/widgets/control_panel.dart';
+import '../../shared/widgets/circuit_canvas/circuit_canvas.dart';
+import '../../shared/widgets/control_panel.dart';
 import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import 'package:circuitquest/ui/shared/providers/level_providers.dart';
-import '../../domain/commands/command_controller.dart';
-import './level_info_dialog.dart';
+import '../../../domain/commands/command_controller.dart';
+import 'level_info_dialog.dart';
 
 /// Screen for playing a specific level.
 ///

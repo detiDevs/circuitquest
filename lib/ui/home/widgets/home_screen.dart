@@ -1,14 +1,14 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/ui/home/settings_screen.dart';
+import 'package:circuitquest/ui/settings/widgets/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:circuitquest/constants.dart';
-import '../sandbox_mode/sandbox_screen.dart';
-import '../level_selection/views/level_selection_screen.dart';
+import '../../sandbox_mode/widgets/sandbox_screen.dart';
+import '../../level_selection/widgets/level_selection_screen.dart';
 import 'package:circuitquest/ui/shared/widgets/rich_button.dart';
 import 'dart:io';
-import 'view_models/home_view_model.dart';
+import '../view_models/home_view_model.dart';
+import 'home_logo.dart';
 
 /// Home screen for CircuitQuest.
 ///
@@ -32,7 +32,7 @@ class HomeScreen extends ConsumerWidget {
             children: [
               const SizedBox(height: 60),
               // App Logo
-              _buildAppLogo(),
+              const HomeLogo(),
               const SizedBox(height: 40),
               // App Title
               Text(
@@ -147,22 +147,4 @@ class HomeScreen extends ConsumerWidget {
     }
   }
 
-  /// Builds the app logo with fallback handling.
-  Widget _buildAppLogo() {
-    return SizedBox(
-      width: 150,
-      height: 150,
-      child: SvgPicture.asset(
-        'assets/images/AppLogo.svg',
-        fit: BoxFit.contain,
-        placeholderBuilder: (context) => Container(
-          decoration: BoxDecoration(
-            color: Colors.blue[100],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(Icons.memory, size: 80, color: Colors.blue[800]),
-        ),
-      ),
-    );
-  }
 }

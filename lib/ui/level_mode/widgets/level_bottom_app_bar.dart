@@ -1,8 +1,8 @@
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
-import 'package:circuitquest/ui/level_mode/level_info_dialog.dart';
-import 'package:circuitquest/ui/level_mode/level_component_palette.dart';
+import 'package:circuitquest/ui/level_mode/widgets/level_info_dialog.dart';
+import 'package:circuitquest/ui/level_mode/widgets/level_component_palette.dart';
 import 'package:circuitquest/ui/shared/widgets/bottom_app_bar.dart'
     as shared_bottom_app_bar;
 import 'package:circuitquest/ui/shared/widgets/control_panel.dart';

@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/shared/providers/level_providers.dart';
-import './difficulty_badge.dart';
+import 'difficulty_badge.dart';
 
 // Dialog displaying level information.
 class LevelInfoDialog extends ConsumerStatefulWidget {
