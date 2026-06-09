@@ -3,6 +3,7 @@ import 'package:circuitquest/ui/settings/widgets/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/constants.dart';
+import 'package:go_router/go_router.dart';
 import '../../sandbox_mode/widgets/sandbox_screen.dart';
 import '../../level_selection/widgets/level_selection_screen.dart';
 import 'package:circuitquest/ui/shared/widgets/rich_button.dart';
@@ -125,23 +126,11 @@ class HomeScreen extends ConsumerWidget {
   void _handleNavigation(BuildContext context, HomeNavigation navigation) {
     switch (navigation) {
       case HomeNavigation.levelMode:
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const LevelSelectionScreen(),
-          ),
-        );
+        context.push('/level-selection');
       case HomeNavigation.sandboxMode:
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const SandboxScreen(),
-          ),
-        );
+        context.push('/sandbox');
       case HomeNavigation.settings:
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const SettingsScreen(),
-          ),
-        );
+        context.push('/settings');
       case HomeNavigation.exitApp:
         exit(0);
     }

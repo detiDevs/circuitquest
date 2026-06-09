@@ -1,3 +1,4 @@
+import 'package:circuitquest/app/router.dart';
 import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/app/providers/locale_provider.dart';
@@ -15,7 +16,7 @@ class CircuitQuestApp extends ConsumerWidget {
     final selectedLocale = ref.watch(localeProvider);
     final selectedThemeMode = ref.watch(themeProvider);
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: Constants.kAppName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -36,7 +37,7 @@ class CircuitQuestApp extends ConsumerWidget {
       locale: selectedLocale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const HomeScreen(),
+      routerConfig: router(),
     );
   }
 }
