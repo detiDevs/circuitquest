@@ -1,5 +1,6 @@
 import 'package:circuitquest/domain/models/level.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/ui/level_mode/view_models/level_mode_view_model.dart';
 import 'package:circuitquest/ui/level_mode/widgets/level_bottom_app_bar.dart';
 import 'package:circuitquest/ui/level_mode/widgets/level_component_palette.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +21,9 @@ import 'level_info_dialog.dart';
 /// - Control panel for simulation
 /// - Level info accessible via dialog and FAB
 class LevelScreen extends ConsumerStatefulWidget {
-  final Level level;
+  final int levelId;
 
-  const LevelScreen({super.key, required this.level});
+  LevelScreen({super.key, required this.levelId});
 
   @override
   ConsumerState<LevelScreen> createState() => _LevelScreenState();
@@ -30,20 +31,14 @@ class LevelScreen extends ConsumerStatefulWidget {
 
 class _LevelScreenState extends ConsumerState<LevelScreen> {
   bool _dialogShown = false;
+  late final Future<Level> _levelFuture;
 
   @override
   void initState() {
     super.initState();
-    // Show level info dialog on first entry
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_dialogShown && mounted) {
-        _showLevelInfoDialog();
-        _dialogShown = true;
-      }
 
-      // Initialize clock for this level
-      initializeLevelClock(ref, widget.level);
-    });
+    final viewModel = ref.read(levelModeViewModelProvider);
+    _levelFuture = viewModel.loadLevel(widget.levelId);
   }
 
   @override
@@ -60,47 +55,90 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
     final isMobile =
         MediaQuery.of(context).size.width < Constants.kMobileThreshold;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.level.name),
-        backgroundColor: Colors.blue[800],
-        foregroundColor: Colors.white,
-        actions: [
-          // Undo button
-          IconButton(
-            onPressed: sandboxState.canUndo ? sandboxState.undo : null,
-            icon: const Icon(Icons.undo),
-            tooltip: 'Undo',
-          ),
-          // Redo button
-          IconButton(
-            onPressed: sandboxState.canRedo ? sandboxState.redo : null,
-            icon: const Icon(Icons.redo),
-            tooltip: 'Redo',
-          ),
-        ],
-      ),
-      body: _LevelScreenBody(level: widget.level),
-      floatingActionButton: isMobile
-          ? null
-          : FloatingActionButton.extended(
-              onPressed: _showLevelInfoDialog,
-              label: Text(
-                AppLocalizations.of(context)!.levelInformationTooltip,
-              ),
-              icon: Icon(Icons.info),
+    return FutureBuilder<Level>(
+      future: _levelFuture,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Level'),
+              backgroundColor: Colors.blue[800],
+              foregroundColor: Colors.white,
             ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: isMobile
-          ? LevelBottomAppBar(level: widget.level)
-          : null,
+            body: Center(
+              child: Text(
+                'Failed to load level.',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Loading level...'),
+              backgroundColor: Colors.blue[800],
+              foregroundColor: Colors.white,
+            ),
+            body: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+
+        final level = snapshot.requireData;
+
+        if (!_dialogShown) {
+          _dialogShown = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            _showLevelInfoDialog(level);
+            initializeLevelClock(ref, level);
+          });
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(level.name),
+            backgroundColor: Colors.blue[800],
+            foregroundColor: Colors.white,
+            actions: [
+              // Undo button
+              IconButton(
+                onPressed: sandboxState.canUndo ? sandboxState.undo : null,
+                icon: const Icon(Icons.undo),
+                tooltip: 'Undo',
+              ),
+              // Redo button
+              IconButton(
+                onPressed: sandboxState.canRedo ? sandboxState.redo : null,
+                icon: const Icon(Icons.redo),
+                tooltip: 'Redo',
+              ),
+            ],
+          ),
+          body: _LevelScreenBody(level: level),
+          floatingActionButton: isMobile
+              ? null
+              : FloatingActionButton.extended(
+                  onPressed: () => _showLevelInfoDialog(level),
+                  label: Text(
+                    AppLocalizations.of(context)!.levelInformationTooltip,
+                  ),
+                  icon: Icon(Icons.info),
+                ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          bottomNavigationBar: isMobile ? LevelBottomAppBar(level: level) : null,
+        );
+      },
     );
   }
 
-  void _showLevelInfoDialog() {
+  void _showLevelInfoDialog(Level level) {
     showDialog(
       context: context,
-      builder: (context) => LevelInfoDialog(level: widget.level),
+      builder: (context) => LevelInfoDialog(level: level),
     );
   }
 }

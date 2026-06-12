@@ -1,4 +1,5 @@
 import 'package:circuitquest/ui/home/widgets/home_screen.dart';
+import 'package:circuitquest/ui/level_mode/widgets/level_screen.dart';
 import 'package:circuitquest/ui/level_selection/widgets/level_selection_screen.dart';
 import 'package:circuitquest/ui/sandbox_mode/widgets/sandbox_screen.dart';
 import 'package:circuitquest/ui/settings/view_models/settings_view_model.dart';
@@ -27,6 +28,12 @@ GoRouter router() => GoRouter(
     GoRoute(
       path: Routes.levelSelection,
       builder: (context, state) => LevelSelectionScreen(),
+    ),
+    GoRoute(
+      path: Routes.level,
+      builder: (context, state) => LevelScreen(
+        levelId: int.parse(state.pathParameters['levelId'] ?? '0'),
+      ),
     ),
     GoRoute(
       path: Routes.sandboxMode,

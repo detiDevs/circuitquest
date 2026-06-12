@@ -7,6 +7,7 @@ import 'package:circuitquest/ui/level_mode/widgets/level_screen.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Widget displaying a single level card.
 class LevelCard extends ConsumerWidget {
@@ -143,14 +144,7 @@ class LevelCard extends ConsumerWidget {
 
   Future<void> _accessLevel(BuildContext context, WidgetRef ref) async {
     try {
-      final repository = ref.read(levelRepositoryProvider);
-      final level = await repository.loadLevel(levelItem.id);
-      if (context.mounted) {
-        await Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => LevelScreen(level: level)),
-        );
-        // No need to manually reload - Riverpod will handle the refresh
-      }
+      context.push('/level/${levelItem.id}');
     } catch (e) {
       if (context.mounted) {
         SnackBarUtils.showError(
