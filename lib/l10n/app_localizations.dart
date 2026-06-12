@@ -134,6 +134,12 @@ abstract class AppLocalizations {
   /// **'Complete circuit challenges and progress through levels'**
   String get levelModeDescription;
 
+  /// No description provided for @loadingLevel.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading level...'**
+  String get loadingLevel;
+
   /// No description provided for @failedToLoadLevels.
   ///
   /// In en, this message translates to:

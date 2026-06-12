@@ -1,5 +1,4 @@
 import 'package:circuitquest/core/components/base/component.dart';
-import 'package:circuitquest/core/components/base/sequentialComponent.dart';
 import 'package:circuitquest/core/components/cpu/instruction_memory.dart';
 import 'package:circuitquest/core/components/cpu/program_counter.dart';
 

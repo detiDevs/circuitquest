@@ -1,15 +1,16 @@
-import 'package:circuitquest/core/commands/command_controller.dart';
-import 'package:circuitquest/core/commands/move_component_command.dart';
-import 'package:circuitquest/core/commands/remove_connection_command.dart';
+import 'package:circuitquest/domain/commands/command_controller.dart';
+import 'package:circuitquest/domain/commands/move_component_command.dart';
+import 'package:circuitquest/domain/commands/remove_connection_command.dart';
 import 'package:circuitquest/core/components/custom_component.dart';
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/core/components/input_source.dart';
 import 'package:circuitquest/core/components/output_probe.dart';
 import 'package:circuitquest/core/logic/pin.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
-import 'package:circuitquest/state/custom_component_library.dart';
-import 'package:circuitquest/state/placed_component.dart';
-import 'package:circuitquest/state/sandbox_state.dart';
+import 'package:circuitquest/data/repositories/custom_component_repository.dart';
+import 'package:circuitquest/data/repositories/custom_component_repository_impl.dart';
+import 'package:circuitquest/domain/models/placed_component.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:circuitquest/ui/shared/utils/pin_positioning_utils.dart';
 import 'package:circuitquest/ui/shared/widgets/circuit_canvas/component_detail_dialog.dart';
@@ -51,7 +52,7 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(sandboxProvider);
-    final customLibrary = ref.watch(customComponentProvider);
+    final customLibrary = ref.watch(customComponentRepositoryProvider);
     ComponentType? componentType;
     try {
       componentType = availableComponents.firstWhere(
@@ -231,7 +232,7 @@ class _PlacedComponentWidgetState extends ConsumerState<PlacedComponentWidget> {
   }
 
   /// Builds interactive input pin widgets.
-  List<Widget> _buildPins(BuildContext context, SandboxState state) {
+  List<Widget> _buildPins(BuildContext context, SandboxViewModel state) {
     final inputs = widget.placedComponent.component.inputs.entries.toList();
     final outputs = widget.placedComponent.component.outputs.entries.toList();
     final pinPositions = widget.placedComponent.component.pinPositions;

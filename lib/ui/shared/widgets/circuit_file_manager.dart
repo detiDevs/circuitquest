@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:circuitquest/constants.dart';
+import 'package:circuitquest/data/repositories/custom_component_repository_impl.dart';
+import 'package:circuitquest/data/repositories/saved_circuit_repository_impl.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import '../../../state/sandbox_state.dart';
-import '../../../state/custom_component_library.dart';
+import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import '../../../core/components/input_source.dart';
 import '../../../core/components/output_probe.dart';
 
@@ -27,7 +26,7 @@ class CircuitFileManager extends ConsumerWidget {
         ElevatedButton.icon(
           onPressed: state.placedComponents.isEmpty
               ? null
-              : () => _saveCircuit(context, state),
+              : () => _saveCircuit(context, ref, state),
           icon: const Icon(Icons.save),
           label: Text(AppLocalizations.of(context)!.saveCircuit),
           style: ElevatedButton.styleFrom(
@@ -53,7 +52,7 @@ class CircuitFileManager extends ConsumerWidget {
 
         // Load circuit button
         OutlinedButton.icon(
-          onPressed: () => _loadCircuit(context, state),
+          onPressed: () => _loadCircuit(context, ref, state),
           icon: const Icon(Icons.folder_open),
           label: Text(AppLocalizations.of(context)!.loadCircuit),
           style: OutlinedButton.styleFrom(foregroundColor: Colors.blue),
@@ -65,7 +64,7 @@ class CircuitFileManager extends ConsumerWidget {
   Future<void> _saveAsCustomComponent(
     BuildContext context,
     WidgetRef ref,
-    SandboxState state,
+    SandboxViewModel state,
   ) async {
     final inputComponents = state.placedComponents
         .where((c) => c.component is InputSource)
@@ -250,7 +249,7 @@ class CircuitFileManager extends ConsumerWidget {
       return;
     }
 
-    final library = ref.read(customComponentProvider);
+    final library = ref.read(customComponentRepositoryProvider);
     final success = await library.saveCustomComponent(
       data,
       spriteSourcePath: spritePath,
@@ -273,7 +272,11 @@ class CircuitFileManager extends ConsumerWidget {
   }
 
   /// Shows dialog to save the circuit
-  Future<void> _saveCircuit(BuildContext context, SandboxState state) async {
+  Future<void> _saveCircuit(
+    BuildContext context,
+    WidgetRef ref,
+    SandboxViewModel state,
+  ) async {
     final nameController = TextEditingController(
       text: AppLocalizations.of(context)!.circuitDefaultName,
     );
@@ -323,7 +326,8 @@ class CircuitFileManager extends ConsumerWidget {
 
     try {
       // Ensure default save directory exists
-      final defaultDir = await _ensureDefaultDirectory();
+      final repository = ref.read(savedCircuitRepositoryProvider);
+      final defaultDir = await repository.ensureDefaultDirectory();
 
       // Serialize circuit
       final jsonString = state.serializeCircuit(
@@ -334,8 +338,9 @@ class CircuitFileManager extends ConsumerWidget {
       // Convert to bytes for mobile compatibility
       final bytes = utf8.encode(jsonString);
 
-      // Build default file name
-      final defaultFileName = '${_sanitizeFileName(nameController.text)}.json';
+        // Build default file name
+        final defaultFileName =
+          '${repository.sanitizeFileName(nameController.text)}.json';
 
       // Save file (bytes required for Android/iOS)
       final result = await FilePicker.platform.saveFile(
@@ -351,9 +356,7 @@ class CircuitFileManager extends ConsumerWidget {
 
       // On desktop platforms, saveFile may only return a path and not write
       // the content automatically. Ensure bytes are persisted to disk.
-      final outFile = File(result);
-      await outFile.parent.create(recursive: true);
-      await outFile.writeAsBytes(bytes, flush: true);
+      await repository.saveCircuitFile(path: result, jsonString: jsonString);
 
       if (context.mounted) {
         SnackBarUtils.showSuccess(
@@ -372,10 +375,15 @@ class CircuitFileManager extends ConsumerWidget {
   }
 
   /// Shows dialog to load a circuit
-  Future<void> _loadCircuit(BuildContext context, SandboxState state) async {
+  Future<void> _loadCircuit(
+    BuildContext context,
+    WidgetRef ref,
+    SandboxViewModel state,
+  ) async {
     try {
       // Ensure default directory exists before opening picker
-      final defaultDir = await _ensureDefaultDirectory();
+      final repository = ref.read(savedCircuitRepositoryProvider);
+      final defaultDir = await repository.ensureDefaultDirectory();
 
       // Pick file
       final result = await FilePicker.platform.pickFiles(
@@ -387,8 +395,9 @@ class CircuitFileManager extends ConsumerWidget {
 
       if (result == null || result.files.isEmpty) return;
 
-      final file = File(result.files.single.path!);
-      final jsonString = await file.readAsString();
+      final jsonString = await repository.readCircuitFile(
+        result.files.single.path!,
+      );
 
       // Confirm if circuit is not empty
       if (state.placedComponents.isNotEmpty) {
@@ -438,28 +447,6 @@ class CircuitFileManager extends ConsumerWidget {
         );
       }
     }
-  }
-
-  /// Returns (and creates if needed) the default save/load directory.
-  Future<String> _ensureDefaultDirectory() async {
-    final documentsDir = await getApplicationDocumentsDirectory();
-    final dirPath = [
-      documentsDir.path,
-      Constants.kAppName,
-      'Saved Circuits',
-    ].join(Platform.pathSeparator);
-    final dir = Directory(dirPath);
-    if (!await dir.exists()) {
-      await dir.create(recursive: true);
-    }
-    return dir.path;
-  }
-
-  /// Sanitizes the provided file name to a filesystem-safe string.
-  String _sanitizeFileName(String input) {
-    final trimmed = input.trim();
-    final base = trimmed.isEmpty ? 'circuit' : trimmed;
-    return base.replaceAll(RegExp(r'[^a-zA-Z0-9._-]+'), '_');
   }
 
   String _toCamelCase(String input) {

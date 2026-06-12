@@ -11,6 +11,7 @@
   "sandboxModeDescription": "Design circuits freely\nwithout constraints",
   "levelModeTitle": "Level Mode",
   "levelModeDescription": "Complete circuit challenges and progress through levels",
+  "loadingLevel": "Loading level...",
   "failedToLoadLevels": "Failed to load levels",
   "failedToLoadLevel": "Failed to load level",
   "selectALevel": "Select a level",

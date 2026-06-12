@@ -1,0 +1,67 @@
+import 'package:circuitquest/domain/commands/command.dart';
+import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/domain/models/placed_component.dart';
+import 'package:flutter/material.dart';
+import 'package:circuitquest/domain/use_cases/sandbox_engine.dart';
+
+/// Command to place a component on the canvas.
+class PlaceComponentCommand extends Command {
+  final SandboxEngine _sandboxState;
+  final String _componentType;
+  final Offset _position;
+  final Component _component;
+  final bool _immovable;
+  final bool _immutable;
+  final String? _label;
+
+  String? _componentId; // Will be set after first execution
+  PlacedComponent? _placedComponent; // Store the full component for restoration
+
+  PlaceComponentCommand(
+    this._sandboxState,
+    this._componentType,
+    this._position,
+    this._component, {
+    super.onError,
+    bool immovable = false,
+    bool immutable = false,
+    String? label,
+  }) : _immovable = immovable,
+       _immutable = immutable,
+       _label = label;
+
+  @override
+  void execute() {
+    if (_placedComponent != null) {
+      // This is a redo - restore the component with its original ID
+      _sandboxState.restoreComponentWithId(_placedComponent!);
+    } else {
+      // This is the first execution - create new component
+      _componentId = _sandboxState.placeComponent(
+        _componentType,
+        _position,
+        _component,
+        immovable: _immovable,
+        immutable: _immutable,
+        label: _label,
+      );
+      if (_componentId == null) {
+        onError!("");
+        return;
+      }
+
+      // Store the placed component for future redo operations
+      _placedComponent = _sandboxState.getComponent(_componentId!);
+    }
+  }
+
+  @override
+  void undo() {
+    if (_componentId != null) {
+      _sandboxState.removeComponent(_componentId!);
+    }
+  }
+
+  @override
+  String get description => 'Place $_componentType';
+}

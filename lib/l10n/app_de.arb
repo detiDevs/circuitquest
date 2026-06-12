@@ -15,6 +15,7 @@
 
   "levelModeTitle": "Level Modus",
   "levelModeDescription": "Lerne spielerisch anhand von Levels",
+  "loadingLevel": "Lade Level...",
   "failedToLoadLevels": "Fehler beim Laden der Level",
   "failedToLoadLevel": "Fehler beim laden des Levels",
   "selectALevel": "Wähle ein level",

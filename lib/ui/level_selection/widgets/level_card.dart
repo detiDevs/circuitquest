@@ -1,0 +1,169 @@
+import 'package:circuitquest/domain/models/level.dart';
+import 'package:circuitquest/l10n/app_localizations.dart';
+import 'package:circuitquest/data/repositories/level_repository_impl.dart';
+import 'package:circuitquest/ui/shared/providers/level_providers.dart';
+import 'package:circuitquest/app/providers/theme_provider.dart';
+import 'package:circuitquest/ui/level_mode/widgets/level_screen.dart';
+import 'package:circuitquest/ui/shared/utils/snackbar_utils.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+/// Widget displaying a single level card.
+class LevelCard extends ConsumerWidget {
+  final LevelBlockItem levelItem;
+
+  const LevelCard({super.key, required this.levelItem});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+     final localeCode = Localizations.localeOf(context).languageCode;
+    final levelName = levelItem.getLocalizedName(localeCode);
+    final isCompletedAsync = ref.watch(levelCompletedProvider(levelItem.id));
+    final canAccessAsync = ref.watch(levelAccessProvider(levelItem.id));
+    final themeMode = ref.watch(themeProvider);
+
+    final isCompleted = isCompletedAsync.value ?? false;
+    final canAccess = canAccessAsync.value ?? false;
+    final isLoading = isCompletedAsync.isLoading || canAccessAsync.isLoading;
+
+    return Material(
+      child: InkWell(
+        onTap: canAccess ? () => _accessLevel(context, ref) : null,
+        borderRadius: BorderRadius.circular(8),
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: _getCardBorderColor(isCompleted, canAccess, themeMode),
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(8),
+                color: _getCardBackgroundColor(isCompleted, canAccess, themeMode),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Status badges
+                    Row(
+                      children: [
+                        
+                        const Spacer(),
+                        if (levelItem.isBonus)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.orange,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.bonusLevel,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        if (isCompleted)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.completed,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        if (!canAccess && !isLoading)
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)!.locked,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const Spacer(),
+                    // Level name
+                    Text(
+                      levelName,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Disabled overlay for locked levels
+            if (!canAccess && !isLoading)
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black.withOpacity(0.5),
+                ),
+                child: const Center(
+                  child: Icon(Icons.lock, color: Colors.white, size: 32),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _accessLevel(BuildContext context, WidgetRef ref) async {
+    try {
+      context.push('/level/${levelItem.id}');
+    } catch (e) {
+      if (context.mounted) {
+        SnackBarUtils.showError(
+          context,
+          '${AppLocalizations.of(context)!.failedToLoadLevel}: $e',
+        );
+      }
+    }
+  }
+
+  Color _getCardBorderColor(bool isCompleted, bool canAccess, ThemeMode themeMode) {
+    if (isCompleted) return themeMode == ThemeMode.light ? Colors.green : Colors.green[900]!;
+    if (canAccess) return themeMode == ThemeMode.light ? Colors.blue : Colors.blue[900]!;
+    return Colors.grey;
+  }
+
+  Color? _getCardBackgroundColor(bool isCompleted, bool canAccess, ThemeMode themeMode) {
+    if (isCompleted) return themeMode == ThemeMode.light ? Colors.green[50] : const Color.fromARGB(100, 76, 175, 79);
+    if (canAccess) return themeMode == ThemeMode.light ? Colors.blue[50] : const Color.fromARGB(100, 33, 149, 243);
+    return Colors.grey[50];
+  }
+}
