@@ -67,7 +67,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
             ),
             body: Center(
               child: Text(
-                'Failed to load level.',
+                AppLocalizations.of(context)!.failedToLoadLevel,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -77,7 +77,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
         if (!snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Loading level...'),
+              title: Text(AppLocalizations.of(context)!.loadingLevel),
               backgroundColor: Colors.blue[800],
               foregroundColor: Colors.white,
             ),

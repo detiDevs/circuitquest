@@ -33,7 +33,7 @@ class _ComponentDetailDialogState extends ConsumerState<ComponentDetailDialog> {
   Widget build(BuildContext context) {
     PlacedComponent placedComponent = widget.placedComponent;
     textController.text = placedComponent.label ?? "";
-    SandboxViewModel sandboxState = ref.watch(sandboxProvider);
+    SandboxViewModel sandboxState = ref.read(sandboxProvider);
     return Dialog(
           constraints: BoxConstraints(maxWidth: maxDialogWidth),
           child: Padding(

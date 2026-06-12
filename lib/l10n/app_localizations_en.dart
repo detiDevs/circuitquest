@@ -29,6 +29,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Complete circuit challenges and progress through levels';
 
   @override
+  String get loadingLevel => 'Loading level...';
+
+  @override
   String get failedToLoadLevels => 'Failed to load levels';
 
   @override

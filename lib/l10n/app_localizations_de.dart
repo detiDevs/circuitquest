@@ -29,6 +29,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get levelModeDescription => 'Lerne spielerisch anhand von Levels';
 
   @override
+  String get loadingLevel => 'Lade Level...';
+
+  @override
   String get failedToLoadLevels => 'Fehler beim Laden der Level';
 
   @override

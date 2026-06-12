@@ -14,7 +14,7 @@ abstract final class Routes {
   static const sandboxMode = '/sandbox';
 }
 
-GoRouter router() => GoRouter(
+final GoRouter appRouter = GoRouter(
   initialLocation: Routes.home,
   routes: [
     GoRoute(path: Routes.home, builder: (context, state) => HomeScreen()),
@@ -31,8 +31,12 @@ GoRouter router() => GoRouter(
     ),
     GoRoute(
       path: Routes.level,
+      redirect: (context, state) {
+        final levelId = int.tryParse(state.pathParameters['levelId'] ?? '');
+        return levelId == null ? Routes.levelSelection : null;
+      },
       builder: (context, state) => LevelScreen(
-        levelId: int.parse(state.pathParameters['levelId'] ?? '0'),
+        levelId: int.tryParse(state.pathParameters['levelId'] ?? '') ?? 0,
       ),
     ),
     GoRoute(

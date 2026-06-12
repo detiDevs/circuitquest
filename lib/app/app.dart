@@ -3,7 +3,6 @@ import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/l10n/app_localizations.dart';
 import 'package:circuitquest/app/providers/locale_provider.dart';
 import 'package:circuitquest/app/providers/theme_provider.dart';
-import 'package:circuitquest/ui/home/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,7 +36,7 @@ class CircuitQuestApp extends ConsumerWidget {
       locale: selectedLocale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      routerConfig: router(),
+      routerConfig: appRouter,
     );
   }
 }
