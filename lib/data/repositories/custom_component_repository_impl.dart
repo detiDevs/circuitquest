@@ -68,6 +68,9 @@ class CustomComponentRepositoryImpl extends ChangeNotifier
       data,
       spriteSourcePath: spriteSourcePath,
     );
+    if (success) {
+      await load();
+    }
     return success;
   }
 
