@@ -116,7 +116,7 @@ final List<ComponentType> availableComponents = [
   ComponentType(
     name: 'Decoder',
     displayName: 'Decoder',
-    iconPath: 'assets/gates/DecoderThreeBit.svg',
+    iconPath: 'assets/gates/Decoder.svg',
     createComponent: () => Decoder(selectBitWidth: 3),
   ),
   ComponentType(
