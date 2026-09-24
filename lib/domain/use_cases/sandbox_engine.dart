@@ -7,6 +7,7 @@ import 'package:circuitquest/constants.dart';
 import 'package:circuitquest/domain/commands/add_connection_command.dart';
 import 'package:circuitquest/domain/commands/command_controller.dart';
 import 'package:circuitquest/core/components/base/component.dart';
+import 'package:circuitquest/core/components/base/sequentialComponent.dart';
 import 'package:circuitquest/core/components/combinational/multiplexer.dart';
 import 'package:circuitquest/core/components/component_registry.dart';
 import 'package:circuitquest/core/components/custom_component.dart';
@@ -48,8 +49,12 @@ class SandboxEngine extends ChangeNotifier {
   /// The simulator instance for evaluating the circuit
   Simulator? _simulator;
 
-  /// Clock manager for sequential component timing
-  ClockManager? _clockmanager;
+  /// Clock manager for sequential component timing.
+  /// Always present so the user can enable the clock at any time.
+  ClockManager _clockmanager = ClockManager(
+    ticksPerClockCycle: 8,
+    clockMode: ClockMode.disabled,
+  );
 
   /// Currently selected component type for placement
   String? _selectedComponentType;
@@ -95,8 +100,62 @@ class SandboxEngine extends ChangeNotifier {
         clockMode: clockConfig.clockMode,
       );
     } else {
-      _clockmanager = null;
+      _resetClockManager();
     }
+  }
+
+  /// Sets the clock mode. Ignored while a simulation is running.
+  void setClockMode(ClockMode mode) {
+    if (_isSimulating) return;
+    _clockmanager.updateClockMode(mode);
+    notifyListeners();
+  }
+
+  /// Sets the number of ticks between clock highs. Ignored while a
+  /// simulation is running.
+  void setTicksPerClockCycle(int ticks) {
+    if (_isSimulating) return;
+    _clockmanager.updateTicksPerClockCycle(ticks);
+    notifyListeners();
+  }
+
+  /// Triggers one manual clock update: sequential components commit their
+  /// staged state and the change is propagated through the circuit.
+  void triggerManualClockUpdate() {
+    if (_isSimulating || !_clockmanager.isEnabled || _placedComponents.isEmpty) {
+      return;
+    }
+
+    final allComponents = _placedComponents.map((pc) => pc.component).toSet();
+    final sequentialComponents = allComponents
+        .whereType<SequentialComponent>()
+        .toSet();
+    if (sequentialComponents.isEmpty) return;
+
+    for (final comp in sequentialComponents) {
+      comp.applyNewState();
+    }
+
+    // Propagate the committed state through the circuit without letting the
+    // evaluation algorithm apply another clock update (clock: false).
+    _simulator = Simulator(
+      components: allComponents,
+      inputComponents: sequentialComponents,
+      clockManager: _clockmanager,
+    );
+    _simulator!.evaluateEventDriven(
+      startingComponents: sequentialComponents,
+      clock: false,
+    );
+    notifyListeners();
+  }
+
+  /// Resets the clock manager to its default (disabled) configuration.
+  void _resetClockManager() {
+    _clockmanager = ClockManager(
+      ticksPerClockCycle: 8,
+      clockMode: ClockMode.disabled,
+    );
   }
 
   /// Initializes sandbox contents from a level definition once per level.
@@ -207,7 +266,7 @@ class SandboxEngine extends ChangeNotifier {
   Set<String> get activeComponentIds => Set.unmodifiable(_activeComponentIds);
   ({String componentId, String pinName})? get wireDrawingStart =>
       _wireDrawingStart;
-  ClockManager? get clockManager => _clockmanager;
+  ClockManager get clockManager => _clockmanager;
   int get viewportCenterRequestId => _viewportCenterRequestId;
 
   // Undo/Redo getters
@@ -695,6 +754,7 @@ class SandboxEngine extends ChangeNotifier {
     _simulator = null;
     _nextComponentId = 0;
     _tickSpeed = 0.0;
+    _resetClockManager();
   }
 
   @override
@@ -710,6 +770,12 @@ class SandboxEngine extends ChangeNotifier {
       'description': description ?? 'Circuit saved from sandbox mode',
       'components': _placedComponents.map((pc) => pc.toJson()).toList(),
       'connections': _connections.map((wc) => wc.toJson()).toList(),
+      'clockConfig': {
+        'enabled': _clockmanager.isEnabled,
+        'ticksPerClockCycle': _clockmanager.ticksPerClockCycle,
+        'startState': 0,
+        'mode': _clockmanager.clockMode.value,
+      },
     };
     return jsonEncode(circuitData);
   }
@@ -731,6 +797,14 @@ class SandboxEngine extends ChangeNotifier {
       _savedComponentStates = null;
       _initializedFromLevel = false;
       _initializedLevelId = null;
+
+      // Restore clock configuration (fall back to the default clock manager)
+      final clockConfigJson = data['clockConfig'];
+      if (clockConfigJson is Map<String, dynamic>) {
+        initializeClockFromLevel(ClockConfig.fromJson(clockConfigJson));
+      } else {
+        _resetClockManager();
+      }
 
       // Load components
       final components = data['components'] as List<dynamic>;

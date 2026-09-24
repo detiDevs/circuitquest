@@ -534,5 +534,13 @@
       }
     }
   },
-  "tryAgain": "Noch einmal versuchen"
+  "tryAgain": "Noch einmal versuchen",
+  "clockSectionTitle": "Takt",
+  "clockModeLabel": "Taktmodus",
+  "clockModeDisabled": "Deaktiviert",
+  "clockModeEnabled": "Automatisch",
+  "clockModeComponentUpdate": "Update bei Auslösung",
+  "ticksPerClockCycleLabel": "Ticks pro Takt-High",
+  "triggerClockUpdate": "Update auslösen",
+  "triggerClockUpdateTooltip": "Wendet eine Taktflanke an: sequenzielle Komponenten aktualisieren ihren Zustand"
 }

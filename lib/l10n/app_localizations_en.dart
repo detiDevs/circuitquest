@@ -520,4 +520,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tryAgain => 'Try again';
+
+  @override
+  String get clockSectionTitle => 'Clock';
+
+  @override
+  String get clockModeLabel => 'Clock mode';
+
+  @override
+  String get clockModeDisabled => 'Disabled';
+
+  @override
+  String get clockModeEnabled => 'Automatic';
+
+  @override
+  String get clockModeComponentUpdate => 'Update on trigger';
+
+  @override
+  String get ticksPerClockCycleLabel => 'Ticks per clock high';
+
+  @override
+  String get triggerClockUpdate => 'Trigger update';
+
+  @override
+  String get triggerClockUpdateTooltip =>
+      'Applies one clock edge: sequential components update their state';
 }

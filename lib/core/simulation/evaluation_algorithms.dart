@@ -37,7 +37,9 @@ class EvaluationAlgorithms {
     }
 
     int tick = 0;
-    if (clockManager != null && clockManager.shouldUpdateManually()) {
+    if (clock &&
+        clockManager != null &&
+        clockManager.shouldUpdateManually()) {
       // update sequential components (for Levels without PC but with sequential Compoenents)
       final sequentialComponents = allComponents.where(
         (c) => c is SequentialComponent,
@@ -70,7 +72,7 @@ class EvaluationAlgorithms {
         await onWait();
       }
 
-      if (clockManager?.tickAndCheckClock() == true) {
+      if (clock && clockManager?.tickAndCheckClock() == true) {
         // update sequential components
         final sequentialComponents = allComponents.where(
           (c) => c is SequentialComponent,
@@ -92,7 +94,8 @@ class EvaluationAlgorithms {
       tick++;
 
       // continue clock if current cycle is shorter than clock cycle
-      if (current.isEmpty &&
+      if (clock &&
+          current.isEmpty &&
           clockManager != null &&
           clockManager.ticksPerClockCycle > 0 &&
           clockManager.shouldContinue(allComponents)) {

@@ -29,6 +29,12 @@ class _LevelBottomAppBarState
   late final SandboxViewModel sandboxState;
   bool _isCheckingSolution = false;
 
+  /// True when the level has an active clock configuration
+  bool get _hasClockConfig =>
+      widget.level.clockConfig != null &&
+      widget.level.clockConfig!.enabled &&
+      widget.level.clockConfig!.mode > 0;
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +67,17 @@ class _LevelBottomAppBarState
               sandboxState.isSimulating ? Icons.pause : Icons.play_arrow,
             ),
           ),
+          if (_hasClockConfig) ...[
+            Spacer(),
+            IconButton(
+              tooltip: AppLocalizations.of(context)!.triggerClockUpdateTooltip,
+              onPressed: sandboxState.isSimulating
+                  ? null
+                  : sandboxState.triggerManualClockUpdate,
+              color: Colors.blue,
+              icon: const Icon(Icons.update),
+            ),
+          ],
           Spacer(),
           ElevatedButton(
             onPressed: _checkSolution,

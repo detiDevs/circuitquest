@@ -517,6 +517,14 @@
       }
     }
   },
-  "tryAgain": "Try again"
+  "tryAgain": "Try again",
 
+  "clockSectionTitle": "Clock",
+  "clockModeLabel": "Clock mode",
+  "clockModeDisabled": "Disabled",
+  "clockModeEnabled": "Automatic",
+  "clockModeComponentUpdate": "Update on trigger",
+  "ticksPerClockCycleLabel": "Ticks per clock high",
+  "triggerClockUpdate": "Trigger update",
+  "triggerClockUpdateTooltip": "Applies one clock edge: sequential components update their state"
 }

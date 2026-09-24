@@ -22,6 +22,7 @@ class Simulator {
     UpdateCallback? onUpdate,
     WaitCallback? onWait,
     int maxEvalCycles = 1000,
+    bool clock = true,
   }) async {
     // Determine starting components
     final starting = startingComponents?.toSet() ?? inputComponents.toSet();
@@ -39,6 +40,7 @@ class Simulator {
       onUpdate: onUpdate,
       onWait: onWait,
       maxEvalCycles: maxEvalCycles,
+      clock: clock,
     );
     
     print("Evaluated event driven");

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:circuitquest/ui/sandbox_mode/view_models/sandbox_view_model.dart';
 import 'circuit_file_manager.dart';
+import 'clock_controls.dart';
 
 /// Control panel for circuit simulation and evaluation.
 ///
@@ -134,6 +135,12 @@ class ControlPanel extends ConsumerWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 8),
+
+            // Clock controls (clock mode, ticks per clock high, manual trigger)
+            const Divider(),
+            const SizedBox(height: 8),
+            const ClockControls(),
             const SizedBox(height: 8),
 
             // Reset button (only show if simulation was paused)

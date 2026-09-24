@@ -527,4 +527,29 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tryAgain => 'Noch einmal versuchen';
+
+  @override
+  String get clockSectionTitle => 'Takt';
+
+  @override
+  String get clockModeLabel => 'Taktmodus';
+
+  @override
+  String get clockModeDisabled => 'Deaktiviert';
+
+  @override
+  String get clockModeEnabled => 'Automatisch';
+
+  @override
+  String get clockModeComponentUpdate => 'Update bei Auslösung';
+
+  @override
+  String get ticksPerClockCycleLabel => 'Ticks pro Takt-High';
+
+  @override
+  String get triggerClockUpdate => 'Update auslösen';
+
+  @override
+  String get triggerClockUpdateTooltip =>
+      'Wendet eine Taktflanke an: sequenzielle Komponenten aktualisieren ihren Zustand';
 }

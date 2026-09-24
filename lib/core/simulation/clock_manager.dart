@@ -21,13 +21,29 @@ enum ClockMode {
 
 class ClockManager {
   int _currentTick = 0;
-  late final int ticksPerClockCycle;
-  final ClockMode clockMode;
+  int ticksPerClockCycle;
+  ClockMode clockMode;
 
   ClockManager({
     this.ticksPerClockCycle = 0,
     this.clockMode = ClockMode.disabled,
   });
+
+  /// Sets the number of ticks between clock highs.
+  /// Values below 1 mean the clock never fires automatically.
+  void updateTicksPerClockCycle(int ticks) {
+    ticksPerClockCycle = ticks;
+    _currentTick = 0;
+  }
+
+  /// Sets the clock mode and resets the tick counter.
+  void updateClockMode(ClockMode mode) {
+    clockMode = mode;
+    _currentTick = 0;
+  }
+
+  /// Returns the current tick within the clock cycle
+  int get currentTick => _currentTick;
 
   bool tickAndCheckClock() {
     _currentTick++;

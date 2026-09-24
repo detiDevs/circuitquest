@@ -989,6 +989,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again'**
   String get tryAgain;
+
+  /// No description provided for @clockSectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock'**
+  String get clockSectionTitle;
+
+  /// No description provided for @clockModeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock mode'**
+  String get clockModeLabel;
+
+  /// No description provided for @clockModeDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get clockModeDisabled;
+
+  /// No description provided for @clockModeEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic'**
+  String get clockModeEnabled;
+
+  /// No description provided for @clockModeComponentUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Update on trigger'**
+  String get clockModeComponentUpdate;
+
+  /// No description provided for @ticksPerClockCycleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticks per clock high'**
+  String get ticksPerClockCycleLabel;
+
+  /// No description provided for @triggerClockUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger update'**
+  String get triggerClockUpdate;
+
+  /// No description provided for @triggerClockUpdateTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies one clock edge: sequential components update their state'**
+  String get triggerClockUpdateTooltip;
 }
 
 class _AppLocalizationsDelegate
