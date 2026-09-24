@@ -320,6 +320,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get leaveGame => 'Leave Game';
+
+  @override
   String get language => 'Language';
 
   @override
