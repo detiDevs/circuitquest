@@ -325,6 +325,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settings => 'Einstellungen';
 
   @override
+  String get leaveGame => 'Spiel verlassen';
+
+  @override
   String get language => 'Sprache';
 
   @override

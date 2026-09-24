@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-
-/// A large colored button with a title, description and an icon.
+/// A large colored button with a title, description and an icon,
+/// laid out horizontally with the icon on the left.
 class RichButton extends StatelessWidget {
   final String title;
   final String description;
@@ -31,25 +31,38 @@ class RichButton extends StatelessWidget {
             border: Border.all(color: color, width: 2),
             color: color.withAlpha((0.1 * 255).toInt()),
           ),
-          padding: const EdgeInsets.all(24),
-          child: Column(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
             children: [
-              Icon(icon, size: 64, color: color),
-              const SizedBox(height: 16),
-              Text(
-                title,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: color,
+              Icon(icon, size: 32, color: color),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (description.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        description,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ],
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                description,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                textAlign: TextAlign.center,
               ),
             ],
           ),

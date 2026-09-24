@@ -311,6 +311,7 @@
     }
   },
   "settings": "Settings",
+  "leaveGame": "Leave Game",
   "language": "Language",
   "systemDefault": "System default",
   "util": "",

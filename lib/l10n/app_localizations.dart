@@ -656,6 +656,12 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @leaveGame.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave Game'**
+  String get leaveGame;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:

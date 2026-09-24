@@ -100,7 +100,7 @@ class _LevelScreenState extends ConsumerState<LevelScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(level.name),
+            title: Text(level.nameDe ?? level.name),
             backgroundColor: Colors.blue[800],
             foregroundColor: Colors.white,
             actions: [
